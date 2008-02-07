@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>easyb makes it easy, man</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- start header -->
+<div id="header">
+	<h1><a href="http://www.easyb.org"><span>easyb</span></a></h1>
+	<h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+
+
+
+<!-- start page -->
+<div id="page">
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h2 class="title">Domain Specific Language specifications of easyb</h2>
+		
+			<div class="entry">
+			<p>A <a href="http://en.wikipedia.org/wiki/Domain-specific_programming_language">Domain Specific Language</a> (or DSL, which is much easier to write and say) is a programming language designed for a specific task-- that is, it's a special purpose syntax. For example, <a href="http://ant.apache.org/">Ant</a>'s XML build files are DSLs for building software. </p>
+			
+			<p>Not surprisingly, easyb makes heavy use of DSLs for defining a behavior focused language-- in this case, easyb actually has two main DSLs-- one for defining stories and another for defining basic RSpec-like behaviors. </p>	
+			
+			<h2>Story DSL</h2>
+			
+			<p>Stories in easyb are files which contain scenarios; consequently, by convention, easyb story file names end in <code>Story</code>. For example, if you have a create account story, the file would be <code>CreateAccountStory.groovy</code> (by the way, the <code>.groovy</code> is convention but not required-- you could do <code>.gv</code> or <code>.story</code>-- what ever is easier for you).</p>
+			
+			<p>Story files have 0..N <code>scenario</code>s in them. Scenarios then have a mixture of 0..N <code>given</code>s, <code>when</code>s, and <code>then</code>s, with <code>and</code>s linking them (if you desire).</p>	
+			
+			<p>Consequently, the definition of an easyb scenario is:
+<pre><code>
+scenario "text", {
+ given "text", {}
+ when "text", {}
+ then "text", {}
+}
+</code></pre>				
+Remember, you can have as many <code>given</code>s, <code>when</code>s, and <code>then</code>s, with <code>and</code>s linking them; therefore, the DSL supports
+<pre><code>
+scenario "text",{
+ given "text", {}
+ and
+ given "text", {}
+ when "text", {}
+ then "text", {}
+ and
+ then "text", {}
+}
+</code></pre>
+
+Don't forget that <code>when</code>s are not required. Accordingly, the following variation works too.
+<pre><code>
+scenario{
+ given "text", {}
+ then "text", {}
+}
+</code></pre>	
+</p>
+
+<h2>Behavior DSL</h2>
+	<p>easyb supports an RSpec-like DSL for defining simple behaviors. Along with supporting <code>it</code>, you can create a fixture using the <code>before</code> syntax. 
+<pre><code>
+before "", {}
+it "", {}
+</code></pre>
+</p>
+<p>
+Of course, you can have as many <code>it</code>'s as you'd like. The contract of easyb is that the code in <code>before</code> will be run before <i>each</i> <code>it</code>.	If you'd only like a one time setup, then place that logic above the first <code>it</code> and that code will be run <i>once</i>.	
+		
+		</p>
+		
+<h2>easyb ensure syntax</h2>
+<p>easyb has an expressive <code>ensure</code> syntax that is similar in nature to Java's <code>assert</code> but a bit more readable.</p>	
+<p>Whenever you want to verify the state of a particular object, use easyb's <code>ensure</code> closure, which supports the following syntax: </p>
+<pre><code>
+ensure(object or expression){
+  expression
+}
+</code></pre>
+
+<p>That is, the <code>ensure</code> closure takes a value, which could be a normal object or an expression itself. For instance, you could ensure that some value was <code>false</code> by writing:</p>
+<pre><code>
+ensure(!value)
+</code></pre>
+	
+<p>You could alternatively write:</p>
+<pre><code>
+ensure(value){
+  isFalse
+}
+</code></pre>
+
+<p>As you can see, inside the <code>ensure</code> clause you can do some cool things, such as:</p>
+<pre><code>
+isNull
+isNotNull
+isA&lt;class type&gt;
+isEqualTo(value)
+isEqualTo&lt;value&gt;
+isNotEqualTo&lt;value&gt;
+isTrue
+isFalse
+</code></pre>
+
+<p>You can chain clauses too:</p>
+<pre><code>
+ensure(value){
+ isNotNull
+ and
+ isAString
+}
+</code></pre>
+
+<p>The <code>ensure</code> DSL is quite forgiving-- for instance, check out these code examples:</p>
+
+<pre><code>
+mVal = "Test"
+ensure(mVal){
+ isEqualToTest
+ and
+ isEqualTo "Test"
+}
+</code></pre>
+
+<pre><code>
+mVal = 23
+ensure(mVal){
+ isEqualTo23
+ and
+ isEqualTo 23
+}
+</code></pre>
+
+<p>You can work with collections and even ensure fields on objects too:</p>
+<pre><code>
+ensure("test"){
+ contains("est")
+}
+</code></pre>
+
+<pre><code>
+ensure([1,2,3]){
+ contains(3)
+ and
+ contains([2,3])
+}
+</code></pre>
+
+<pre><code>
+def person = new Person("Andy", 11)
+ensure(person){
+ contains(firstName:"Andy")
+ and 
+ contains(age:11)
+}
+</code></pre>
+
+<p>Flexibility is key, hence you can use <code>has</code> instead of <code>contains</code> if you wish:</p>
+<pre><code>
+def person = new Person("Jill", 11)
+ ensure(person){
+  has([firstName:"Jill", age:11])
+}
+</code></pre>
+			</div>
+		</div>
+		
+	</div>
+	<!-- end content -->
+	
+	
+	
+	
+	
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<li>
+				<h2>Overview</h2>
+				<ul>
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./howtos.html">Stories</a></li>
+					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./download.html">Download</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Details</h2>
+				<ul>
+					<li><a href="./running.html">Running easyb</a></li>
+					<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+					<li><a href="./dsls.html">easyb syntax specification</a></li>
+					<li><a href="./lic.html">License</a></li>
+					<li><a href="./source.html">Source code</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Resources</h2>
+				<ul>
+					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+					<li><a href="./articles.html">Additional resources</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end sidebar -->
+</div>
+<!-- end page -->
+<div id="footer">
+	<!-- 
+	<p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
+	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
+-->
+</div>
+</body>
+</html>

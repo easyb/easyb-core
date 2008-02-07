@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>easyb makes it easy, man</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- start header -->
+<div id="header">
+	<h1><a href="http://www.easyb.org"><span>easyb</span></a></h1>
+	<h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+
+
+
+<!-- start page -->
+<div id="page">
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h2 class="title">Stories with easyb</h2>
+		
+			<div class="entry">
+			
+			<p>BDD principles support the notion of stories quite nicely-- you can think of a story as narrative between a stakeholder and development (almost like a use case). 	In short, think of a story as a description of a requirement, which has  an associated benefit and criteria for validation.</p>
+				
+				<p>Stories can be made up of <code>scenario</code>s that group specifications. The specifications are money-- they are essentially steps that are friendly to read. They are:
+				</p>
+
+      <ul>
+        <li>Given (a context)</li>
+        <li>When (something happens)</li>
+        <li>Then (something else happens)</li>
+      </ul>
+				
+				<h3>Stories in action</h3>
+
+      <p>The default convention for stories in easyb is to place each story in a file ending with Story.groovy. So if you have story regarding shipping calculations, for example, you'd have a file named <code>ShippingCalculationsStory.groovy</code>.</p>
+
+      <p>The code below shows a story in easyb in action-- the code has two scenarios which reside in a story file named <code>EmptyStackStory.groovy</code>.</p>
+
+         <pre><code>
+import org.disco.easyb.bdd.stack.Stack
+
+scenario "null is pushed onto empty stack", {
+  given "an empty stack",{
+    stack = new Stack()
+  }
+
+  when "null is pushed", {
+    pushnull = {
+      stack.push(null)
+    }
+  }
+
+  then "an exception should be thrown", {
+    ensureThrows(RuntimeException.class){
+      pushnull()
+    }
+  }
+
+  and
+
+  then "the stack should still be empty", {
+    ensure(stack.empty) {
+      isTrue
+    }
+  }
+}
+
+
+scenario "pop is called on empty stack", {
+  given "an empty stack",{
+    stack = new Stack()
+  }
+
+  when "pop is called", {
+    popnull = {
+      stack.pop()
+    }
+  }
+
+  then "an exception should be thrown", {
+    ensureThrows(RuntimeException.class){
+      popnull()
+    }
+  }
+  
+  and
+  
+  then "the stack should still be empty", {
+      ensure(stack.empty) {
+        isTrue
+      }
+    }
+}
+</code></pre>
+
+<p>Does it not convey the intention clearly? Of course it does!! It's so easy too.</p>
+
+      <p>Take notice of multiple <code>scenario</code>s in that file, each with their own set of <code>given</code>s,<code>when</code>s and <code>then</code>s all coming together to create a <code>story</code>. </p>
+
+<h3>Printing stories</h3>
+
+      <p>It wouldn't be fair to only let the developers see this beautiful story now would it? We didn't think so either, so we decided to give you an easy way to print out the story without all that icky implementation code (we're too familiar with that glossy eye look stakeholders get when you show them code).</p>
+
+      <p>Story printing is available from command line as a format flag as well as via the easyb ant task. For instance, below is an example of two stories-- one with two scenarios and the other containing three.</p>
+<pre><code>
+Story:  empty stack
+  scenario null is pushed onto empty stack
+    given an empty stack
+    when null is pushed
+    then an exception should be thrown
+    then the stack should still be empty
+  scenario pop is called on empty stack
+    given an empty stack
+    when pop is called
+    then an exception should be thrown
+    and then the stack should still be empty
+Story:  single value stack
+  scenario pop is called on stack with one value
+    given an empty stack with one pushed value
+    when pop is called
+    then that object should be returned
+    then the stack should be empty
+  scenario stack with one value is not empty
+    given an empty stack with one pushed value
+    then the stack should not be empty
+  scenario peek is called
+    given a stack containing an item
+    when peek is called
+    then it should provide the value of the most recent pushed value
+    and then the stack should not be empty
+    and then calling pop should also return the peeked value which is the same as the original pushed value
+    and then the stack should  be empty
+</code></pre>
+
+
+        <h3>Easy database handling for stories</h3>
+				
+				<p>To seed a database, use the <code>database_model</code> call, which is quite flexible. You can create the required DbUnit XML document in at least three different ways.</p>
+			
+			<p>Using Groovy's <code>MarkupBuilder</code> is easy and lacks XML syntax: </p>	
+<pre><code>
+given "the database is properly seeded", {
+ database_model("org.hsqldb.jdbcDriver",
+  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
+   def writer = new StringWriter();
+   def builder = new MarkupBuilder(writer);
+
+   builder.dataset(){
+    word(word_id:1, spelling:"bellicose", part_of_speech:"Adjective")
+    definition(definition_id:10, definition:"demonstrating willingness and 
+      willingness to fight",
+    word_id:1, example_sentence:"The pugnacious youth had no friends left 
+      to pick on." )
+    synonym(synonym_id:20, word_id:1, spelling:"belligerent")
+    synonym(synonym_id:21, word_id:1, spelling:"aggressive")
+   }
+  return writer.toString()
+ }
+}
+</code></pre>
+
+<p>Or just create the XML using <code>"""</code>.</p>
+
+<pre><code>
+given "the database is properly seeded", {
+ database_model("org.hsqldb.jdbcDriver",
+  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
+   """&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+   &lt;dataset&gt;
+    &lt;word WORD_ID="1" SPELLING="pugnacious" PART_OF_SPEECH="Adjective"/&gt;
+    &lt;definition DEFINITION_ID="10" DEFINITION="Combative in nature; belligerent."
+      WORD_ID="1"
+      EXAMPLE_SENTENCE="The pugnacious youth had no friends left to pick on."/&gt;
+    &lt;synonym SYNONYM_ID="20" WORD_ID="1" SPELLING="belligerent"/&gt;
+    &lt;synonym SYNONYM_ID="21" WORD_ID="1" SPELLING="aggressive"/&gt;
+   &lt;/dataset&gt;
+   """
+ }
+}
+</code></pre>
+
+<p>If you already have seed files, grab the text easily:</p>
+
+<pre><code>
+given "the database is properly seeded", {
+ database_model("org.hsqldb.jdbcDriver",
+  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
+   return new File("./src/conf/seed.xml").text
+ }
+}
+</code></pre>					
+				
+			</div>
+		</div>
+		
+	</div>
+	<!-- end content -->
+	
+	
+	
+	
+	
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<li>
+				<h2>Overview</h2>
+				<ul>
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./howtos.html">Stories</a></li>
+					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./download.html">Download</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Details</h2>
+				<ul>
+					<li><a href="./running.html">Running easyb</a></li>
+					<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+					<li><a href="./dsls.html">easyb syntax specification</a></li>
+					<li><a href="./lic.html">License</a></li>
+					<li><a href="./source.html">Source code</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Resources</h2>
+				<ul>
+					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+					<li><a href="./articles.html">Additional resources</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end sidebar -->
+</div>
+<!-- end page -->
+<div id="footer">
+	<!-- 
+	<p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
+	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
+-->
+</div>
+</body>
+</html>

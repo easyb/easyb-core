@@ -1,0 +1,419 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>easyb makes it easy, man</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- start header -->
+<div id="header">
+	<h1><a href="http://www.easyb.org"><span>easyb</span></a></h1>
+	<h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+
+
+
+<!-- start page -->
+<div id="page">
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h2 class="title">An in-depth tutorial</h2>
+		
+			<div class="entry">
+					<p>With easyb it's quite easy to create stories (which are logically made up of scenarios) that facilitate driving development, much like TDD is supposed to do. That is, easyb (and BDD concepts) can seriously assist your test-first-development desires; however, you don't need to focus on tests-- just focus on the intended behavior! It happens to be easy too. Remember, easyb may be a Groovy framework but it is for Java-- so if you are coding normal Java applications, you can use easyb!</p>
+					
+					<p>Using roughly the same (albeit prosaic, but oh so easy) <code>Stack</code> example from IBM developerWorks' <a href="http://www.ibm.com/developerworks/web/library/j-cq09187/index.html">Adventures in behavior-driven development</a>, easyb can be used to fashion a series of scenarios that describe a stack data-structure <i>before</i> you actually write it-- because easyb stories are Groovy, you don't have to worry about compilation issues either. Even better, easyb stories are single Groovy files that have scenarios in sequential order.</p>
+
+
+<h3>Pushing null</h3>
+					
+					<p>Thinking at a high level about a stack, one could maybe specify that: 
+					<blockquote>given an empty stack, when <code>null</code> is <code>push</code>ed, an exception should be thrown and the stack should still be empty.</blockquote>
+					</p>
+
+
+
+<p>Whether or not you actually create a place holder object first is up to you; however, for the purposes of this example, the first step is to create a <code>Stack</code> object (in Java, of course!). </p>
+
+<pre><code>
+public class Stack&lt;E&gt; {
+ public Stack() {
+ }
+}
+</code></pre>	
+
+<p>The scenario can then be written out as follows: </p>				
+
+<pre><code>
+given "an empty stack",{
+ stack = new Stack()
+}
+
+when "null is pushed", {
+ pushnull = {
+  stack.push(null)
+ }
+}
+
+then "an exception should be thrown", {
+ ensureThrows(RuntimeException.class){
+  pushnull()
+ }
+}
+
+then "the stack should still be empty", {
+ ensure(stack.isEmpty())
+}	
+</code></pre>
+
+<p>Note how multiple <code>then</code>s were used; plus, see the <code>when</code> clause? A closure is created to essentially capture the intended behavior, which will be exercised in the first <code>then</code>. As you can infer, the <code>ensureThrows</code> method take two parameters-- an exception type and a closure to invoke. Logically, we expect that the call to <code>push</code> with <code>null</code> will yield a <code>RuntimeException</code>. The second <code>then</code> clause then ensures that the stack is still empty.</p>
+
+<p>Of course, executing this story will yield some errors-- as you can see below, the <code>isEmpty</code> method isn't defined yet! What about the <code>push</code> call as well? It turns out that an exception <i>was</i> generated as a result of that invocation; however, the framework caught it (because it was looking for a <code>RuntimeException</code>, which apparently <code>groovy.lang.MissingMethodException</code> is a subclass of).</p>
+
+<pre><code>
+1) Specification the stack should still be empty:
+ groovy.lang.MissingMethodException: No signature of method: \
+ org.disco.easyb.bdd.stack.Stack.isEmpty() is applicable for \
+   argument types: () values: {}
+  at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:572)
+  at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:450)
+</code></pre>
+
+<p>Accordingly, the stack needs an <code>isEmpty</code> method defined. </p>
+
+<pre><code>
+public boolean isEmpty(){
+ return true;
+}
+</code></pre>						
+
+<p>The stack still needs a <code>push</code> method too.</p>
+
+
+<pre><code>
+public void push(E value){
+ throw new RuntimeException();
+}
+</code></pre>
+
+<p>Running this story now works out nicely. </p>
+
+<h3>Empty pops</h3>
+
+<p>The stack isn't finished yet-- in fact, as coded, it only works to make a story succeed. BDD, however, is an excellent mechanism for collaboration between stakeholders and development; as such, it makes sense to delay writing the actual implementation as long as possible and instead focus on behavior. </p>
+
+<p>Therefore, the next behavior of a stack could be:<blockquote>given an empty stack, when <code>pop</code> is called an exception should be thrown and the stack should still be empty</blockquote></p>
+
+<p>Coding this scenario in easyb is easy too-- just add it to the existing story! It looks quite familiar, right?</p>
+
+<pre><code>
+given "an empty stack",{
+ stack = new Stack()
+}
+
+when "pop is called", {
+ popnull = {
+  stack.pop()
+ }
+}
+
+then "an exception should be thrown", {
+ ensureThrows(RuntimeException.class){
+  popnull()
+ }
+}
+
+then "the stack should still be empty", {
+ ensure(stack.isEmpty())
+}
+</code></pre>
+
+<p>Running the story now yields another issue-- the <code>pop</code> method isn't defined.</p>
+
+<pre><code>
+public E pop(){
+ throw new RuntimeException();
+}
+</code></pre>
+
+<p>Now things work and the story has two scenarios.</p>
+
+<h3>Push and pop working together</h3>
+
+<p>Moving on, another behavior relates to the logical behavior of <code>push</code> and <code>pop</code> working together: 
+	<blockquote>given a stack with one <code>push</code>ed value, when <code>pop</code> is called that object should be returned and the stack should be empty.</blockquote></p>
+
+<p>Things are looking easy, eh?</p>
+
+<pre><code>
+given "an empty stack with one pushed value",{
+ stack = new Stack()
+ pushVal = "foo"
+ stack.push(pushVal)
+}
+
+when "pop is called", {
+ popVal = stack.pop()
+}
+
+then "that object should be returned", {
+ ensure(popVal) {
+  isEqualTo pushVal
+ }
+}
+
+then "the stack should be empty", {
+ ensure(stack.isEmpty())
+}
+</code></pre>
+
+<p>In the above code, a value is <code>push</code>ed and then <code>pop</code>ped and the values are compared for equality. Things don't work, however. The <code>push</code> method is defined to throw an exception so the scenario fails. </p>
+
+<pre><code>
+....There was an error running the script
+java.lang.RuntimeException
+ at org.disco.easyb.bdd.stack.Stack.push(Stack.java:10)
+ at gjdk.org.disco.bdd.story.stack.Stack_GroovyReflector.invoke(Unknown Source)
+</code></pre>
+
+<p>Time to code a real <code>pop</code> method! Oh yeah, and a <code>push</code> one as well.</p>
+
+<pre><code>
+public class Stack&lt;E&gt; {
+ private ArrayList&lt;E&gt; list;
+
+ public Stack() {
+  this.list = new ArrayList&lt;E&gt;();
+ }
+
+ public void push(E value) {
+  if (value == null) {
+   throw new RuntimeException("Can't push null");
+  } else {
+   this.list.add(value);
+  }
+}
+
+ public boolean isEmpty() {
+  return true;
+ }
+
+ public E pop() {
+  if (this.list.size() &gt; 0) {
+   return this.list.remove(this.list.size() - 1);
+  } else {
+   throw new RuntimeException("Nothing to pop");
+  }
+ }
+}
+</code></pre>
+
+<p>Now the story is starting to work again! </p>
+<pre><code>
+6 behavior steps run successfully  
+</code></pre>
+
+<h3>Coding isEmpty</h3>
+
+<p>It seems the <code>isEmpty</code> method is still hardcoded, which leads to another behavior: <blockquote>given a stack with any pushed values, <code>isEmpty</code> should return <code>false</code>.</blockquote></p>
+
+<p>This scenario is even easier to code with easyb-- in fact, you can forget the <code>when</code> clause all together (if you want).</p>
+<pre><code>
+given "an empty stack with one pushed value",{
+ stack = new Stack()
+ stack.push("bar")
+}
+
+then "the stack should be empty", {
+ ensure(!stack.isEmpty())
+}
+</code></pre>
+
+<p>The empty test fails of course.</p>
+
+<pre><code>
+......F
+Time: 0.92s
+
+Failures: 1.
+
+1) Specification the stack should be empty:
+ VerificationException: Expected: 
+ equal to [false]
+ but got: 
+ true:
+</code></pre>
+
+<p>Coding it in Java is easy.</p>
+
+<pre><code>
+public boolean isEmpty() {
+ return this.list.isEmpty();
+}
+</code></pre>
+
+<h3>The meat of a stack</h3>
+
+<p>The meat of a stack is the behavior of <code>push</code> and <code>pop</code> called multiple times; accordingly <blockquote>given a stack with two values, when <code>pop</code> is called the last item <code>push<c/ode>ed should be returned.</blockquote></p>
+<pre><code>
+given "a stack with two values",{
+ stack = new Stack()
+ push1 = "foo"
+ push2 = "bar"
+ stack.push(push1)
+ stack.push(push2)
+}
+
+when "pop is called", {
+ popVal = stack.pop()
+}
+
+then "the last item pushed should be returned", {
+ ensure(popVal) {
+  isEqualTo pushVal
+ }
+}
+
+then "the stack should not be empty", {
+ ensure(stack.isEmpty())
+}
+</code></pre>
+
+<p>Things read nicely don't they? Don't forget, this scenario is in one file containing the entire story.</p>
+
+<h3>Peek's behavior</h3>
+
+<p>The <code>peek</code> method is commonly found on stacks, as such: <blockquote>given a stack containing items, when <code>peek</code> is called, it should provide the value of the most recent <code>push</code>ed value; however, that value should remain in the stack.</blockquote></p>
+
+<pre><code>
+given "a stack containing an item",{
+ stack = new Stack()
+ push1 = "foo"
+ stack.push(push1)
+}
+
+when "peek is called", {
+ peeked = stack.peek()
+}
+
+then "it should provide the value of the most recent pushed value", {
+ ensure(peeked) {
+  isEqualTo(push1)
+ }
+}
+
+then "the stack should not be empty", {
+ ensure(!stack.isEmpty())
+}
+
+then "calling pop should also return the peeked value", {
+ ensure(stack.pop()){
+   isEqualTo push1	
+ } 
+}
+
+then "the stack should be empty", {
+ ensure(stack.isEmpty())
+}
+</code></pre>
+
+<p>This scenario is fairly detailed and long; however, the point is valid-- you can use as many <code>then</code>s as you need.</p>
+
+<p>Oh yeah, <code>peek</code> wasn't ever coded. </p>
+<pre><code>
+.........There was an error running the script
+groovy.lang.MissingMethodException: No signature of method: 
+ org.disco.easyb.bdd.stack.Stack.peek() is applicable for 
+  argument types: () values: {}
+ at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:572)
+</code></pre>
+
+<p>Coding peek takes a New York second.</p>
+<pre><code>
+public E peek() {
+ if(this.list.size() &gt; 0){
+  return this.list.get(this.list.size()-1);
+ }else{
+  return null;
+ }
+}
+</code></pre>
+
+<p>Time to run the entire story!</p>
+
+<pre><code>
+13 behavior steps run successfully  
+</code></pre>	
+
+<p>In this tutorial, a stack was created by driving development with BDD. In essence, easyb was used to tell the story of a stack-- as things failed, the proper behavior was coded. Scenarios were written in literate form via easyb's constructs and they all aggregated up to create a story that lives as executable documentation for the object being verified.
+</p>	
+<p>Wow, aren't things easy with easyb?</p>
+
+<!--
+<pre><code>
+</code></pre>						
+-->
+			</div>
+		</div>
+		
+	</div>
+	<!-- end content -->
+	
+	
+	
+	
+	
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<li>
+				<h2>Overview</h2>
+				<ul>
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./howtos.html">Stories</a></li>
+					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./download.html">Download</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Details</h2>
+				<ul>
+					<li><a href="./running.html">Running easyb</a></li>
+					<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+					<li><a href="./dsls.html">easyb syntax specification</a></li>
+					<li><a href="./lic.html">License</a></li>
+					<li><a href="./source.html">Source code</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Resources</h2>
+				<ul>
+					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+					<li><a href="./articles.html">Additional resources</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end sidebar -->
+</div>
+<!-- end page -->
+<div id="footer">
+	<!-- 
+	<p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
+	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
+-->
+</div>
+</body>
+</html>

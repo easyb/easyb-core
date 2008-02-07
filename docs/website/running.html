@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <title>easyb makes it easy, man</title>
+  <meta name="keywords" content=""/>
+  <meta name="description" content=""/>
+  <link href="default.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- start header -->
+<div id="header">
+  <h1><a href="http://www.easyb.org"><span>easyb</span></a></h1>
+
+  <h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+<!-- start page -->
+<div id="page">
+<!-- start content -->
+<div id="content">
+<div class="post">
+<h2 class="title">Running easyb</h2>
+
+<div class="entry">
+
+<p>easyb can be invoked via:</p>
+<ul>
+  <li>the command line</li>
+  <li>Ant</li>
+</ul>
+
+
+<h2>Command line </h2>
+
+<p>easyb comes with a command line runner that takes the name of a particular behavior or story you wish to run. You can
+  optionally pass in a few different flag options to output various report formats as well. </p>
+
+
+<pre><code>
+  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy
+</code></pre>
+
+<p>If no additional arguments are specified, you'll see a report printed to <code>System.out</code> that looks something
+  like this: </p>
+<pre><code>
+9 behavior steps run successfully
+</code></pre>
+
+<p>Want to run multiple behaviors or stories in a single run? Yep, easyb supports that too. Just pass multiple stories
+on the command line.</p>
+
+<pre><code>
+  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy my/path/to/MySecondStory.groovy
+</code></pre>
+
+<p>Note, the runner doesn't care if you run a behavior or a story-- they are run the same either way! Easy, eh?</p>
+
+<h3>Story reporting via the command line</h3>
+
+<p>You can generate a story printout of an easyb story by passing in the <code>-txtstory</code> flag as follows:</p>
+
+<pre><code>
+  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy \
+  -txtstory ./target/mystory.txt
+</code></pre>
+
+<p>Note, the line break in the above example is for formatting purposes only.</p>
+
+
+<h3>XML reporting via the command line</h3>
+
+<p>If you'd rather produce an XML report, just pass in the <code>-xmlbehavior</code> flag and provide a path where the xml
+  report should be written. For instance, using the same example from earlier, if you'd rather have an XML report,
+  simply type:</p>
+
+
+<pre><code>
+  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy \
+  -xmlbehavior my/path/report.xml
+</code></pre>
+
+<p>Note, the line break in the above example is for formatting purposes only.</p>
+
+<h2>Ant</h2>
+
+<p>You can run your behaviors and stories via easyb's Ant task. It's easy:</p>
+<ol>
+  <li>load the task (via Ant's <code>taskdef</code>)-- the class name is <code>org.disco.easyb.ant.SpecificationRunnerTask</code>
+  </li>
+  <li>provide a location for a report (or series of reports) and then provide a <code>fileset</code> with the location(s) of your behaviors
+    and stories
+  </li>
+</ol>
+
+<p>Defining the task looks like this:</p>
+<pre><code>
+  &lt;taskdef name="easyb" classname="org.disco.easyb.ant.SpecificationRunnerTask"&gt;
+    &lt;classpath&gt;
+      &lt;pathelement location="${lib.dir}/release/easyb-xx.jar"/&gt;
+    &lt;/classpath&gt;
+  &lt;/taskdef&gt;
+</code></pre>
+
+
+<p>Running the task looks like:</p>
+
+
+<pre><code>
+    &lt;easyb&gt;
+      &lt;classpath&gt;
+         &lt;path refid="build.classpath" /&gt;
+		 &lt;pathelement path="target/classes" /&gt;
+      &lt;/classpath&gt;
+     &lt;report location="target/story.txt" format="txtstory" /&gt;
+     &lt;behaviors dir="${mybehaviors.dir}"&gt;
+       &lt;include name="**/*Story.groovy"/&gt;
+     &lt;/behaviors&gt;
+    &lt;/easyb&gt;
+</code></pre>
+
+<p>Produces output:</p>
+
+<pre><code>
+    [easyb] easyb is preparing to process 1 file(s)
+    [easyb] 9 behavior steps run successfully  
+    [easyb] easyb execution passed
+
+  BUILD SUCCESSFUL
+  Total time: 3 seconds
+</code></pre>
+
+<h3>Failures</h3>
+
+<p>The point of having your behaviors run as part of your build is to notify you when they catch possible code problems. Easyb also allows a user specified property to be set to true if the build fails.</p>
+
+<p>This property is called <code>failureProperty</code> and using it would look like this</p>
+<pre><code>
+  &lt;easyb failureProperty="easyb.failed"&gt;
+</code></pre>
+
+<p>That alone doesn't fail the build but puts the flexibility in your hands to fail it, print it or do nothing with it as you please. Here is  a common example of using that property to fail a build:</p>
+
+<pre><code>
+  &lt;fail if="easyb.failed" message="Execution halted as behaviors failed"/&gt;
+</code></pre>
+
+<p>Now when a behavior fails our build will halt with output like so:</p>
+<pre><code>
+ [easyb] easyb is preparing to process 1 file(s)
+ [easyb] 9 behavior steps run , but status is failure! Total failures: 1
+ [easyb]   Failure -> then the dealer should win in BlackjackStory.groovy
+ [easyb]   VerificationException: expected lossss but was loss:
+ ....
+ ....
+ [easyb] specification failures detected!
+ [easyb] easyb execution FAILED
+
+BUILD FAILED
+/blah/blah/build.xml:75: easyb reported a failure
+
+Total time: 3 seconds
+</code></pre>
+
+<p>Now you can be more confident that your build hasn't been broken by a change since you get instant feedback on behavior failures.</p>
+
+<h3>Story Printing</h3>
+
+<p>easyb embraces the idea that stories are a link between the business requirements and your code. To help use those stories when talking to your clients about requirements, easyb provides a way to print out just the stories without a lot of geeky code.</p>
+
+<p>To print out a story report via Ant, simply create a <code>report</code> element with its <code>format</code> attribute set to <code>txtstory</code> as follows:</p>
+
+<pre><code>
+  &lt;report location="target/stories.txt" format="txtstory"/&gt;
+</code></pre>
+
+<p>Here is some sample output:</p>
+<pre><code>
+9 behavior steps executed successfully  
+ Story: blackjack
+  scenario tie game when cards are dealt but dealer gets higher card
+    given a game a blackjack game and both players have a score of 10
+    when the dealer gets an Ace and you get a 10
+    then the dealer should win
+  scenario tie game when cards are dealt but player gets higher card
+    given a game a blackjack game and both players have a score of 10
+    when the dealer gets a 10 and you get an Ace
+    then the player should win
+</code></pre>
+
+<p>That looks like something business users (or management) could understand-- they might even be able to *gasp* write them!</p>
+
+</div>
+</div>
+
+</div>
+<!-- end content -->
+
+
+<!-- start sidebar -->
+<div id="sidebar">
+	<ul>
+		<li>
+			<h2>Overview</h2>
+			<ul>
+				<li><a href="./index.html">Home</a></li>
+				<li><a href="./howtos.html">Stories</a></li>
+				<li><a href="./howtobb.html">Behaviors</a></li>
+				<li><a href="./download.html">Download</a></li>
+			</ul>
+		</li>
+		<li>
+			<h2>Details</h2>
+			<ul>
+				<li><a href="./running.html">Running easyb</a></li>
+				<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+				<li><a href="./dsls.html">easyb syntax specification</a></li>
+				<li><a href="./lic.html">License</a></li>
+				<li><a href="./source.html">Source code</a></li>
+			</ul>
+		</li>
+		<li>
+			<h2>Resources</h2>
+			<ul>
+				<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+				<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+				<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+				<li><a href="./articles.html">Additional resources</a></li>
+			</ul>
+		</li>
+		
+	</ul>
+	<div style="clear: both;">&nbsp;</div>
+</div>
+<!-- end sidebar -->
+</div>
+<!-- end page -->
+<div id="footer">
+  <!--
+   <p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
+	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
+-->
+</div>
+</body>
+</html>

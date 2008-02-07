@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>easyb makes it easy, man</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- start header -->
+<div id="header">
+	<h1><a href="http://www.easyb.org"><span>easyb</span></a></h1>
+	<h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+
+
+
+<!-- start page -->
+<div id="page">
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h2 class="title">Take a look under the hood</h2>
+		
+			<div class="entry">
+				<p>easyb is hosted at <a href="http://code.google.com/p/easyb/">Google code</a>, which provides an 
+				<a href="http://code.google.com/p/easyb/source/browse">accessible Subversion repository</a>. To checkout easyb's source code, simply type </p>
+<pre><code>
+svn checkout http://easyb.googlecode.com/svn/trunk/ easyb-read-only
+</code></pre>
+
+<p>Building easyb requires <a href="http://groovy.codehaus.org/">Groovy 1.5</a> and <a href="http://gant.codehaus.org/">Gant 1.0.2</a> (or greater). Once you've downloaded the project, in the project's rot directory, type <code>gant -p</code>. You should see something like this: </p>
+
+<pre><code>
+ ant-task           runs the easyb ant task
+ clean              cleans target dir
+ compile-all        compile Groovy & Java classes
+ compile-behaviors  compile Groovy & Java classes in easyb behavior
+ compile-core       compile Groovy & Java classes in easyb core
+ configuregroovy    configures environment to compile w/Groovy
+ dist               create a distribution from the release
+ getdeps            retrieves dependencies
+ init               init dirs
+ jar                archive project
+ release            compile and archive
+ validate           runs behaviors	
+</code></pre>	
+
+<p>To verify everything works, type <code>gant dist</code>, which will basically run everything (including validation). At the end you should see some <code>.tar.gz</code> files created and some text like this: </p>
+
+<pre><code>
+ [easyb] 113 behavior steps run successfully  
+ [easyb] easyb execution passed
+</code></pre>	
+
+<p>Now you are good to go. Now wasn't that easy? If you have any questions or comments, drop us a note on <a href="http://groups.google.com/group/easyb-users">our mailing list</a>.</p>
+			</div>
+		</div>
+		
+	</div>
+	<!-- end content -->
+	
+	
+	
+	
+	
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<li>
+				<h2>Overview</h2>
+				<ul>
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./howtos.html">Stories</a></li>
+					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./download.html">Download</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Details</h2>
+				<ul>
+					<li><a href="./running.html">Running easyb</a></li>
+					<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+					<li><a href="./dsls.html">easyb syntax specification</a></li>
+					<li><a href="./lic.html">License</a></li>
+					<li><a href="./source.html">Source code</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Resources</h2>
+				<ul>
+					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+					<li><a href="./articles.html">Additional resources</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end sidebar -->
+</div>
+<!-- end page -->
+<div id="footer">
+	<!-- 
+	<p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
+	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
+-->
+</div>
+</body>
+</html>
