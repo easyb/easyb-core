@@ -82,21 +82,23 @@ target("compile-all":"compile Groovy & Java classes"){
 
 target("compile-core":"compile Groovy & Java classes in easyb core"){
 	depends(configuregroovy)
-	genericgroovyc(sourcedir, classdir)
-	genericgroovyc(gsourcedir, classdir)
-	genericgroovyc(antsourcedir, classdir)
+	genericgroovyc([sourcedir, gsourcedir, antsourcedir], classdir)
 }
 
 target("compile-behaviors":"compile Groovy & Java classes in easyb behavior"){
 	depends(configuregroovy)
 	depends("compile-core")
-	genericgroovyc(behaviordir, behaviorclassdir)
-	genericgroovyc(gbehaviordir, behaviorclassdir)
+	genericgroovyc([behaviordir, gbehaviordir], behaviorclassdir)
 }
 
-genericgroovyc = { source, destination ->
-  Ant.groovyc(srcdir:source, destdir:destination, jointCompilationOptions:"-j -Jsource=1.5 -Jtarget=1.5"){
-	  classpath(){
+genericgroovyc = { sourcedirs, destination ->
+  Ant.groovyc(destdir:destination, jointCompilationOptions:"-j -Jsource=1.5 -Jtarget=1.5"){
+    src() {
+      sourcedirs.each() {
+        dirset(dir:it)        
+      }
+    }
+    classpath(){
 	    fileset(dir:libdir){
 	      include(name:jarincludes)
 	    }
