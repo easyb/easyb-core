@@ -7,14 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 
 import org.disco.easyb.core.listener.DefaultListener;
 import org.disco.easyb.core.listener.SpecificationListener;
@@ -27,6 +20,7 @@ import org.disco.easyb.core.report.TerseReportWriter;
 import org.disco.easyb.core.report.TxtStoryReportWriter;
 import org.disco.easyb.core.report.XmlBehaviorReportWriter;
 import org.disco.easyb.core.result.Result;
+import org.disco.easyb.core.exception.InvalidArgumentException;
 
 
 /**
@@ -65,7 +59,6 @@ public class SpecificationRunner {
     List<SpecificationListener> listeners = new ArrayList<SpecificationListener>();
 
     SpecificationListener listener = new DefaultListener();
-    
 
     for (File file : specs) {
     	listener.setSpecificationName(file.getName());
@@ -94,7 +87,7 @@ public class SpecificationRunner {
 
       reportWriter.writeReport();
     }
-    
+
     listeners.add(listener);
     return listeners;
   }
@@ -104,25 +97,35 @@ public class SpecificationRunner {
    * @param args the command line arguments
    */
   public static void main(String[] args) {
+    Options options = getOptionsForMain();
+
+
     try {
-      Options options = getOptionsForMain();
-
-      if (args.length > 0 && args[0] != null) {
-
         CommandLine commandLine = getCommandLineForMain(args, options);
+        validateArguments(commandLine);
+
         SpecificationRunner runner = new SpecificationRunner(getConfiguredReports(commandLine));
 
         List<SpecificationListener> listeners = runner.runSpecification(getFileCollection(commandLine.getArgs()));
 
         notifyAndExitOnSpecificationFailures(listeners);
 
-      } else {
-        handleHelpForMain(options);
-      }
+    } catch (InvalidArgumentException iae) {
+      System.out.println(iae.getMessage());
+      handleHelpForMain(options);
+    } catch (ParseException pe) {
+      System.out.println(pe.getMessage());
+      handleHelpForMain(options);
     } catch (Exception e) {
       System.err.println("There was an error running the script");
       e.printStackTrace(System.err);
       System.exit(-6);
+    }
+  }
+
+  private static void validateArguments(CommandLine commandLine) throws InvalidArgumentException {
+    if(commandLine.getArgs().length == 0) {
+      throw new InvalidArgumentException("Required Arguments not passed in.");
     }
   }
 
@@ -195,8 +198,7 @@ public class SpecificationRunner {
    * @return representation of command line arguments passed in that match the available options
    * @throws ParseException if there are any problems encountered while parsing the command line tokens
    */
-  private static CommandLine getCommandLineForMain(String[] args, Options options)
-      throws ParseException {
+  private static CommandLine getCommandLineForMain(String[] args, Options options) throws ParseException {
     CommandLineParser commandLineParser = new GnuParser();
     return commandLineParser.parse(options, args);
   }
