@@ -20,7 +20,6 @@ import org.disco.easyb.core.report.TerseReportWriter;
 import org.disco.easyb.core.report.TxtStoryReportWriter;
 import org.disco.easyb.core.report.XmlBehaviorReportWriter;
 import org.disco.easyb.core.result.Result;
-import org.disco.easyb.core.exception.InvalidArgumentException;
 
 
 /**
@@ -110,7 +109,7 @@ public class SpecificationRunner {
 
         notifyAndExitOnSpecificationFailures(listeners);
 
-    } catch (InvalidArgumentException iae) {
+    } catch (IllegalArgumentException iae) {
       System.out.println(iae.getMessage());
       handleHelpForMain(options);
     } catch (ParseException pe) {
@@ -123,9 +122,9 @@ public class SpecificationRunner {
     }
   }
 
-  private static void validateArguments(CommandLine commandLine) throws InvalidArgumentException {
+  private static void validateArguments(CommandLine commandLine) throws IllegalArgumentException {
     if(commandLine.getArgs().length == 0) {
-      throw new InvalidArgumentException("Required Arguments not passed in.");
+      throw new IllegalArgumentException("Required Arguments not passed in.");
     }
   }
 
