@@ -21,8 +21,8 @@ class TxtStoryReportWriter implements ReportWriter{
     
     def count = storyListener.getTotalBehaviorCount()
     writer.writeLine("${(count > 1) ?  "${count} behavior steps executed " : " 1 behavior step run" }" +  
-    	"${storyListener.hasBehaviorFailures() ? ", but status is failure!" : "successfully"} " + 
-    	"${storyListener.hasBehaviorFailures() ? "Total failures: ${storyListener.failedBehaviorCount}" : " "}")
+    	"${storyListener.hasBehaviorFailures() ? ", but status is failure!" : "successfully"}" + 
+    	"${storyListener.hasBehaviorFailures() ? " Total failures: ${storyListener.failedBehaviorCount}" : ""}")
    	
     
     storyListener.results.each{ result ->
