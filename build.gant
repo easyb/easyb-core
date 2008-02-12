@@ -11,8 +11,8 @@ antsourcedir = "src/ant"
 gbehaviordir = "behavior/groovy"
 behaviordir =  "behavior/java"
 behaviorclassdir = "${defaultdir}/behavior-classes"
-
-
+homedir = System.properties.'user.home'
+mavenrepo = "${homedir}/.m2/repository"
 
 target(clean:"cleans target dir"){
 	Ant.delete(dir:defaultdir)
@@ -144,4 +144,9 @@ target("ant-task":"runs the easyb ant task"){
 	}
 
   	Ant.fail(if:"easyb.failed", message:"Execution halted as behaviors failed")
+}
+
+target("install-maven":"install easyb into the local maven repository") {
+    depends(dist)
+	Ant.copy(file: "${defaultdir}/easyb-${version}.jar", toDir: "${mavenrepo}/easyb/easyb/${version}/")
 }
