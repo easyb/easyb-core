@@ -7,19 +7,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import org.disco.easyb.core.listener.DefaultListener;
 import org.disco.easyb.core.listener.SpecificationListener;
-import org.disco.easyb.core.util.CamelCaseConverter;
-import org.disco.easyb.core.util.ReportFormat;
-import org.disco.easyb.core.util.ReportType;
 import org.disco.easyb.core.report.Report;
 import org.disco.easyb.core.report.ReportWriter;
 import org.disco.easyb.core.report.TerseReportWriter;
 import org.disco.easyb.core.report.TxtStoryReportWriter;
 import org.disco.easyb.core.report.XmlBehaviorReportWriter;
 import org.disco.easyb.core.result.Result;
+import org.disco.easyb.core.util.CamelCaseConverter;
+import org.disco.easyb.core.util.ReportFormat;
+import org.disco.easyb.core.util.ReportType;
 
 
 /**
