@@ -149,10 +149,10 @@ target("ant-task":"runs the easyb ant task"){
 target("install-maven":"install easyb into the default local maven 2 repository") {
     depends(dist)
 
-	Ant.copy(file: "${defaultdir}/easyb-${version}.jar", toDir: "${mavenrepo}/easyb/easyb/${version}/")
+	Ant.copy(file: "${defaultdir}/easyb-${version}.jar", toDir: "${mavenrepo}/org/easyb/easyb/${version}/")
 	
 	def reader = new FileReader("pom-template.xml")
-	def writer = new FileWriter("${mavenrepo}/easyb/easyb/${version}/easyb-${version}.pom")
+	def writer = new FileWriter("${mavenrepo}/org/easyb/easyb/${version}/easyb-${version}.pom")
 	
 	reader.transformLine(writer) { line ->
 	    line.replace("VERSION", version)

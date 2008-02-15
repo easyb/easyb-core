@@ -3,7 +3,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>easyb</groupId>
+  <groupId>org.easyb</groupId>
   <artifactId>easyb</artifactId>
   <packaging>jar</packaging>
   <version>VERSION</version>
