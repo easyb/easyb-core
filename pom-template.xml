@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>easyb</groupId>
+  <artifactId>easyb</artifactId>
+  <packaging>jar</packaging>
+  <version>VERSION</version>
+  <name>easyb</name>
+  <description>A behavior driven development framework for the Java platform</description>
+  <url>http://www.easyb.org</url>
+
+  <developers>
+    <developer>
+      <id>ajglover</id>
+      <name>Andy Glover</name>
+    </developer>
+    <developer>
+      <id>kenneth.s.brooks</id>
+      <name>Ken Brooks</name>
+    </developer>
+    <developer>
+      <id>rfciii</id>
+      <name>Rod Coffin</name>
+      <email>rod@rodcoffin.com</email>
+      <url>http://www.rodcoffin.com</url>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+
+  <repositories>
+    <repository>
+      <id>easyb</id>
+      <url>http://www.thediscoblog.com/repo/</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+
+  <scm>
+    <connection>scm:svn:http://easyb.googlecode.com/svn/trunk/</connection>
+    <developerConnection>scm:svn:https://easyb.googlecode.com/svn/trunk/</developerConnection>
+  </scm>
+
+  <mailingLists>
+    <mailingList>
+      <name>easyb users</name>
+      <archive>http://groups.google.com/group/easyb-users</archive>
+      <subscribe>http://groups.google.com/group/easyb-users</subscribe>
+      <unsubscribe>http://groups.google.com/group/easyb-users</unsubscribe>
+      <post>http://groups.google.com/group/easyb-users</post>
+    </mailingList>
+    <mailingList>
+      <name>easyb dev</name>
+      <archive>http://groups.google.com/group/easyb-dev</archive>
+      <subscribe>http://groups.google.com/group/easyb-dev</subscribe>
+      <unsubscribe>http://groups.google.com/group/easyb-dev</unsubscribe>
+      <post>http://groups.google.com/group/easyb-dev</post>
+    </mailingList>
+    <mailingList>
+      <name>easyb commits</name>
+      <archive>http://groups.google.com/group/easyb-commits</archive>
+      <subscribe>http://groups.google.com/group/easyb-commits</subscribe>
+      <unsubscribe>http://groups.google.com/group/easyb-commits</unsubscribe>
+      <post>http://groups.google.com/group/easyb-commits</post>
+    </mailingList>
+  </mailingLists>
+
+  <issueManagement>
+    <system>Google Code</system>
+    <url>http://code.google.com/p/easyb/issues/</url>
+  </issueManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all-minimal</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+  </dependencies>
+
+</project>

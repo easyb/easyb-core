@@ -146,7 +146,15 @@ target("ant-task":"runs the easyb ant task"){
   	Ant.fail(if:"easyb.failed", message:"Execution halted as behaviors failed")
 }
 
-target("install-maven":"install easyb into the local maven repository") {
+target("install-maven":"install easyb into the default local maven 2 repository") {
     depends(dist)
+
 	Ant.copy(file: "${defaultdir}/easyb-${version}.jar", toDir: "${mavenrepo}/easyb/easyb/${version}/")
+	
+	def reader = new FileReader("pom-template.xml")
+	def writer = new FileWriter("${mavenrepo}/easyb/easyb/${version}/easyb-${version}.pom")
+	
+	reader.transformLine(writer) { line ->
+	    line.replace("VERSION", version)
+	}
 }
