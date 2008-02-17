@@ -1,50 +1,19 @@
-includeTool << gant.tools.Ivy
+/**
+ * Master easyb core build
+ */
+includeTargets << new File("default_tasks.gant")
 
 version = "0.7a"
-defaultdir = "target"
-libdir = "${defaultdir}/lib"
-jarincludes = "**/*.jar"
-classdir = "${defaultdir}/classes"
+
 sourcedir = "src/java"
-gsourcedir = "src/groovy"
 antsourcedir = "src/ant"
-gbehaviordir = "behavior/groovy"
 behaviordir =  "behavior/java"
-behaviorclassdir = "${defaultdir}/behavior-classes"
 homedir = System.properties.'user.home'
 mavenrepo = "${homedir}/.m2/repository"
-
-target(clean:"cleans target dir"){
-	Ant.delete(dir:defaultdir)
-}
-
-Ant.path(id:"build.classpath"){
-	fileset(dir:libdir, includes:jarincludes)
-}
-
-target(configuregroovy:"configures environment to compile w/Groovy"){
- depends(init)
- Ant.taskdef(name:"groovyc",
-    classname:"org.codehaus.groovy.ant.Groovyc", classpathref:"build.classpath"){
- }
-}
-
-target(getdeps:"retrieves dependencies"){
-  Ivy.configure(file:"./ivyconfig.xml")
-  Ivy.retrieve(pattern:"./target/lib/[artifact]-[revision].[ext]")
-}
-
-target(init:"init dirs"){
-	Ant.mkdir(dir:classdir)
-	Ant.mkdir(dir:libdir)
-	Ant.mkdir(dir:behaviorclassdir)
-	getdeps()
-}
 
 target("default":"Default task is to run the test suite."){
    	depends("validate")
 }
-
 
 target(release:"compile and archive"){
   depends("validate")
@@ -91,21 +60,7 @@ target("compile-behaviors":"compile Groovy & Java classes in easyb behavior"){
 	genericgroovyc([behaviordir, gbehaviordir], behaviorclassdir)
 }
 
-genericgroovyc = { sourcedirs, destination ->
-  Ant.groovyc(destdir:destination, jointCompilationOptions:"-j -Jsource=1.5 -Jtarget=1.5"){
-    src() {
-      sourcedirs.each() {
-        dirset(dir:it)        
-      }
-    }
-    classpath(){
-	    fileset(dir:libdir){
-	      include(name:jarincludes)
-	    }
-	    dirset(dir:classdir)
-	  }
-	}
-}
+
 
 target("validate":"runs behaviors"){
   depends("ant-task")
