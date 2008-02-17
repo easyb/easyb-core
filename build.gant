@@ -47,7 +47,6 @@ target(dist:"create a distribution from the release"){
 target(jar:"create an archieve of the project's classfiles"){
    depends("compile-all")
    
-   def jar_version
    if(Ant.project.properties."version" != null){
    	 jar_version = Ant.project.properties."version"
    }else{
