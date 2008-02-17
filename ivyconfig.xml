@@ -1,11 +1,12 @@
 <ivysettings>
   <conf defaultResolver="chained"/>
   <resolvers>
-    <chain name="chained" returnFirst="true">
-      <url name="discorepo">
-        <artifact pattern="http://www.thediscoblog.com/repo/[artifact]/jars/[artifact]-[revision].[ext]"/>
-      </url>
-      <ibiblio name="ibiblio"/>
-    </chain>
-  </resolvers>
+		<chain name="chained" returnFirst="true">
+			<url name="easybrepo">
+				<artifact
+					pattern="http://www.easyb.org/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+			<ibiblio name="ibiblio" />
+		</chain>
+	</resolvers>
 </ivysettings>
