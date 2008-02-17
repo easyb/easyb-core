@@ -37,10 +37,23 @@ target(dist:"create a distribution from the release"){
     Ant.gzip(zipfile:"${tarfilename}.gz", src:tarfilename)
     Ant.delete(file:tarfilename)
 }
-
-target(jar:"archive project"){
+/**  
+ * This target is command line overridden if needed- for example
+ * if you need to create a snapshot version, you can type
+ * gant -Dversion=snapshot jar and the resultant jar file
+ * will be easyb-snapshot.jar instead of reading the default
+ * value of version from above.
+ */
+target(jar:"create an archieve of the project's classfiles"){
    depends("compile-all")
-   Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:classdir)
+   
+   def jar_version
+   if(Ant.project.properties."version" != null){
+   	 jar_version = Ant.project.properties."version"
+   }else{
+   	 jar_version = version
+   }
+   Ant.jar(destfile:"${defaultdir}/easyb-${jar_version}.jar", basedir:classdir)
 }
 
 target("compile-all":"compile Groovy & Java classes"){
