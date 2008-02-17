@@ -1,0 +1,60 @@
+/** 
+ * this is a default set of tasks
+ * that other projects within easyb
+ * can include. See easyb core build
+ * file for an example
+ */
+
+includeTool << gant.tools.Ivy
+
+defaultdir = "target"
+libdir = "${defaultdir}/lib"
+jarincludes = "**/*.jar"
+classdir = "${defaultdir}/classes"
+behaviorclassdir = "${defaultdir}/behavior-classes"
+gbehaviordir = "behavior/groovy"
+gsourcedir = "src/groovy"
+
+
+target(clean:"cleans target dir"){
+	Ant.delete(dir:defaultdir)
+}
+
+Ant.path(id:"build.classpath"){
+	fileset(dir:libdir, includes:jarincludes)
+}
+
+target(configuregroovy:"configures environment to compile w/Groovy"){
+ depends(init)
+ Ant.taskdef(name:"groovyc",
+    classname:"org.codehaus.groovy.ant.Groovyc", classpathref:"build.classpath"){
+ }
+}
+
+target(getdeps:"retrieves dependencies"){
+  Ivy.configure(file:"./ivyconfig.xml")
+  Ivy.retrieve(pattern:"./target/lib/[artifact]-[revision].[ext]")
+}
+
+target(init:"init dirs"){
+	Ant.mkdir(dir:classdir)
+	Ant.mkdir(dir:libdir)
+	Ant.mkdir(dir:behaviorclassdir)
+	getdeps()
+}
+
+genericgroovyc = { sourcedirs, destination ->
+  Ant.groovyc(destdir:destination, jointCompilationOptions:"-j -Jsource=1.5 -Jtarget=1.5"){
+    src() {
+      sourcedirs.each() {
+        dirset(dir:it)        
+      }
+    }
+    classpath(){
+	    fileset(dir:libdir){
+	      include(name:jarincludes)
+	    }
+	    dirset(dir:classdir)
+	  }
+	}
+}
