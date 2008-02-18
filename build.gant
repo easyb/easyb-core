@@ -11,7 +11,7 @@ behaviordir =  "behavior/java"
 homedir = System.properties.'user.home'
 mavenrepo = "${homedir}/.m2/repository"
 
-target("default":"Default task is to run the test suite."){
+target("default":"validate"){
    	depends("validate")
 }
 
