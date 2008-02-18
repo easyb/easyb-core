@@ -256,9 +256,48 @@ Total time: 3 seconds
 
 <p>You can override the following properties of the easyb Maven plugin:</p>
 <ol>
+  <li>Test source directory</li>
+  <li>Test include patterns</li>
   <li>The story report file</li>
   <li>The behavior report file</li>
 </ol>
+
+<p>Defining the test source directory looks like this:</p>
+<pre><code>
+  &lt;plugins&gt;
+  ...
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
+      &lt;version&gt;0.7&lt;/version&gt;
+      ...
+      &lt;configuration&gt;
+        &lt;easybTestDirectory&gt;${basedir}/src/...&lt;/easybTestDirectory&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  ...
+  &lt;/plugins&gt;
+</code></pre>
+
+<p>Defining the test include patterns looks like this:</p>
+<pre><code>
+  &lt;plugins&gt;
+  ...
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
+      &lt;version&gt;0.7&lt;/version&gt;
+      ...
+      &lt;configuration&gt;
+        &lt;includes&gt;
+          &lt;include&gt;**/*.*&lt;/include&gt;
+          &lt;include&gt;**/*.*&lt;/include&gt;
+        &lt;/includes&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  ...
+  &lt;/plugins&gt;
+</code></pre>
 
 <p>Defining the story report file looks like this:</p>
 <pre><code>
@@ -277,7 +316,7 @@ Total time: 3 seconds
   &lt;/plugins&gt;
 </code></pre>
 
-<p>Defining the behavior looks like this:</p>
+<p>Defining the behavior report looks like this:</p>
 <pre><code>
   &lt;plugins&gt;
   ...
