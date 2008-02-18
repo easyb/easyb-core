@@ -3,13 +3,14 @@
  */
 includeTargets << new File("default_tasks.gant")
 
-version = "0.7a"
+version = 0.7
 
 sourcedir = "src/java"
 antsourcedir = "src/ant"
 behaviordir =  "behavior/java"
 homedir = System.properties.'user.home'
 mavenrepo = "${homedir}/.m2/repository"
+tarfilename = "${defaultdir}/dist/easyb-${version}.tar"
 
 target("default":"validate"){
    	depends("validate")
@@ -26,17 +27,6 @@ target(release:"compile and archive"){
   	}
   }
 }
-
-target(dist:"create a distribution from the release"){
-	depends("release")
-
-	def tarfilename = "${defaultdir}/dist/easyb-${version}.tar"
-
-	Ant.mkdir(dir:"${defaultdir}/dist")
-	Ant.tar(tarfile:tarfilename, basedir:"${defaultdir}/release")
-    Ant.gzip(zipfile:"${tarfilename}.gz", src:tarfilename)
-    Ant.delete(file:tarfilename)
-}
 /**  
  * This target is command line overridden if needed- for example
  * if you need to create a snapshot version, you can type
@@ -44,7 +34,7 @@ target(dist:"create a distribution from the release"){
  * will be easyb-snapshot.jar instead of reading the default
  * value of version from above.
  */
-target(jar:"create an archieve of the project's classfiles"){
+target(jar:"create an archive of the project's classfiles"){
    depends("compile-all")
    
    if(Ant.project.properties."version" != null){
@@ -72,12 +62,9 @@ target("compile-behaviors":"compile Groovy & Java classes in easyb behavior"){
 	genericgroovyc([behaviordir, gbehaviordir], behaviorclassdir)
 }
 
-
-
 target("validate":"runs behaviors"){
   depends("ant-task")
 }
-
 
 target("ant-task":"runs the easyb ant task"){
   	depends(jar)

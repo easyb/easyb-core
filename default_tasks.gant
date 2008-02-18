@@ -24,6 +24,14 @@ Ant.path(id:"build.classpath"){
 	fileset(dir:libdir, includes:jarincludes)
 }
 
+target(dist:"create a distribution from the release"){
+	depends(release)
+	Ant.mkdir(dir:"${defaultdir}/dist")
+	Ant.tar(tarfile:tarfilename, basedir:"${defaultdir}/release")
+    Ant.gzip(zipfile:"${tarfilename}.gz", src:tarfilename)
+    Ant.delete(file:tarfilename)
+}
+
 target(configuregroovy:"configures environment to compile w/Groovy"){
  depends(init)
  Ant.taskdef(name:"groovyc",
