@@ -219,34 +219,35 @@ Total time: 3 seconds
 
 <p>The easyb dependency looks like this:</p>
 <pre><code>
-  &lt;project&gt;
-  ...
   &lt;dependencies&gt;
+    ...
     &lt;dependency&gt;
       &lt;groupId&gt;org.easyb&lt;/groupId&gt;
       &lt;artifactId&gt;easyb&lt;/artifactId&gt;
       &lt;version&gt;0.7&lt;/version&gt;
       &lt;scope&gt;test&lt;/scope&gt;
     &lt;/dependency&gt;
+   ...
   &lt;/dependencies&gt;
-  ...
-  &lt;/project&gt;
 </code></pre>
 
 <p>And the plugin looks like this:</p>
 <pre><code>
-  &lt;project&gt;
-  ...
-  &lt;dependencies&gt;
-    &lt;dependency&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
       &lt;groupId&gt;org.easyb&lt;/groupId&gt;
-      &lt;artifactId&gt;easyb&lt;/artifactId&gt;
-      &lt;version&gt;0.7&lt;/version&gt;
-      &lt;scope&gt;test&lt;/scope&gt;
-    &lt;/dependency&gt;
-  &lt;/dependencies&gt;
+      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
+      &lt;version&gt;testing&lt;/version&gt;
+      &lt;executions&gt;
+        &lt;execution&gt;
+          &lt;goals&gt;
+            &lt;goal&gt;test&lt;/goal&gt;
+          &lt;/goals&gt;
+        &lt;/execution&gt;
+      &lt;/executions&gt;
+    &lt;/plugin&gt;
   ...
-  &lt;/project&gt;
+  &lt;/plugins&gt;
 </code></pre>
 
 <p>By convention the easyb Maven plugin will look for specs in the <code>src/test/easyb</code> directory of your project.  It assumes that story tests have the suffix <code>Story</code> while behaviors have the suffix <code>Behavior</code>.
@@ -267,6 +268,7 @@ Total time: 3 seconds
       &lt;groupId&gt;org.easyb&lt;/groupId&gt;
       &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
       &lt;version&gt;0.7&lt;/version&gt;
+      ...
       &lt;configuration&gt;
         &lt;storyReport&gt;${project.build.directory}/...&lt;/storyReport&gt;
       &lt;/configuration&gt;
@@ -283,6 +285,7 @@ Total time: 3 seconds
       &lt;groupId&gt;org.easyb&lt;/groupId&gt;
       &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
       &lt;version&gt;0.7&lt;/version&gt;
+      ...
       &lt;configuration&gt;
         &lt;behaviorReport&gt;${project.build.directory}/...&lt;/behaviorReport&gt;
       &lt;/configuration&gt;
