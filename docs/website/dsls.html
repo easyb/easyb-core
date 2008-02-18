@@ -4,7 +4,8 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>easyb makes it easy, man</title>
-<meta name="keywords" content="" />
+<meta name="keywords" content="BDD, behavior driven development, java, java bdd, groovy, groovy bdd, 
+groovy behavior driven development, java behavior driven development, ruby, rspec, easyb, easy bdd" />
 <meta name="description" content="" />
 <link href="default.css" rel="stylesheet" type="text/css" />
 </head>
@@ -79,6 +80,51 @@ it "", {}
 Of course, you can have as many <code>it</code>'s as you'd like. The contract of easyb is that the code in <code>before</code> will be run before <i>each</i> <code>it</code>.	If you'd only like a one time setup, then place that logic above the first <code>it</code> and that code will be run <i>once</i>.	
 		
 		</p>
+
+<h2>easyb should syntax</h2>
+		
+<p>easyb auto-magically wires all objects within the confines of a story or behavior to respond to a series of <code>should</code> calls. That means you can easily verify the state of things by writing phrases like :</p>
+	
+<pre><code>
+var.shouldNotBe null  
+and  
+var.length().shouldEqual 6
+</code></pre>	
+
+<p>Currently, easyb supports the following phrases, where the phrase is attached to <i>any</i> object and the phrase takes a value to be verified against. </p>
+
+<pre><code>
+shouldBe
+shouldEqual
+shouldBeEqual
+shouldBeEqualTo
+</code></pre>
+
+<p>easyb supports the negative of the above phrases as follows (same rules apply as above):</p>
+
+<pre><code>	
+shouldNotBe
+shouldNotEqual
+shouldntBe
+shouldntEqual
+</code></pre>
+
+<p>What's more, easyb allows you to verify object types, such as <code>value.shouldBeAn Integer</code>. Both positive and negative phrases are supported:</p>
+
+<pre><code>
+shouldBeA
+shouldBeAn
+shouldNotBeA
+shouldNotBeAn
+</code></pre>
+
+<p>Lastly, easyb supports verifying objects in a collection or properties of objects via the <code>shouldHave</code> method.</p>
+
+<pre><code>
+shouldHave	
+</code></pre>	
+	
+<p>To see all of the above verifications in action, look at some of the stories and behaviors in easyb's source.</p>	
 		
 <h2>easyb ensure syntax</h2>
 <p>easyb has an expressive <code>ensure</code> syntax that is similar in nature to Java's <code>assert</code> but a bit more readable.</p>	
@@ -206,6 +252,12 @@ def person = new Person("Jill", 11)
 				</ul>
 			</li>
 			<li>
+				<h2>Plug-ins</h2>
+				<ul>
+					<li><a href="./dbunit.html">DbUnit plug-in</a></li>
+				</ul>
+			</li>
+			<li>
 				<h2>Resources</h2>
 				<ul>
 					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
@@ -222,10 +274,7 @@ def person = new Person("Jill", 11)
 </div>
 <!-- end page -->
 <div id="footer">
-	<!-- 
-	<p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
-	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
--->
+
 </div>
 </body>
 </html>

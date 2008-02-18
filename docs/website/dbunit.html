@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>easyb makes it easy, man</title>
+<meta name="keywords" content="BDD, behavior driven development, java, java bdd, groovy, groovy bdd, 
+groovy behavior driven development, java behavior driven development, ruby, rspec, easyb, easy bdd" />
+<meta name="description" content="" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- start header -->
+<div id="header">
+	<h1><a href="http://www.easyb.org"><span>easyb</span></a></h1>
+	<h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+
+
+
+<!-- start page -->
+<div id="page">
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h2 class="title">Dealing with databases with easyb</h2>
+		
+			<div class="entry">
+				<p>easyb supports plug-in development-- for instance, the dbunit-plug-in supports database management via <a href="http://dbunit.sourceforge.net/">DbUnit</a>-- if you find that a particular story requires some prerequisite data, you can put that data in a database via the <code>database_model</code> call, which takes standard JDBC connection information (URL, user name, driver, etc) and then a <code>String</code> representation of DbUnit's standard <code>FlatXmlDataSet</code> type. So for example, in a <code>given</code> clause you can seed a database like so:
+</p>			
+<pre><code>
+given "the database is properly seeded", {
+ database_model("org.hsqldb.jdbcDriver",
+    "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
+       return new File("./src/conf/seed.xml").text
+    }
+}			
+</code></pre>			
+			
+<p>Using Groovy's <code>MarkupBuilder</code> is easy and lacks XML syntax: </p>	
+
+<pre><code>
+given "the database is properly seeded", {
+ database_model("org.hsqldb.jdbcDriver",
+  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
+    def writer = new StringWriter();
+    def builder = new MarkupBuilder(writer);
+
+    builder.dataset(){
+    word(word_id:1, spelling:"bellicose", part_of_speech:"Adjective")
+     definition(definition_id:10, definition:"demonstrating willingness and willingness to fight",
+     word_id:1, example_sentence:"The pugnacious youth had no friends left to pick on." )
+     synonym(synonym_id:20, word_id:1, spelling:"belligerent")
+     synonym(synonym_id:21, word_id:1, spelling:"aggressive")
+   }
+  return writer.toString()
+ }
+}
+</code></pre>
+
+<p>Or just create the XML using <code>"""</code>.</p>		
+			
+<pre><code>
+given "the database is properly seeded", {
+ database_model("org.hsqldb.jdbcDriver",
+  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
+   """&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+   &lt;dataset&gt;
+    &lt;word WORD_ID="1" SPELLING="pugnacious" PART_OF_SPEECH="Adjective"/&gt;
+    &lt;definition DEFINITION_ID="10" DEFINITION="Combative in nature; belligerent."
+      WORD_ID="1"
+      EXAMPLE_SENTENCE="The pugnacious youth had no friends left to pick on."/&gt;
+    &lt;synonym SYNONYM_ID="20" WORD_ID="1" SPELLING="belligerent"/&gt;
+    &lt;synonym SYNONYM_ID="21" WORD_ID="1" SPELLING="aggressive"/&gt;
+   &lt;/dataset&gt;
+   """
+ }
+}
+</code></pre>
+		
+
+			<p>	That makes integration testing easy, doesn't it? The DbUnit plug-in is a <a href="http://code.google.com/p/easyb/downloads/list">separate jar file</a> you can download from the <a href="http://code.google.com/p/easyb/downloads/list">easyb Google code website</a>-- just ensure you have that jar in your classpath and easyb will find it if you invoke the <code>database_model</code> call. 
+</p>
+				
+<h3>The plug-in in action</h3>				
+
+<p>The easiest way to demonstrate the plug-in is to look at its own story-- in this case, the dbunit-plug-in uses easyb to verify itself. </p>
+
+<p>
+Using easyb itself, it is rather easy to describe what the plug-in does and how to use it. A story to validate the database plug-in sounds a bit like this:
+<ul>
+ <li>given that database has an initialized data model (i.e. tables to hold stuff) </li>
+    <li>and given the plug-in’s method is invoked with a dataset (i.e. rows for tables) </li>
+     <li>when a select statement is issued for a value only found in the dataset inserted by the plug-in </li>
+     <li> then the desired item (i.e. column value) should be returned </li>
+</ul>
+</p>
+
+<p>
+In essence, this story is the use case for the plug-in– reading it you can most likely ascertain that the plug-in puts rows in database tables. Reading this story, it is also evident that at some point, it may be helpful to start and stop a database instance during the course of the story– i.e. start it up at the commencement of the story and stop it at the end.
+</p>
+
+<p>
+Using easyb’s story format, you can sketch out the body of the story as follows (note, the story includes starting and stopping a database):
+</p>
+
+<pre><code>
+given "a database is up and running", {}
+and
+given "the database has an initialized data model", {}
+and
+given "the database_model method is invoked with a dataset", {}
+when "a select statement is issued for a value that could
+only be present if the database_model call worked", {}
+then "the word bellicose should be returned", {}
+and
+then "shut down the database", {}
+</code></pre>
+
+<p>Making the story executable entails adding some logic– in the course of doing so, the story demonstrates how to use the database plug-in (minus the first and last steps, right?)!
+</p>
+
+<p>
+The first given can be coded as follows (in Groovy, that is):
+</p>
+<pre><code>
+given "a database is up and running", {
+ Server.main(["-no_system_exit", "true"] as String[])
+}
+</code></pre>
+
+
+<p>
+The Server instance in the above code is HSQLDB’s <code>org.hsqldb.Server</code> type. This is, by the way, a handy database that is easily controlled programatically and easy to install (it’s a jar file!).
+</p>
+
+<p>
+The next <code>given</code> is a bit more complicated– the database needs an empty schema– one can’t assume one is present, so the story just creates it. This also happens to validate the story quite nicely– no assumptions are made about the underlying database!
+</p>
+
+<pre><code>
+and 
+
+given "the database has an initalized data model", {
+ sql = Sql.newInstance("jdbc:hsqldb:hsql://127.0.0.1",
+   "sa", "", "org.hsqldb.jdbcDriver")
+ ddl = """DROP TABLE definition IF EXISTS;
+  DROP TABLE synonym IF EXISTS;
+  DROP TABLE word IF EXISTS;
+
+  CREATE TABLE word (
+   WORD_ID bigint default '0' NOT NULL,
+   PART_OF_SPEECH varchar(100) default ''  NOT NULL,
+   SPELLING varchar(100) default '' NOT NULL,
+   PRIMARY KEY  (WORD_ID),
+   UNIQUE (SPELLING));
+
+  CREATE TABLE definition (
+   DEFINITION_ID bigint default '0' NOT NULL,
+   DEFINITION varchar(500) NOT NULL,
+   WORD_ID bigint default '0' NOT NULL,
+   EXAMPLE_SENTENCE varchar(1000),
+   FOREIGN KEY (WORD_ID) REFERENCES word(WORD_ID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+   PRIMARY KEY  (DEFINITION_ID));
+
+  CREATE TABLE synonym (
+   SYNONYM_ID bigint default '0' NOT NULL ,
+   WORD_ID bigint default '0' NOT NULL ,
+   SPELLING varchar(100) default '' NOT NULL ,
+   FOREIGN KEY (WORD_ID) REFERENCES word(WORD_ID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+   PRIMARY KEY  (SYNONYM_ID));
+  commit;"""
+ sql.execute(ddl);
+}
+</code></pre>
+
+<p>
+The data model here is quite simple– three tables and a bit of GroovySQL to jam it into the database.
+</p>
+
+
+
+<p>
+Next, you need to actually use the plug-in to seed the database with data! The core API of the plug-in is the <code>database_model</code> closure, which takes standard JDBC connection information (URL, user name, driver, etc) and a <code>String</code> representing the dataset. In this case, the story uses Groovy’s <code>MarkupBuilder</code> to to create an XML representation of the data.
+</p>
+
+<pre><code>
+and 
+
+given "the database_model method is invoked with a dataset", {
+ database_model("org.hsqldb.jdbcDriver",
+   "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
+  def writer = new StringWriter();
+  def builder = new MarkupBuilder(writer);
+
+  builder.dataset(){
+   word(word_id:1, spelling:"bellicose", part_of_speech:"Adjective")
+   definition(definition_id:10, definition:"demonstrating willingness and willingness to fight ",
+    word_id:1, example_sentence:"The pugnacious youth had no friends left to pick on." )
+   synonym(synonym_id:20, word_id:1, spelling:"belligerent")
+   synonym(synonym_id:21, word_id:1, spelling:"aggressive")
+  }
+  return writer.toString()
+ }
+}
+</code></pre>
+
+<p>
+Note, the <code>and</code> clauses– in truth they’re noops but they serve to make the story read more nicely. Notice how the <code>MarkupBuilder</code> instance creates data that matches the data model found in the 2nd <code>given</code>. For instance, the word “bellicose” is inserted with an id of 1.
+That right there is the heart of the plug-in– inserting data into the database so that a high level story can play out. Now, using easyb, it’s time to validate that the call to <code>database_model</code> worked.
+</p>
+	
+<p>	
+Validating the <code>database_model</code> call means querying the database for the data that the <code>database_model</code> call should have inserted– in my case, the story verifies the word bellicose is present!
+</p>
+
+<pre><code>
+when "a select statement is issued for a value that could 
+ only be present if the database_model call worked", {
+  value = null
+  sql.eachRow("select word.spelling from word where word.word_id = 1"){
+   value = it.spelling
+  }
+}
+</code></pre>
+
+<p>
+Note how the story still uses GroovySQL to talk to the database. Once the word (stored in the value variable) is obtained, it’s time to verify it is there.
+</p>
+
+<pre><code>
+then "the word bellicose should be returned", {
+ value.shouldBe "bellicose"
+}
+</code></pre>
+
+<p>
+Lastly, stopping the database is as easy as sending a shutdown command (via SQL) to the instance of HSQLDB.
+</p>
+
+<pre><code>
+and 
+
+then "shut down the database", {
+ sql.execute("SHUTDOWN")
+}
+</code></pre>
+
+</p>
+<p>BDD with databases in Java can't get any easier!</p>			
+
+<h3></h3>
+
+<p>Plug-in resources:
+	
+	<ul>
+		<li><a href="http://www.onjava.com/pub/a/onjava/2004/01/21/dbunit.html">Effective Unit Testing with DbUnit</a>- Curious about DbUnit or how to create DbUnit XML files? Read this article and you'll be set.</li>
+	</ul>
+</p>
+
+			</div>
+		</div>
+		
+	</div>
+	<!-- end content -->
+	
+	
+	
+	
+	
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<li>
+				<h2>Overview</h2>
+				<ul>
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./howtos.html">Stories</a></li>
+					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./download.html">Download</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Details</h2>
+				<ul>
+					<li><a href="./running.html">Running easyb</a></li>
+					<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+					<li><a href="./dsls.html">easyb syntax specification</a></li>
+					<li><a href="./lic.html">License</a></li>
+					<li><a href="./source.html">Source code</a></li>
+				</ul>
+			</li>
+			
+			<li>
+				<h2>Plug-ins</h2>
+				<ul>
+					<li><a href="./dbunit.html">DbUnit plug-in</a></li>
+				</ul>
+			</li>
+			
+			<li>
+				<h2>Resources</h2>
+				<ul>
+					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+					<li><a href="./articles.html">Additional resources</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end sidebar -->
+</div>
+<!-- end page -->
+<div id="footer">
+	
+</div>
+</body>
+</html>

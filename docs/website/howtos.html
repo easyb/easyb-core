@@ -4,7 +4,8 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>easyb makes it easy, man</title>
-<meta name="keywords" content="" />
+<meta name="keywords" content="BDD, behavior driven development, java, java bdd, groovy, groovy bdd, 
+groovy behavior driven development, java behavior driven development, ruby, rspec, easyb, easy bdd" />
 <meta name="description" content="" />
 <link href="default.css" rel="stylesheet" type="text/css" />
 </head>
@@ -69,9 +70,7 @@ scenario "null is pushed onto empty stack", {
   and
 
   then "the stack should still be empty", {
-    ensure(stack.empty) {
-      isTrue
-    }
+    stack.empty.shouldBe true
   }
 }
 
@@ -96,9 +95,7 @@ scenario "pop is called on empty stack", {
   and
   
   then "the stack should still be empty", {
-      ensure(stack.empty) {
-        isTrue
-      }
+      stack.empty.shouldBe true
     }
 }
 </code></pre>
@@ -143,62 +140,7 @@ Story:  single value stack
 </code></pre>
 
 
-        <h3>Easy database handling for stories</h3>
-				
-				<p>To seed a database, use the <code>database_model</code> call, which is quite flexible. You can create the required DbUnit XML document in at least three different ways.</p>
-			
-			<p>Using Groovy's <code>MarkupBuilder</code> is easy and lacks XML syntax: </p>	
-<pre><code>
-given "the database is properly seeded", {
- database_model("org.hsqldb.jdbcDriver",
-  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
-   def writer = new StringWriter();
-   def builder = new MarkupBuilder(writer);
-
-   builder.dataset(){
-    word(word_id:1, spelling:"bellicose", part_of_speech:"Adjective")
-    definition(definition_id:10, definition:"demonstrating willingness and 
-      willingness to fight",
-    word_id:1, example_sentence:"The pugnacious youth had no friends left 
-      to pick on." )
-    synonym(synonym_id:20, word_id:1, spelling:"belligerent")
-    synonym(synonym_id:21, word_id:1, spelling:"aggressive")
-   }
-  return writer.toString()
- }
-}
-</code></pre>
-
-<p>Or just create the XML using <code>"""</code>.</p>
-
-<pre><code>
-given "the database is properly seeded", {
- database_model("org.hsqldb.jdbcDriver",
-  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
-   """&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-   &lt;dataset&gt;
-    &lt;word WORD_ID="1" SPELLING="pugnacious" PART_OF_SPEECH="Adjective"/&gt;
-    &lt;definition DEFINITION_ID="10" DEFINITION="Combative in nature; belligerent."
-      WORD_ID="1"
-      EXAMPLE_SENTENCE="The pugnacious youth had no friends left to pick on."/&gt;
-    &lt;synonym SYNONYM_ID="20" WORD_ID="1" SPELLING="belligerent"/&gt;
-    &lt;synonym SYNONYM_ID="21" WORD_ID="1" SPELLING="aggressive"/&gt;
-   &lt;/dataset&gt;
-   """
- }
-}
-</code></pre>
-
-<p>If you already have seed files, grab the text easily:</p>
-
-<pre><code>
-given "the database is properly seeded", {
- database_model("org.hsqldb.jdbcDriver",
-  "jdbc:hsqldb:hsql://127.0.0.1", "sa", ""){
-   return new File("./src/conf/seed.xml").text
- }
-}
-</code></pre>					
+       <p>Easy story printing, eh?</p>				
 				
 			</div>
 		</div>
@@ -233,6 +175,12 @@ given "the database is properly seeded", {
 				</ul>
 			</li>
 			<li>
+				<h2>Plug-ins</h2>
+				<ul>
+					<li><a href="./dbunit.html">DbUnit plug-in</a></li>
+				</ul>
+			</li>
+			<li>
 				<h2>Resources</h2>
 				<ul>
 					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
@@ -249,10 +197,7 @@ given "the database is properly seeded", {
 </div>
 <!-- end page -->
 <div id="footer">
-	<!-- 
-	<p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
-	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
--->
+
 </div>
 </body>
 </html>

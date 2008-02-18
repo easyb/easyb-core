@@ -4,7 +4,8 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>easyb makes it easy, man</title>
-<meta name="keywords" content="" />
+<meta name="keywords" content="BDD, behavior driven development, java, java bdd, groovy, groovy bdd, 
+groovy behavior driven development, java behavior driven development, ruby, rspec, easyb, easy bdd" />
 <meta name="description" content="" />
 <link href="default.css" rel="stylesheet" type="text/css" />
 </head>
@@ -82,11 +83,11 @@ when "validate is invoked with the invalid zip code", {
 }
 
 then "the validator instance should return false", {
- ensure(!value)
+ value.shouldBe false
 }
 </code></pre>	
 
-<p>Is that easy or what? Notice the <code>ensure</code> call in the <code>then</code> phrase-- it can evaluate an expression. You can, of course, also write the <code>then</code> clause as 
+<p>Is that easy or what? Notice the <code>shouldBe</code> call in the <code>then</code> phrase-- neat, huh? You can, of course, also write the <code>then</code> clause as 
 	
 <pre><code>
 then "the validator instance should return false", {
@@ -130,6 +131,14 @@ then "the validator instance should return false", {
 					<li><a href="./source.html">Source code</a></li>
 				</ul>
 			</li>
+			
+			<li>
+				<h2>Plug-ins</h2>
+				<ul>
+					<li><a href="./dbunit.html">DbUnit plug-in</a></li>
+				</ul>
+			</li>
+			
 			<li>
 				<h2>Resources</h2>
 				<ul>
@@ -147,10 +156,7 @@ then "the validator instance should return false", {
 </div>
 <!-- end page -->
 <div id="footer">
-	<!-- 
-	<p id="legal">&copy;2007 All Rights Reserved. | Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
-	<p id="links"><a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
--->
+	
 </div>
 </body>
 </html>

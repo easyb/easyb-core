@@ -105,6 +105,6 @@ target("install-maven":"install easyb into the default local maven 2 repository"
 	def writer = new FileWriter("${mavenrepo}/org/easyb/easyb/${version}/easyb-${version}.pom")
 	
 	reader.transformLine(writer) { line ->
-	    line.replace("VERSION", version)
+	    line.replace("VERSION", version.toString())
 	}
 }
