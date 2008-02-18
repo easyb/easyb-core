@@ -15,7 +15,6 @@ behaviorclassdir = "${defaultdir}/behavior-classes"
 gbehaviordir = "behavior/groovy"
 gsourcedir = "src/groovy"
 
-
 target(clean:"cleans target dir"){
 	Ant.delete(dir:defaultdir)
 }
