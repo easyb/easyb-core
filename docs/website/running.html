@@ -31,6 +31,7 @@
 <ul>
   <li>the command line</li>
   <li>Ant</li>
+  <li>Maven</li>
 </ul>
 
 
@@ -192,6 +193,103 @@ Total time: 3 seconds
 </code></pre>
 
 <p>That looks like something business users (or management) could understand-- they might even be able to *gasp* write them!</p>
+
+<h2>Maven</h2>
+
+<p>You can also run your behaviors and stories via easyb's Maven plugin. It's easy, all you need to do is to add the following to your project's pom and your easyb stories and behaviors will automatically be executed as a part of the test phase:</p>
+<ol>
+  <li>The easyb repository</li>
+  <li>A dependency on easyb</li>
+  <li>The easyb-plugin</li>
+</ol>
+
+<p>Defining the repository looks like this:</p>
+<pre><code>
+  &lt;project&gt;
+  ...
+  &lt;repositories&gt;
+    &lt;repository&gt;
+      &lt;id&gt;easyb&lt;/id&gt;
+      &lt;url&gt;http://www.easyb.org/repo/&lt;/url&gt;
+    &lt;/repository&gt;
+  &lt;/repositories&gt;
+  ...
+  &lt;/project&gt;
+</code></pre>
+
+<p>The easyb dependency looks like this:</p>
+<pre><code>
+  &lt;project&gt;
+  ...
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
+      &lt;artifactId&gt;easyb&lt;/artifactId&gt;
+      &lt;version&gt;0.7&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+  ...
+  &lt;/project&gt;
+</code></pre>
+
+<p>And the plugin looks like this:</p>
+<pre><code>
+  &lt;project&gt;
+  ...
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
+      &lt;artifactId&gt;easyb&lt;/artifactId&gt;
+      &lt;version&gt;0.7&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+  ...
+  &lt;/project&gt;
+</code></pre>
+
+<p>By convention the easyb Maven plugin will look for specs in the <code>src/test/easyb</code> directory of your project.  It assumes that story tests have the suffix <code>Story</code> while behaviors have the suffix <code>Behavior</code>.
+
+<h3>Overriding default conventions</h3>
+
+<p>You can override the following properties of the easyb Maven plugin:</p>
+<ol>
+  <li>The story report file</li>
+  <li>The behavior report file</li>
+</ol>
+
+<p>Defining the story report file looks like this:</p>
+<pre><code>
+  &lt;plugins&gt;
+  ...
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
+      &lt;version&gt;0.7&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;storyReport&gt;${project.build.directory}/...&lt;/storyReport&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  ...
+  &lt;/plugins&gt;
+</code></pre>
+
+<p>Defining the behavior looks like this:</p>
+<pre><code>
+  &lt;plugins&gt;
+  ...
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
+      &lt;version&gt;0.7&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;behaviorReport&gt;${project.build.directory}/...&lt;/behaviorReport&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  ...
+  &lt;/plugins&gt;
+</code></pre>
 
 </div>
 </div>
