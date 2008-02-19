@@ -6,9 +6,18 @@
 <title>easyb makes it easy, man</title>
 <meta name="keywords" content="BDD, behavior driven development, java, java bdd, groovy, groovy bdd, 
 groovy behavior driven development, java behavior driven development, ruby, rspec, easyb, easy bdd" />
-<meta name="description" content="" />
+<meta name="description" content="easyb is story verification framework built in the spirit of behavior driven development." />
 <link href="default.css" rel="stylesheet" type="text/css" />
 </head>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3500051-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
 <body>
 <!-- start header -->
 <div id="header">
@@ -51,8 +60,10 @@ given "the database is properly seeded", {
 
     builder.dataset(){
     word(word_id:1, spelling:"bellicose", part_of_speech:"Adjective")
-     definition(definition_id:10, definition:"demonstrating willingness and willingness to fight",
-     word_id:1, example_sentence:"The pugnacious youth had no friends left to pick on." )
+     definition(definition_id:10, definition:"demonstrating willingness \
+        and willingness to fight",
+     word_id:1, example_sentence:"The pugnacious youth had no friends \
+       left to pick on." )
      synonym(synonym_id:20, word_id:1, spelling:"belligerent")
      synonym(synonym_id:21, word_id:1, spelling:"aggressive")
    }
@@ -202,8 +213,10 @@ given "the database_model method is invoked with a dataset", {
 
   builder.dataset(){
    word(word_id:1, spelling:"bellicose", part_of_speech:"Adjective")
-   definition(definition_id:10, definition:"demonstrating willingness and willingness to fight ",
-    word_id:1, example_sentence:"The pugnacious youth had no friends left to pick on." )
+   definition(definition_id:10, definition:"demonstrating willingness and \
+       willingness to fight ",
+    word_id:1, example_sentence:"The pugnacious youth had no friends left \
+      to pick on." )
    synonym(synonym_id:20, word_id:1, spelling:"belligerent")
    synonym(synonym_id:21, word_id:1, spelling:"aggressive")
   }
