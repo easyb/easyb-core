@@ -22,10 +22,11 @@ public class EnsuringDelegate {
 			throws Exception {
 		try {
 			closure.call();
-		} catch (Exception e) {
-			if (!clzz.isAssignableFrom(e.getClass())) {
+		} catch (Throwable e) {
+			if (!clzz.isAssignableFrom(e.getClass()) && !(e.getCause().getClass() == clzz)) {
 				throw new VerificationException(
-						"the exception caught wasn't of type " + clzz);
+						"exception caught (" + e.getClass().getName()+ ") is not of type " + clzz + 
+						" or the cause isn't " + clzz);
 			}
 		}
 	}
