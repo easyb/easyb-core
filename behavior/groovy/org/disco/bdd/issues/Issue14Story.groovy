@@ -13,7 +13,7 @@ import org.disco.bdd.issues.Issue14Stack
 		}
 	}
 
-	then "an exception should be thrown", {
+	then "an IllegalArgumentException should be thrown", {
 		ensureThrows(IllegalArgumentException.class){
 			pushnull()
 		}
