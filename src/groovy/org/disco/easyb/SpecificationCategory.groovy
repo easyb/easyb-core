@@ -123,12 +123,12 @@ class SpecificationCategory{
 	 		def outval =  "Warning! The has expando method isn't working " +
 		  	   "100% with JavaBean-like Objects. ${self.toString()} invoking has w/${value} may not work " +
 		  	   "as you intend."
-		  	   println outval
+		  	 //println outval
 	 		 value.each{ ky, vl ->
 	 		 	def fld = self.getClass().getDeclaredField(ky)
 	 		 	//println "${fld}"
 	 		 	fld.setAccessible(true)
-	 		 	def ret = fld.get(delegate)
+	 		 	def ret = fld.get(self)
 	 		 	if(ret.getClass() instanceof String){
 	 		 		if(!ret.equals(vl)){
 	 		 			throw new VerificationException("${self.getClass().getName()}.${ky} doesn't equal ${vl}")
