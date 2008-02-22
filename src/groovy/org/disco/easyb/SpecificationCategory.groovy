@@ -120,13 +120,8 @@ class SpecificationCategory{
 				  throw new VerificationException("${self} doesn't contain ${value}")
 		  	}
 	 	 }else if(value instanceof Map){
-	 		def outval =  "Warning! The has expando method isn't working " +
-		  	   "100% with JavaBean-like Objects. ${self.toString()} invoking has w/${value} may not work " +
-		  	   "as you intend."
-		  	 //println outval
 	 		 value.each{ ky, vl ->
 	 		 	def fld = self.getClass().getDeclaredField(ky)
-	 		 	//println "${fld}"
 	 		 	fld.setAccessible(true)
 	 		 	def ret = fld.get(self)
 	 		 	if(ret.getClass() instanceof String){
