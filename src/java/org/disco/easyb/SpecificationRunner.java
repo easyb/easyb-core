@@ -56,11 +56,12 @@ public class SpecificationRunner {
   }
 
   /**
+   * TODO: refactor me please
    * @param specs collection of files that contain the specifications
    * @throws Exception if unable to write report file
    * @return BehaviorListener has status about failures and successes
    */
-  public List<SpecificationListener> runSpecification(Collection<File> specs) throws Exception {
+  public void runSpecification(Collection<File> specs) throws Exception {
 
     List<SpecificationListener> listeners = new ArrayList<SpecificationListener>();
 
@@ -68,10 +69,16 @@ public class SpecificationRunner {
 
     for (File file : specs) {
     	listener.setSpecificationName(file.getName());
-        if (file.getName().contains("Story.groovy")) {
-        	listener.gotResult(new Result(new CamelCaseConverter(file.getName().substring(0, file.getName().indexOf("Story.groovy"))).toPhrase(), SpecificationBinding.STORY, Result.SUCCEEDED));
-          new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
-        } else {
+        if (file.getName().contains("Story.groovy") || file.getName().contains(".story")) {
+        	if (file.getName().contains("Story.groovy")){
+        		listener.gotResult(new Result(new CamelCaseConverter(file.getName().substring(0, file.getName().indexOf("Story.groovy"))).toPhrase(), 
+        				SpecificationBinding.STORY, Result.SUCCEEDED));
+        	}else{
+        		listener.gotResult(new Result(new CamelCaseConverter(file.getName().substring(0, file.getName().indexOf(".story"))).toPhrase(), 
+            			SpecificationBinding.STORY, Result.SUCCEEDED));
+        	}
+        	new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
+        }else {
         	if(!file.getName().contains("Behavior.groovy")){
         		System.out.println("You should consider ending your specification file (" +
         			file.getName() + ") with either Story or Behavior. " + 
@@ -95,7 +102,17 @@ public class SpecificationRunner {
     }
 
     listeners.add(listener);
-    return listeners;
+    
+    int totalSpecificationFailures = 0;
+    for(SpecificationListener ilistener : listeners) {
+      if(ilistener.hasBehaviorFailures()) {
+        totalSpecificationFailures++;
+      }
+    }
+    if(totalSpecificationFailures > 0) {
+      System.out.println("specification failures detected!");
+      System.exit(-6);
+    }
   }
 
 
@@ -105,16 +122,13 @@ public class SpecificationRunner {
   public static void main(String[] args) {
     Options options = getOptionsForMain();
 
-
     try {
         CommandLine commandLine = getCommandLineForMain(args, options);
         validateArguments(commandLine);
 
         SpecificationRunner runner = new SpecificationRunner(getConfiguredReports(commandLine));
 
-        List<SpecificationListener> listeners = runner.runSpecification(getFileCollection(commandLine.getArgs()));
-
-        notifyAndExitOnSpecificationFailures(listeners);
+        runner.runSpecification(getFileCollection(commandLine.getArgs()));
 
     } catch (IllegalArgumentException iae) {
       System.out.println(iae.getMessage());
@@ -136,16 +150,7 @@ public class SpecificationRunner {
   }
 
   private static void notifyAndExitOnSpecificationFailures(List<SpecificationListener> listeners) {
-    int totalSpecificationFailures = 0;
-    for(SpecificationListener listener : listeners) {
-      if(listener.hasBehaviorFailures()) {
-        totalSpecificationFailures++;
-      }
-    }
-    if(totalSpecificationFailures > 0) {
-      System.out.println("specification failures detected!");
-      System.exit(-6);
-    }
+    
   }
 
   private static List<Report> getConfiguredReports(CommandLine line) {

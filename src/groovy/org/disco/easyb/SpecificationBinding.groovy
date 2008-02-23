@@ -24,8 +24,6 @@ class SpecificationBinding {
 	 */
   static Binding getBinding(listener){
 		 
-		
-		 
   	def binding = new Binding()
 
     def basicDelegate = basicDelegate()
@@ -33,16 +31,16 @@ class SpecificationBinding {
 
     def beforeIt
 	
-    binding.scenario = { scenarioDescription, scenarioClosure ->
+    binding.scenario = { scenarioDescription, scenarioClosure={} ->
       listener.gotResult(new Result(scenarioDescription, STORY_SCENARIO, Result.SUCCEEDED))
       scenarioClosure()
     }
 
-    binding.before = { beforeDescription, closure ->
+    binding.before = { beforeDescription, closure={} ->
       beforeIt = closure
     }
 
-    def itClosure = { spec, closure, storyPart ->
+    def itClosure = { spec, closure={}, storyPart ->
       closure.delegate = basicDelegate
       
       try{
@@ -58,21 +56,21 @@ class SpecificationBinding {
       }
     }
 
-    binding.it = { spec, closure ->
+    binding.it = { spec, closure={} ->
     	  itClosure(spec, closure, BEHAVIOR_IT)
     }
 
-    binding.then = {spec, closure ->
+    binding.then = {spec, closure={} ->
     		itClosure(spec, closure, STORY_THEN)
     }
         		  
-	binding.when = { whenDescription, closure ->
+	binding.when = { whenDescription, closure={} ->
 		closure.delegate = basicDelegate
 		closure()
 		listener.gotResult(new Result(whenDescription, STORY_WHEN, Result.SUCCEEDED))
 	}
 	
-	binding.given = { givenDescription, closure ->
+	binding.given = { givenDescription, closure={} ->
 		closure.delegate = givenDelegate
 		closure()
         listener.gotResult(new Result(givenDescription, STORY_GIVEN, Result.SUCCEEDED))
@@ -83,7 +81,6 @@ class SpecificationBinding {
 	}
 	  		  
 	 return binding
-		 
 	}
 
 	/**

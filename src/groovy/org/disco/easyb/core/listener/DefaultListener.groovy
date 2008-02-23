@@ -6,6 +6,7 @@ class DefaultListener implements SpecificationListener{
 //	 TODO encapsulate failures and successes so we can prevent mutable
 	  def failures = []
 	  def successes = []
+	  def pendings = []
 	  def results = []
 
 	  def specName;
@@ -23,6 +24,10 @@ class DefaultListener implements SpecificationListener{
 	  int getSuccessfulBehaviorCount() {
 	    return successes.size()
 	  }
+	  
+	  int getPendingBehaviorCount() {
+		    return pendings.size()
+	  }
 
 	  int getFailedBehaviorCount() {
 	    return failures.size()
@@ -35,6 +40,8 @@ class DefaultListener implements SpecificationListener{
 	    	//there is a better way to do this.
 	    	result.source = this.specName
 	        failures << result
+	      }else if(result.pending()){
+	    	pendings << result  
 	      }else{
 	        successes << result
 	      }

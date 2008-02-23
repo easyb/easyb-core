@@ -12,7 +12,8 @@ package org.disco.easyb.core.result;
 public class Result {
     public static final Type SUCCEEDED = new Type("Succeeded", ".");
     public static final Type FAILED = new Type("Failed", "F");
-
+    public static final Type PENDING = new Type("Pending", "P");
+    
     public static class Type {
         private final String description;
         private final String symbol;
@@ -83,6 +84,10 @@ public class Result {
         return status == FAILED;
     }
 
+    public boolean pending(){
+    	return status == PENDING;
+    }
+    
 	public String toString() {
         return "Name: " + name + ", status: " + status + ", targetException: " + cause;
     }

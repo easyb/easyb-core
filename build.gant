@@ -3,7 +3,7 @@
  */
 includeTargets << new File("default_tasks.gant")
 
-version = 0.7
+version = "0.7.1"
 
 sourcedir = "src/java"
 antsourcedir = "src/ant"
@@ -89,7 +89,8 @@ target("ant-task":"runs the easyb ant task"){
     	behaviors(dir:gbehaviordir){
 	        include(name:"**/*Story.groovy")
 	        include(name:"**/*Behavior.groovy")
-	         include(name:"**/*name.groovy")
+	        include(name:"**/*name.groovy")
+	        include(name:"**/*.story")
 		}
 	}
 
