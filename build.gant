@@ -52,10 +52,26 @@ target(jar:"create an archive of the project's classfiles"){
 target("jar-sources":"creates a sources jar"){
    depends("init")
 
-   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}-sources.jar") {
+   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}-sources.jar"){
      fileset(dir: "$sourcedir")
      fileset(dir: "$gsourcedir")
      fileset(dir: "$antsourcedir")
+   }
+}
+
+target("jar-javadocs":"creates a javadocs jar"){
+   taskdef (name:'groovydoc', classname:'org.codehaus.groovy.ant.Groovydoc')
+
+   // Groovydoc doesn't seem to support multiple sources at this time so combine them on disk first
+   Ant.copy(toDir:"${defaultdir}/javadoc-sources"){
+     fileset(dir: "$sourcedir")
+     fileset(dir: "$gsourcedir")
+     fileset(dir: "$antsourcedir")
+   }
+
+   Ant.groovydoc(destdir:"${defaultdir}/javadoc", sourcepath:"${defaultdir}/javadoc-sources", windowtitle:"easyb")
+   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}-javadoc.jar") {
+     fileset(dir: "${defaultdir}/javadoc")
    }
 }
 
@@ -113,9 +129,11 @@ target("ant-task":"runs the easyb ant task"){
 target("install-maven":"install easyb into the default local maven 2 repository") {
     depends(dist)
     depends("jar-sources")
+    depends("jar-javadocs")
 
 	Ant.copy(file: "${defaultdir}/easyb-${version}.jar", toDir: "${mavenrepo}/org/easyb/easyb/${version}/")
 	Ant.copy(file: "${defaultdir}/easyb-${version}-sources.jar", toDir: "${mavenrepo}/org/easyb/easyb/${version}/")
+	Ant.copy(file: "${defaultdir}/easyb-${version}-javadoc.jar", toDir: "${mavenrepo}/org/easyb/easyb/${version}/")
 	
 	def reader = new FileReader("pom-template.xml")
 	def writer = new FileWriter("${mavenrepo}/org/easyb/easyb/${version}/easyb-${version}.pom")
