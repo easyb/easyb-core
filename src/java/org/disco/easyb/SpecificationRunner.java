@@ -1,12 +1,6 @@
 package org.disco.easyb;
 
 import groovy.lang.GroovyShell;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -15,7 +9,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
 import org.disco.easyb.core.listener.DefaultListener;
 import org.disco.easyb.core.listener.SpecificationListener;
 import org.disco.easyb.core.report.Report;
@@ -27,6 +20,11 @@ import org.disco.easyb.core.result.Result;
 import org.disco.easyb.core.util.CamelCaseConverter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -69,23 +67,13 @@ public class SpecificationRunner {
 
     for (File file : specs) {
     	listener.setSpecificationName(file.getName());
-        if (file.getName().contains("Story.groovy") || file.getName().contains(".story")) {
-        	if (file.getName().contains("Story.groovy")){
-        		listener.gotResult(new Result(new CamelCaseConverter(file.getName().substring(0, file.getName().indexOf("Story.groovy"))).toPhrase(), 
-        				SpecificationBinding.STORY, Result.SUCCEEDED));
-        	}else{
-        		listener.gotResult(new Result(new CamelCaseConverter(file.getName().substring(0, file.getName().indexOf(".story"))).toPhrase(), 
-            			SpecificationBinding.STORY, Result.SUCCEEDED));
-        	}
-        	new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
-        }else {
-        	if(!file.getName().contains("Behavior.groovy")){
-        		System.out.println("You should consider ending your specification file (" +
-        			file.getName() + ") with either Story or Behavior. " + 
-        			"See easyb documentation for more details. ");
-        	}
-        	new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
-        } 
+        Specification specification = new Specification(file);
+        if (specification.isStory()) {
+            listener.gotResult(new Result(specification.getPhrase(), SpecificationBinding.STORY, Result.SUCCEEDED));
+        } else {
+            warnOnBehaviorNaming(file);
+        }
+        new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
     }
 
     for(Report report : reports) {
@@ -115,6 +103,13 @@ public class SpecificationRunner {
     }
   }
 
+    private void warnOnBehaviorNaming(File file) {
+        if(!file.getName().contains("Behavior.groovy")){
+        		System.out.println("You should consider ending your specification file (" +
+                file.getName() + ") with either Story or Behavior. " +
+                "See easyb documentation for more details. ");
+        }
+    }
 
   /**
    * @param args the command line arguments
