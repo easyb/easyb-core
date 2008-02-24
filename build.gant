@@ -67,7 +67,7 @@ target("validate":"runs behaviors"){
 }
 
 target("ant-task":"runs the easyb ant task"){
-  	depends(jar)
+  depends(jar)
 
 	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.SpecificationRunnerTask"){
 		classpath(){
@@ -77,24 +77,24 @@ target("ant-task":"runs the easyb ant task"){
 
 	Ant.easyb(failureProperty:"easyb.failed"){
 	
-    	classpath() {
-        	fileset(dir:libdir, includes:jarincludes)
-        	pathelement(location:"${defaultdir}/easyb-${version}.jar")
-        	pathelement(location:behaviorclassdir)
-      	}
+    classpath() {
+      fileset(dir:libdir, includes:jarincludes)
+      pathelement(location:"${defaultdir}/easyb-${version}.jar")
+      pathelement(location:behaviorclassdir)
+    }
       	
 		report(location:"${defaultdir}/behavior-report.xml", format:"xmlbehavior")
-	    report(location:"${defaultdir}/story-report.txt", format:"txtstory")
+	  report(location:"${defaultdir}/story-report.txt", format:"txtstory")
 
-    	behaviors(dir:gbehaviordir){
-	        include(name:"**/*Story.groovy")
-	        include(name:"**/*Behavior.groovy")
-	        include(name:"**/*name.groovy")
-	        include(name:"**/*.story")
+    behaviors(dir:gbehaviordir){
+	    include(name:"**/*Story.groovy")
+	    include(name:"**/*Behavior.groovy")
+	    include(name:"**/*name.groovy")
+	    include(name:"**/*.story")
 		}
 	}
 
-  	Ant.fail(if:"easyb.failed", message:"Execution halted as behaviors failed")
+  Ant.fail(if:"easyb.failed", message:"Execution halted as specifications failed")
 }
 
 target("install-maven":"install easyb into the default local maven 2 repository") {

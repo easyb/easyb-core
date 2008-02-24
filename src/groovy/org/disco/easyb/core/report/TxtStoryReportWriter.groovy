@@ -29,9 +29,11 @@ class TxtStoryReportWriter implements ReportWriter{
     
       switch(result.containerName) {
         case SpecificationBinding.STORY:
+          writer.newLine()
           writer.write("${' '.padRight(2)}Story: ${result.name}")
           break
         case SpecificationBinding.STORY_SCENARIO:
+          writer.newLine()
           writer.write("${' '.padRight(4)}scenario ${result.name}")
           break
         case SpecificationBinding.STORY_GIVEN:
