@@ -11,6 +11,15 @@ behaviordir =  "behavior/java"
 homedir = System.properties.'user.home'
 mavenrepo = "${homedir}/.m2/repository"
 tarfilename = "${defaultdir}/dist/easyb-${version}.tar"
+jarversion = detectOrDefaultVersion()
+
+def detectOrDefaultVersion() {
+  if(Ant.project.properties."version" != null){
+	 return Ant.project.properties."version"
+  }else{
+  	 return version
+  }
+}
 
 target("default":"validate"){
    	depends("validate")
@@ -37,18 +46,22 @@ target(release:"compile and archive"){
 target(jar:"create an archive of the project's classfiles"){
    depends("compile-all")
    
-   if(Ant.project.properties."version" != null){
-   	 jar_version = Ant.project.properties."version"
-   }else{
-   	 jar_version = version
+   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}.jar", basedir:classdir)
+}
+
+target("jar-sources":"creates a sources jar"){
+   depends("init")
+
+   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}-sources.jar") {
+     fileset(dir: "$sourcedir")
+     fileset(dir: "$gsourcedir")
+     fileset(dir: "$antsourcedir")
    }
-   Ant.jar(destfile:"${defaultdir}/easyb-${jar_version}.jar", basedir:classdir)
 }
 
 target("compile-all":"compile Groovy & Java classes"){
 	depends("compile-core")
 	depends("compile-behaviors")
-	
 }
 
 target("compile-core":"compile Groovy & Java classes in easyb core"){
@@ -99,8 +112,10 @@ target("ant-task":"runs the easyb ant task"){
 
 target("install-maven":"install easyb into the default local maven 2 repository") {
     depends(dist)
+    depends("jar-sources")
 
 	Ant.copy(file: "${defaultdir}/easyb-${version}.jar", toDir: "${mavenrepo}/org/easyb/easyb/${version}/")
+	Ant.copy(file: "${defaultdir}/easyb-${version}-sources.jar", toDir: "${mavenrepo}/org/easyb/easyb/${version}/")
 	
 	def reader = new FileReader("pom-template.xml")
 	def writer = new FileWriter("${mavenrepo}/org/easyb/easyb/${version}/easyb-${version}.pom")
