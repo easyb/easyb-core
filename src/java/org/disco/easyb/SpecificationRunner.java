@@ -1,6 +1,12 @@
 package org.disco.easyb;
 
 import groovy.lang.GroovyShell;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -17,14 +23,8 @@ import org.disco.easyb.core.report.TerseReportWriter;
 import org.disco.easyb.core.report.TxtStoryReportWriter;
 import org.disco.easyb.core.report.XmlBehaviorReportWriter;
 import org.disco.easyb.core.result.Result;
-import org.disco.easyb.core.util.CamelCaseConverter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -142,10 +142,6 @@ public class SpecificationRunner {
     if(commandLine.getArgs().length == 0) {
       throw new IllegalArgumentException("Required Arguments not passed in.");
     }
-  }
-
-  private static void notifyAndExitOnSpecificationFailures(List<SpecificationListener> listeners) {
-    
   }
 
   private static List<Report> getConfiguredReports(CommandLine line) {

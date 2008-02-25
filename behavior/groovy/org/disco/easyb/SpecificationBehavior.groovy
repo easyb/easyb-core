@@ -1,3 +1,5 @@
+package org.disco.easyb //needed for eclipse
+
 import org.disco.easyb.Specification
 
 it "should identify files ending with *Story.groovy as stories", {
