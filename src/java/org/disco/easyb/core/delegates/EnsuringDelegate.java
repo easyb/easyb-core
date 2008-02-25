@@ -23,7 +23,8 @@ public class EnsuringDelegate {
 		try {
 			closure.call();
 		} catch (Throwable e) {
-			if (!clzz.isAssignableFrom(e.getClass()) && !(e.getCause().getClass() == clzz)) {
+			if (!clzz.isAssignableFrom(e.getClass()) && (e.getCause() != null)
+					&& !(e.getCause().getClass() == clzz)) {
 				throw new VerificationException(
 						"exception caught (" + e.getClass().getName()+ ") is not of type " + clzz + 
 						" or the cause isn't " + clzz);
