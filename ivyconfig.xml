@@ -2,7 +2,10 @@
   <conf defaultResolver="chained"/>
   <resolvers>
 		<chain name="chained" returnFirst="true">
-			<url name="easybrepo">
+      <filesystem name="libraries">
+        <artifact pattern="${ivy.conf.dir}/repository/[artifact]-[revision].[type]" />
+      </filesystem>
+      <url name="easybrepo">
 				<artifact
 					pattern="http://www.easyb.org/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>

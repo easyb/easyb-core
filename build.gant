@@ -3,7 +3,7 @@
  */
 includeTargets << new File("default_tasks.gant")
 
-version = "0.7.1"
+version = "0.7.2"
 
 sourcedir = "src/java"
 antsourcedir = "src/ant"
@@ -13,11 +13,13 @@ mavenrepo = "${homedir}/.m2/repository"
 tarfilename = "${defaultdir}/dist/easyb-${version}.tar"
 jarversion = detectOrDefaultVersion()
 
+Ant.property(file: 'local.build.properties')
+
 def detectOrDefaultVersion() {
   if(Ant.project.properties."version" != null){
-	 return Ant.project.properties."version"
+	  return Ant.project.properties."version"
   }else{
-  	 return version
+  	return version
   }
 }
 
@@ -47,6 +49,35 @@ target(jar:"create an archive of the project's classfiles"){
    depends("compile-all")
    
    Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}.jar", basedir:classdir)
+}
+
+target("publish-easyb":"uploads easyb distribution to googlecode") {
+  depends(dist)
+
+  Ant.fail(unless:"googleuser", message:"Property googleuser not set. Please pass in with -D or set in local.build.properties")
+  Ant.fail(unless:"googlepass", message:"Property googlepass not set. Please pass in with -D or set in local.build.properties")
+
+
+  Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.SpecificationRunnerTask"){
+    classpath(){
+          pathelement(location:"${defaultdir}/easyb-${version}.jar")
+      }
+  }
+
+  Ant.taskdef (name:"googlecodeupload",
+          classname:"net.bluecow.googlecode.ant.GoogleCodeUploadTask"){
+    classpath(){
+          pathelement(location:"${libdir}/ant-googlecode-0.0.0test.jar")
+      }
+  }
+
+  Ant.googlecodeupload(username:"${Ant.project.properties.'googleuser'}",
+          password:"${Ant.project.properties.'googlepass'}",
+          projectname:"easyb",
+          filename:"${tarfilename}.gz",
+          targetfilename:"${tarfilename}.gz",
+          summary:"easyb ${version} release")
+          
 }
 
 target("jar-sources":"creates a sources jar"){
