@@ -32,137 +32,153 @@ pageTracker._trackPageview();
 
 <!-- start page -->
 <div id="page">
-	<!-- start content -->
-	<div id="content">
-		<div class="post">
-			<h2 class="title">Take it easy with easyb</h2>
-		
-			<div class="entry">
-				<p>easyb is a behavior driven development framework for the Java platform.  By using a specification based Domain Specific Language, easyb aims to enable executable, yet <i>readable</i> documentation.  </p>
-				
-				<h3>Behavior driven development?</h3>
-				
-				<p>Behavior driven development (or BDD) isn't anything new or revolutionary-- it's just an evolutionary offshoot of test driven development, in which the word <i>test</i> is replaced by the word <i>should</i>. Semantics aside, a lot of people have found that the concept of <i>should</i> is a much more natural development driver than the concept of testing. In fact, when you think in terms of behavior (i.e. shoulds) you'll find that writing specifications is easier to do first, which is the intent of test driven development in the first place.</p>
-				
-				<h3>Easy?</h3>
-				
-				<p>easyb specifications are written in Groovy and run via a Java runner that can be invoked via the command line, Maven 2, or Ant. What's more, easyb supports a few different styles of specifications ranging from RSpec's <code>it</code> to a story based DSL with <code>given</code>s, <code>when</code>s, and <code>then</code>s. 
-				</p>
-				
-				
-				<p>easyb is all about easy. </p>
+<!-- start content -->
+<div id="content">
+  <div class="post">
+    <h2 class="title">Take it easy with easyb</h2>
 
-	<h3>easyb in action</h3>
-	
-	<p>easyb enables you to verify behavior of normal Java objects, work-flows, etc (basically, anything you write in Java) in a more natural way-- for instance, imagine having a conversation with a customer who wants you to write something to validate zip codes. </p>
-				
-				<blockquote>
-				"Could you please write something that lets my customers know when they've provided an invalid zip code?"
-				</blockquote>
-				<blockquote>
-				"Sure! So, given an invalid zip code, this validation service should notify someone that the zip code is incorrect?"	
-				</blockquote>
-				<blockquote>
-				"Right on! Man, you are smart!"
-				</blockquote>
-		
-		<p>Notice that nowhere in this conversation did anyone say test! Whether or not you write specifications first or afterwards is up to you; however, assuming that you've already written the zip code validator, you could construct a story like so:
-			<ul>
-				<li>Given that someone mistypes a zip code</li>
-				<li>And given the zip code validation service is up and running</li>
-				<li>When validate is invoked</li>
-				<li>Then the service should indicate the zip code is invalid</li>
-				</ul>
-			</p>	
-			<p>Using the text above, you can then construct an easyb story like so: </p>	
+    <div class="entry">
+      <p>easyb is a behavior driven development framework for the Java platform. By using a specification based Domain Specific Language, easyb aims to enable executable, yet <i>readable</i>
+        documentation. </p>
+
+      <h3>Behavior driven development?</h3>
+
+      <p>Behavior driven development (or BDD) isn't anything new or revolutionary-- it's just an evolutionary offshoot of test driven development, in which the word <i>test</i> is replaced by the word
+        <i>should</i>. Semantics aside, a lot of people have found that the concept of <i>should</i> is a much more natural development driver than the concept of testing. In fact, when you think in
+        terms of behavior (i.e. shoulds) you'll find that writing specifications is easier to do first, which is the intent of test driven development in the first place.</p>
+
+      <h3>Easy?</h3>
+
+      <p>easyb specifications are written in Groovy and run via a Java runner that can be invoked via the command line, Maven 2, or Ant. What's more, easyb supports a few different styles of
+        specifications ranging from RSpec's <code>it</code> to a story based DSL with <code>given</code>s, <code>when</code>s, and <code>then</code>s.
+      </p>
+
+
+      <p>easyb is all about easy. </p>
+
+      <h3>easyb in action</h3>
+
+      <p>easyb enables you to verify behavior of normal Java objects, work-flows, etc (basically, anything you write in Java) in a more natural way-- for instance, imagine having a conversation with a
+        customer who wants you to write something to validate zip codes. </p>
+
+      <blockquote>
+        "Could you please write something that lets my customers know when they've provided an invalid zip code?"
+      </blockquote>
+      <blockquote>
+        "Sure! So, given an invalid zip code, this validation service should notify someone that the zip code is incorrect?"
+      </blockquote>
+      <blockquote>
+        "Right on! Man, you are smart!"
+      </blockquote>
+
+      <p>Notice that nowhere in this conversation did anyone say test! Whether or not you write specifications first or afterwards is up to you; however, assuming that you've already written the zip
+        code validator, you could construct a story like so:</p>
+      <ul>
+        <li>Given that someone mistypes a zip code</li>
+        <li>And given the zip code validation service is up and running</li>
+        <li>When validate is invoked</li>
+        <li>Then the service should indicate the zip code is invalid</li>
+      </ul>
+      <p>Using the text above, you can then construct an easyb story like so: </p>
 			
-<pre><code>
-given "an invalid zip code", {
- invalidzipcode = "221o1"
-}
+    <pre><code>
+      given "an invalid zip code", {
+        invalidzipcode = "221o1"
+      }
 
-and
+      and
 
-given "the zipcodevalidator is initialized", {
- zipvalidate = new ZipCodeValidator()
-}
+      given "the zipcodevalidator is initialized", {
+        zipvalidate = new ZipCodeValidator()
+      }
 
-when "validate is invoked with the invalid zip code", {
- value = zipvalidate.validate(invalidzipcode)
-}
+      when "validate is invoked with the invalid zip code", {
+        value = zipvalidate.validate(invalidzipcode)
+      }
 
-then "the validator instance should return false", {
- value.shouldBe false
-}
-</code></pre>	
+      then "the validator instance should return false", {
+        value.shouldBe false
+      }
+    </code></pre>
 
-<p>Is that easy or what? Notice the <code>shouldBe</code> call in the <code>then</code> phrase-- neat, huh? You can, of course, also write the <code>then</code> clause as 
-	
-<pre><code>
-then "the validator instance should return false", {
- ensure(value){
-  isFalse	
- }
-}
-</code></pre>
-	
-</p>
-<p>BDD in Java can't get any easier!</p>			
-			</div>
-		</div>
-		
-	</div>
-	<!-- end content -->
-	
-	
-	
-	
-	
-	<!-- start sidebar -->
-	<div id="sidebar">
-		<ul>
-			<li>
-				<h2>Overview</h2>
-				<ul>
-					<li><a href="./index.html">Home</a></li>
-					<li><a href="./howtos.html">Stories</a></li>
-					<li><a href="./howtobb.html">Behaviors</a></li>
-					<li><a href="./download.html">Download</a></li>
-          <li><a href="./contact.html">Contact</a></li>
-				</ul>
-			</li>
-			<li>
-				<h2>Details</h2>
-				<ul>
-					<li><a href="./running.html">Running easyb</a></li>
-					<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
-					<li><a href="./dsls.html">easyb syntax specification</a></li>
-					<li><a href="./lic.html">License</a></li>
-					<li><a href="./source.html">Source code</a></li>
-				</ul>
-			</li>
-			
-			<li>
-				<h2>Plug-ins</h2>
-				<ul>
-					<li><a href="./dbunit.html">DbUnit plug-in</a></li>
-				</ul>
-			</li>
-			
-			<li>
-				<h2>Resources</h2>
-				<ul>
-					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
-					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
-					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
-					<li><a href="./articles.html">Additional resources</a></li>
-				</ul>
-			</li>
-			
-		</ul>
-		<div style="clear: both;">&nbsp;</div>
-	</div>
-	<!-- end sidebar -->
+      <p>Is that easy or what? Notice the <code>shouldBe</code> call in the <code>then</code> phrase-- neat, huh? You can, of course, also write the <code>then</code> clause as </p>
+
+
+    <pre><code>
+      then "the validator instance should return false", {
+        ensure(value){
+          isFalse
+        }
+      }
+    </code></pre>
+
+    <p>Hit the <a href="./howtos.html">Stories</a> page for a deeper dive.</p>
+
+
+    <h3>alternative easyb flavors</h3>
+    <p>Specifications come in many flavors. You just saw an example of a story specification. Easyb also supports the more terse behavior specification. Thus we can rewrite the test above as</p>
+
+      <pre><code>
+        it "should deny invalid zip code", {
+          new ZipCodeValidator().validate("221o1").shouldBe false
+        }
+      </code></pre>
+
+      <p>Hit the <a href="./howtobb.html">Behaviors</a> page for a deeper dive.</p>
+
+      <p>BDD in Java can't get any easier!</p>
+    </div>
+  </div>
+
+</div>
+<!-- end content -->
+
+
+<!-- start sidebar -->
+<div id="sidebar">
+  <ul>
+    <li>
+      <h2>Overview</h2>
+      <ul>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./howtos.html">Stories</a></li>
+        <li><a href="./howtobb.html">Behaviors</a></li>
+        <li><a href="./download.html">Download</a></li>
+        <li><a href="./contact.html">Contact</a></li>
+      </ul>
+    </li>
+    <li>
+      <h2>Details</h2>
+      <ul>
+        <li><a href="./running.html">Running easyb</a></li>
+        <li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+        <li><a href="./dsls.html">easyb syntax specification</a></li>
+        <li><a href="./lic.html">License</a></li>
+        <li><a href="./source.html">Source code</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <h2>Plug-ins</h2>
+      <ul>
+        <li><a href="./dbunit.html">DbUnit plug-in</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <h2>Resources</h2>
+      <ul>
+        <li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+        <li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+        <li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+        <li><a href="./articles.html">Additional resources</a></li>
+      </ul>
+    </li>
+
+  </ul>
+  <div style="clear: both;">&nbsp;</div>
+</div>
+<!-- end sidebar -->
 </div>
 <!-- end page -->
 <div id="footer">
