@@ -3,7 +3,7 @@
  */
 includeTargets << new File("default_tasks.gant")
 
-version = "0.7.2"
+version = detectOrDefaultVersion("0.7.2")
 
 sourcedir = "src/java"
 antsourcedir = "src/ant"
@@ -11,11 +11,10 @@ behaviordir =  "behavior/java"
 homedir = System.properties.'user.home'
 mavenrepo = "${homedir}/.m2/repository"
 tarfilename = "${defaultdir}/dist/easyb-${version}.tar"
-jarversion = detectOrDefaultVersion()
 
 Ant.property(file: 'local.build.properties')
 
-def detectOrDefaultVersion() {
+def detectOrDefaultVersion(version) {
   if(Ant.project.properties."version" != null){
 	  return Ant.project.properties."version"
   }else{
@@ -48,7 +47,7 @@ target(release:"compile and archive"){
 target(jar:"create an archive of the project's classfiles"){
    depends("compile-all")
    
-   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}.jar", basedir:classdir)
+   Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:classdir)
 }
 
 target("publish-easyb":"uploads easyb distribution to googlecode") {
@@ -83,7 +82,7 @@ target("publish-easyb":"uploads easyb distribution to googlecode") {
 target("jar-sources":"creates a sources jar"){
    depends("init")
 
-   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}-sources.jar"){
+   Ant.jar(destfile:"${defaultdir}/easyb-${version}-sources.jar"){
      fileset(dir: "$sourcedir")
      fileset(dir: "$gsourcedir")
      fileset(dir: "$antsourcedir")
@@ -101,7 +100,7 @@ target("jar-javadocs":"creates a javadocs jar"){
    }
 
    Ant.groovydoc(destdir:"${defaultdir}/javadoc", sourcepath:"${defaultdir}/javadoc-sources", windowtitle:"easyb")
-   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}-javadoc.jar") {
+   Ant.jar(destfile:"${defaultdir}/easyb-${version}-javadoc.jar") {
      fileset(dir: "${defaultdir}/javadoc")
    }
 }
@@ -183,7 +182,7 @@ target("maven-install":"install easyb into the default local maven repository") 
 target("maven-bundle":"creates an easyb upload bundle for the central maven repository"){
    depends("maven-install")
 
-   Ant.jar(destfile:"${defaultdir}/easyb-${jarversion}-bundle.jar"){
+   Ant.jar(destfile:"${defaultdir}/easyb-${version}-bundle.jar"){
      path(refid:"maven.artifacts")
    }
 }
