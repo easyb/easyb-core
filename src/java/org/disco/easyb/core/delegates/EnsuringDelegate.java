@@ -18,8 +18,8 @@ public class EnsuringDelegate {
 	 *            exception
 	 * @throws Exception
 	 */
-	public void ensureThrows(final Class<?> clzz, final Closure closure)
-			throws Exception {
+	public void ensureThrows(final Class<?> clzz, final Closure closure) throws Exception {
+		boolean expectedExceptionCaught = false;
 		try {
 			closure.call();
 		} catch (Throwable e) {
@@ -29,6 +29,12 @@ public class EnsuringDelegate {
 						"exception caught (" + e.getClass().getName()+ ") is not of type " + clzz + 
 						" or the cause isn't " + clzz);
 			}
+			expectedExceptionCaught = true;
+		}
+		if (!expectedExceptionCaught) {
+		    // Can't throw this immediately after the invokation of the closure because this exception
+		    // would get inadvertantly caught by the catch which contains it.  Thus the flag approach.
+		    throw new VerificationException("expected exception of type " + clzz + " was not thrown");
 		}
 	}
 

@@ -228,6 +228,14 @@ def person = new Person("Jill", 11)
   has([firstName:"Jill", age:11])
 }
 </code></pre>
+
+<p>You can also check that an exception is thrown using the <code>ensureThrows</code> variant of the <code>ensure</code> closure:</p>
+<pre><code>
+ensureThrows(RuntimeException.class) {
+	throw new RuntimeException("Test")
+}	
+</code></pre>
+
 			</div>
 		</div>
 		
