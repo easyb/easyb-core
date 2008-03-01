@@ -14,6 +14,11 @@ classdir = "${defaultdir}/classes"
 behaviorclassdir = "${defaultdir}/behavior-classes"
 gbehaviordir = "behavior/groovy"
 gsourcedir = "src/groovy"
+sourcedir = "src/java"
+antsourcedir = "src/ant"
+behaviordir =  "behavior/java"
+homedir = System.properties.'user.home'
+mavenrepo = "${homedir}/.m2/repository"
 
 target(clean:"cleans target dir"){
 	Ant.delete(dir:defaultdir)
@@ -64,4 +69,61 @@ genericgroovyc = { sourcedirs, destination ->
 	    dirset(dir:classdir)
 	  }
 	}
+}
+
+target("jar-sources":"creates a sources jar"){
+   depends("init")
+
+   Ant.jar(destfile:"${defaultdir}/${artifactid}-${version}-sources.jar"){
+     sourcedirs.each {
+       fileset(dir: it)
+     }
+   }
+}
+
+target("jar-javadocs":"creates a javadocs jar"){
+   taskdef (name:'groovydoc', classname:'org.codehaus.groovy.ant.Groovydoc')
+
+   // Groovydoc doesn't seem to support multiple sources at this time so combine them on disk first
+   Ant.copy(toDir:"${defaultdir}/javadoc-sources"){
+     sourcedirs.each {
+       fileset(dir: it)
+     }
+   }
+
+   Ant.groovydoc(destdir:"${defaultdir}/javadoc", sourcepath:"${defaultdir}/javadoc-sources", windowtitle:"${artifactid}")
+   Ant.jar(destfile:"${defaultdir}/${artifactid}-${version}-javadoc.jar") {
+     fileset(dir: "${defaultdir}/javadoc")
+   }
+}
+
+target("maven-install":"install into the default local maven repository") {
+    depends(jar)
+    depends("jar-sources")
+    depends("jar-javadocs")
+
+	def reader = new FileReader("pom-template.xml")
+	def writer = new FileWriter("${defaultdir}/${artifactid}-${version}.pom")
+	
+	reader.transformLine(writer) { line ->
+	    line.replace("VERSION", version.toString())
+	}
+
+    Ant.path(id: "maven.artifacts"){
+      fileset(dir:"${defaultdir}"){
+        include(name:"${artifactid}-${version}*.jar")
+        include(name:"${artifactid}-${version}*.pom")
+      }
+    }
+	Ant.copy(toDir: "${mavenrepo}/org/easyb/${artifactid}/${version}/"){
+	  path(refid:"maven.artifacts")
+	}
+}
+
+target("maven-bundle":"creates an upload bundle for the central maven repository"){
+   depends("maven-install")
+
+   Ant.jar(destfile:"${defaultdir}/${artifactid}-${version}-bundle.jar"){
+     path(refid:"maven.artifacts")
+   }
 }

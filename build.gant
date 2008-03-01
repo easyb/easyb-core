@@ -3,17 +3,27 @@
  */
 includeTargets << new File("default_tasks.gant")
 
+/**
+ * Properties needed by default tasks
+ */
+artifactid = "easyb"
 version = detectOrDefaultVersion("0.7.2")
+sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
-sourcedir = "src/java"
-antsourcedir = "src/ant"
-behaviordir =  "behavior/java"
-homedir = System.properties.'user.home'
-mavenrepo = "${homedir}/.m2/repository"
-tarfilename = "${defaultdir}/dist/easyb-${version}.tar"
+/**
+ * Project specific properties
+ */
+tarfilename = "${defaultdir}/dist/${artifactid}-${version}.tar"
+
 
 Ant.property(file: 'local.build.properties')
 
+/**  
+ * The version number used by all targets is command line overridden if needed- for example
+ * if you need to create a snapshot version, you can type gant -Dversion=snapshot jar and 
+ * the resultant jar file will be easyb-snapshot.jar instead of reading the default value
+ * of version from above.
+ */
 def detectOrDefaultVersion(version) {
   if(Ant.project.properties."version" != null){
 	  return Ant.project.properties."version"
@@ -37,13 +47,7 @@ target(release:"compile and archive"){
   	}
   }
 }
-/**  
- * This target is command line overridden if needed- for example
- * if you need to create a snapshot version, you can type
- * gant -Dversion=snapshot jar and the resultant jar file
- * will be easyb-snapshot.jar instead of reading the default
- * value of version from above.
- */
+
 target(jar:"create an archive of the project's classfiles"){
    depends("compile-all")
    
@@ -77,32 +81,6 @@ target("publish-easyb":"uploads easyb distribution to googlecode") {
           targetfilename:"${tarfilename}.gz",
           summary:"easyb ${version} release")
           
-}
-
-target("jar-sources":"creates a sources jar"){
-   depends("init")
-
-   Ant.jar(destfile:"${defaultdir}/easyb-${version}-sources.jar"){
-     fileset(dir: "$sourcedir")
-     fileset(dir: "$gsourcedir")
-     fileset(dir: "$antsourcedir")
-   }
-}
-
-target("jar-javadocs":"creates a javadocs jar"){
-   taskdef (name:'groovydoc', classname:'org.codehaus.groovy.ant.Groovydoc')
-
-   // Groovydoc doesn't seem to support multiple sources at this time so combine them on disk first
-   Ant.copy(toDir:"${defaultdir}/javadoc-sources"){
-     fileset(dir: "$sourcedir")
-     fileset(dir: "$gsourcedir")
-     fileset(dir: "$antsourcedir")
-   }
-
-   Ant.groovydoc(destdir:"${defaultdir}/javadoc", sourcepath:"${defaultdir}/javadoc-sources", windowtitle:"easyb")
-   Ant.jar(destfile:"${defaultdir}/easyb-${version}-javadoc.jar") {
-     fileset(dir: "${defaultdir}/javadoc")
-   }
 }
 
 target("compile-all":"compile Groovy & Java classes"){
@@ -154,35 +132,4 @@ target("ant-task":"runs the easyb ant task"){
 	}
 
   Ant.fail(if:"easyb.failed", message:"Execution halted as specifications failed")
-}
-
-target("maven-install":"install easyb into the default local maven repository") {
-    depends(dist)
-    depends("jar-sources")
-    depends("jar-javadocs")
-
-	def reader = new FileReader("pom-template.xml")
-	def writer = new FileWriter("${defaultdir}/easyb-${version}.pom")
-	
-	reader.transformLine(writer) { line ->
-	    line.replace("VERSION", version.toString())
-	}
-
-    Ant.path(id: "maven.artifacts"){
-      fileset(dir:"${defaultdir}"){
-        include(name:"easyb-${version}*.jar")
-        include(name:"easyb-${version}*.pom")
-      }
-    }
-	Ant.copy(toDir: "${mavenrepo}/org/easyb/easyb/${version}/"){
-	  path(refid:"maven.artifacts")
-	}
-}
-
-target("maven-bundle":"creates an easyb upload bundle for the central maven repository"){
-   depends("maven-install")
-
-   Ant.jar(destfile:"${defaultdir}/easyb-${version}-bundle.jar"){
-     path(refid:"maven.artifacts")
-   }
 }
