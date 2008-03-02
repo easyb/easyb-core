@@ -66,7 +66,13 @@ class EasybXmlReportWriter implements ReportWriter {
         }
       }
       behaviors {
-        // TODO
+        listener.genesisStep.childSteps.each { genesisChild ->
+          if(SpecificationStepType.BEHAVIOR.equals(genesisChild.stepType)) {
+            "${genesisChild.stepType.type()}"(name:genesisChild.name) {
+              walkChildren(xml, genesisChild)
+            }
+          }
+        }
       }
       // TODO should we have a misc? grouping.. for things that aren't in a Story.groovy or a Behavior.groovy.. etc?
 
