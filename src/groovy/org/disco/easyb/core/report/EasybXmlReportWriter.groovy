@@ -1,7 +1,5 @@
 package org.disco.easyb.core.report
 
-import org.disco.easyb.core.listener.SpecificationListener
-import org.disco.easyb.core.report.Report
 import groovy.xml.MarkupBuilder
 import org.disco.easyb.core.util.SpecificationStepType
 import org.disco.easyb.core.SpecificationStep
@@ -19,7 +17,7 @@ class EasybXmlReportWriter implements ReportWriter {
   def buildFailureMessage(result){
     def buff = new StringBuffer()
     for(i in 1..10){
-      // TODO needs better formatting
+      // TODO needs better formatting ?
       buff << result.cause()?.getStackTrace()[i]
       buff << "\n"
     }

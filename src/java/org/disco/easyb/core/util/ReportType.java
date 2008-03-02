@@ -2,7 +2,8 @@ package org.disco.easyb.core.util;
 
 public enum ReportType {
 
-	STORY("story"), 
+    EASYB("easyb"), 
+	STORY("story"),
 	BEHAVIOR("behavior");
 
 	private final String type;

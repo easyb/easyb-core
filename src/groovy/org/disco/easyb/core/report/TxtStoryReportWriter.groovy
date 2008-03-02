@@ -9,6 +9,7 @@ class TxtStoryReportWriter implements ReportWriter{
   def report
   def storyListener
 
+// TODO this will now take the location of the base easyb xml
   TxtStoryReportWriter(report, storyListener) {
     this.report = report
     this.storyListener = storyListener

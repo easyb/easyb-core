@@ -25,7 +25,6 @@ public class SpecificationRunnerTask extends AbstractStoryTask {
 
     void addConfiguredReport(Report report) {
       super.addTarget("-${report.format} ${report.location}")
-
     }
 
 }

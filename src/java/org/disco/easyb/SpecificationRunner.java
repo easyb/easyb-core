@@ -20,6 +20,8 @@ import org.disco.easyb.core.listener.SpecificationListener;
 import org.disco.easyb.core.report.Report;
 import org.disco.easyb.core.report.ReportWriter;
 import org.disco.easyb.core.report.EasybXmlReportWriter;
+import org.disco.easyb.core.report.TxtStoryReportWriter;
+import org.disco.easyb.core.report.TerseReportWriter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
 import org.disco.easyb.core.util.SpecificationStepType;
@@ -74,21 +76,30 @@ public class SpecificationRunner {
         }
 
         // TODO reimplement the report writing.. but it will just start with the main XML file
+        String easybxmlreportlocation = null;
         for (Report report : reports) {
-          ReportWriter reportWriter;
-          reportWriter = new EasybXmlReportWriter(report, listener);
-          reportWriter.writeReport();
+            if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
+                easybxmlreportlocation = report.getLocation();
+                ReportWriter reportWriter = new EasybXmlReportWriter(report, listener);
+                reportWriter.writeReport();
+            }
+        }
 
-//            ReportWriter reportWriter;
-//            if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
-//                reportWriter = new TxtStoryReportWriter(report, listener);
-//            } else if (report.getFormat().concat(report.getType()).equals(Report.XML_BEHAVIOR)) {
-//                reportWriter = new XmlBehaviorReportWriter(report, listener);
-//            } else {
-//                reportWriter = new TerseReportWriter(report, listener);
+        if(easybxmlreportlocation == null) {
+            System.out.println("xmleasyb report is required");
+            System.exit(-1);
+        }
+
+        for (Report report : reports) {
+            if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
+                //do nothing, report was already run above.
+            } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
+                new TxtStoryReportWriter(report, listener).writeReport();
+
+            }
+//            else if (report.getFormat().concat(report.getType()).equals(Report.t)){
+//                new TerseReportWriter(report, listener).writeReport();
 //            }
-//
-//            reportWriter.writeReport();
         }
 
 
@@ -170,6 +181,20 @@ public class SpecificationRunner {
 
             configuredReports.add(report);
         }
+
+        if (line.hasOption(Report.XML_EASYB)) {
+            Report report = new Report();
+            report.setFormat(ReportFormat.XML.format());
+            if (line.getOptionValue(Report.XML_EASYB) == null) {
+                report.setLocation("easyb-report.xml");
+            } else {
+                report.setLocation(line.getOptionValue(Report.XML_EASYB));
+            }
+            report.setType(ReportType.EASYB.type());
+
+            configuredReports.add(report);
+        }
+
         return configuredReports;
     }
 
@@ -235,18 +260,11 @@ public class SpecificationRunner {
             configuredReports.addAll(userConfiguredReports);
         }
 
-        Report terseStoryReport = new Report();
-        terseStoryReport.setFormat(ReportFormat.TERSE.format());
-        terseStoryReport.setLocation("screen");
-        terseStoryReport.setType(ReportType.STORY.type());
-        configuredReports.add(terseStoryReport);
-
-        Report easybXmlReport = new Report();
-        easybXmlReport.setFormat(ReportFormat.XML.format());
-        // TODO allow the location of the easyb report to be passed in
-        easybXmlReport.setLocation("./target/easyb-report.xml");
-//        easybXmlReport.setType(ReportType.STORY.type());
-        configuredReports.add(easybXmlReport);
+//        Report terseStoryReport = new Report();
+//        terseStoryReport.setFormat(ReportFormat.TERSE.format());
+//        terseStoryReport.setLocation("screen");
+//        terseStoryReport.setType(ReportType.STORY.type());
+//        configuredReports.add(terseStoryReport);
 
         return configuredReports;
     }

@@ -34,11 +34,11 @@ public class AbstractStoryTask extends AbstractJavaTask {
     }
 
     public String getFailureProperty() {
-      return failureProperty;
+      return failureProperty
     }
 
     public void setFailureProperty(String failureProperty) {
-      this.failureProperty = failureProperty;
+      this.failureProperty = failureProperty
     }
 
 
