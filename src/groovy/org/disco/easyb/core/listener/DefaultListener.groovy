@@ -31,13 +31,13 @@ class DefaultListener implements SpecificationListener{
     return genesisStep
   }
 
-	  public void gotResult(Result result) {
-      currentStep.setResult(result)
-	  }
-	  
-	  public void setSpecificationName(String name){
-		  this.specName = name
-	  }
+  public void gotResult(Result result) {
+    currentStep.setResult(result)
+  }
+
+  public void setSpecificationName(String name){
+    this.specName = name
+  }
 
 
   // TODO instead of startStep and stopStep we should do a decorator instead

@@ -72,6 +72,10 @@ class SpecificationStep {
     }
   }
 
+  public List<SpecificationStep> getChildrenOfType(SpecificationStepType specificationStoryType) {
+    childSteps.findAll { specificationStoryType.equals(it.stepType) }
+  }
+
   public SpecificationStep getParentStep() {
     return parentStep
   }

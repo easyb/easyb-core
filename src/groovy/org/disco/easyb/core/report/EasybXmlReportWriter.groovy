@@ -54,21 +54,23 @@ class EasybXmlReportWriter implements ReportWriter {
     def xml = new MarkupBuilder(writer)
 
 	  xml.EasybRun(time:new Date(), totalspecifications:listener.getSpecificationCount(), totalfailedspecifications:listener.getFailedSpecificationCount()){
-      stories { // TODO add metrics at this level
-        listener.genesisStep.childSteps.each { genesisChild ->
-          if(SpecificationStepType.STORY.equals(genesisChild.stepType)) {
-            "${genesisChild.stepType.type()}"(name:genesisChild.name) {
-              walkChildren(xml, genesisChild)
-            }
+      def storyChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY)
+      def storyChildrenTotalSpecifications = storyChildren.inject(0) { count, item -> count + item.getChildStepSpecificationCount() }
+      def storyChildrenTotalFailedSpecifications = storyChildren.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
+      stories (totalspecifications:storyChildrenTotalSpecifications, totalfailedspecifications:storyChildrenTotalFailedSpecifications) { // TODO add metrics at this level
+        listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY).each { genesisChild ->
+          "${genesisChild.stepType.type()}"(name:genesisChild.name) {
+            walkChildren(xml, genesisChild)
           }
         }
       }
-      behaviors {
-        listener.genesisStep.childSteps.each { genesisChild ->
-          if(SpecificationStepType.BEHAVIOR.equals(genesisChild.stepType)) {
-            "${genesisChild.stepType.type()}"(name:genesisChild.name) {
-              walkChildren(xml, genesisChild)
-            }
+      def behaviorChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR)
+      def behaviorChildrenTotalSpecifications = behaviorChildren.inject(0) { count, item -> count + item.getChildStepSpecificationCount() }
+      def behaviorChildrenTotalFailedSpecifications = behaviorChildren.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
+      behaviors (totalspecifications:behaviorChildrenTotalSpecifications, totalfailedspecifications:behaviorChildrenTotalFailedSpecifications) {
+        listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR).each { genesisChild ->
+          "${genesisChild.stepType.type()}"(name:genesisChild.name) {
+            walkChildren(xml, genesisChild)
           }
         }
       }
