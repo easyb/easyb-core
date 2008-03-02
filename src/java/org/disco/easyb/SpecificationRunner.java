@@ -19,12 +19,10 @@ import org.disco.easyb.core.listener.DefaultListener;
 import org.disco.easyb.core.listener.SpecificationListener;
 import org.disco.easyb.core.report.Report;
 import org.disco.easyb.core.report.ReportWriter;
-import org.disco.easyb.core.report.TerseReportWriter;
-import org.disco.easyb.core.report.TxtStoryReportWriter;
-import org.disco.easyb.core.report.XmlBehaviorReportWriter;
-import org.disco.easyb.core.result.Result;
+import org.disco.easyb.core.report.EasybXmlReportWriter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
+import org.disco.easyb.core.util.SpecificationStepType;
 
 /**
  * usage is:
@@ -60,43 +58,45 @@ public class SpecificationRunner {
      */
     public void runSpecification(Collection<File> specs) throws Exception {
 
-        List<SpecificationListener> listeners = new ArrayList<SpecificationListener>();
-
         SpecificationListener listener = new DefaultListener();
 
         for (File file : specs) {
-            listener.setSpecificationName(file.getName());
             Specification specification = new Specification(file);
             if (specification.isStory()) {
-                listener.gotResult(new Result(specification.getPhrase(), SpecificationBinding.STORY, Result.SUCCEEDED));
+                listener.startStep(SpecificationStepType.STORY, specification.getPhrase());
+                // TODO do the start/stop but figure out what to do with behaviors
             } else {
+                listener.startStep(SpecificationStepType.BEHAVIOR, specification.getPhrase());
                 warnOnBehaviorNaming(file);
             }
             new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
+            listener.stopStep();
         }
 
+        // TODO reimplement the report writing.. but it will just start with the main XML file
         for (Report report : reports) {
-            ReportWriter reportWriter;
-            if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
-                reportWriter = new TxtStoryReportWriter(report, listener);
-            } else if (report.getFormat().concat(report.getType()).equals(Report.XML_BEHAVIOR)) {
-                reportWriter = new XmlBehaviorReportWriter(report, listener);
-            } else {
-                reportWriter = new TerseReportWriter(report, listener);
-            }
+          ReportWriter reportWriter;
+          reportWriter = new EasybXmlReportWriter(report, listener);
+          reportWriter.writeReport();
 
-            reportWriter.writeReport();
+//            ReportWriter reportWriter;
+//            if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
+//                reportWriter = new TxtStoryReportWriter(report, listener);
+//            } else if (report.getFormat().concat(report.getType()).equals(Report.XML_BEHAVIOR)) {
+//                reportWriter = new XmlBehaviorReportWriter(report, listener);
+//            } else {
+//                reportWriter = new TerseReportWriter(report, listener);
+//            }
+//
+//            reportWriter.writeReport();
         }
 
-        listeners.add(listener);
 
-        int totalSpecificationFailures = 0;
-        for (SpecificationListener ilistener : listeners) {
-            if (ilistener.hasBehaviorFailures()) {
-                totalSpecificationFailures++;
-            }
-        }
-        if (totalSpecificationFailures > 0) {
+        System.out.println("total specs: " + listener.getSpecificationCount());
+        System.out.println("failed specs: " + listener.getFailedSpecificationCount());
+        System.out.println("success specs: " + listener.getSuccessfulSpecificationCount());
+
+        if (listener.getFailedSpecificationCount() > 0) {
             System.out.println("specification failures detected!");
             System.exit(-6);
         }
@@ -209,15 +209,21 @@ public class SpecificationRunner {
     private static Options getOptionsForMain() {
         Options options = new Options();
 
-        //noinspection AccessStaticViaInstance
-        Option xmlbehaviorreport = OptionBuilder.withArgName("file").hasArg()
-            .withDescription("create a behavior report in xml format").create(Report.XML_BEHAVIOR);
-        options.addOption(xmlbehaviorreport);
 
         //noinspection AccessStaticViaInstance
-        Option storyreport = OptionBuilder.withArgName("file").hasArg()
-            .withDescription("create a story report").create(Report.TXT_STORY);
-        options.addOption(storyreport);
+        Option xmleasybreport = OptionBuilder.withArgName("file").hasArg()
+            .withDescription("create an easyb report in xml format").create(Report.XML_EASYB);
+        options.addOption(xmleasybreport);
+
+        //noinspection AccessStaticViaInstance
+//        Option xmlbehaviorreport = OptionBuilder.withArgName("file").hasArg()
+//            .withDescription("create a behavior report in xml format").create(Report.XML_BEHAVIOR);
+//        options.addOption(xmlbehaviorreport);
+//
+//        //noinspection AccessStaticViaInstance
+//        Option storyreport = OptionBuilder.withArgName("file").hasArg()
+//            .withDescription("create a story report").create(Report.TXT_STORY);
+//        options.addOption(storyreport);
 
         return options;
     }
@@ -234,6 +240,13 @@ public class SpecificationRunner {
         terseStoryReport.setLocation("screen");
         terseStoryReport.setType(ReportType.STORY.type());
         configuredReports.add(terseStoryReport);
+
+        Report easybXmlReport = new Report();
+        easybXmlReport.setFormat(ReportFormat.XML.format());
+        // TODO allow the location of the easyb report to be passed in
+        easybXmlReport.setLocation("./target/easyb-report.xml");
+//        easybXmlReport.setType(ReportType.STORY.type());
+        configuredReports.add(easybXmlReport);
 
         return configuredReports;
     }

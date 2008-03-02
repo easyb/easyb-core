@@ -1,6 +1,7 @@
 package org.disco.easyb.core.listener
 
 import org.disco.easyb.core.result.Result
+import org.disco.easyb.core.util.SpecificationStepType
 
 scenario "listener is given all successful results", {
 
@@ -9,36 +10,31 @@ scenario "listener is given all successful results", {
   }
 
   when "a successful result is added", {
-    result = new Result("irrelevant", "irrelevant", Result.SUCCEEDED)
-    listener.gotResult(result)
+    listener.startStep(SpecificationStepType.THEN, "success then step")
+    listener.gotResult(new Result("irrelevant", "irrelevant", Result.SUCCEEDED))
+    listener.stopStep()
   }
-
-  then "it should have no failures", {
-    listener.hasBehaviorFailures().is false
-  }
-
-  and
 
   then "the count of failed specifications should be 0", {
-    listener.getFailedBehaviorCount().shouldBe 0
+    listener.failedSpecificationCount.shouldBe 0
   }
 
   and
 
   then "the count of successful specifications should be 1", {
-   listener.getSuccessfulBehaviorCount().shouldBe 1
+   listener.getSuccessfulSpecificationCount().shouldBe 1
   }
 
   and
 
   then "the count of total specifications should be 1", {
-   listener.getTotalBehaviorCount().shouldBe 1
+   listener.getSpecificationCount().shouldBe 1
   }
 
   and
 
   then "the total specifications should equal the successful specifications", {
-    listener.getTotalBehaviorCount().shouldEqual listener.getSuccessfulBehaviorCount()
+    listener.getSpecificationCount().shouldEqual listener.getSuccessfulSpecificationCount()
   }
 
 }
@@ -50,36 +46,31 @@ scenario "listener is given a single failure", {
   }
 
   when "a failure result is added", {
-    result = new Result("irrelevant", "irrelevant", new Exception("FailureExceptionReason"))
-    listener.gotResult(result)
+    listener.startStep(SpecificationStepType.THEN, "failure then step")
+    listener.gotResult(new Result("irrelevant", "irrelevant", new Exception("FailureExceptionReason")))
+    listener.stopStep()
   }
-
-  then "it should have failures", {
-    listener.hasBehaviorFailures().is(true)
-  }
-
-  and
 
   then "the count of failed specifications should be 1", {
-   listener.getFailedBehaviorCount().shouldBe(1)
+   listener.getFailedSpecificationCount().shouldBe(1)
   }
 
   and
 
   then "the count of successful specifications should be 0", {
-    listener.getSuccessfulBehaviorCount().is(0)
+    listener.getSuccessfulSpecificationCount().is(0)
   }
 
   and
 
   then "the count of total specifications should be 1", {
-   listener.getTotalBehaviorCount().shouldBe 1
+   listener.getSpecificationCount().shouldBe 1
   }
 
   and
 
   then "the total specifications should equal the failed specifications", {
-    listener.getTotalBehaviorCount().shouldBeEqualTo listener.getFailedBehaviorCount()
+    listener.getSpecificationCount().shouldBeEqualTo listener.getFailedSpecificationCount()
   }
 
 }

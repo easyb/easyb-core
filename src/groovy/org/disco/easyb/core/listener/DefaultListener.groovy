@@ -1,54 +1,55 @@
 package org.disco.easyb.core.listener;
 
 import org.disco.easyb.core.result.Result
+import org.disco.easyb.core.SpecificationStep
+import org.disco.easyb.core.util.SpecificationStepType
 
 class DefaultListener implements SpecificationListener{
-//	 TODO encapsulate failures and successes so we can prevent mutable
-	  def failures = []
-	  def successes = []
-	  def pendings = []
-	  def results = []
 
-	  def specName;
+  // TODO possibly create the top level step when the listener is created and set that as the current step.
+  private SpecificationStep currentStep
+  private SpecificationStep genesisStep = new SpecificationStep(SpecificationStepType.GENESIS, "easyb-genesis", null)
 
-	  private int methodsVerified = 0;
+  DefaultListener() {
+    currentStep = genesisStep
+  }
 
-	  boolean hasBehaviorFailures() {
-	      return !failures.isEmpty();
-	  }
 
-	  int getTotalBehaviorCount() {
-	    return methodsVerified
-	  }
+  long getFailedSpecificationCount() {
+    return genesisStep.getChildStepSpecificationFailureCount()
+  }
 
-	  int getSuccessfulBehaviorCount() {
-	    return successes.size()
-	  }
-	  
-	  int getPendingBehaviorCount() {
-		    return pendings.size()
-	  }
+  long getSuccessfulSpecificationCount() {
+    return genesisStep.getChildStepSpecificationSuccessCount()
+  }
 
-	  int getFailedBehaviorCount() {
-	    return failures.size()
-	  }
+  long getSpecificationCount() {
+    return genesisStep.getChildStepSpecificationCount()
+  }
+
+  SpecificationStep getGenesisStep() {
+    return genesisStep
+  }
 
 	  public void gotResult(Result result) {
-		results << result
-	    methodsVerified++
-	      if (result.failed()) {
-	    	//there is a better way to do this.
-	    	result.source = this.specName
-	        failures << result
-	      }else if(result.pending()){
-	    	pendings << result  
-	      }else{
-	        successes << result
-	      }
+      currentStep.setResult(result)
 	  }
 	  
 	  public void setSpecificationName(String name){
 		  this.specName = name
 	  }
+
+
+  // TODO instead of startStep and stopStep we should do a decorator instead
+  public void startStep(SpecificationStepType specificationStepType, String stepName) {
+    SpecificationStep specificationStep = new SpecificationStep(specificationStepType, stepName, currentStep);
+    currentStep.addChildStep(specificationStep)
+    currentStep = specificationStep
+  }
+
+  public void stopStep() {
+    // TODO set the metrics for the current step prior to popping it??
+    currentStep = currentStep.parentStep
+  }
   
 }

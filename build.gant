@@ -120,11 +120,12 @@ target("ant-task":"runs the easyb ant task"){
       pathelement(location:behaviorclassdir)
     }
       	
-		report(location:"${defaultdir}/behavior-report.xml", format:"xmlbehavior")
-	  report(location:"${defaultdir}/story-report.txt", format:"txtstory")
+//		report(location:"${defaultdir}/behavior-report.xml", format:"xmlbehavior")
+//	  report(location:"${defaultdir}/story-report.txt", format:"txtstory")
 
     behaviors(dir:gbehaviordir){
-	    include(name:"**/*Story.groovy")
+
+        include(name:"**/*Story.groovy")
 	    include(name:"**/*Behavior.groovy")
 	    include(name:"**/*name.groovy")
 	    include(name:"**/*.story")

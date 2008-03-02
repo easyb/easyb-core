@@ -7,6 +7,7 @@ class Report {
   public static final String TXT_BEHAVIOR = "txtbehavior"
   public static final String XML_STORY = "xmlstory"
   public static final String TXT_STORY = "txtstory"
+  public static final String XML_EASYB = "xmleasyb"
 
   public static final String XML_FORMAT = "xml"
   public static final String TXT_FORMAT = "txt"

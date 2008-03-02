@@ -4,6 +4,7 @@ import org.disco.easyb.core.delegates.EnsuringDelegate
 import org.disco.easyb.core.result.Result
 import org.disco.easyb.core.delegates.PlugableDelegate
 import org.disco.easyb.SpecificationCategory
+import org.disco.easyb.core.util.SpecificationStepType
 
 class SpecificationBinding {
 
@@ -32,12 +33,15 @@ class SpecificationBinding {
     def beforeIt
 	
     binding.scenario = { scenarioDescription, scenarioClosure={} ->
-      listener.gotResult(new Result(scenarioDescription, STORY_SCENARIO, Result.SUCCEEDED))
-      scenarioClosure()
+      listener.startStep(SpecificationStepType.SCENARIO, scenarioDescription)
+        scenarioClosure()
+      listener.stopStep()
     }
 
     binding.before = { beforeDescription, closure={} ->
+      listener.startStep(SpecificationStepType.BEFORE, beforeDescription)
       beforeIt = closure
+      listener.stopStep()
     }
 
     def itClosure = { spec, closure={}, storyPart ->
@@ -57,28 +61,35 @@ class SpecificationBinding {
     }
 
     binding.it = { spec, closure={} ->
+      listener.startStep(SpecificationStepType.IT, spec)
     	  itClosure(spec, closure, BEHAVIOR_IT)
+    	listener.stopStep()
     }
 
     binding.then = {spec, closure={} ->
+      listener.startStep(SpecificationStepType.THEN, spec)
     		itClosure(spec, closure, STORY_THEN)
+      listener.stopStep()
     }
         		  
 	binding.when = { whenDescription, closure={} ->
+	  listener.startStep(SpecificationStepType.WHEN, whenDescription)
 		closure.delegate = basicDelegate
 		closure()
-		listener.gotResult(new Result(whenDescription, STORY_WHEN, Result.SUCCEEDED))
-	}
+    listener.stopStep()
+  }
 	
 	binding.given = { givenDescription, closure={} ->
+	  listener.startStep(SpecificationStepType.GIVEN, givenDescription)
 		closure.delegate = givenDelegate
 		closure()
-        listener.gotResult(new Result(givenDescription, STORY_GIVEN, Result.SUCCEEDED))
-	}
+    listener.stopStep()
+  }
 		
 	binding.and = {
-      listener.gotResult(new Result("", AND, Result.SUCCEEDED))
-	}
+    listener.startStep(SpecificationStepType.AND, "")
+    listener.stopStep()
+  }
 	  		  
 	 return binding
 	}
