@@ -29,18 +29,17 @@ class EasybXmlReportWriter implements ReportWriter {
       if(step.result == null) {
         xml."${step.stepType.type()}"(name:step.name)
       } else {
-        if(step.result.failed()) {
           xml."${step.stepType.type()}"(name:step.name, result:step.result.status) {
-            FailureMessage(buildFailureMessage(step.result))
+            if(step.result.failed()) {
+                  FailureMessage(buildFailureMessage(step.result))
+            }
           }
-        } else {
-          xml."${step.stepType.type()}"(name:step.name, result:step.result.status)
-
-        }
       }
     } else {
-      for(child in step.childSteps) {
-        walkChildren(xml, child)
+      xml."${step.stepType.type()}"(name:step.name) {
+        for(child in step.childSteps) {
+          walkChildren(xml, child)
+        }
       }
     }
 
@@ -59,9 +58,7 @@ class EasybXmlReportWriter implements ReportWriter {
       def storyChildrenTotalFailedSpecifications = storyChildren.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
       stories (totalspecifications:storyChildrenTotalSpecifications, totalfailedspecifications:storyChildrenTotalFailedSpecifications) { // TODO add metrics at this level
         listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY).each { genesisChild ->
-          "${genesisChild.stepType.type()}"(name:genesisChild.name) {
-            walkChildren(xml, genesisChild)
-          }
+          walkChildren(xml, genesisChild)
         }
       }
       def behaviorChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR)
@@ -69,9 +66,7 @@ class EasybXmlReportWriter implements ReportWriter {
       def behaviorChildrenTotalFailedSpecifications = behaviorChildren.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
       behaviors (totalspecifications:behaviorChildrenTotalSpecifications, totalfailedspecifications:behaviorChildrenTotalFailedSpecifications) {
         listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR).each { genesisChild ->
-          "${genesisChild.stepType.type()}"(name:genesisChild.name) {
-            walkChildren(xml, genesisChild)
-          }
+          walkChildren(xml, genesisChild)
         }
       }
       // TODO should we have a misc? grouping.. for things that aren't in a Story.groovy or a Behavior.groovy.. etc?
