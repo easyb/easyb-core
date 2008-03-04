@@ -31,7 +31,7 @@ class EasybXmlReportWriter implements ReportWriter {
       } else {
           xml."${step.stepType.type()}"(name:step.name, result:step.result.status) {
             if(step.result.failed()) {
-                  FailureMessage(buildFailureMessage(step.result))
+                  failuremessage(buildFailureMessage(step.result))
             }
           }
       }

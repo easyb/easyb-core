@@ -66,7 +66,6 @@ public class SpecificationRunner {
             Specification specification = new Specification(file);
             if (specification.isStory()) {
                 listener.startStep(SpecificationStepType.STORY, specification.getPhrase());
-                // TODO do the start/stop but figure out what to do with behaviors
             } else {
                 listener.startStep(SpecificationStepType.BEHAVIOR, specification.getPhrase());
                 warnOnBehaviorNaming(file);
@@ -94,7 +93,7 @@ public class SpecificationRunner {
             if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
                 //do nothing, report was already run above.
             } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
-                new TxtStoryReportWriter(report, listener).writeReport();
+                new TxtStoryReportWriter(report, easybxmlreportlocation).writeReport();
 
             }
 //            else if (report.getFormat().concat(report.getType()).equals(Report.t)){
@@ -244,11 +243,11 @@ public class SpecificationRunner {
 //        Option xmlbehaviorreport = OptionBuilder.withArgName("file").hasArg()
 //            .withDescription("create a behavior report in xml format").create(Report.XML_BEHAVIOR);
 //        options.addOption(xmlbehaviorreport);
-//
-//        //noinspection AccessStaticViaInstance
-//        Option storyreport = OptionBuilder.withArgName("file").hasArg()
-//            .withDescription("create a story report").create(Report.TXT_STORY);
-//        options.addOption(storyreport);
+
+        //noinspection AccessStaticViaInstance
+        Option storyreport = OptionBuilder.withArgName("file").hasArg()
+            .withDescription("create a story report").create(Report.TXT_STORY);
+        options.addOption(storyreport);
 
         return options;
     }
