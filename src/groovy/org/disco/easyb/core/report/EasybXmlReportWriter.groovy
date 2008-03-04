@@ -36,7 +36,10 @@ class EasybXmlReportWriter implements ReportWriter {
           }
       }
     } else {
-      xml."${step.stepType.type()}"(name:step.name) {
+      def stepTotalSpecifications = step.childSteps.inject(0) { count, item -> count + item.getChildStepSpecificationCount() }
+      def stepTotalFailedSpecifications = step.childSteps.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
+
+      xml."${step.stepType.type()}"(name:step.name, totalspecifications:stepTotalSpecifications, totalfailedspecifications:stepTotalFailedSpecifications) {
         for(child in step.childSteps) {
           walkChildren(xml, child)
         }
