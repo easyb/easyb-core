@@ -15,7 +15,14 @@ class TxtStoryReportWriter implements ReportWriter {
   }
 
   void writeReport() {
+
     def easybXml = new XmlSlurper().parse(new File(easybXmlLocation))
+
+    def count = easybXml.stories.@totalspecifications.toInteger()
+    writer.writeLine("${(count > 1) ?  "${count} specifications executed " : " 1 specification run" }" +
+      "${easybXml.stories.@totalfailedspecifications.toInteger() > 0 ? ", but status is failure!" : "successfully"}" +
+      "${easybXml.stories.@totalfailedspecifications.toInteger() > 0 ? " Total failures: ${easybXml.stories.@totalfailedspecifications}" : ""}")
+
     handleElement(easybXml.stories)
     writer.close()
   }
