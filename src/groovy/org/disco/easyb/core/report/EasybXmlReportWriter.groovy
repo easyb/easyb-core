@@ -56,7 +56,7 @@ class EasybXmlReportWriter implements ReportWriter {
       def storyChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY)
       def storyChildrenTotalSpecifications = storyChildren.inject(0) { count, item -> count + item.getChildStepSpecificationCount() }
       def storyChildrenTotalFailedSpecifications = storyChildren.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
-      stories (totalspecifications:storyChildrenTotalSpecifications, totalfailedspecifications:storyChildrenTotalFailedSpecifications) { // TODO add metrics at this level
+      stories (totalspecifications:storyChildrenTotalSpecifications, totalfailedspecifications:storyChildrenTotalFailedSpecifications) {
         listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY).each { genesisChild ->
           walkChildren(xml, genesisChild)
         }
