@@ -25,6 +25,7 @@ import org.disco.easyb.core.report.TerseReportWriter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
 import org.disco.easyb.core.util.SpecificationStepType;
+import org.disco.easyb.core.SpecificationStep;
 
 /**
  * usage is:
@@ -63,18 +64,26 @@ public class SpecificationRunner {
         SpecificationListener listener = new DefaultListener();
 
         for (File file : specs) {
+            long startTime = System.currentTimeMillis();
+            System.out.println("Running " + file.getCanonicalPath());
+
             Specification specification = new Specification(file);
+            SpecificationStep currentStep;
             if (specification.isStory()) {
-                listener.startStep(SpecificationStepType.STORY, specification.getPhrase());
+                currentStep = listener.startStep(SpecificationStepType.STORY, specification.getPhrase());
             } else {
-                listener.startStep(SpecificationStepType.BEHAVIOR, specification.getPhrase());
+                currentStep = listener.startStep(SpecificationStepType.BEHAVIOR, specification.getPhrase());
                 warnOnBehaviorNaming(file);
             }
             new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
             listener.stopStep();
+
+            long endTime = System.currentTimeMillis();
+            System.out.println("Specs run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime)/1000f + " sec");
         }
 
-        // TODO reimplement the report writing.. but it will just start with the main XML file
+        System.out.println("Total specs: " + listener.getSpecificationCount() + ", Failed specs: " + listener.getFailedSpecificationCount() + ", Success specs: " + listener.getSuccessfulSpecificationCount());
+
         String easybxmlreportlocation = null;
         for (Report report : reports) {
             if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
@@ -100,9 +109,6 @@ public class SpecificationRunner {
 //            }
         }
 
-        System.out.println("total specs: " + listener.getSpecificationCount());
-        System.out.println("failed specs: " + listener.getFailedSpecificationCount());
-        System.out.println("success specs: " + listener.getSuccessfulSpecificationCount());
 
         if (listener.getFailedSpecificationCount() > 0) {
             System.out.println("specification failures detected!");
@@ -255,12 +261,6 @@ public class SpecificationRunner {
         if (userConfiguredReports != null) {
             configuredReports.addAll(userConfiguredReports);
         }
-
-//        Report terseStoryReport = new Report();
-//        terseStoryReport.setFormat(ReportFormat.TERSE.format());
-//        terseStoryReport.setLocation("screen");
-//        terseStoryReport.setType(ReportType.STORY.type());
-//        configuredReports.add(terseStoryReport);
 
         return configuredReports;
     }

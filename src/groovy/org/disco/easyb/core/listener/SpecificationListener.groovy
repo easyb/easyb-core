@@ -6,7 +6,7 @@ import org.disco.easyb.core.SpecificationStep
 
 interface SpecificationListener {
 
-  void startStep(SpecificationStepType specificationStepType, String stepName)
+  SpecificationStep startStep(SpecificationStepType specificationStepType, String stepName)
   void stopStep()
 
   SpecificationStep getGenesisStep()

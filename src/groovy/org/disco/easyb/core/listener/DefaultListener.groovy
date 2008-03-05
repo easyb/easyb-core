@@ -34,10 +34,11 @@ class DefaultListener implements SpecificationListener {
   }
 
   // TODO instead of startStep and stopStep we should do a decorator instead
-  public void startStep(SpecificationStepType specificationStepType, String stepName) {
+  public SpecificationStep startStep(SpecificationStepType specificationStepType, String stepName) {
     SpecificationStep specificationStep = new SpecificationStep(specificationStepType, stepName, currentStep);
     currentStep.addChildStep(specificationStep)
     currentStep = specificationStep
+    return specificationStep
   }
 
   public void stopStep() {
