@@ -79,7 +79,7 @@ public class SpecificationRunner {
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
-            System.out.println("Specs run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime)/1000f + " sec");
+            System.out.println((currentStep.getChildStepSpecificationFailureCount() == 0 ? "" : "FAILURE ") + "Specs run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime)/1000f + " sec");
         }
 
         System.out.println("Total specs: " + listener.getSpecificationCount() + ", Failed specs: " + listener.getFailedSpecificationCount() + ", Success specs: " + listener.getSuccessfulSpecificationCount());
