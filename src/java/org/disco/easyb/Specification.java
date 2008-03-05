@@ -19,8 +19,9 @@ public class Specification {
                 phrase = new CamelCaseConverter(stripPattern(specificationFile.getName(), pattern)).toPhrase();
             }
         }
-        if (!story)
+        if (!story) {
             phrase = new CamelCaseConverter(stripPattern(specificationFile.getName(), "\\.")).toPhrase();
+        }
     }
 
     private String stripPattern(String string, String pattern) {

@@ -5,7 +5,7 @@ import org.disco.easyb.core.util.SpecificationStepType
 
 scenario "listener is given all successful results", {
 
-  given "a story listener",{
+  given "a story listener", {
     listener = new DefaultListener()
   }
 
@@ -22,13 +22,13 @@ scenario "listener is given all successful results", {
   and
 
   then "the count of successful specifications should be 1", {
-   listener.getSuccessfulSpecificationCount().shouldBe 1
+    listener.getSuccessfulSpecificationCount().shouldBe 1
   }
 
   and
 
   then "the count of total specifications should be 1", {
-   listener.getSpecificationCount().shouldBe 1
+    listener.getSpecificationCount().shouldBe 1
   }
 
   and
@@ -52,7 +52,7 @@ scenario "listener is given a single failure", {
   }
 
   then "the count of failed specifications should be 1", {
-   listener.getFailedSpecificationCount().shouldBe(1)
+    listener.getFailedSpecificationCount().shouldBe(1)
   }
 
   and
@@ -64,7 +64,7 @@ scenario "listener is given a single failure", {
   and
 
   then "the count of total specifications should be 1", {
-   listener.getSpecificationCount().shouldBe 1
+    listener.getSpecificationCount().shouldBe 1
   }
 
   and

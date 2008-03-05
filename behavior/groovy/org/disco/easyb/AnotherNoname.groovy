@@ -3,13 +3,13 @@ package org.disco.easyb
 
 
 given "a valid string with 6 characters", {
-	var = "string"
+  var = "string"
 }
 
 when "length is called", {
-	len = var.length()
+  len = var.length()
 }
 
 then "the value returned should be 6", {
-	len.is(6)
+  len.is(6)
 }

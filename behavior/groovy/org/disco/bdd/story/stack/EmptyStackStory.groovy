@@ -4,7 +4,7 @@ import org.disco.bdd.Stack
 
 scenario "null is pushed onto empty stack", {
 
-  given "an empty stack",{
+  given "an empty stack", {
     stack = new Stack()
   }
 
@@ -15,7 +15,7 @@ scenario "null is pushed onto empty stack", {
   }
 
   then "an exception should be thrown", {
-    ensureThrows(RuntimeException.class){
+    ensureThrows(RuntimeException.class) {
       pushnull()
     }
   }
@@ -23,14 +23,14 @@ scenario "null is pushed onto empty stack", {
   and
 
   then "the stack should still be empty", {
-   stack.empty.shouldBe true
+    stack.empty.shouldBe true
   }
 }
 
 
 scenario "pop is called on empty stack", {
 
-  given "an empty stack",{
+  given "an empty stack", {
     stack = new Stack()
   }
 
@@ -41,14 +41,14 @@ scenario "pop is called on empty stack", {
   }
 
   then "an exception should be thrown", {
-    ensureThrows(RuntimeException.class){
+    ensureThrows(RuntimeException.class) {
       popnull()
     }
   }
 
- and
+  and
 
- then "the stack should still be empty", {
-	 stack.empty.shouldBe true
-    }
+  then "the stack should still be empty", {
+    stack.empty.shouldBe true
+  }
 }

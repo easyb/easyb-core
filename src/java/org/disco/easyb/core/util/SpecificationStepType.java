@@ -13,7 +13,6 @@ public enum SpecificationStepType {
     BEFORE("before"),
     IT("it");
 
-    
     private final String type;
 
     SpecificationStepType(String type) {
@@ -23,5 +22,4 @@ public enum SpecificationStepType {
     public String type() {
         return type;
     }
-
 }

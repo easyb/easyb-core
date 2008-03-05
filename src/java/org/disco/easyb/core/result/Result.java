@@ -4,8 +4,8 @@ package org.disco.easyb.core.result;
  * Represents the result of verifying an individual behavior.
  *
  * TODO: right now a result has no knowledge of what was the
- * containing behavior-- you can't ask a result for which story it 
- * was in, scenario, etc. Error reporting is thus not easy. 
+ * containing behavior-- you can't ask a result for which story it
+ * was in, scenario, etc. Error reporting is thus not easy.
  *
  * @author sevensoft [Ken Brooks]
  */
@@ -13,7 +13,7 @@ public class Result {
     public static final Type SUCCEEDED = new Type("Succeeded", ".");
     public static final Type FAILED = new Type("Failed", "F");
     public static final Type PENDING = new Type("Pending", "P");
-    
+
     public static class Type {
         private final String description;
         private final String symbol;
@@ -22,9 +22,11 @@ public class Result {
             this.description = description;
             this.symbol = symbol;
         }
+
         public String toString() {
             return description;
         }
+
         public String symbol() {
             return symbol;
         }
@@ -34,7 +36,7 @@ public class Result {
     private final Type status;
     private final Throwable cause;
     private final String containerName;
-    
+
     //added to support better error handling
     private String source;
 
@@ -84,18 +86,24 @@ public class Result {
         return status == FAILED;
     }
 
-    public boolean pending(){
-    	return status == PENDING;
+    public boolean pending() {
+        return status == PENDING;
     }
-    
-	public String toString() {
+
+    public String toString() {
         return "Name: " + name + ", status: " + status + ", targetException: " + cause;
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        if (o.getClass() != getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (o.getClass() != getClass()) {
+            return false;
+        }
 
         Result other = (Result) o;
         return ((name == null ? other.name == null : name.equals(other.name))
@@ -114,11 +122,11 @@ public class Result {
         return hashCode;
     }
 
-	public String getSource() {
-		return source;
-	}
+    public String getSource() {
+        return source;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public void setSource(String source) {
+        this.source = source;
+    }
 }

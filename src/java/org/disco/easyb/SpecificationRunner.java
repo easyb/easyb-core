@@ -84,7 +84,7 @@ public class SpecificationRunner {
             }
         }
 
-        if(easybxmlreportlocation == null) {
+        if (easybxmlreportlocation == null) {
             System.out.println("xmleasyb report is required");
             System.exit(-1);
         }
@@ -94,13 +94,11 @@ public class SpecificationRunner {
                 //do nothing, report was already run above.
             } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
                 new TxtStoryReportWriter(report, easybxmlreportlocation).writeReport();
-
             }
 //            else if (report.getFormat().concat(report.getType()).equals(Report.t)){
 //                new TerseReportWriter(report, listener).writeReport();
 //            }
         }
-
 
         System.out.println("total specs: " + listener.getSpecificationCount());
         System.out.println("failed specs: " + listener.getFailedSpecificationCount());
@@ -232,7 +230,6 @@ public class SpecificationRunner {
      */
     private static Options getOptionsForMain() {
         Options options = new Options();
-
 
         //noinspection AccessStaticViaInstance
         Option xmleasybreport = OptionBuilder.withArgName("file").hasArg()

@@ -15,16 +15,14 @@ public class CamelCaseConverter {
         chars = words.toCharArray();
     }
 
-
     public CamelCaseConverter(Class type) {
         this(type.getName());
     }
 
     public CamelCaseConverter(Object obj) {
 //        this(obj instanceof Named ? ((Named) obj).getName() : obj.getClass().getName());
-      this(obj.getClass().getName());
+        this(obj.getClass().getName());
     }
-
 
     public String toCamelCase() {
         StringBuffer buf = new StringBuffer();
@@ -34,11 +32,9 @@ public class CamelCaseConverter {
                 if (pos < chars.length) {
                     buf.append(Character.toUpperCase(chars[pos]));
                 }
-            }
-            else if (pos == 0) {
+            } else if (pos == 0) {
                 buf.append(Character.toUpperCase(chars[pos]));
-            }
-            else {
+            } else {
                 buf.append(chars[pos]);
             }
             pos++;
@@ -70,8 +66,9 @@ public class CamelCaseConverter {
 
     private int countUppercase() {
         int count = 0;
-        while (pos + count < chars.length && Character.isUpperCase(chars[pos + count]))
+        while (pos + count < chars.length && Character.isUpperCase(chars[pos + count])) {
             count++;
+        }
         return count;
     }
 
@@ -97,6 +94,4 @@ public class CamelCaseConverter {
         }
         processSingleUppercaseChar(buf);
     }
-
-
 }

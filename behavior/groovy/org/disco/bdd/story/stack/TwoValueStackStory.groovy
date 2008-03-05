@@ -3,7 +3,7 @@ package org.disco.bdd.story.stack
 import org.disco.bdd.Stack
 
 scenario "pop returns last item", {
-  given "a stack with two values",{
+  given "a stack with two values", {
     stack = new Stack()
     push1 = "foo"
     push2 = "bar"
@@ -21,8 +21,8 @@ scenario "pop returns last item", {
 
   and
 
-  then "the stack should not be empty", {   
-      stack.empty.shouldBe false
-    }
+  then "the stack should not be empty", {
+    stack.empty.shouldBe false
+  }
 }
 
