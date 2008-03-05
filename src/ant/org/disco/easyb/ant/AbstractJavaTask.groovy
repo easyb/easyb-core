@@ -9,34 +9,34 @@ import org.apache.tools.ant.types.Commandline
 
 abstract public class AbstractJavaTask extends Task {
 
-    protected CommandlineJava commandLine = new CommandlineJava()
-    private CommandRunner runner
+  protected CommandlineJava commandLine = new CommandlineJava()
+  private CommandRunner runner
 
-    public AbstractJavaTask(CommandRunner commandRunner) {
-        this.runner = commandRunner
-    }
+  public AbstractJavaTask(CommandRunner commandRunner) {
+    this.runner = commandRunner
+  }
 
-    protected int run() throws BuildException {
-        return runner.fork(this, commandLine.getCommandline())
-    }
+  protected int run() throws BuildException {
+    return runner.fork(this, commandLine.getCommandline())
+  }
 
-    public Path createClasspath() {
-        return commandLine.createClasspath(getProject()).createPath()
-    }
+  public Path createClasspath() {
+    return commandLine.createClasspath(getProject()).createPath()
+  }
 
-    public void setClassPath(Path path) {
-        createClasspath().append(path)
-    }
+  public void setClassPath(Path path) {
+    createClasspath().append(path)
+  }
 
-    public void setClasspathRef(Reference r) {
-        createClasspath().setRefid(r)
-    }
+  public void setClasspathRef(Reference r) {
+    createClasspath().setRefid(r)
+  }
 
-    public Commandline.Argument createJvmarg() {
-        return commandLine.createVmArgument()
-    }
+  public Commandline.Argument createJvmarg() {
+    return commandLine.createVmArgument()
+  }
 
-    public void setMaxmemory(int megabyte) {
-        createJvmarg().setLine("-Xmx" + megabyte + "m")
-    }
+  public void setMaxmemory(int megabyte) {
+    createJvmarg().setLine("-Xmx" + megabyte + "m")
+  }
 }

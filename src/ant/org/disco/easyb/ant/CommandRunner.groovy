@@ -3,5 +3,5 @@ package org.disco.easyb.ant
 import org.apache.tools.ant.Task
 
 public interface CommandRunner {
-    int fork(Task task, String[] commandline)
+  int fork(Task task, String[] commandline)
 }

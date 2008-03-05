@@ -17,17 +17,16 @@ class SpecificationStep {
     name = inStepName
   }
 
-  public void addChildStep(SpecificationStep inSpecificationStep) {
+  def addChildStep(SpecificationStep inSpecificationStep) {
     childSteps.add(inSpecificationStep)
   }
 
-
 // TODO refactor into a getStepCount that can take the type its looking for (Fail, pass, pending)
-  public long getStepSuccessCount() {
+  long getStepSuccessCount() {
     return result != null && result.succeeded() ? 1 : 0
   }
 
-  public long getChildStepSpecificationSuccessCount() {
+  long getChildStepSpecificationSuccessCount() {
     if(childSteps.size() == 0) {
       return getStepSuccessCount()
     } else {
@@ -40,11 +39,11 @@ class SpecificationStep {
   }
 
 
-  public long getStepFailureCount() {
+  long getStepFailureCount() {
     return result != null && result.failed() ? 1 : 0
   }
 
-  public long getChildStepSpecificationFailureCount() {
+  long getChildStepSpecificationFailureCount() {
     if(childSteps.size() == 0) {
       return getStepFailureCount()
     } else {
@@ -56,11 +55,11 @@ class SpecificationStep {
     }
   }
 
-  public long getStepSpecificationCount(){
+  long getStepSpecificationCount(){
     return result != null ? 1 : 0
   }
 
-  public long getChildStepSpecificationCount() {
+  long getChildStepSpecificationCount() {
     if(childSteps.size() == 0) {
       return getStepSpecificationCount()
     } else {
@@ -72,15 +71,15 @@ class SpecificationStep {
     }
   }
 
-  public List<SpecificationStep> getChildrenOfType(SpecificationStepType specificationStoryType) {
+  List<SpecificationStep> getChildrenOfType(SpecificationStepType specificationStoryType) {
     childSteps.findAll { specificationStoryType.equals(it.stepType) }
   }
 
-  public SpecificationStep getParentStep() {
+  SpecificationStep getParentStep() {
     return parentStep
   }
 
-  public void setResult(Result inResult) {
+  def setResult(Result inResult) {
     result = inResult
   }
   
