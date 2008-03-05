@@ -4,7 +4,7 @@ import org.disco.easyb.core.result.Result
 import org.disco.easyb.core.SpecificationStep
 import org.disco.easyb.core.util.SpecificationStepType
 
-class DefaultListener implements SpecificationListener{
+class DefaultListener implements SpecificationListener {
 
   private SpecificationStep currentStep
   private SpecificationStep genesisStep = new SpecificationStep(SpecificationStepType.GENESIS, "easyb-genesis", null)
@@ -44,5 +44,5 @@ class DefaultListener implements SpecificationListener{
     // TODO set the metrics for the current step prior to popping it??
     currentStep = currentStep.parentStep
   }
-  
+
 }

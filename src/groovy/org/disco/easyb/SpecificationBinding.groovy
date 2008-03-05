@@ -8,7 +8,6 @@ import org.disco.easyb.core.util.SpecificationStepType
 
 class SpecificationBinding {
 
-  
   // TODO change to constants when i break the binding into story and behavior bindings
   public static final String STORY = "story"
   public static final String STORY_SCENARIO = "scenario"
@@ -23,91 +22,91 @@ class SpecificationBinding {
 	 * has definitions for methods such as "it" and "given", which are used
 	 * in the context of behaviors (or stories). 
 	 */
-  static Binding getBinding(listener){
-		 
-  	def binding = new Binding()
+  static Binding getBinding(listener) {
+
+    def binding = new Binding()
 
     def basicDelegate = basicDelegate()
     def givenDelegate = givenDelegate()
 
     def beforeIt
-	
-    binding.scenario = { scenarioDescription, scenarioClosure={} ->
+
+    binding.scenario = {scenarioDescription, scenarioClosure = {} ->
       listener.startStep(SpecificationStepType.SCENARIO, scenarioDescription)
-        scenarioClosure()
+      scenarioClosure()
       listener.stopStep()
     }
 
-    binding.before = { beforeDescription, closure={} ->
+    binding.before = {beforeDescription, closure = {} ->
       listener.startStep(SpecificationStepType.BEFORE, beforeDescription)
       beforeIt = closure
       listener.stopStep()
     }
 
-    def itClosure = { spec, closure={}, storyPart ->
+    def itClosure = {spec, closure = {}, storyPart ->
       closure.delegate = basicDelegate
-      
-      try{
-        if(beforeIt != null){
+
+      try {
+        if (beforeIt != null) {
           beforeIt()
         }
-        use(SpecificationCategory){
+        use(SpecificationCategory) {
           closure()
         }
         listener.gotResult(new Result(spec, storyPart, Result.SUCCEEDED))
-      }catch(ex){
+      } catch (ex) {
         listener.gotResult(new Result(spec, storyPart, ex))
       }
     }
 
-    binding.it = { spec, closure={} ->
+    binding.it = {spec, closure = {} ->
       listener.startStep(SpecificationStepType.IT, spec)
-    	  itClosure(spec, closure, BEHAVIOR_IT)
-    	listener.stopStep()
-    }
-
-    binding.then = {spec, closure={} ->
-      listener.startStep(SpecificationStepType.THEN, spec)
-    		itClosure(spec, closure, STORY_THEN)
+      itClosure(spec, closure, BEHAVIOR_IT)
       listener.stopStep()
     }
-        		  
-	binding.when = { whenDescription, closure={} ->
-	  listener.startStep(SpecificationStepType.WHEN, whenDescription)
-		closure.delegate = basicDelegate
-		closure()
-    listener.stopStep()
-  }
-	
-	binding.given = { givenDescription, closure={} ->
-	  listener.startStep(SpecificationStepType.GIVEN, givenDescription)
-		closure.delegate = givenDelegate
-		closure()
-    listener.stopStep()
-  }
-		
-	binding.and = {
-    listener.startStep(SpecificationStepType.AND, "")
-    listener.stopStep()
-  }
-	  		  
-	 return binding
-	}
 
-	/**
-	 * The easy delegate handles "it", "then", and "when"
-	 * Currently, this delegate isn't plug and play.
-	 */
-	private static basicDelegate(){
-		return new EnsuringDelegate()
-	}
-	/** 
-	 * The "given" delegate supports plug-ins, consequently, 
-	 * the flex guys are utlized. Currently, there is a DbUnit
-	 * "given" plug-in and it is envisioned that there could be 
-	 * others like Selenium. 
-	 */
-	private static givenDelegate(){
-		return new PlugableDelegate()
-	}
+    binding.then = {spec, closure = {} ->
+      listener.startStep(SpecificationStepType.THEN, spec)
+      itClosure(spec, closure, STORY_THEN)
+      listener.stopStep()
+    }
+
+    binding.when = {whenDescription, closure = {} ->
+      listener.startStep(SpecificationStepType.WHEN, whenDescription)
+      closure.delegate = basicDelegate
+      closure()
+      listener.stopStep()
+    }
+
+    binding.given = {givenDescription, closure = {} ->
+      listener.startStep(SpecificationStepType.GIVEN, givenDescription)
+      closure.delegate = givenDelegate
+      closure()
+      listener.stopStep()
+    }
+
+    binding.and = {
+      listener.startStep(SpecificationStepType.AND, "")
+      listener.stopStep()
+    }
+
+    return binding
+  }
+
+  /**
+   * The easy delegate handles "it", "then", and "when"
+   * Currently, this delegate isn't plug and play.
+   */
+  private static basicDelegate() {
+    return new EnsuringDelegate()
+  }
+  /**
+   * The "given" delegate supports plug-ins, consequently,
+   * the flex guys are utlized. Currently, there is a DbUnit
+   * "given" plug-in and it is envisioned that there could be
+   * others like Selenium.
+   */
+  private static givenDelegate() {
+    return new PlugableDelegate()
+  }
 }

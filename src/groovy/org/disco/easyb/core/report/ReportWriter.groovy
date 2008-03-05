@@ -6,5 +6,5 @@ package org.disco.easyb.core.report
  *  inside Groovy where we'd leverage duck typing
  */
 interface ReportWriter {
-	void writeReport()
+  void writeReport()
 }

@@ -14,9 +14,9 @@ class EasybXmlReportWriter implements ReportWriter {
     report = inReport
   }
 
-  def buildFailureMessage(result){
+  def buildFailureMessage(result) {
     def buff = new StringBuffer()
-    for(i in 1..10){
+    for (i in 1..10) {
       // TODO needs better formatting ?
       buff << result.cause()?.getStackTrace()[i]
       buff << "\n"
@@ -25,22 +25,22 @@ class EasybXmlReportWriter implements ReportWriter {
   }
 
   def walkChildren(MarkupBuilder xml, SpecificationStep step) {
-    if(step.childSteps.size() == 0) {
-      if(step.result == null) {
-        xml."${step.stepType.type()}"(name:step.name)
+    if (step.childSteps.size() == 0) {
+      if (step.result == null) {
+        xml."${step.stepType.type()}"(name: step.name)
       } else {
-          xml."${step.stepType.type()}"(name:step.name, result:step.result.status) {
-            if(step.result.failed()) {
-                  failuremessage(buildFailureMessage(step.result))
-            }
+        xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
+          if (step.result.failed()) {
+            failuremessage(buildFailureMessage(step.result))
           }
+        }
       }
     } else {
-      def stepTotalSpecifications = step.childSteps.inject(0) { count, item -> count + item.getChildStepSpecificationCount() }
-      def stepTotalFailedSpecifications = step.childSteps.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
+      def stepTotalSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
+      def stepTotalFailedSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
 
-      xml."${step.stepType.type()}"(name:step.name, totalspecifications:stepTotalSpecifications, totalfailedspecifications:stepTotalFailedSpecifications) {
-        for(child in step.childSteps) {
+      xml."${step.stepType.type()}"(name: step.name, totalspecifications: stepTotalSpecifications, totalfailedspecifications: stepTotalFailedSpecifications) {
+        for (child in step.childSteps) {
           walkChildren(xml, child)
         }
       }
@@ -55,27 +55,27 @@ class EasybXmlReportWriter implements ReportWriter {
 
     def xml = new MarkupBuilder(writer)
 
-	  xml.EasybRun(time:new Date(), totalspecifications:listener.getSpecificationCount(), totalfailedspecifications:listener.getFailedSpecificationCount()){
+    xml.EasybRun(time: new Date(), totalspecifications: listener.getSpecificationCount(), totalfailedspecifications: listener.getFailedSpecificationCount()) {
       def storyChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY)
-      def storyChildrenTotalSpecifications = storyChildren.inject(0) { count, item -> count + item.getChildStepSpecificationCount() }
-      def storyChildrenTotalFailedSpecifications = storyChildren.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
-      stories (totalspecifications:storyChildrenTotalSpecifications, totalfailedspecifications:storyChildrenTotalFailedSpecifications) {
-        listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY).each { genesisChild ->
+      def storyChildrenTotalSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
+      def storyChildrenTotalFailedSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
+      stories(totalspecifications: storyChildrenTotalSpecifications, totalfailedspecifications: storyChildrenTotalFailedSpecifications) {
+        listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY).each {genesisChild ->
           walkChildren(xml, genesisChild)
         }
       }
       def behaviorChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR)
-      def behaviorChildrenTotalSpecifications = behaviorChildren.inject(0) { count, item -> count + item.getChildStepSpecificationCount() }
-      def behaviorChildrenTotalFailedSpecifications = behaviorChildren.inject(0) { count, item -> count + item.getChildStepSpecificationFailureCount() }
-      behaviors (totalspecifications:behaviorChildrenTotalSpecifications, totalfailedspecifications:behaviorChildrenTotalFailedSpecifications) {
-        listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR).each { genesisChild ->
+      def behaviorChildrenTotalSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
+      def behaviorChildrenTotalFailedSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
+      behaviors(totalspecifications: behaviorChildrenTotalSpecifications, totalfailedspecifications: behaviorChildrenTotalFailedSpecifications) {
+        listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR).each {genesisChild ->
           walkChildren(xml, genesisChild)
         }
       }
       // TODO should we have a misc? grouping.. for things that aren't in a Story.groovy or a Behavior.groovy.. etc?
 
-	  }
-	  writer.close()
+    }
+    writer.close()
   }
 
 }

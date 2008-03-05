@@ -2,7 +2,7 @@ package org.disco.easyb.core.report
 
 
 class Report {
-        
+
   public static final String XML_BEHAVIOR = "xmlbehavior"
   public static final String TXT_BEHAVIOR = "txtbehavior"
   public static final String XML_STORY = "xmlstory"
@@ -16,11 +16,11 @@ class Report {
   public static final String BEHAVIOR_TYPE = "behavior"
 
 
-  	String location
+  String location
 
-  	// xml or txt
-	String format
-	// story or behavior
-	String type
-  
+  // xml or txt
+  String format
+  // story or behavior
+  String type
+
 }

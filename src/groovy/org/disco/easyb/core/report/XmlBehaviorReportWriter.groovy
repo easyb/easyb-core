@@ -4,7 +4,7 @@ import org.disco.easyb.core.listener.SpecificationListener
 import groovy.xml.MarkupBuilder
 import org.disco.easyb.core.util.CamelCaseConverter
 
-public class XmlBehaviorReportWriter implements ReportWriter{
+public class XmlBehaviorReportWriter implements ReportWriter {
 
   Report report
   SpecificationListener behaviorListener
@@ -20,23 +20,23 @@ public class XmlBehaviorReportWriter implements ReportWriter{
 
     def builder = new MarkupBuilder(writer)
 
-	  builder.EasyBehaviorRun(time:new Date(), totalrun:behaviorListener.methodsVerified, totalfailed:behaviorListener.failures.size()){
-		  behaviorListener.successes.each{
-		  	Behavior(name:it.name, result:it.status)
-		  }
-		  behaviorListener.failures.each{ res ->
-			  Behavior(name:res.name, result:res.status){
-				  FailureMessage(this.buildFailureMessage(res))
-			  }
-		  }
-	  }
-	  writer.close()
+    builder.EasyBehaviorRun(time: new Date(), totalrun: behaviorListener.methodsVerified, totalfailed: behaviorListener.failures.size()) {
+      behaviorListener.successes.each {
+        Behavior(name: it.name, result: it.status)
+      }
+      behaviorListener.failures.each {res ->
+        Behavior(name: res.name, result: res.status) {
+          FailureMessage(this.buildFailureMessage(res))
+        }
+      }
+    }
+    writer.close()
   }
 
-  def buildFailureMessage(result){
+  def buildFailureMessage(result) {
     def buff = new StringBuffer()
     buff << "\t\n"
-    for(i in 1..10){
+    for (i in 1..10) {
       buff << "\t" + result.cause()?.getStackTrace()[i]
       buff << "\t\n"
     }
