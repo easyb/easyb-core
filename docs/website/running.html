@@ -40,13 +40,14 @@ pageTracker._trackPageview();
 
 <p>easyb can be invoked via:</p>
 <ul>
-  <li>the command line</li>
-  <li>Ant</li>
-  <li>Maven</li>
+  <li><a href='#commandline'>the command line</a></li>
+  <li><a href='#ant'>Ant</a></li>
+  <li><a href='#maven'>Maven</a></li>
 </ul>
 
-
+<a name='commandline'>
 <h2>Command line </h2>
+</a>
 
 <p>easyb comes with a command line runner that takes the name of a particular behavior or story you wish to run. You can
   optionally pass in a few different flag options to output various report formats as well. </p>
@@ -97,7 +98,9 @@ on the command line.</p>
 
 <p>Note, the line break in the above example is for formatting purposes only.</p>
 
+<a name='ant'>
 <h2>Ant</h2>
+</a>
 
 <p>You can run your behaviors and stories via easyb's Ant task. It's easy:</p>
 <ol>
@@ -205,34 +208,15 @@ Total time: 3 seconds
 
 <p>That looks like something business users (or management) could understand-- they might even be able to *gasp* write them!</p>
 
+<a name='maven'>
 <h2>Maven</h2>
+</a>
 
-<p>You can also run your behaviors and stories via easyb's Maven plugin. It's easy, all you need to do is to add the following to your project's pom and your easyb stories and behaviors will automatically be executed as a part of the test phase:</p>
+<p>You can also run your behaviors and stories via easyb's Maven plugin. Since all the easyb artifacts are hosted on the maven central repository all you need to do is to add the following to your project's pom and your easyb stories and behaviors will automatically be executed as a part of the test phase:</p>
 <ol>
-  <li>The easyb repository</li>
   <li>A dependency on easyb</li>
   <li>The easyb-plugin</li>
 </ol>
-
-<p>Defining the repository looks like this:</p>
-<pre><code>
-  &lt;project&gt;
-  ...
-  &lt;repositories&gt;
-    &lt;repository&gt;
-      &lt;id&gt;easyb&lt;/id&gt;
-      &lt;url&gt;http://www.easyb.org/repo/&lt;/url&gt;
-    &lt;/repository&gt;
-  &lt;/repositories&gt;
-  &lt;pluginRepositories&gt;
-    &lt;pluginRepository&gt;
-      &lt;id&gt;easyb&lt;/id&gt;
-      &lt;url&gt;http://www.easyb.org/repo/&lt;/url&gt;
-    &lt;/pluginRepository&gt;
-  &lt;/pluginRepositories&gt;
-  ...
-  &lt;/project&gt;
-</code></pre>
 
 <p>The easyb dependency looks like this:</p>
 <pre><code>
