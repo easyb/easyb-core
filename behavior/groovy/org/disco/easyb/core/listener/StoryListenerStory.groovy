@@ -11,7 +11,7 @@ scenario "listener is given all successful results", {
 
   when "a successful result is added", {
     listener.startStep(SpecificationStepType.THEN, "success then step")
-    listener.gotResult(new Result("irrelevant", "irrelevant", Result.SUCCEEDED))
+    listener.gotResult(new Result(Result.SUCCEEDED))
     listener.stopStep()
   }
 
@@ -47,7 +47,7 @@ scenario "listener is given a single failure", {
 
   when "a failure result is added", {
     listener.startStep(SpecificationStepType.THEN, "failure then step")
-    listener.gotResult(new Result("irrelevant", "irrelevant", new Exception("FailureExceptionReason")))
+    listener.gotResult(new Result(new Exception("FailureExceptionReason")))
     listener.stopStep()
   }
 

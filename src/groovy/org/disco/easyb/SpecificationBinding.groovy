@@ -31,6 +31,10 @@ class SpecificationBinding {
 
     def beforeIt
 
+    def pendingClosure = {
+      listener.gotResult(new Result(Result.PENDING))
+    }
+
     binding.scenario = {scenarioDescription, scenarioClosure = {} ->
       listener.startStep(SpecificationStepType.SCENARIO, scenarioDescription)
       scenarioClosure()
@@ -43,29 +47,30 @@ class SpecificationBinding {
       listener.stopStep()
     }
 
-    def itClosure = {spec, closure = {}, storyPart ->
+    def itClosure = {spec, closure, storyPart ->
       closure.delegate = basicDelegate
 
       try {
         if (beforeIt != null) {
           beforeIt()
         }
+        listener.gotResult(new Result(Result.SUCCEEDED))
         use(SpecificationCategory) {
           closure()
         }
-        listener.gotResult(new Result(spec, storyPart, Result.SUCCEEDED))
       } catch (ex) {
-        listener.gotResult(new Result(spec, storyPart, ex))
+        listener.gotResult(new Result(ex))
       }
     }
 
-    binding.it = {spec, closure = {} ->
+    binding.it = {spec, closure = pendingClosure ->
       listener.startStep(SpecificationStepType.IT, spec)
       itClosure(spec, closure, BEHAVIOR_IT)
       listener.stopStep()
     }
 
-    binding.then = {spec, closure = {} ->
+
+    binding.then = {spec, closure = pendingClosure ->
       listener.startStep(SpecificationStepType.THEN, spec)
       itClosure(spec, closure, STORY_THEN)
       listener.stopStep()

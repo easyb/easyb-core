@@ -32,17 +32,13 @@ public class Result {
         }
     }
 
-    private final String name;
     private final Type status;
     private final Throwable cause;
-    private final String containerName;
 
     //added to support better error handling
     private String source;
 
-    public Result(String name, String containerName, Throwable cause) {
-        this.name = name;
-        this.containerName = containerName;
+    public Result(Throwable cause) {
         this.cause = cause;
         this.status = getStatusFromCause(cause);
     }
@@ -55,19 +51,9 @@ public class Result {
         }
     }
 
-    public Result(String name, String containerName, Type status) {
-        this.name = name;
-        this.containerName = containerName;
+    public Result(Type status) {
         this.cause = null;
         this.status = status;
-    }
-
-    public String name() {
-        return name;
-    }
-
-    public String containerName() {
-        return containerName;
     }
 
     public Type status() {
@@ -91,7 +77,7 @@ public class Result {
     }
 
     public String toString() {
-        return "Name: " + name + ", status: " + status + ", targetException: " + cause;
+        return "status: " + status + ", targetException: " + cause;
     }
 
     public boolean equals(Object o) {
@@ -106,9 +92,8 @@ public class Result {
         }
 
         Result other = (Result) o;
-        return ((name == null ? other.name == null : name.equals(other.name))
-            && (status == other.status)
-            && (cause == null ? other.cause == null : cause.equals(other.cause)));
+        return (status == other.status)
+            && (cause == null ? other.cause == null : cause.equals(other.cause));
     }
 
     /**
@@ -116,7 +101,6 @@ public class Result {
      */
     public int hashCode() {
         int hashCode = 1;
-        hashCode = 31 * hashCode + (name == null ? 0 : name.hashCode());
         hashCode = 31 * hashCode + status.hashCode();
         hashCode = 31 * hashCode + (cause == null ? 0 : cause.hashCode());
         return hashCode;

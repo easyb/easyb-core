@@ -21,7 +21,6 @@ import org.disco.easyb.core.report.Report;
 import org.disco.easyb.core.report.ReportWriter;
 import org.disco.easyb.core.report.EasybXmlReportWriter;
 import org.disco.easyb.core.report.TxtStoryReportWriter;
-import org.disco.easyb.core.report.TerseReportWriter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
 import org.disco.easyb.core.util.SpecificationStepType;
@@ -104,9 +103,6 @@ public class SpecificationRunner {
             } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
                 new TxtStoryReportWriter(report, easybxmlreportlocation).writeReport();
             }
-//            else if (report.getFormat().concat(report.getType()).equals(Report.t)){
-//                new TerseReportWriter(report, listener).writeReport();
-//            }
         }
 
 
