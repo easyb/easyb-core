@@ -21,6 +21,10 @@ class DefaultListener implements SpecificationListener {
     return genesisStep.getChildStepSpecificationSuccessCount()
   }
 
+  long getPendingSpecificationCount() {
+    return genesisStep.getChildStepSpecificationPendingCount()
+  }
+
   long getSpecificationCount() {
     return genesisStep.getChildStepSpecificationCount()
   }

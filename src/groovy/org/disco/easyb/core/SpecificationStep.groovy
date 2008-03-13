@@ -22,6 +22,22 @@ class SpecificationStep {
   }
 
   // TODO refactor into a getStepCount that can take the type its looking for (Fail, pass, pending)
+  long getStepPendingCount() {
+    return result != null && result.pending() ? 1 : 0
+  }
+
+  long getChildStepSpecificationPendingCount() {
+    if (childSteps.size() == 0) {
+      return getStepPendingCount()
+    } else {
+      long childStepPending = 0
+      for (childStep in childSteps) {
+        childStepPending += childStep.getChildStepSpecificationPendingCount()
+      }
+      return childStepPending + getStepPendingCount()
+    }
+  }
+
   long getStepSuccessCount() {
     return result != null && result.succeeded() ? 1 : 0
   }

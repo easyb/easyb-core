@@ -36,10 +36,11 @@ class EasybXmlReportWriter implements ReportWriter {
         }
       }
     } else {
-      def stepTotalSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
-      def stepTotalFailedSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
+      def stepSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
+      def stepFailedSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
+      def stepPendingSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
 
-      xml."${step.stepType.type()}"(name: step.name, totalspecifications: stepTotalSpecifications, totalfailedspecifications: stepTotalFailedSpecifications) {
+      xml."${step.stepType.type()}"(name: step.name, specifications: stepSpecifications, failedspecifications: stepFailedSpecifications, pendingspecifications: stepPendingSpecifications) {
         for (child in step.childSteps) {
           walkChildren(xml, child)
         }
@@ -55,25 +56,25 @@ class EasybXmlReportWriter implements ReportWriter {
 
     def xml = new MarkupBuilder(writer)
 
-    xml.EasybRun(time: new Date(), totalspecifications: listener.getSpecificationCount(), totalfailedspecifications: listener.getFailedSpecificationCount()) {
+    xml.EasybRun(time: new Date(), totalspecifications: listener.getSpecificationCount(), totalfailedspecifications: listener.getFailedSpecificationCount(), totalpendingspecifications: listener.getPendingSpecificationCount()) {
       def storyChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY)
-      def storyChildrenTotalSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
-      def storyChildrenTotalFailedSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
-      stories(totalspecifications: storyChildrenTotalSpecifications, totalfailedspecifications: storyChildrenTotalFailedSpecifications) {
+      def storyChildrenSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
+      def storyChildrenFailedSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
+      def storyChildrenPendingSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
+      stories(specifications: storyChildrenSpecifications, failedspecifications: storyChildrenFailedSpecifications, pendingspecifications: storyChildrenPendingSpecifications) {
         listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY).each {genesisChild ->
           walkChildren(xml, genesisChild)
         }
       }
       def behaviorChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR)
-      def behaviorChildrenTotalSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
-      def behaviorChildrenTotalFailedSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
-      behaviors(totalspecifications: behaviorChildrenTotalSpecifications, totalfailedspecifications: behaviorChildrenTotalFailedSpecifications) {
+      def behaviorChildrenSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
+      def behaviorChildrenFailedSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
+      def behaviorChildrenPendingSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
+      behaviors(specifications: behaviorChildrenSpecifications, failedspecifications: behaviorChildrenFailedSpecifications, pendingspecifications: behaviorChildrenPendingSpecifications) {
         listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR).each {genesisChild ->
           walkChildren(xml, genesisChild)
         }
       }
-      // TODO should we have a misc? grouping.. for things that aren't in a Story.groovy or a Behavior.groovy.. etc?
-
     }
     writer.close()
   }

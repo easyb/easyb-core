@@ -18,10 +18,10 @@ class TxtStoryReportWriter implements ReportWriter {
 
     def easybXml = new XmlSlurper().parse(new File(easybXmlLocation))
 
-    def count = easybXml.stories.@totalspecifications.toInteger()
-    writer.writeLine("${(count > 1) ? "${count} specifications executed " : " 1 specification run"}" +
-            "${easybXml.stories.@totalfailedspecifications.toInteger() > 0 ? ", but status is failure!" : "successfully"}" +
-            "${easybXml.stories.@totalfailedspecifications.toInteger() > 0 ? " Total failures: ${easybXml.stories.@totalfailedspecifications}" : ""}")
+    def count = easybXml.stories.@specifications.toInteger()
+    writer.writeLine("${(count > 1) ? "${count} specifications" : " 1 specification"}" + " (including ${easybXml.stories.@pendingspecifications.toInteger()} pending) executed" +
+            "${easybXml.stories.@failedspecifications.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
+            "${easybXml.stories.@failedspecifications.toInteger() > 0 ? " Total failures: ${easybXml.stories.@failedspecifications}" : ""}")
 
     handleElement(easybXml.stories)
     writer.close()
@@ -67,6 +67,9 @@ class TxtStoryReportWriter implements ReportWriter {
       writer.write("	Failure -> ${element.name()} ${element.@name}")
       writer.newLine()
       writer.write("${element.failuremessage}")
+    }
+    if (element.@result == Result.PENDING) {
+      writer.write(" [PENDING]")
     }
     writer.newLine()
 
