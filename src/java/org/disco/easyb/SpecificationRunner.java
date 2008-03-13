@@ -155,19 +155,6 @@ public class SpecificationRunner {
     private static List<Report> getConfiguredReports(CommandLine line) {
 
         List<Report> configuredReports = new ArrayList<Report>();
-        if (line.hasOption(Report.XML_BEHAVIOR)) {
-            Report report = new Report();
-            report.setFormat(ReportFormat.XML.format());
-            if (line.getOptionValue(Report.XML_BEHAVIOR) == null) {
-                report.setLocation("easyb-behavior-report.xml");
-            } else {
-                report.setLocation(line.getOptionValue(Report.XML_BEHAVIOR));
-            }
-            report.setType(ReportType.BEHAVIOR.type());
-
-            configuredReports.add(report);
-        }
-
         if (line.hasOption(Report.TXT_STORY)) {
             Report report = new Report();
             report.setFormat(ReportFormat.TXT.format());
@@ -237,11 +224,6 @@ public class SpecificationRunner {
         Option xmleasybreport = OptionBuilder.withArgName("file").hasArg()
             .withDescription("create an easyb report in xml format").create(Report.XML_EASYB);
         options.addOption(xmleasybreport);
-
-        //noinspection AccessStaticViaInstance
-//        Option xmlbehaviorreport = OptionBuilder.withArgName("file").hasArg()
-//            .withDescription("create a behavior report in xml format").create(Report.XML_BEHAVIOR);
-//        options.addOption(xmlbehaviorreport);
 
         //noinspection AccessStaticViaInstance
         Option storyreport = OptionBuilder.withArgName("file").hasArg()
