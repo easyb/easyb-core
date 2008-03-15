@@ -3,6 +3,7 @@ package org.disco.easyb;
 import groovy.lang.GroovyShell;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -53,37 +54,26 @@ public class SpecificationRunner {
     }
 
     /**
-     * TODO: refactor me please
-     *
      * @param specs collection of files that contain the specifications
-     * @return BehaviorListener has status about failures and successes
      * @throws Exception if unable to write report file
      */
     public void runSpecification(Collection<File> specs) throws Exception {
 
         SpecificationListener listener = new DefaultListener();
 
-        for (File file : specs) {
-            long startTime = System.currentTimeMillis();
-            System.out.println("Running " + file.getCanonicalPath());
-
-            Specification specification = new Specification(file);
-            SpecificationStep currentStep;
-            if (specification.isStory()) {
-                currentStep = listener.startStep(SpecificationStepType.STORY, specification.getPhrase());
-            } else {
-                currentStep = listener.startStep(SpecificationStepType.BEHAVIOR, specification.getPhrase());
-                warnOnBehaviorNaming(file);
-            }
-            new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
-            listener.stopStep();
-
-            long endTime = System.currentTimeMillis();
-            System.out.println((currentStep.getChildStepSpecificationFailureCount() == 0 ? "" : "FAILURE ") + "Specs run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime)/1000f + " sec");
-        }
+        executeSpecifications(specs, listener);
 
         System.out.println("Total specs: " + listener.getSpecificationCount() + ", Failed specs: " + listener.getFailedSpecificationCount() + ", Success specs: " + listener.getSuccessfulSpecificationCount());
 
+        produceReports(listener);
+
+        if (listener.getFailedSpecificationCount() > 0) {
+            System.out.println("specification failures detected!");
+            System.exit(-6);
+        }
+    }
+
+    private void produceReports(SpecificationListener listener) {
         String easybxmlreportlocation = null;
         for (Report report : reports) {
             if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
@@ -107,11 +97,26 @@ public class SpecificationRunner {
                 new TxtBehaviorReportWriter(report, easybxmlreportlocation).writeReport();
             }
         }
+    }
 
+    private void executeSpecifications(Collection<File> specs, SpecificationListener listener) throws IOException {
+        for (File file : specs) {
+            long startTime = System.currentTimeMillis();
+            System.out.println("Running " + file.getCanonicalPath());
 
-        if (listener.getFailedSpecificationCount() > 0) {
-            System.out.println("specification failures detected!");
-            System.exit(-6);
+            Specification specification = new Specification(file);
+            SpecificationStep currentStep;
+            if (specification.isStory()) {
+                currentStep = listener.startStep(SpecificationStepType.STORY, specification.getPhrase());
+            } else {
+                currentStep = listener.startStep(SpecificationStepType.BEHAVIOR, specification.getPhrase());
+                warnOnBehaviorNaming(file);
+            }
+            new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
+            listener.stopStep();
+
+            long endTime = System.currentTimeMillis();
+            System.out.println((currentStep.getChildStepSpecificationFailureCount() == 0 ? "" : "FAILURE ") + "Specs run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
     }
 
