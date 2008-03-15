@@ -6,7 +6,6 @@ import org.disco.easyb.core.result.Result
 class TxtStoryReportWriter implements ReportWriter {
 
   def easybXmlLocation
-  def storyListener
   def writer
 
   TxtStoryReportWriter(outputReport, easybXmlLocation) {

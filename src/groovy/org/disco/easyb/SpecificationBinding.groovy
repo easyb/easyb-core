@@ -14,6 +14,8 @@ class SpecificationBinding {
   public static final String STORY_GIVEN = "given"
   public static final String STORY_WHEN = "when"
   public static final String STORY_THEN = "then"
+  public static final String BEHAVIOR = "behavior"
+  public static final String BEHAVIOR_BEFORE = "before"
   public static final String BEHAVIOR_IT = "it"
   public static final String AND = "and"
 

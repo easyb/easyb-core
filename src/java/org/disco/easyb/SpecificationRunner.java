@@ -21,6 +21,7 @@ import org.disco.easyb.core.report.Report;
 import org.disco.easyb.core.report.ReportWriter;
 import org.disco.easyb.core.report.EasybXmlReportWriter;
 import org.disco.easyb.core.report.TxtStoryReportWriter;
+import org.disco.easyb.core.report.TxtBehaviorReportWriter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
 import org.disco.easyb.core.util.SpecificationStepType;
@@ -102,6 +103,8 @@ public class SpecificationRunner {
                 //do nothing, report was already run above.
             } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
                 new TxtStoryReportWriter(report, easybxmlreportlocation).writeReport();
+            } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_BEHAVIOR)) {
+                new TxtBehaviorReportWriter(report, easybxmlreportlocation).writeReport();
             }
         }
 
@@ -168,6 +171,19 @@ public class SpecificationRunner {
             configuredReports.add(report);
         }
 
+        if (line.hasOption(Report.TXT_BEHAVIOR)) {
+            Report report = new Report();
+            report.setFormat(ReportFormat.TXT.format());
+            if (line.getOptionValue(Report.TXT_BEHAVIOR) == null) {
+                report.setLocation("easyb-behavior-report.txt");
+            } else {
+                report.setLocation(line.getOptionValue(Report.TXT_BEHAVIOR));
+            }
+            report.setType(ReportType.BEHAVIOR.type());
+
+            configuredReports.add(report);
+        }
+
         if (line.hasOption(Report.XML_EASYB)) {
             Report report = new Report();
             report.setFormat(ReportFormat.XML.format());
@@ -229,6 +245,11 @@ public class SpecificationRunner {
         Option storyreport = OptionBuilder.withArgName("file").hasArg()
             .withDescription("create a story report").create(Report.TXT_STORY);
         options.addOption(storyreport);
+
+        //noinspection AccessStaticViaInstance
+        Option behaviorreport = OptionBuilder.withArgName("file").hasArg()
+            .withDescription("create a behavior report").create(Report.TXT_BEHAVIOR);
+        options.addOption(behaviorreport);
 
         return options;
     }
