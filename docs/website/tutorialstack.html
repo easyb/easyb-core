@@ -285,11 +285,11 @@ when "pop is called", {
 }
 
 then "the last item pushed should be returned", {
- popVal.shouldBe pushVal
+ popVal.shouldBe push2
 }
 
 then "the stack should not be empty", {
- stack.empty.shouldBe true
+ stack.empty.shouldBe false
 }
 </code></pre>
 
