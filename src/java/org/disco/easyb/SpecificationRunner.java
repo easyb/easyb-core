@@ -83,7 +83,7 @@ public class SpecificationRunner {
             }
         }
 
-        if (easybxmlreportlocation == null) {
+        if (reports.size() > 0 && easybxmlreportlocation == null) {
             System.out.println("xmleasyb report is required");
             System.exit(-1);
         }
