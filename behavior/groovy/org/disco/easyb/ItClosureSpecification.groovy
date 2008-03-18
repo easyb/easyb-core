@@ -1,11 +1,11 @@
 package org.disco.easyb
 
-import org.disco.easyb.core.listener.SpecificationListener
+import org.disco.easyb.core.listener.BehaviorListener
 import org.disco.easyb.core.listener.DefaultListener
 
 
 before "obtain a reference to the binding object", {
-  SpecificationListener behaviorListener = new DefaultListener()
+  BehaviorListener behaviorListener = new DefaultListener()
   binding = SpecificationBinding.getBinding(behaviorListener)
 }
 

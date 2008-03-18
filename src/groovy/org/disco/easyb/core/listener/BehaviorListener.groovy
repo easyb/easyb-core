@@ -4,7 +4,7 @@ import org.disco.easyb.core.result.Result
 import org.disco.easyb.core.util.SpecificationStepType
 import org.disco.easyb.core.SpecificationStep
 
-interface SpecificationListener {
+interface BehaviorListener {
 
   SpecificationStep startStep(SpecificationStepType specificationStepType, String stepName)
   void stopStep()

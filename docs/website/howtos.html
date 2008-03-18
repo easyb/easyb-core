@@ -106,46 +106,61 @@ scenario "pop is called on empty stack", {
   then "the stack should still be empty", {
       stack.empty.shouldBe true
     }
+
+  then "an example pending" 
 }
 </code></pre>
 
 <p>Does it not convey the intention clearly? Of course it does!! It's so easy too.</p>
-
-      <p>Take notice of multiple <code>scenario</code>s in that file, each with their own set of <code>given</code>s,<code>when</code>s and <code>then</code>s all coming together to create a <code>story</code>. </p>
+<p>Take notice of multiple <code>scenario</code>s in that file, each with their own set of <code>given</code>s,<code>when</code>s and <code>then</code>s all coming together to create a <code>story</code>. </p>
+<p>Also pay attention to the last <code>then</code> as it doesn't have an implementation. Easyb also makes it easy to create stories with no coding and come back to fill in the implementation later. This will be marked as a pending specification.</p>
 
 <h3>Printing stories</h3>
 
-      <p>It wouldn't be fair to only let the developers see this beautiful story now would it? We didn't think so either, so we decided to give you an easy way to print out the story without all that icky implementation code (we're too familiar with that glossy eye look stakeholders get when you show them code).</p>
+<p>It wouldn't be fair to only let the developers see this beautiful story now would it? We didn't think so either, so we decided to give you an easy way to print out the story without all that icky implementation code (we're too familiar with that glossy eye look stakeholders get when you show them code).</p>
+<p>Story printing is available from command line as a format flag as well as via the easyb ant task. For instance, below is an example of two stories-- one with two scenarios and the other containing three.</p>
+<p>This example also shows what you see when a specification isn't filled out and is marked as pending.</p>
 
-      <p>Story printing is available from command line as a format flag as well as via the easyb ant task. For instance, below is an example of two stories-- one with two scenarios and the other containing three.</p>
 <pre><code>
-Story:  empty stack
-  scenario null is pushed onto empty stack
-    given an empty stack
-    when null is pushed
-    then an exception should be thrown
-    then the stack should still be empty
-  scenario pop is called on empty stack
-    given an empty stack
-    when pop is called
-    then an exception should be thrown
-    and then the stack should still be empty
-Story:  single value stack
-  scenario pop is called on stack with one value
-    given an empty stack with one pushed value
-    when pop is called
-    then that object should be returned
-    then the stack should be empty
-  scenario stack with one value is not empty
-    given an empty stack with one pushed value
-    then the stack should not be empty
-  scenario peek is called
-    given a stack containing an item
-    when peek is called
-    then it should provide the value of the most recent pushed value
-    and then the stack should not be empty
-    and then calling pop should also return the peeked value which is the same as the original pushed value
-    and then the stack should  be empty
+33 specifications (including 2 pending) executed successfully
+
+
+  Story: empty stack
+
+    scenario null is pushed onto empty stack
+      given an empty stack
+      when null is pushed
+      then an exception should be thrown
+      then the stack should still be empty
+
+    scenario pop is called on empty stack
+      given an empty stack
+      when pop is called
+      then an exception should be thrown
+      then the stack should still be empty
+
+  Story: single value stack
+
+    scenario pop is called on stack with one value
+      given an empty stack with one pushed value
+      when pop is called
+      then that object should be returned
+      then the stack should be empty
+
+    scenario stack with one value is not empty
+      given an empty stack with one pushed value
+      then the stack should not be empty
+
+    scenario peek is called
+      given a stack containing an item
+      when peek is called
+      then it should provide the value of the most recent pushed value
+      then the stack should not be empty
+      then calling pop should also return the peeked value which is the same as the original pushed value
+      then the stack should  be empty
+      then an example pending [PENDING]
+
+  etc...
 </code></pre>
 
 

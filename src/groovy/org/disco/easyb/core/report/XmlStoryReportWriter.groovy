@@ -1,6 +1,6 @@
 package org.disco.easyb.core.report
 
-import org.disco.easyb.core.listener.SpecificationListener
+import org.disco.easyb.core.listener.BehaviorListener
 import org.disco.easyb.core.report.Report
 import groovy.xml.MarkupBuilder
 

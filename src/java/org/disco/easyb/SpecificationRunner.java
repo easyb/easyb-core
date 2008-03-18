@@ -17,7 +17,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.disco.easyb.core.listener.DefaultListener;
-import org.disco.easyb.core.listener.SpecificationListener;
+import org.disco.easyb.core.listener.BehaviorListener;
 import org.disco.easyb.core.report.Report;
 import org.disco.easyb.core.report.ReportWriter;
 import org.disco.easyb.core.report.EasybXmlReportWriter;
@@ -59,7 +59,7 @@ public class SpecificationRunner {
      */
     public void runSpecification(Collection<File> specs) throws Exception {
 
-        SpecificationListener listener = new DefaultListener();
+        BehaviorListener listener = new DefaultListener();
 
         executeSpecifications(specs, listener);
 
@@ -73,7 +73,7 @@ public class SpecificationRunner {
         }
     }
 
-    private void produceReports(SpecificationListener listener) {
+    private void produceReports(BehaviorListener listener) {
         String easybxmlreportlocation = null;
         for (Report report : reports) {
             if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
@@ -99,7 +99,7 @@ public class SpecificationRunner {
         }
     }
 
-    private void executeSpecifications(Collection<File> specs, SpecificationListener listener) throws IOException {
+    private void executeSpecifications(Collection<File> specs, BehaviorListener listener) throws IOException {
         for (File file : specs) {
             long startTime = System.currentTimeMillis();
             System.out.println("Running " + file.getCanonicalPath());
