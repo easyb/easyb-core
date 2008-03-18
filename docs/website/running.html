@@ -54,7 +54,7 @@ pageTracker._trackPageview();
 
 
 <pre><code>
-  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy
+  c:>java org.disco.easyb.BehaviorRunner my/path/to/MyStory.groovy
 </code></pre>
 
 <p>If no additional arguments are specified, you'll see a report printed to <code>System.out</code> that looks something
@@ -67,7 +67,7 @@ pageTracker._trackPageview();
 on the command line.</p>
 
 <pre><code>
-  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy my/path/to/MySecondStory.groovy
+  c:>java org.disco.easyb.BehaviorRunner my/path/to/MyStory.groovy my/path/to/MySecondStory.groovy
 </code></pre>
 
 <p>Note, the runner doesn't care if you run a behavior or a story-- they are run the same either way! Easy, eh?</p>
@@ -77,7 +77,7 @@ on the command line.</p>
 <p>You can generate a story printout of an easyb story by passing in the <code>-txtstory</code> flag as follows:</p>
 
 <pre><code>
-  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy \
+  c:>java org.disco.easyb.BehaviorRunner my/path/to/MyStory.groovy \
   -txtstory ./target/mystory.txt
 </code></pre>
 
@@ -92,7 +92,7 @@ on the command line.</p>
 
 
 <pre><code>
-  c:>java org.disco.easyb.SpecificationRunner my/path/to/MyStory.groovy \
+  c:>java org.disco.easyb.BehaviorRunner my/path/to/MyStory.groovy \
   -xmlbehavior my/path/report.xml
 </code></pre>
 

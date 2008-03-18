@@ -2,8 +2,9 @@ package org.disco.easyb.ant
 
 import org.apache.tools.ant.types.FileSet
 
-import org.disco.easyb.SpecificationRunner
+import org.disco.easyb.BehaviorRunner
 import org.disco.easyb.core.report.Report
+import org.disco.easyb.BehaviorRunner
 
 public class SpecificationRunnerTask extends AbstractStoryTask {
 
@@ -12,7 +13,7 @@ public class SpecificationRunnerTask extends AbstractStoryTask {
   }
 
   public SpecificationRunnerTask(CommandRunner runner) {
-    super(SpecificationRunner.class, runner)
+    super(BehaviorRunner.class, runner)
   }
 
   public void setBehaviorsClassName(String behaviorsClassName) {
