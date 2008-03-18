@@ -3,8 +3,9 @@ package org.disco.easyb
 import org.disco.easyb.core.delegates.EnsuringDelegate
 import org.disco.easyb.core.result.Result
 import org.disco.easyb.core.delegates.PlugableDelegate
-import org.disco.easyb.SpecificationCategory
-import org.disco.easyb.core.util.SpecificationStepType
+import org.disco.easyb.BehaviorCategory
+import org.disco.easyb.core.util.BehaviorStepType
+import org.disco.easyb.core.util.BehaviorStepType
 
 class SpecificationBinding {
 
@@ -38,13 +39,13 @@ class SpecificationBinding {
     }
 
     binding.scenario = {scenarioDescription, scenarioClosure = {} ->
-      listener.startStep(SpecificationStepType.SCENARIO, scenarioDescription)
+      listener.startStep(BehaviorStepType.SCENARIO, scenarioDescription)
       scenarioClosure()
       listener.stopStep()
     }
 
     binding.before = {beforeDescription, closure = {} ->
-      listener.startStep(SpecificationStepType.BEFORE, beforeDescription)
+      listener.startStep(BehaviorStepType.BEFORE, beforeDescription)
       beforeIt = closure
       listener.stopStep()
     }
@@ -57,7 +58,7 @@ class SpecificationBinding {
           beforeIt()
         }
         listener.gotResult(new Result(Result.SUCCEEDED))
-        use(SpecificationCategory) {
+        use(BehaviorCategory) {
           closure()
         }
       } catch (ex) {
@@ -66,34 +67,34 @@ class SpecificationBinding {
     }
 
     binding.it = {spec, closure = pendingClosure ->
-      listener.startStep(SpecificationStepType.IT, spec)
+      listener.startStep(BehaviorStepType.IT, spec)
       itClosure(spec, closure, BEHAVIOR_IT)
       listener.stopStep()
     }
 
 
     binding.then = {spec, closure = pendingClosure ->
-      listener.startStep(SpecificationStepType.THEN, spec)
+      listener.startStep(BehaviorStepType.THEN, spec)
       itClosure(spec, closure, STORY_THEN)
       listener.stopStep()
     }
 
     binding.when = {whenDescription, closure = {} ->
-      listener.startStep(SpecificationStepType.WHEN, whenDescription)
+      listener.startStep(BehaviorStepType.WHEN, whenDescription)
       closure.delegate = basicDelegate
       closure()
       listener.stopStep()
     }
 
     binding.given = {givenDescription, closure = {} ->
-      listener.startStep(SpecificationStepType.GIVEN, givenDescription)
+      listener.startStep(BehaviorStepType.GIVEN, givenDescription)
       closure.delegate = givenDelegate
       closure()
       listener.stopStep()
     }
 
     binding.and = {
-      listener.startStep(SpecificationStepType.AND, "")
+      listener.startStep(BehaviorStepType.AND, "")
       listener.stopStep()
     }
 

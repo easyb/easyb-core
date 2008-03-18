@@ -1,12 +1,12 @@
 package org.disco.easyb.core.listener
 
 import org.disco.easyb.core.result.Result
-import org.disco.easyb.core.util.SpecificationStepType
+import org.disco.easyb.core.util.BehaviorStepType
 import org.disco.easyb.core.BehaviorStep
 
 interface BehaviorListener {
 
-  BehaviorStep startStep(SpecificationStepType specificationStepType, String stepName)
+  BehaviorStep startStep(BehaviorStepType specificationStepType, String stepName)
   void stopStep()
 
   BehaviorStep getGenesisStep()

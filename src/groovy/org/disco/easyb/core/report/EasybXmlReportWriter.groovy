@@ -1,9 +1,10 @@
 package org.disco.easyb.core.report
 
 import groovy.xml.MarkupBuilder
-import org.disco.easyb.core.util.SpecificationStepType
+import org.disco.easyb.core.util.BehaviorStepType
 import org.disco.easyb.core.BehaviorStep
 import org.disco.easyb.core.BehaviorStep
+import org.disco.easyb.core.util.BehaviorStepType
 
 class EasybXmlReportWriter implements ReportWriter {
 
@@ -58,21 +59,21 @@ class EasybXmlReportWriter implements ReportWriter {
     def xml = new MarkupBuilder(writer)
 
     xml.EasybRun(time: new Date(), totalspecifications: listener.getSpecificationCount(), totalfailedspecifications: listener.getFailedSpecificationCount(), totalpendingspecifications: listener.getPendingSpecificationCount()) {
-      def storyChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY)
+      def storyChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY)
       def storyChildrenSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
       def storyChildrenFailedSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
       def storyChildrenPendingSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
       stories(specifications: storyChildrenSpecifications, failedspecifications: storyChildrenFailedSpecifications, pendingspecifications: storyChildrenPendingSpecifications) {
-        listener.genesisStep.getChildrenOfType(SpecificationStepType.STORY).each {genesisChild ->
+        listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
           walkChildren(xml, genesisChild)
         }
       }
-      def behaviorChildren = listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR)
+      def behaviorChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.BEHAVIOR)
       def behaviorChildrenSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
       def behaviorChildrenFailedSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
       def behaviorChildrenPendingSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
       behaviors(specifications: behaviorChildrenSpecifications, failedspecifications: behaviorChildrenFailedSpecifications, pendingspecifications: behaviorChildrenPendingSpecifications) {
-        listener.genesisStep.getChildrenOfType(SpecificationStepType.BEHAVIOR).each {genesisChild ->
+        listener.genesisStep.getChildrenOfType(BehaviorStepType.BEHAVIOR).each {genesisChild ->
           walkChildren(xml, genesisChild)
         }
       }

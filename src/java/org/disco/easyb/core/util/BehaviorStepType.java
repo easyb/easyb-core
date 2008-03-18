@@ -1,6 +1,6 @@
 package org.disco.easyb.core.util;
 
-public enum SpecificationStepType {
+public enum BehaviorStepType {
 
     GENESIS("genesis"),
     BEHAVIOR("behavior"),
@@ -15,7 +15,7 @@ public enum SpecificationStepType {
 
     private final String type;
 
-    SpecificationStepType(String type) {
+    BehaviorStepType(String type) {
         this.type = type;
     }
 

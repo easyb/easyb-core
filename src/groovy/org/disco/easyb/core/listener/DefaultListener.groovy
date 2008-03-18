@@ -2,12 +2,13 @@ package org.disco.easyb.core.listener;
 
 import org.disco.easyb.core.result.Result
 import org.disco.easyb.core.BehaviorStep
-import org.disco.easyb.core.util.SpecificationStepType
+import org.disco.easyb.core.util.BehaviorStepType
+import org.disco.easyb.core.util.BehaviorStepType
 
 class DefaultListener implements BehaviorListener {
 
   private BehaviorStep currentStep
-  private BehaviorStep genesisStep = new BehaviorStep(SpecificationStepType.GENESIS, "easyb-genesis", null)
+  private BehaviorStep genesisStep = new BehaviorStep(BehaviorStepType.GENESIS, "easyb-genesis", null)
 
   DefaultListener() {
     currentStep = genesisStep
@@ -38,7 +39,7 @@ class DefaultListener implements BehaviorListener {
   }
 
   // TODO instead of startStep and stopStep we should do a decorator instead
-  public BehaviorStep startStep(SpecificationStepType specificationStepType, String stepName) {
+  public BehaviorStep startStep(BehaviorStepType specificationStepType, String stepName) {
     BehaviorStep specificationStep = new BehaviorStep(specificationStepType, stepName, currentStep);
     currentStep.addChildStep(specificationStep)
     currentStep = specificationStep

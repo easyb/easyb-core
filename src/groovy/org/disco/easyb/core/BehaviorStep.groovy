@@ -1,17 +1,17 @@
 package org.disco.easyb.core
 
 import org.disco.easyb.core.result.Result
-import org.disco.easyb.core.util.SpecificationStepType
+import org.disco.easyb.core.util.BehaviorStepType
 
 class BehaviorStep {
 
-  private SpecificationStepType stepType
+  private BehaviorStepType stepType
   private ArrayList<BehaviorStep> childSteps = new ArrayList()
   private BehaviorStep parentStep
   private Result result
   private String name
 
-  BehaviorStep(SpecificationStepType inStepType, String inStepName, BehaviorStep inParentStep) {
+  BehaviorStep(BehaviorStepType inStepType, String inStepName, BehaviorStep inParentStep) {
     stepType = inStepType
     parentStep = inParentStep
     name = inStepName
@@ -87,7 +87,7 @@ class BehaviorStep {
     }
   }
 
-  List<BehaviorStep> getChildrenOfType(SpecificationStepType specificationStoryType) {
+  List<BehaviorStep> getChildrenOfType(BehaviorStepType specificationStoryType) {
     childSteps.findAll {specificationStoryType.equals(it.stepType)}
   }
 

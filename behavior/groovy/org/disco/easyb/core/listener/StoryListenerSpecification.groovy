@@ -1,7 +1,8 @@
 package org.disco.easyb.core.listener
 
 import org.disco.easyb.core.result.Result
-import org.disco.easyb.core.util.SpecificationStepType
+import org.disco.easyb.core.util.BehaviorStepType
+import org.disco.easyb.core.util.BehaviorStepType
 
 scenario "listener is given all successful results", {
 
@@ -10,7 +11,7 @@ scenario "listener is given all successful results", {
   }
 
   when "a successful result is added", {
-    listener.startStep(SpecificationStepType.THEN, "success then step")
+    listener.startStep(BehaviorStepType.THEN, "success then step")
     listener.gotResult(new Result(Result.SUCCEEDED))
     listener.stopStep()
   }
@@ -46,7 +47,7 @@ scenario "listener is given a single failure", {
   }
 
   when "a failure result is added", {
-    listener.startStep(SpecificationStepType.THEN, "failure then step")
+    listener.startStep(BehaviorStepType.THEN, "failure then step")
     listener.gotResult(new Result(new Exception("FailureExceptionReason")))
     listener.stopStep()
   }

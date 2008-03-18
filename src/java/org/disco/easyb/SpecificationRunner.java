@@ -25,7 +25,7 @@ import org.disco.easyb.core.report.TxtStoryReportWriter;
 import org.disco.easyb.core.report.TxtBehaviorReportWriter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
-import org.disco.easyb.core.util.SpecificationStepType;
+import org.disco.easyb.core.util.BehaviorStepType;
 import org.disco.easyb.core.BehaviorStep;
 
 /**
@@ -115,9 +115,9 @@ public class SpecificationRunner {
             
             BehaviorStep currentStep;
             if (behavior instanceof Story) {
-                currentStep = listener.startStep(SpecificationStepType.STORY, behavior.getPhrase());
+                currentStep = listener.startStep(BehaviorStepType.STORY, behavior.getPhrase());
             } else {
-                currentStep = listener.startStep(SpecificationStepType.BEHAVIOR, behavior.getPhrase());
+                currentStep = listener.startStep(BehaviorStepType.BEHAVIOR, behavior.getPhrase());
             }
             new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
             listener.stopStep();
