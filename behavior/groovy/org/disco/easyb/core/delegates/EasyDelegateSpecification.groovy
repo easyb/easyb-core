@@ -1,13 +1,14 @@
 package org.disco.easyb.core.delegates
 
-import org.disco.easyb.SpecificationBinding
+import org.disco.easyb.BehaviorBinding
 import org.disco.easyb.core.listener.BehaviorListener
 import org.disco.easyb.core.listener.DefaultListener
 import org.disco.easyb.core.listener.BehaviorListener
+import org.disco.easyb.BehaviorBinding
 
 before "obtain a reference to the binding object", {
   BehaviorListener behaviorListener = new DefaultListener()
-  itbehave = SpecificationBinding.getBinding(behaviorListener).it
+  itbehave = BehaviorBinding.getBinding(behaviorListener).it
 }
 
 it "should support a simple ensure call", {

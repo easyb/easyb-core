@@ -1,7 +1,8 @@
 package org.disco.easyb.core.report
 
-import org.disco.easyb.SpecificationBinding
+import org.disco.easyb.BehaviorBinding
 import org.disco.easyb.core.result.Result
+import org.disco.easyb.BehaviorBinding
 
 public class TxtBehaviorReportWriter implements ReportWriter {
 
@@ -35,30 +36,30 @@ public class TxtBehaviorReportWriter implements ReportWriter {
 
   def writeElement(element) {
     switch (element.name()) {
-      case SpecificationBinding.BEHAVIOR:
+      case BehaviorBinding.BEHAVIOR:
         writer.newLine()
         writer.write("${' '.padRight(2)}Behavior: ${element.@name}")
         break
-      case SpecificationBinding.BEHAVIOR_BEFORE:
+      case BehaviorBinding.BEHAVIOR_BEFORE:
         writer.write("${' '.padRight(4)}before ${element.@name}")
         break
-      case SpecificationBinding.BEHAVIOR_IT:
+      case BehaviorBinding.BEHAVIOR_IT:
         writer.write("${' '.padRight(4)}it ${element.@name}")
         break
-      case SpecificationBinding.STORY_SCENARIO:
+      case BehaviorBinding.STORY_SCENARIO:
         writer.newLine()
         writer.write("${' '.padRight(4)}scenario ${element.@name}")
         break
-      case SpecificationBinding.STORY_GIVEN:
+      case BehaviorBinding.STORY_GIVEN:
         writer.write("${' '.padRight(6)}given ${element.@name}")
         break
-      case SpecificationBinding.STORY_WHEN:
+      case BehaviorBinding.STORY_WHEN:
         writer.write("${' '.padRight(6)}when ${element.@name}")
         break
-      case SpecificationBinding.STORY_THEN:
+      case BehaviorBinding.STORY_THEN:
         writer.write("${' '.padRight(6)}then ${element.@name}")
         break
-      case SpecificationBinding.AND:
+      case BehaviorBinding.AND:
         writer.write("${' '.padRight(4)}and")
         break
       default:

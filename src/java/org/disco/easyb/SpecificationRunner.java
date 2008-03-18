@@ -119,7 +119,7 @@ public class SpecificationRunner {
             } else {
                 currentStep = listener.startStep(BehaviorStepType.BEHAVIOR, behavior.getPhrase());
             }
-            new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
+            new GroovyShell(BehaviorBinding.getBinding(listener)).evaluate(file);
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
