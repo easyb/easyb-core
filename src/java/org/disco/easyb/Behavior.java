@@ -1,6 +1,14 @@
 package org.disco.easyb;
 
-public interface Behavior {
+public abstract class Behavior {
 
-    public String getPhrase();
+    private String phrase;
+
+    protected Behavior(String behaviorPhrase) {
+        phrase = behaviorPhrase;
+    }
+
+    public String getPhrase() {
+        return phrase;
+    }
 }

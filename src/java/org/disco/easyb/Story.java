@@ -1,14 +1,8 @@
 package org.disco.easyb;
 
-public class Story implements Behavior {
-
-    private String phrase;
+public class Story extends Behavior {
 
     public Story(String storyPhrase) {
-        phrase = storyPhrase;
-    }
-
-    public String getPhrase() {
-        return phrase;
+        super(storyPhrase);
     }
 }
