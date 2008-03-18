@@ -3,21 +3,21 @@ package org.disco.easyb.core
 import org.disco.easyb.core.result.Result
 import org.disco.easyb.core.util.SpecificationStepType
 
-class SpecificationStep {
+class BehaviorStep {
 
   private SpecificationStepType stepType
-  private ArrayList<SpecificationStep> childSteps = new ArrayList()
-  private SpecificationStep parentStep
+  private ArrayList<BehaviorStep> childSteps = new ArrayList()
+  private BehaviorStep parentStep
   private Result result
   private String name
 
-  SpecificationStep(SpecificationStepType inStepType, String inStepName, SpecificationStep inParentStep) {
+  BehaviorStep(SpecificationStepType inStepType, String inStepName, BehaviorStep inParentStep) {
     stepType = inStepType
     parentStep = inParentStep
     name = inStepName
   }
 
-  def addChildStep(SpecificationStep inSpecificationStep) {
+  def addChildStep(BehaviorStep inSpecificationStep) {
     childSteps.add(inSpecificationStep)
   }
 
@@ -87,11 +87,11 @@ class SpecificationStep {
     }
   }
 
-  List<SpecificationStep> getChildrenOfType(SpecificationStepType specificationStoryType) {
+  List<BehaviorStep> getChildrenOfType(SpecificationStepType specificationStoryType) {
     childSteps.findAll {specificationStoryType.equals(it.stepType)}
   }
 
-  SpecificationStep getParentStep() {
+  BehaviorStep getParentStep() {
     return parentStep
   }
 

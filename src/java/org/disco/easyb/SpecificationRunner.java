@@ -26,7 +26,7 @@ import org.disco.easyb.core.report.TxtBehaviorReportWriter;
 import org.disco.easyb.core.util.ReportFormat;
 import org.disco.easyb.core.util.ReportType;
 import org.disco.easyb.core.util.SpecificationStepType;
-import org.disco.easyb.core.SpecificationStep;
+import org.disco.easyb.core.BehaviorStep;
 
 /**
  * usage is:
@@ -113,7 +113,7 @@ public class SpecificationRunner {
             }
 
             
-            SpecificationStep currentStep;
+            BehaviorStep currentStep;
             if (behavior instanceof Story) {
                 currentStep = listener.startStep(SpecificationStepType.STORY, behavior.getPhrase());
             } else {

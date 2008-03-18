@@ -2,14 +2,14 @@ package org.disco.easyb.core.listener
 
 import org.disco.easyb.core.result.Result
 import org.disco.easyb.core.util.SpecificationStepType
-import org.disco.easyb.core.SpecificationStep
+import org.disco.easyb.core.BehaviorStep
 
 interface BehaviorListener {
 
-  SpecificationStep startStep(SpecificationStepType specificationStepType, String stepName)
+  BehaviorStep startStep(SpecificationStepType specificationStepType, String stepName)
   void stopStep()
 
-  SpecificationStep getGenesisStep()
+  BehaviorStep getGenesisStep()
 
   long getFailedSpecificationCount()
   long getSuccessfulSpecificationCount()

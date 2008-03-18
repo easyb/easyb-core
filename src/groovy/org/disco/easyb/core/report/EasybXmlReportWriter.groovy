@@ -2,7 +2,8 @@ package org.disco.easyb.core.report
 
 import groovy.xml.MarkupBuilder
 import org.disco.easyb.core.util.SpecificationStepType
-import org.disco.easyb.core.SpecificationStep
+import org.disco.easyb.core.BehaviorStep
+import org.disco.easyb.core.BehaviorStep
 
 class EasybXmlReportWriter implements ReportWriter {
 
@@ -24,7 +25,7 @@ class EasybXmlReportWriter implements ReportWriter {
     return buff.toString()
   }
 
-  def walkChildren(MarkupBuilder xml, SpecificationStep step) {
+  def walkChildren(MarkupBuilder xml, BehaviorStep step) {
     if (step.childSteps.size() == 0) {
       if (step.result == null) {
         xml."${step.stepType.type()}"(name: step.name)
