@@ -7,7 +7,7 @@ includeTargets << new File("default_tasks.gant")
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.7.2")
+version = detectOrDefaultVersion("0.7.3")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**
@@ -114,23 +114,22 @@ target("ant-task":"runs the easyb ant task"){
 
 	Ant.easyb(failureProperty:"easyb.failed"){
 	
-    classpath() {
-      fileset(dir:libdir, includes:jarincludes)
-      pathelement(location:"${defaultdir}/easyb-${version}.jar")
-      pathelement(location:behaviorclassdir)
-    }
+      classpath() {
+        fileset(dir:libdir, includes:jarincludes)
+        pathelement(location:"${defaultdir}/easyb-${version}.jar")
+        pathelement(location:behaviorclassdir)
+      }
 
-    report(location:"${defaultdir}/easyb-report.xml", format:"xmleasyb")
-    report(location:"${defaultdir}/story-report.txt", format:"txtstory")
-    report(location:"${defaultdir}/behavior-report.txt", format:"txtbehavior")
+      report(location:"${defaultdir}/easyb-report.xml", format:"xmleasyb")
+      report(location:"${defaultdir}/story-report.txt", format:"txtstory")
+      report(location:"${defaultdir}/behavior-report.txt", format:"txtbehavior")
 
-    behaviors(dir:gbehaviordir){
-
-      include(name:"**/*Story.groovy")
-	    include(name:"**/*Behavior.groovy")
-	    include(name:"**/*name.groovy")
-	    include(name:"**/*.story")
-		}
+      behaviors(dir:gbehaviordir){
+        include(name:"**/*Story.groovy")
+        include(name:"**/*.story")
+	    include(name:"**/*Specification.groovy")
+	    include(name:"**/*.specification")
+	  }
 	}
 
   Ant.fail(if:"easyb.failed", message:"Execution halted as specifications failed")

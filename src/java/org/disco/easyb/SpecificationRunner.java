@@ -104,27 +104,26 @@ public class SpecificationRunner {
             long startTime = System.currentTimeMillis();
             System.out.println("Running " + file.getCanonicalPath());
 
-            Specification specification = new Specification(file);
+            Behavior behavior = null;
+            try {
+                behavior = BehaviorFactory.createBehavior(file);
+            } catch(IllegalArgumentException iae) {
+                System.out.println(iae.getMessage());
+                System.exit(-1);
+            }
+
+            
             SpecificationStep currentStep;
-            if (specification.isStory()) {
-                currentStep = listener.startStep(SpecificationStepType.STORY, specification.getPhrase());
+            if (behavior instanceof Story) {
+                currentStep = listener.startStep(SpecificationStepType.STORY, behavior.getPhrase());
             } else {
-                currentStep = listener.startStep(SpecificationStepType.BEHAVIOR, specification.getPhrase());
-                warnOnBehaviorNaming(file);
+                currentStep = listener.startStep(SpecificationStepType.BEHAVIOR, behavior.getPhrase());
             }
             new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(file);
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
             System.out.println((currentStep.getChildStepSpecificationFailureCount() == 0 ? "" : "FAILURE ") + "Specs run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
-        }
-    }
-
-    private void warnOnBehaviorNaming(File file) {
-        if (!file.getName().contains("Behavior.groovy")) {
-            System.out.println("You should consider ending your specification file (" +
-                file.getName() + ") with either Story or Behavior. " +
-                "See easyb documentation for more details. ");
         }
     }
 
