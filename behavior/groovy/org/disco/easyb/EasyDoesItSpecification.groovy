@@ -23,7 +23,7 @@ String value = "test"
 
 //is is a method on Groovy's nullobject and that's the one
 //being picked up in this method call. The question is
-//"how do you override this behavior?"
+//"how do you override this specification?"
 it "should work to say is test", {
   //ensure(value){
   //	isEqualTo("test")

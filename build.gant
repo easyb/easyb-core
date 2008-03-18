@@ -61,7 +61,7 @@ target("publish-easyb":"uploads easyb distribution to googlecode") {
   Ant.fail(unless:"googlepass", message:"Property googlepass not set. Please pass in with -D or set in local.build.properties")
 
 
-  Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.SpecificationRunnerTask"){
+  Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
     classpath(){
           pathelement(location:"${defaultdir}/easyb-${version}.jar")
       }
@@ -106,7 +106,7 @@ target("validate":"runs behaviors"){
 target("ant-task":"runs the easyb ant task"){
   depends(jar)
 
-	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.SpecificationRunnerTask"){
+	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
 		classpath(){
         	pathelement(location:"${defaultdir}/easyb-${version}.jar")
     	}

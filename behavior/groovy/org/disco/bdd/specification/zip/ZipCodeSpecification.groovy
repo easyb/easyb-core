@@ -1,4 +1,4 @@
-package org.disco.bdd.behavior.zip
+package org.disco.bdd.specification.zip
 
 import org.disco.bdd.zip.ZipCodeValidator
 

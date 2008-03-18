@@ -25,7 +25,7 @@ public class BehaviorFactory {
                 return new Specification(new CamelCaseConverter(stripPattern(behaviorFile.getName(), pattern)).toPhrase());
             }
         }
-        throw new IllegalArgumentException("Easyb behavior files must end in Story.groovy, .story, Specification.groovy or .specification. See easyb documentation for more details.");
+        throw new IllegalArgumentException("Easyb behavior file must end in Story.groovy, .story, Specification.groovy or .specification. See easyb documentation for more details.");
     }
 
     private static String stripPattern(String string, String pattern) {

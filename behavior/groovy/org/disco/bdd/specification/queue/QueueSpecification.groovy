@@ -1,4 +1,4 @@
-package org.disco.bdd.behavior.queue
+package org.disco.bdd.specification.queue
 
 import org.disco.bdd.Queue
 

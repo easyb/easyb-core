@@ -1,4 +1,4 @@
-package org.disco.bdd.behavior.stringutil
+package org.disco.bdd.specification.stringutil
 
 import org.disco.bdd.StringUtilPartial
 

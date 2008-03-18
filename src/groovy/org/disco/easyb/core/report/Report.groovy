@@ -18,7 +18,7 @@ class Report {
 
   // xml or txt
   String format
-  // story or behavior
+  // story or specification
   String type
 
 }

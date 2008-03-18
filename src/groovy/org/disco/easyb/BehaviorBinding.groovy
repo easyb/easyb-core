@@ -9,7 +9,7 @@ import org.disco.easyb.core.util.BehaviorStepType
 
 class BehaviorBinding {
 
-  // TODO change to constants when i break the binding into story and behavior bindings
+  // TODO change to constants when i break the binding into story and specification bindings
   public static final String STORY = "story"
   public static final String STORY_SCENARIO = "scenario"
   public static final String STORY_GIVEN = "given"

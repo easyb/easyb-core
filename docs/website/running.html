@@ -104,7 +104,7 @@ on the command line.</p>
 
 <p>You can run your behaviors and stories via easyb's Ant task. It's easy:</p>
 <ol>
-  <li>load the task (via Ant's <code>taskdef</code>)-- the class name is <code>org.disco.easyb.ant.SpecificationRunnerTask</code>
+  <li>load the task (via Ant's <code>taskdef</code>)-- the class name is <code>org.disco.easyb.ant.BehaviorRunnerTask</code>
   </li>
   <li>provide a location for a report (or series of reports) and then provide a <code>fileset</code> with the location(s) of your behaviors
     and stories
@@ -113,7 +113,7 @@ on the command line.</p>
 
 <p>Defining the task looks like this:</p>
 <pre><code>
-  &lt;taskdef name="easyb" classname="org.disco.easyb.ant.SpecificationRunnerTask"&gt;
+  &lt;taskdef name="easyb" classname="org.disco.easyb.ant.BehaviorRunnerTask"&gt;
     &lt;classpath&gt;
       &lt;pathelement location="${lib.dir}/release/easyb-xx.jar"/&gt;
     &lt;/classpath&gt;
