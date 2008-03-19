@@ -62,13 +62,18 @@ public class BehaviorRunner {
         BehaviorListener listener = new DefaultListener();
 
         executeSpecifications(specs, listener);
-
-        System.out.println("Total specs: " + listener.getSpecificationCount() + ", Failed specs: " + listener.getFailedSpecificationCount() + ", Success specs: " + listener.getSuccessfulSpecificationCount());
+        
+        System.out.println("\n" +
+        	//prints "1 behavior run" or "x behaviors run" 
+        	(listener.getSpecificationCount() > 1 ? listener.getSpecificationCount()  + " total behaviors run" : "1 behavior run")
+        	//outer ternary prints either 1..X failure(s) or no failures
+        	//inner ternary determines if more than one failure and makes it plural if so
+        	+ (listener.getFailedSpecificationCount() > 0 ? " with" 
+        		+ (listener.getFailedSpecificationCount() == 1 ? " 1 failure" : listener.getFailedSpecificationCount() + " failures") : " with no failures"));
 
         produceReports(listener);
 
         if (listener.getFailedSpecificationCount() > 0) {
-            System.out.println("specification failures detected!");
             System.exit(-6);
         }
     }
@@ -101,10 +106,7 @@ public class BehaviorRunner {
 
     private void executeSpecifications(Collection<File> specs, BehaviorListener listener) throws IOException {
         for (File file : specs) {
-            long startTime = System.currentTimeMillis();
-            System.out.println("Running " + file.getCanonicalPath());
-
-            Behavior behavior = null;
+        	Behavior behavior = null;
             try {
                 behavior = BehaviorFactory.createBehavior(file);
             } catch(IllegalArgumentException iae) {
@@ -112,6 +114,11 @@ public class BehaviorRunner {
                 System.exit(-1);
             }
 
+            long startTime = System.currentTimeMillis();
+            System.out.println("Running " + behavior.getPhrase() 
+            		+ ((behavior instanceof Story) ? " story" : " specification")
+            		+ " (" + file.getName() + ")" );
+            
             
             BehaviorStep currentStep;
             if (behavior instanceof Story) {
@@ -123,7 +130,9 @@ public class BehaviorRunner {
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
-            System.out.println((currentStep.getChildStepSpecificationFailureCount() == 0 ? "" : "FAILURE ") + "Specs run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+            System.out.println((currentStep.getChildStepSpecificationFailureCount() == 0 ? "" : "FAILURE ") + 
+            		"Behaviors run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + 
+            		currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
     }
 
