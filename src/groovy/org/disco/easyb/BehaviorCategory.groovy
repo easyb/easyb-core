@@ -1,6 +1,6 @@
 package org.disco.easyb
 
-import org.disco.easyb.core.exception.VerificationException
+import org.disco.easyb.exception.VerificationException
 import org.codehaus.groovy.runtime.NullObject
 
 class BehaviorCategory {

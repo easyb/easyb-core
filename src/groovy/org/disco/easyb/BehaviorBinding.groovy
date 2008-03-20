@@ -1,12 +1,12 @@
 package org.disco.easyb
 
-import org.disco.easyb.core.delegates.EnsuringDelegate
-import org.disco.easyb.core.result.Result
-import org.disco.easyb.core.delegates.PlugableDelegate
+import org.disco.easyb.delegates.EnsuringDelegate
+import org.disco.easyb.result.Result
+import org.disco.easyb.delegates.PlugableDelegate
 import org.disco.easyb.BehaviorCategory
-import org.disco.easyb.core.util.BehaviorStepType
-import org.disco.easyb.core.util.BehaviorStepType
-import org.disco.easyb.core.delegates.NarrativeDelegate
+import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.delegates.NarrativeDelegate
 class BehaviorBinding {
 
   // TODO change to constants when i break the binding into story and specification bindings
