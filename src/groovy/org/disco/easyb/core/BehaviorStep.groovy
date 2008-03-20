@@ -10,6 +10,7 @@ class BehaviorStep {
   private BehaviorStep parentStep
   private Result result
   private String name
+  private String description
 
   BehaviorStep(BehaviorStepType inStepType, String inStepName, BehaviorStep inParentStep) {
     stepType = inStepType
@@ -95,8 +96,12 @@ class BehaviorStep {
     return parentStep
   }
 
-  def setResult(Result inResult) {
+  def setResult(inResult) {
     result = inResult
+  }
+  
+  def setDescription(inDescription){
+	  description = inDescription
   }
 
 }

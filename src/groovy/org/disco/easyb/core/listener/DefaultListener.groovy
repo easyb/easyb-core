@@ -33,8 +33,12 @@ class DefaultListener implements BehaviorListener {
   BehaviorStep getGenesisStep() {
     return genesisStep
   }
-
-  public void gotResult(Result result) {
+  
+  BehaviorStep getCurrentStep() {
+	return currentStep
+  }
+ 
+  public void gotResult(result) {
     currentStep.setResult(result)
   }
 

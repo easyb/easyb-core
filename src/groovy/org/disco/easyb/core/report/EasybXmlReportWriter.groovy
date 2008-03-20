@@ -43,7 +43,10 @@ class EasybXmlReportWriter implements ReportWriter {
       def stepPendingSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
 
       xml."${step.stepType.type()}"(name: step.name, specifications: stepSpecifications, failedspecifications: stepFailedSpecifications, pendingspecifications: stepPendingSpecifications) {
-        for (child in step.childSteps) {
+    	  if(step.description){
+    		xml.description(step.description)
+    	  }
+    	  for (child in step.childSteps) {
           walkChildren(xml, child)
         }
       }

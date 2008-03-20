@@ -40,6 +40,10 @@ class TxtStoryReportWriter implements ReportWriter {
         writer.newLine()
         writer.write("${' '.padRight(2)}Story: ${element.@name}")
         break
+      case BehaviorBinding.DESCRIPTION:
+    	writer.write("${' '.padRight(3)} ${element.text()}")
+    	writer.newLine()
+    	break
       case BehaviorBinding.STORY_SCENARIO:
         writer.newLine()
         writer.write("${' '.padRight(4)}scenario ${element.@name}")

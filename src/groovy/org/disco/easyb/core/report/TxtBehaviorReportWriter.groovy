@@ -40,6 +40,10 @@ public class TxtBehaviorReportWriter implements ReportWriter {
         writer.newLine()
         writer.write("${' '.padRight(2)}Behavior: ${element.@name}")
         break
+      case BehaviorBinding.DESCRIPTION:
+    	writer.write("${' '.padRight(3)} ${element.text()}")
+    	writer.newLine()
+    	break
       case BehaviorBinding.BEHAVIOR_BEFORE:
         writer.write("${' '.padRight(4)}before ${element.@name}")
         break

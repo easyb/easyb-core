@@ -6,7 +6,7 @@ import org.disco.easyb.core.delegates.PlugableDelegate
 import org.disco.easyb.BehaviorCategory
 import org.disco.easyb.core.util.BehaviorStepType
 import org.disco.easyb.core.util.BehaviorStepType
-
+import org.disco.easyb.core.delegates.NarrativeDelegate
 class BehaviorBinding {
 
   // TODO change to constants when i break the binding into story and specification bindings
@@ -19,6 +19,7 @@ class BehaviorBinding {
   public static final String BEHAVIOR_BEFORE = "before"
   public static final String BEHAVIOR_IT = "it"
   public static final String AND = "and"
+  public static final String DESCRIPTION = "description"
 
   /**
 	 * This method returns a fully initialized Binding object (or context) that 
@@ -98,9 +99,20 @@ class BehaviorBinding {
       listener.stopStep()
     }
 
+    binding.narrative = { storydescript = "", closure = {} ->
+    	closure.delegate = narrativeDelegate()
+    }
+    
+    binding.description = { description ->
+    	listener.getCurrentStep().setDescription(description)
+    }
+    
     return binding
   }
 
+  private static narrativeDelegate(){
+	  return new NarrativeDelegate()
+  }
   /**
    * The easy delegate handles "it", "then", and "when"
    * Currently, this delegate isn't plug and play.

@@ -16,5 +16,5 @@ interface BehaviorListener {
   long getSpecificationCount()
 
   //probably expose a method here to get the executionLength
-  void gotResult(Result result)
+  void gotResult(result)
 }
