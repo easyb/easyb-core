@@ -16,17 +16,17 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.disco.easyb.core.listener.DefaultListener;
-import org.disco.easyb.core.listener.BehaviorListener;
-import org.disco.easyb.core.report.Report;
-import org.disco.easyb.core.report.ReportWriter;
-import org.disco.easyb.core.report.EasybXmlReportWriter;
-import org.disco.easyb.core.report.TxtStoryReportWriter;
-import org.disco.easyb.core.report.TxtBehaviorReportWriter;
-import org.disco.easyb.core.util.ReportFormat;
-import org.disco.easyb.core.util.ReportType;
-import org.disco.easyb.core.util.BehaviorStepType;
-import org.disco.easyb.core.BehaviorStep;
+import org.disco.easyb.listener.DefaultListener;
+import org.disco.easyb.listener.BehaviorListener;
+import org.disco.easyb.report.EasybXmlReportWriter;
+import org.disco.easyb.report.TxtStoryReportWriter;
+import org.disco.easyb.report.TxtBehaviorReportWriter;
+import org.disco.easyb.BehaviorStep;
+import org.disco.easyb.report.Report;
+import org.disco.easyb.report.ReportWriter;
+import org.disco.easyb.util.BehaviorStepType;
+import org.disco.easyb.util.ReportFormat;
+import org.disco.easyb.util.ReportType;
 
 /**
  * usage is:

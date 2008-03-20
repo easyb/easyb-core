@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 import static java.util.Arrays.asList;
 
-import org.disco.easyb.core.util.CamelCaseConverter;
+import org.disco.easyb.util.CamelCaseConverter;
 
 public class BehaviorFactory {
 
