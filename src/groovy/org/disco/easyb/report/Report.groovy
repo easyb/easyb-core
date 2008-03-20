@@ -3,7 +3,7 @@ package org.disco.easyb.report
 
 class Report {
 
-  public static final String TXT_BEHAVIOR = "txtbehavior"
+  public static final String TXT_SPECIFICATION = "txtspecification"
   public static final String TXT_STORY = "txtstory"
   public static final String XML_EASYB = "xmleasyb"
 

@@ -3,8 +3,6 @@ package org.disco.easyb.report
 import groovy.xml.MarkupBuilder
 import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.BehaviorStep
-import org.disco.easyb.BehaviorStep
-import org.disco.easyb.util.BehaviorStepType
 
 class EasybXmlReportWriter implements ReportWriter {
 
@@ -71,12 +69,12 @@ class EasybXmlReportWriter implements ReportWriter {
           walkChildren(xml, genesisChild)
         }
       }
-      def behaviorChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.BEHAVIOR)
-      def behaviorChildrenSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
-      def behaviorChildrenFailedSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
-      def behaviorChildrenPendingSpecifications = behaviorChildren.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
-      behaviors(specifications: behaviorChildrenSpecifications, failedspecifications: behaviorChildrenFailedSpecifications, pendingspecifications: behaviorChildrenPendingSpecifications) {
-        listener.genesisStep.getChildrenOfType(BehaviorStepType.BEHAVIOR).each {genesisChild ->
+      def specificationChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION)
+      def specificationChildrenSpecifications = specificationChildren.inject(0) {count, item -> count + item.getChildStepSpecificationCount()}
+      def specificationChildrenFailedSpecifications = specificationChildren.inject(0) {count, item -> count + item.getChildStepSpecificationFailureCount()}
+      def specificationChildrenPendingSpecifications = specificationChildren.inject(0) {count, item -> count + item.getChildStepSpecificationPendingCount()}
+      specifications(specifications: specificationChildrenSpecifications, failedspecifications: specificationChildrenFailedSpecifications, pendingspecifications: specificationChildrenPendingSpecifications) {
+        listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
           walkChildren(xml, genesisChild)
         }
       }

@@ -122,7 +122,7 @@ target("ant-task":"runs the easyb ant task"){
 
       report(location:"${defaultdir}/easyb-report.xml", format:"xmleasyb")
       report(location:"${defaultdir}/story-report.txt", format:"txtstory")
-      report(location:"${defaultdir}/behavior-report.txt", format:"txtbehavior")
+      report(location:"${defaultdir}/behavior-report.txt", format:"txtspecification")
 
       behaviors(dir:gbehaviordir){
         include(name:"**/*Story.groovy")

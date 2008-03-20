@@ -15,9 +15,9 @@ class BehaviorBinding {
   public static final String STORY_GIVEN = "given"
   public static final String STORY_WHEN = "when"
   public static final String STORY_THEN = "then"
-  public static final String BEHAVIOR = "behavior"
-  public static final String BEHAVIOR_BEFORE = "before"
-  public static final String BEHAVIOR_IT = "it"
+  public static final String SPECIFICATION = "behavior"
+  public static final String SPECIFICATION_BEFORE = "before"
+  public static final String SPECIFICATION_IT = "it"
   public static final String AND = "and"
   public static final String DESCRIPTION = "description"
 
@@ -69,7 +69,7 @@ class BehaviorBinding {
 
     binding.it = {spec, closure = pendingClosure ->
       listener.startStep(BehaviorStepType.IT, spec)
-      itClosure(spec, closure, BEHAVIOR_IT)
+      itClosure(spec, closure, SPECIFICATION_IT)
       listener.stopStep()
     }
 

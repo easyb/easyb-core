@@ -3,7 +3,7 @@ package org.disco.easyb.util;
 public enum BehaviorStepType {
 
     GENESIS("genesis"),
-    BEHAVIOR("behavior"),
+    SPECIFICATION("specification"),
     STORY("story"),
     SCENARIO("scenario"),
     GIVEN("given"),

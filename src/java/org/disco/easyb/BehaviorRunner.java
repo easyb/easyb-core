@@ -20,7 +20,7 @@ import org.disco.easyb.listener.DefaultListener;
 import org.disco.easyb.listener.BehaviorListener;
 import org.disco.easyb.report.EasybXmlReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
-import org.disco.easyb.report.TxtBehaviorReportWriter;
+import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.ReportWriter;
 import org.disco.easyb.util.BehaviorStepType;
@@ -97,8 +97,8 @@ public class BehaviorRunner {
                 //do nothing, report was already run above.
             } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
                 new TxtStoryReportWriter(report, easybxmlreportlocation).writeReport();
-            } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_BEHAVIOR)) {
-                new TxtBehaviorReportWriter(report, easybxmlreportlocation).writeReport();
+            } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_SPECIFICATION)) {
+                new TxtSpecificationReportWriter(report, easybxmlreportlocation).writeReport();
             }
         }
     }
@@ -123,7 +123,7 @@ public class BehaviorRunner {
             if (behavior instanceof Story) {
                 currentStep = listener.startStep(BehaviorStepType.STORY, behavior.getPhrase());
             } else {
-                currentStep = listener.startStep(BehaviorStepType.BEHAVIOR, behavior.getPhrase());
+                currentStep = listener.startStep(BehaviorStepType.SPECIFICATION, behavior.getPhrase());
             }
             new GroovyShell(BehaviorBinding.getBinding(listener)).evaluate(behaviorFile);
             listener.stopStep();
@@ -183,13 +183,13 @@ public class BehaviorRunner {
             configuredReports.add(report);
         }
 
-        if (line.hasOption(Report.TXT_BEHAVIOR)) {
+        if (line.hasOption(Report.TXT_SPECIFICATION)) {
             Report report = new Report();
             report.setFormat(ReportFormat.TXT.format());
-            if (line.getOptionValue(Report.TXT_BEHAVIOR) == null) {
-                report.setLocation("easyb-behavior-report.txt");
+            if (line.getOptionValue(Report.TXT_SPECIFICATION) == null) {
+                report.setLocation("easyb-specification-report.txt");
             } else {
-                report.setLocation(line.getOptionValue(Report.TXT_BEHAVIOR));
+                report.setLocation(line.getOptionValue(Report.TXT_SPECIFICATION));
             }
             report.setType(ReportType.BEHAVIOR.type());
 
@@ -260,7 +260,7 @@ public class BehaviorRunner {
 
         //noinspection AccessStaticViaInstance
         Option behaviorreport = OptionBuilder.withArgName("file").hasArg()
-            .withDescription("create a behavior report").create(Report.TXT_BEHAVIOR);
+            .withDescription("create a behavior report").create(Report.TXT_SPECIFICATION);
         options.addOption(behaviorreport);
 
         return options;
