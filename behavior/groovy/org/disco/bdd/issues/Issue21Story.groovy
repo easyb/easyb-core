@@ -1,11 +1,11 @@
 package org.disco.bdd.issues
 
-import org.disco.easyb.core.listener.DefaultListener
-import org.disco.easyb.core.result.Result
-import org.disco.easyb.core.report.TxtStoryReportWriter
-import org.disco.easyb.core.report.Report
-import org.disco.easyb.core.util.ReportFormat
-import org.disco.easyb.core.util.ReportType
+import org.disco.easyb.listener.DefaultListener
+import org.disco.easyb.result.Result
+import org.disco.easyb.report.TxtStoryReportWriter
+import org.disco.easyb.report.Report
+import org.disco.easyb.util.ReportFormat
+import org.disco.easyb.util.ReportType
 import org.disco.easyb.BehaviorBinding
 
 scenario "text story format should have newline prior to story or scenario part", {
