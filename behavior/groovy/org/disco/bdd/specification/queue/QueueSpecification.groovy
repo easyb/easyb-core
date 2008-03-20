@@ -2,6 +2,8 @@ package org.disco.bdd.specification.queue
 
 import org.disco.bdd.Queue
 
+description "This is how a Queue must work"
+
 before "initialize the queue for each spec", {
   queue = new Queue()
 }
