@@ -103,11 +103,11 @@ public class BehaviorRunner {
         }
     }
 
-    private void executeSpecifications(Collection<File> specs, BehaviorListener listener) throws IOException {
-        for (File file : specs) {
+    private void executeSpecifications(Collection<File> behaviorFiles, BehaviorListener listener) throws IOException {
+        for (File behaviorFile : behaviorFiles) {
         	Behavior behavior = null;
             try {
-                behavior = BehaviorFactory.createBehavior(file);
+                behavior = BehaviorFactory.createBehavior(behaviorFile);
             } catch(IllegalArgumentException iae) {
                 System.out.println(iae.getMessage());
                 System.exit(-1);
@@ -116,7 +116,7 @@ public class BehaviorRunner {
             long startTime = System.currentTimeMillis();
             System.out.println("Running " + behavior.getPhrase() 
             		+ ((behavior instanceof Story) ? " story" : " specification")
-            		+ " (" + file.getName() + ")" );
+            		+ " (" + behaviorFile.getName() + ")" );
             
             
             BehaviorStep currentStep;
@@ -125,7 +125,7 @@ public class BehaviorRunner {
             } else {
                 currentStep = listener.startStep(BehaviorStepType.BEHAVIOR, behavior.getPhrase());
             }
-            new GroovyShell(BehaviorBinding.getBinding(listener)).evaluate(file);
+            new GroovyShell(BehaviorBinding.getBinding(listener)).evaluate(behaviorFile);
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
