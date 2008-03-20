@@ -1,6 +1,6 @@
 package org.disco.easyb
 
-import org.disco.easyb.core.exception.VerificationException
+import org.disco.easyb.exception.VerificationException
 
 it "should fail if an exception is not thrown", {
   failed = false

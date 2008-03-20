@@ -1,7 +1,7 @@
 package org.disco.easyb;
 
 import org.disco.bdd.Person
-import org.disco.easyb.core.exception.VerificationException
+import org.disco.easyb.exception.VerificationException
 
 //isNull()
 //isNotNull()

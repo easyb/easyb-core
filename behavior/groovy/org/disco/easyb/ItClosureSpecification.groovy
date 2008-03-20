@@ -1,7 +1,7 @@
 package org.disco.easyb
 
-import org.disco.easyb.core.listener.BehaviorListener
-import org.disco.easyb.core.listener.DefaultListener
+import org.disco.easyb.listener.BehaviorListener
+import org.disco.easyb.listener.DefaultListener
 
 
 before "obtain a reference to the binding object", {
