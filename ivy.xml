@@ -3,8 +3,8 @@
 <ivy-module version="1.0">
 	<info organisation="org" module="easyb" />
 	<dependencies>
-    <dependency name="ant-googlecode" rev="0.0.0test" />
-    <dependency name="groovy" rev="all-1.5.0" />
+		<dependency name="ant-googlecode" rev="0.0.0test" />
+		<dependency name="groovy" rev="all-1.5.0" />
 		<dependency name="commons-cli" rev="1.1" />
 		<dependency name="ant" rev="1.6.5" />
 	</dependencies>
