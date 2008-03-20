@@ -21,7 +21,6 @@ import org.disco.easyb.listener.BehaviorListener;
 import org.disco.easyb.report.EasybXmlReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.report.TxtBehaviorReportWriter;
-import org.disco.easyb.BehaviorStep;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.ReportWriter;
 import org.disco.easyb.util.BehaviorStepType;
