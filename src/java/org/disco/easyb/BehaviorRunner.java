@@ -67,8 +67,8 @@ public class BehaviorRunner {
         	(listener.getSpecificationCount() > 1 ? listener.getSpecificationCount()  + " total behaviors run" : "1 behavior run")
         	//outer ternary prints either 1..X failure(s) or no failures
         	//inner ternary determines if more than one failure and makes it plural if so
-        	+ (listener.getFailedSpecificationCount() > 0 ? " with" 
-        		+ (listener.getFailedSpecificationCount() == 1 ? " 1 failure" : listener.getFailedSpecificationCount() + " failures") : " with no failures"));
+        	+ (listener.getFailedSpecificationCount() > 0 ? " with " 
+        		+ (listener.getFailedSpecificationCount() == 1 ? "1 failure" : listener.getFailedSpecificationCount() + " failures") : " with no failures"));
 
         produceReports(listener);
 
@@ -123,10 +123,11 @@ public class BehaviorRunner {
             BehaviorStep currentStep;
             if (behavior instanceof Story) {
                 currentStep = listener.startStep(BehaviorStepType.STORY, behavior.getPhrase());
+                new GroovyShell(StoryBinding.getBinding(listener)).evaluate(behaviorFile);
             } else {
                 currentStep = listener.startStep(BehaviorStepType.SPECIFICATION, behavior.getPhrase());
+                new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(behaviorFile);
             }
-            new GroovyShell(BehaviorBinding.getBinding(listener)).evaluate(behaviorFile);
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();

@@ -6,7 +6,7 @@ import org.disco.easyb.listener.DefaultListener
 
 before "obtain a reference to the binding object", {
   BehaviorListener behaviorListener = new DefaultListener()
-  binding = BehaviorBinding.getBinding(behaviorListener)
+  binding = SpecificationBinding.getBinding(behaviorListener)
 }
 
 it "should have an it method which isn't null", {

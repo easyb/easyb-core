@@ -1,8 +1,7 @@
 package org.disco.easyb.report
 
-import org.disco.easyb.BehaviorBinding
+import org.disco.easyb.StoryBinding
 import org.disco.easyb.result.Result
-import org.disco.easyb.BehaviorBinding
 
 class TxtStoryReportWriter implements ReportWriter {
 
@@ -36,28 +35,28 @@ class TxtStoryReportWriter implements ReportWriter {
 
   def writeElement(element) {
     switch (element.name()) {
-      case BehaviorBinding.STORY:
+      case StoryBinding.STORY:
         writer.newLine()
         writer.write("${' '.padRight(2)}Story: ${element.@name}")
         break
-      case BehaviorBinding.DESCRIPTION:
+      case StoryBinding.DESCRIPTION:
       	writer.write("${' '.padRight(3)} ${element.text()}")
       	writer.newLine()
       	break
-      case BehaviorBinding.STORY_SCENARIO:
+      case StoryBinding.STORY_SCENARIO:
         writer.newLine()
         writer.write("${' '.padRight(4)}scenario ${element.@name}")
         break
-      case BehaviorBinding.STORY_GIVEN:
+      case StoryBinding.STORY_GIVEN:
         writer.write("${' '.padRight(6)}given ${element.@name}")
         break
-      case BehaviorBinding.STORY_WHEN:
+      case StoryBinding.STORY_WHEN:
         writer.write("${' '.padRight(6)}when ${element.@name}")
         break
-      case BehaviorBinding.STORY_THEN:
+      case StoryBinding.STORY_THEN:
         writer.write("${' '.padRight(6)}then ${element.@name}")
         break
-      case BehaviorBinding.AND:
+      case StoryBinding.AND:
         writer.write("${' '.padRight(6)}and")
         break
       default:

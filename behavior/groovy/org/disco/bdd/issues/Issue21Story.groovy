@@ -6,22 +6,21 @@ import org.disco.easyb.report.TxtStoryReportWriter
 import org.disco.easyb.report.Report
 import org.disco.easyb.util.ReportFormat
 import org.disco.easyb.util.ReportType
-import org.disco.easyb.BehaviorBinding
 
 scenario "text story format should have newline prior to story or scenario part", {
   // TODO reimplement issue 21 once the report formatting has been reimplemented
   //  given "a listener populated with some stories and scenarios", {
   //    listener = new DefaultListener()
-  //    listener.gotResult(new Result("story description", BehaviorBinding.STORY, Result.SUCCEEDED));
-  //    listener.gotResult(new Result("scenario description", BehaviorBinding.STORY_SCENARIO, Result.SUCCEEDED))
-  //    listener.gotResult(new Result("given description", BehaviorBinding.STORY_GIVEN, Result.SUCCEEDED));
-  //    listener.gotResult(new Result("when description", BehaviorBinding.STORY_WHEN, Result.SUCCEEDED));
-  //    listener.gotResult(new Result("then description", BehaviorBinding.STORY_THEN, Result.SUCCEEDED));
+  //    listener.gotResult(new Result("story description", StoryBinding.STORY, Result.SUCCEEDED));
+  //    listener.gotResult(new Result("scenario description", StoryBinding.STORY_SCENARIO, Result.SUCCEEDED))
+  //    listener.gotResult(new Result("given description", StoryBinding.STORY_GIVEN, Result.SUCCEEDED));
+  //    listener.gotResult(new Result("when description", StoryBinding.STORY_WHEN, Result.SUCCEEDED));
+  //    listener.gotResult(new Result("then description", StoryBinding.STORY_THEN, Result.SUCCEEDED));
   //
-  //    listener.gotResult(new Result("scenario description two", BehaviorBinding.STORY_SCENARIO, Result.SUCCEEDED))
-  //    listener.gotResult(new Result("given description two", BehaviorBinding.STORY_GIVEN, Result.SUCCEEDED));
-  //    listener.gotResult(new Result("when description two", BehaviorBinding.STORY_WHEN, Result.SUCCEEDED));
-  //    listener.gotResult(new Result("then description two", BehaviorBinding.STORY_THEN, Result.SUCCEEDED));
+  //    listener.gotResult(new Result("scenario description two", StoryBinding.STORY_SCENARIO, Result.SUCCEEDED))
+  //    listener.gotResult(new Result("given description two", StoryBinding.STORY_GIVEN, Result.SUCCEEDED));
+  //    listener.gotResult(new Result("when description two", StoryBinding.STORY_WHEN, Result.SUCCEEDED));
+  //    listener.gotResult(new Result("then description two", StoryBinding.STORY_THEN, Result.SUCCEEDED));
   //
   //  }
   //

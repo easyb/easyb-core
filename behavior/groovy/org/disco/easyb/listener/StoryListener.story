@@ -2,7 +2,6 @@ package org.disco.easyb.listener
 
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
-import org.disco.easyb.util.BehaviorStepType
 
 scenario "listener is given all successful results", {
 

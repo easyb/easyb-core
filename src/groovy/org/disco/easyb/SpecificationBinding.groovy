@@ -7,14 +7,8 @@ import org.disco.easyb.BehaviorCategory
 import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.delegates.NarrativeDelegate
 
-class BehaviorBinding {
+class SpecificationBinding {
 
-  // TODO change to constants when i break the binding into story and specification bindings
-  public static final String STORY = "story"
-  public static final String STORY_SCENARIO = "scenario"
-  public static final String STORY_GIVEN = "given"
-  public static final String STORY_WHEN = "when"
-  public static final String STORY_THEN = "then"
   public static final String SPECIFICATION = "specification"
   public static final String SPECIFICATION_BEFORE = "before"
   public static final String SPECIFICATION_IT = "it"
@@ -22,9 +16,9 @@ class BehaviorBinding {
   public static final String DESCRIPTION = "description"
 
   /**
-	 * This method returns a fully initialized Binding object (or context) that 
+	 * This method returns a fully initialized Binding object (or context) that
 	 * has definitions for methods such as "it" and "given", which are used
-	 * in the context of behaviors (or stories). 
+	 * in the context of behaviors (or stories).
 	 */
   static Binding getBinding(listener) {
 
@@ -39,21 +33,6 @@ class BehaviorBinding {
       listener.gotResult(new Result(Result.PENDING))
     }
 
-    binding.scenario = {scenarioDescription, scenarioClosure = {} ->
-      listener.startStep(BehaviorStepType.SCENARIO, scenarioDescription)
-      scenarioClosure()
-
-      if(listener.currentStep.childStepFailureResultCount > 0) {
-        listener.gotResult(new Result(Result.FAILED))
-      } else {
-        if(listener.currentStep.childStepPendingResultCount > 0) {
-          listener.gotResult(new Result(Result.PENDING))
-        } else {
-          listener.gotResult(new Result(Result.SUCCEEDED))
-        }
-      }
-      listener.stopStep()
-    }
 
     binding.before = {beforeDescription, closure = {} ->
       listener.startStep(BehaviorStepType.BEFORE, beforeDescription)
@@ -83,27 +62,6 @@ class BehaviorBinding {
       listener.stopStep()
     }
 
-
-    binding.then = {spec, closure = pendingClosure ->
-      listener.startStep(BehaviorStepType.THEN, spec)
-      itClosure(spec, closure, STORY_THEN)
-      listener.stopStep()
-    }
-
-    binding.when = {whenDescription, closure = {} ->
-      listener.startStep(BehaviorStepType.WHEN, whenDescription)
-      closure.delegate = basicDelegate
-      closure()
-      listener.stopStep()
-    }
-
-    binding.given = {givenDescription, closure = {} ->
-      listener.startStep(BehaviorStepType.GIVEN, givenDescription)
-      closure.delegate = givenDelegate
-      closure()
-      listener.stopStep()
-    }
-
     binding.and = {
       listener.startStep(BehaviorStepType.AND, "")
       listener.stopStep()
@@ -112,11 +70,11 @@ class BehaviorBinding {
     binding.narrative = { storydescript = "", closure = {} ->
     	closure.delegate = narrativeDelegate()
     }
-    
+
     binding.description = { description ->
     	listener.getCurrentStep().setDescription(description)
     }
-    
+
     return binding
   }
 
