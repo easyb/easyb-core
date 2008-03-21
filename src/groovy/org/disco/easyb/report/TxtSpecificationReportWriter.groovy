@@ -14,7 +14,6 @@ public class TxtSpecificationReportWriter implements ReportWriter {
   }
 
   void writeReport() {
-
     def easybXml = new XmlSlurper().parse(new File(easybXmlLocation))
 
     def count = easybXml.specifications.@specifications.toInteger()
@@ -40,27 +39,14 @@ public class TxtSpecificationReportWriter implements ReportWriter {
         writer.write("${' '.padRight(2)}Specification: ${element.@name}")
         break
       case BehaviorBinding.DESCRIPTION:
-    	writer.write("${' '.padRight(3)} ${element.text()}")
-    	writer.newLine()
-    	break
+      	writer.write("${' '.padRight(3)} ${element.text()}")
+      	writer.newLine()
+      	break
       case BehaviorBinding.SPECIFICATION_BEFORE:
         writer.write("${' '.padRight(4)}before ${element.@name}")
         break
       case BehaviorBinding.SPECIFICATION_IT:
         writer.write("${' '.padRight(4)}it ${element.@name}")
-        break
-      case BehaviorBinding.STORY_SCENARIO:
-        writer.newLine()
-        writer.write("${' '.padRight(4)}scenario ${element.@name}")
-        break
-      case BehaviorBinding.STORY_GIVEN:
-        writer.write("${' '.padRight(6)}given ${element.@name}")
-        break
-      case BehaviorBinding.STORY_WHEN:
-        writer.write("${' '.padRight(6)}when ${element.@name}")
-        break
-      case BehaviorBinding.STORY_THEN:
-        writer.write("${' '.padRight(6)}then ${element.@name}")
         break
       case BehaviorBinding.AND:
         writer.write("${' '.padRight(4)}and")

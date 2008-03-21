@@ -10,7 +10,9 @@ interface BehaviorListener {
   void stopStep()
 
   BehaviorStep getGenesisStep()
-
+  BehaviorStep getCurrentStep()
+  
+  long getPendingSpecificationCount()
   long getFailedSpecificationCount()
   long getSuccessfulSpecificationCount()
   long getSpecificationCount()

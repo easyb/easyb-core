@@ -19,10 +19,10 @@ import org.apache.commons.cli.ParseException;
 import org.disco.easyb.listener.DefaultListener;
 import org.disco.easyb.listener.BehaviorListener;
 import org.disco.easyb.report.EasybXmlReportWriter;
-import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.ReportWriter;
+import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.util.BehaviorStepType;
 import org.disco.easyb.util.ReportFormat;
 import org.disco.easyb.util.ReportType;
@@ -101,6 +101,7 @@ public class BehaviorRunner {
                 new TxtSpecificationReportWriter(report, easybxmlreportlocation).writeReport();
             }
         }
+
     }
 
     private void executeSpecifications(Collection<File> behaviorFiles, BehaviorListener listener) throws IOException {
@@ -191,7 +192,7 @@ public class BehaviorRunner {
             } else {
                 report.setLocation(line.getOptionValue(Report.TXT_SPECIFICATION));
             }
-            report.setType(ReportType.BEHAVIOR.type());
+            report.setType(ReportType.SPECIFICATION.type());
 
             configuredReports.add(report);
         }

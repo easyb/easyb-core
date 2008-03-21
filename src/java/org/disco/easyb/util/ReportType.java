@@ -4,7 +4,7 @@ public enum ReportType {
 
     EASYB("easyb"),
     STORY("story"),
-    BEHAVIOR("behavior");
+    SPECIFICATION("specification");
 
     private final String type;
 

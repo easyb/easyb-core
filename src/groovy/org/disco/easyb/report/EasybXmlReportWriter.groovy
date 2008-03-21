@@ -3,6 +3,7 @@ package org.disco.easyb.report
 import groovy.xml.MarkupBuilder
 import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.BehaviorStep
+import org.disco.easyb.result.Result
 
 class EasybXmlReportWriter implements ReportWriter {
 
@@ -24,7 +25,46 @@ class EasybXmlReportWriter implements ReportWriter {
     return buff.toString()
   }
 
-  def walkChildren(MarkupBuilder xml, BehaviorStep step) {
+  def walkStoryChildren(MarkupBuilder xml, BehaviorStep step) {
+    if (step.childSteps.size() == 0) {
+      if (step.result == null) {
+        xml."${step.stepType.type()}"(name: step.name)
+      } else {
+        xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
+          if (step.result.failed()) {
+            failuremessage(buildFailureMessage(step.result))
+          }
+        }
+      }
+    } else {
+      if(step.stepType == BehaviorStepType.SCENARIO) {
+        xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
+          if(step.description){
+            xml.description(step.description)
+          }
+          for (child in step.childSteps) {
+            walkStoryChildren(xml, child)
+          }
+        }
+      } else { // assumed to be story now
+        def scenarioChildren = step.childSteps.findAll { it.stepType == BehaviorStepType.SCENARIO }
+        def failedScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.FAILED ? 1 : 0)}
+        def pendingScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.PENDING ? 1 : 0)}
+
+        xml."${step.stepType.type()}"(name: step.name, scenarios: scenarioChildren.size(), failedscenarios: failedScenarios, pendingscenarios: pendingScenarios) {
+          if(step.description){
+          xml.description(step.description)
+          }
+          for (child in step.childSteps) {
+            walkStoryChildren(xml, child)
+          }
+        }
+      }
+    }
+
+  }
+
+  def walkSpecificationChildren(MarkupBuilder xml, BehaviorStep step) {
     if (step.childSteps.size() == 0) {
       if (step.result == null) {
         xml."${step.stepType.type()}"(name: step.name)
@@ -45,7 +85,7 @@ class EasybXmlReportWriter implements ReportWriter {
     		xml.description(step.description)
     	  }
     	  for (child in step.childSteps) {
-          walkChildren(xml, child)
+          walkSpecificationChildren(xml, child)
         }
       }
     }
@@ -59,23 +99,33 @@ class EasybXmlReportWriter implements ReportWriter {
 
     def xml = new MarkupBuilder(writer)
 
-    xml.EasybRun(time: new Date(), totalspecifications: listener.getSpecificationCount(), totalfailedspecifications: listener.getFailedSpecificationCount(), totalpendingspecifications: listener.getPendingSpecificationCount()) {
-      def storyChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY)
-      def storyChildrenSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepResultCount()}
-      def storyChildrenFailedSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepFailureResultCount()}
-      def storyChildrenPendingSpecifications = storyChildren.inject(0) {count, item -> count + item.getChildStepPendingResultCount()}
-      stories(specifications: storyChildrenSpecifications, failedspecifications: storyChildrenFailedSpecifications, pendingspecifications: storyChildrenPendingSpecifications) {
-        listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
-          walkChildren(xml, genesisChild)
+    def storyList = listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY)
+    def scenarioChildren = []
+    for(story in storyList) {
+      for(storyChild in story.childSteps) {
+        if(storyChild.stepType == BehaviorStepType.SCENARIO) {
+          scenarioChildren.add(storyChild)
         }
       }
-      def specificationChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION)
-      def specificationChildrenSpecifications = specificationChildren.inject(0) {count, item -> count + item.getChildStepResultCount()}
-      def specificationChildrenFailedSpecifications = specificationChildren.inject(0) {count, item -> count + item.getChildStepFailureResultCount()}
-      def specificationChildrenPendingSpecifications = specificationChildren.inject(0) {count, item -> count + item.getChildStepPendingResultCount()}
-      specifications(specifications: specificationChildrenSpecifications, failedspecifications: specificationChildrenFailedSpecifications, pendingspecifications: specificationChildrenPendingSpecifications) {
+    }
+    def failedScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.FAILED ? 1 : 0)}
+    def pendingScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.PENDING ? 1 : 0)}
+
+    def specificationChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION)
+    def specificationsCount = specificationChildren.inject(0) {count, item -> count + item.getChildStepResultCount()}
+    def specificationsFailed = specificationChildren.inject(0) {count, item -> count + item.getChildStepFailureResultCount()}
+    def specificationsPending = specificationChildren.inject(0) {count, item -> count + item.getChildStepPendingResultCount()}
+
+    xml.EasybRun(time: new Date(), totalbehaviors: specificationsCount + scenarioChildren.size(), totalfailedbehaviors: specificationsFailed + failedScenarios, totalpendingbehaviors: specificationsPending + pendingScenarios) {
+      stories(scenarios: scenarioChildren.size(), failedscenarios: failedScenarios, pendingscenarios: pendingScenarios) {
+        listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
+          walkStoryChildren(xml, genesisChild)
+        }
+      }
+
+      specifications(specifications: specificationsCount, failedspecifications: specificationsFailed, pendingspecifications: specificationsPending) {
         listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
-          walkChildren(xml, genesisChild)
+          walkSpecificationChildren(xml, genesisChild)
         }
       }
     }

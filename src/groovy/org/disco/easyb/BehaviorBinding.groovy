@@ -5,8 +5,8 @@ import org.disco.easyb.result.Result
 import org.disco.easyb.delegates.PlugableDelegate
 import org.disco.easyb.BehaviorCategory
 import org.disco.easyb.util.BehaviorStepType
-import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.delegates.NarrativeDelegate
+
 class BehaviorBinding {
 
   // TODO change to constants when i break the binding into story and specification bindings
@@ -15,7 +15,7 @@ class BehaviorBinding {
   public static final String STORY_GIVEN = "given"
   public static final String STORY_WHEN = "when"
   public static final String STORY_THEN = "then"
-  public static final String SPECIFICATION = "behavior"
+  public static final String SPECIFICATION = "specification"
   public static final String SPECIFICATION_BEFORE = "before"
   public static final String SPECIFICATION_IT = "it"
   public static final String AND = "and"
@@ -42,6 +42,16 @@ class BehaviorBinding {
     binding.scenario = {scenarioDescription, scenarioClosure = {} ->
       listener.startStep(BehaviorStepType.SCENARIO, scenarioDescription)
       scenarioClosure()
+
+      if(listener.currentStep.childStepFailureResultCount > 0) {
+        listener.gotResult(new Result(Result.FAILED))
+      } else {
+        if(listener.currentStep.childStepPendingResultCount > 0) {
+          listener.gotResult(new Result(Result.PENDING))
+        } else {
+          listener.gotResult(new Result(Result.SUCCEEDED))
+        }
+      }
       listener.stopStep()
     }
 

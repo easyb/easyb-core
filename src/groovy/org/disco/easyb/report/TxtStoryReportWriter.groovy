@@ -18,10 +18,10 @@ class TxtStoryReportWriter implements ReportWriter {
 
     def easybXml = new XmlSlurper().parse(new File(easybXmlLocation))
 
-    def count = easybXml.stories.@specifications.toInteger()
-    writer.writeLine("${(count > 1) ? "${count} specifications" : " 1 specification"}" + " (including ${easybXml.stories.@pendingspecifications.toInteger()} pending) executed" +
-            "${easybXml.stories.@failedspecifications.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
-            "${easybXml.stories.@failedspecifications.toInteger() > 0 ? " Total failures: ${easybXml.stories.@failedspecifications}" : ""}")
+    def count = easybXml.stories.@scenarios.toInteger()
+    writer.writeLine("${(count > 1) ? "${count} scenarios" : " 1 scenario"}" + " (including ${easybXml.stories.@pendingscenarios.toInteger()} pending) executed" +
+            "${easybXml.stories.@failedscenarios.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
+            "${easybXml.stories.@failedscenarios.toInteger() > 0 ? " Total failures: ${easybXml.stories.@failedscenarios}" : ""}")
 
     handleElement(easybXml.stories)
     writer.close()
@@ -41,9 +41,9 @@ class TxtStoryReportWriter implements ReportWriter {
         writer.write("${' '.padRight(2)}Story: ${element.@name}")
         break
       case BehaviorBinding.DESCRIPTION:
-    	writer.write("${' '.padRight(3)} ${element.text()}")
-    	writer.newLine()
-    	break
+      	writer.write("${' '.padRight(3)} ${element.text()}")
+      	writer.newLine()
+      	break
       case BehaviorBinding.STORY_SCENARIO:
         writer.newLine()
         writer.write("${' '.padRight(4)}scenario ${element.@name}")

@@ -1,8 +1,6 @@
 package org.disco.easyb.listener;
 
-import org.disco.easyb.result.Result
 import org.disco.easyb.BehaviorStep
-import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.util.BehaviorStepType
 
 class DefaultListener implements BehaviorListener {
