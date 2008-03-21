@@ -15,19 +15,19 @@ class DefaultListener implements BehaviorListener {
   }
 
   long getFailedSpecificationCount() {
-    return genesisStep.getChildStepSpecificationFailureCount()
+    return genesisStep.getChildStepFailureResultCount()
   }
 
   long getSuccessfulSpecificationCount() {
-    return genesisStep.getChildStepSpecificationSuccessCount()
+    return genesisStep.getChildStepSuccessResultCount()
   }
 
   long getPendingSpecificationCount() {
-    return genesisStep.getChildStepSpecificationPendingCount()
+    return genesisStep.getChildStepPendingResultCount()
   }
 
   long getSpecificationCount() {
-    return genesisStep.getChildStepSpecificationCount()
+    return genesisStep.getChildStepResultCount()
   }
 
   BehaviorStep getGenesisStep() {

@@ -129,9 +129,9 @@ public class BehaviorRunner {
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
-            System.out.println((currentStep.getChildStepSpecificationFailureCount() == 0 ? "" : "FAILURE ") + 
-            		"Behaviors run: " + currentStep.getChildStepSpecificationCount() + ", Failures: " + 
-            		currentStep.getChildStepSpecificationFailureCount() + ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+            System.out.println((currentStep.getChildStepFailureResultCount() == 0 ? "" : "FAILURE ") +
+            		"Behaviors run: " + currentStep.getChildStepResultCount() + ", Failures: " +
+            		currentStep.getChildStepFailureResultCount() + ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
     }
 

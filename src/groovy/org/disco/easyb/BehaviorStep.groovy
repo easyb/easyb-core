@@ -18,8 +18,8 @@ class BehaviorStep {
     name = inStepName
   }
 
-  def addChildStep(BehaviorStep inSpecificationStep) {
-    childSteps.add(inSpecificationStep)
+  def addChildStep(BehaviorStep step) {
+    childSteps.add(step)
   }
 
   // TODO refactor into a getStepCount that can take the type its looking for (Fail, pass, pending)
@@ -27,13 +27,13 @@ class BehaviorStep {
     return result != null && result.pending() ? 1 : 0
   }
 
-  long getChildStepSpecificationPendingCount() {
+  long getChildStepPendingResultCount() {
     if (childSteps.size() == 0) {
       return getStepPendingCount()
     } else {
       long childStepPending = 0
       for (childStep in childSteps) {
-        childStepPending += childStep.getChildStepSpecificationPendingCount()
+        childStepPending += childStep.getChildStepPendingResultCount()
       }
       return childStepPending + getStepPendingCount()
     }
@@ -43,13 +43,13 @@ class BehaviorStep {
     return result != null && result.succeeded() ? 1 : 0
   }
 
-  long getChildStepSpecificationSuccessCount() {
+  long getChildStepSuccessResultCount() {
     if (childSteps.size() == 0) {
       return getStepSuccessCount()
     } else {
       long childStepSuccess = 0
       for (childStep in childSteps) {
-        childStepSuccess += childStep.getChildStepSpecificationSuccessCount()
+        childStepSuccess += childStep.getChildStepSuccessResultCount()
       }
       return childStepSuccess + getStepSuccessCount()
     }
@@ -60,36 +60,36 @@ class BehaviorStep {
     return result != null && result.failed() ? 1 : 0
   }
 
-  long getChildStepSpecificationFailureCount() {
+  long getChildStepFailureResultCount() {
     if (childSteps.size() == 0) {
       return getStepFailureCount()
     } else {
       long childStepFailures = 0
       for (childStep in childSteps) {
-        childStepFailures += childStep.getChildStepSpecificationFailureCount()
+        childStepFailures += childStep.getChildStepFailureResultCount()
       }
       return childStepFailures + getStepFailureCount()
     }
   }
 
-  long getStepSpecificationCount() {
+  long getStepResultCount() {
     return result != null ? 1 : 0
   }
 
-  long getChildStepSpecificationCount() {
+  long getChildStepResultCount() {
     if (childSteps.size() == 0) {
-      return getStepSpecificationCount()
+      return getStepResultCount()
     } else {
-      long childStepSpecifications = 0
+      long childStepResults = 0
       for (childStep in childSteps) {
-        childStepSpecifications += childStep.getChildStepSpecificationCount()
+        childStepResults += childStep.getChildStepResultCount()
       }
-      return childStepSpecifications + getStepSpecificationCount()
+      return childStepResults + getStepResultCount()
     }
   }
 
-  List<BehaviorStep> getChildrenOfType(BehaviorStepType specificationStoryType) {
-    childSteps.findAll {specificationStoryType.equals(it.stepType)}
+  List<BehaviorStep> getChildrenOfType(BehaviorStepType behaviorStepType) {
+    childSteps.findAll {behaviorStepType.equals(it.stepType)}
   }
 
   BehaviorStep getParentStep() {
