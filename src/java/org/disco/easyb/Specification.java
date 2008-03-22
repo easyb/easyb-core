@@ -1,9 +1,15 @@
 package org.disco.easyb;
 
-public class Specification extends Behavior {
+public class Specification implements Behavior {
 
-    public Specification(String specificationPhrase) {
-        super(specificationPhrase);
-    }
+	private String phrase;
+
+	public Specification(String specificationPhrase) {
+		phrase = specificationPhrase;
+	}
+
+	public String getPhrase() {
+		return phrase;
+	}
 
 }

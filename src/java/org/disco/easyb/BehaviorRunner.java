@@ -104,7 +104,7 @@ public class BehaviorRunner {
 
     }
 
-    private void executeSpecifications(Collection<File> behaviorFiles, BehaviorListener listener) throws IOException {
+    private void executeSpecifications(final Collection<File> behaviorFiles, final BehaviorListener listener) throws IOException {
         for (File behaviorFile : behaviorFiles) {
         	Behavior behavior = null;
             try {
