@@ -159,30 +159,29 @@ class BehaviorCategory {
   }
 
 
-  private static void _handleMapShouldNotContain(delegate, values) {
-    def foundcount = 0
-    values.each {key, val ->
-      delegate.each {vkey, vvalue ->
-        if ((vkey.equals(key) && (val == vvalue))) {
-          foundcount++
-        }
-      }
-    }
-    if (foundcount == values.size()) {
-      throw new VerificationException("values ${values} found in ${delegate}")
-    }
+  
+  private static int findItems(delegate, values){
+	  def foundcount = 0
+	    values.each {key, val ->
+	      delegate.each {vkey, vvalue ->
+	        if ((vkey.equals(key) && (val == vvalue))) {
+	          foundcount++
+	        }
+	      }
+	    }
+	  return foundcount
   }
 
+  private static void _handleMapShouldNotContain(delegate, values) {
+	def foundcount = findItems(delegate, values)
+	    if (foundcount == values.size()) {
+	      throw new VerificationException("values ${values} found in ${delegate}")
+	}
+   }
 
+  
   private static void _handleMapContains(delegate, values) {
-    def foundcount = 0
-    values.each {key, val ->
-      delegate.each {vkey, vvalue ->
-        if ((vkey.equals(key) && (val == vvalue))) {
-          foundcount++
-        }
-      }
-    }
+	def foundcount = findItems(delegate, values)
     if (foundcount != values.size()) {
       throw new VerificationException("values ${values} not found in ${delegate}")
     }
