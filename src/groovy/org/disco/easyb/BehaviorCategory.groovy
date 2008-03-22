@@ -97,6 +97,22 @@ class BehaviorCategory {
     _has(self, value)
   }
 
+  static void shouldNotHave(Object self, value) {
+    _hasNot(self, value)
+  }
+
+  private static void _hasNot(Object self, value) {
+    if(self instanceof Map) {
+      if (value instanceof Map) {
+        _handleMapShouldNotContain(self,value)
+      } else {
+        if(self.containsKey(value) || self.containsValue(value)) {
+          throw new VerificationException("${self.toString()} contains ${value.toString()} as a key or value")
+        }
+      }
+    } // TODO self isn't a map
+  }
+
   private static void _has(Object self, value) {
 
     if (self instanceof Map) {
@@ -141,6 +157,22 @@ class BehaviorCategory {
       }
     }
   }
+
+
+  private static void _handleMapShouldNotContain(delegate, values) {
+    def foundcount = 0
+    values.each {key, val ->
+      delegate.each {vkey, vvalue ->
+        if ((vkey.equals(key) && (val == vvalue))) {
+          foundcount++
+        }
+      }
+    }
+    if (foundcount == values.size()) {
+      throw new VerificationException("values ${values} found in ${delegate}")
+    }
+  }
+
 
   private static void _handleMapContains(delegate, values) {
     def foundcount = 0

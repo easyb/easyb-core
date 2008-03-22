@@ -25,7 +25,6 @@ class SpecificationBinding {
     def binding = new Binding()
 
     def basicDelegate = basicDelegate()
-    def givenDelegate = givenDelegate()
 
     def beforeIt
 
@@ -87,14 +86,5 @@ class SpecificationBinding {
    */
   private static basicDelegate() {
     return new EnsuringDelegate()
-  }
-  /**
-   * The "given" delegate supports plug-ins, consequently,
-   * the flex guys are utlized. Currently, there is a DbUnit
-   * "given" plug-in and it is envisioned that there could be
-   * others like Selenium.
-   */
-  private static givenDelegate() {
-    return new PlugableDelegate()
   }
 }

@@ -17,11 +17,17 @@ class EasybXmlReportWriter implements ReportWriter {
 
   def buildFailureMessage(result) {
     def buff = new StringBuffer()
+    buff << "Message: ${result.cause()?.getMessage()}"
+    buff << "\n"
+    buff << "StackTrace: "
+    buff << "\n"
+
     for (i in 1..10) {
-      // TODO needs better formatting ?
+//       TODO needs better formatting ?
       buff << result.cause()?.getStackTrace()[i]
       buff << "\n"
     }
+    buff << "...\n"
     return buff.toString()
   }
 
