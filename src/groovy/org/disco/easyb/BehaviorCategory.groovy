@@ -158,8 +158,6 @@ class BehaviorCategory {
     }
   }
 
-
-  
   private static int findItems(delegate, values){
 	  def foundcount = 0
 	    values.each {key, val ->
