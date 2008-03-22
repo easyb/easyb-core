@@ -5,7 +5,7 @@ import org.disco.easyb.util.BehaviorStepType
 
 class BehaviorStep {
 
-  private BehaviorStepType stepType
+  BehaviorStepType stepType
   private ArrayList<BehaviorStep> childSteps = new ArrayList()
   private BehaviorStep parentStep
   private Result result

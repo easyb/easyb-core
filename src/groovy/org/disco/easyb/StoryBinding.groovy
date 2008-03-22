@@ -82,7 +82,9 @@ class StoryBinding {
       listener.stopStep()
     }
 
-    binding.and = {
+    binding.and = { description = "", closure = {} ->
+      println "binding.and's previous setp is ------> ${listener.getCurrentStep().stepType.type()}"
+    
       listener.startStep(BehaviorStepType.AND, "")
       listener.stopStep()
     }
