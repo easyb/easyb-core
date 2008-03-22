@@ -21,6 +21,20 @@ class RichEnsureDelegate {
   def is(value) {
     // println "is invoked in FlexDelegate"
   }
+
+
+  def void doesNotContain(Object value) {
+    if(this.verified instanceof Map) {
+      if (value instanceof Map) {
+        this.handleMapShouldNotContain(value)
+      } else {
+        if(this.verified.containsKey(value) || this.verified.containsValue(value)) {
+          throw new VerificationException("${verified.toString()} contains ${value.toString()} as a key or value")
+        }
+      }
+    } // TODO self isn't a map
+  }
+
   /**
    * 
    */
@@ -67,6 +81,22 @@ class RichEnsureDelegate {
       }
     }
   }
+
+
+  private void handleMapShouldNotContain(values) {
+    def foundcount = 0
+    values.each {key, val ->
+      this.verified.each {vkey, vvalue ->
+        if ((vkey.equals(key) && (val == vvalue))) {
+          foundcount++
+        }
+      }
+    }
+    if (foundcount == values.size()) {
+      throw new VerificationException("values ${values} found in ${verified}")
+    }
+  }
+
   /**
    *
    */

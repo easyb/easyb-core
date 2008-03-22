@@ -37,6 +37,8 @@ class RichEnsureProxyDelegate implements RichlyEnsurable {
       this.flex.and()
     } else if (method.equals("contains") || method.equals("has")) {
       this.flex.contains(params[0])
+    } else if (method.equals("doesNotContain") || method.equals("doesNotHave")) {
+      this.flex.doesNotContain(params[0])
     } else if (method.equals("startsWith")) {
       this.flex.startsWith(params[0])
     } else if (method.equals("endsWith")) {

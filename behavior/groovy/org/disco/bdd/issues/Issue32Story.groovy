@@ -17,7 +17,14 @@ scenario "maps that should not be contained in other maps", {
     mp.shouldNotHave(notanother: "test") // covers map where key doesn't exist but value does
     mp.shouldNotHave(value)
 
-// TODO the ensure based calls
+    ensure(mp) {
+      doesNotContain("Mervin") // covers a value in a map
+      doesNotContain([value: "Mervin", 55: "somethingnottest"]) // covers a map in a map where neither value is found
+      doesNotContain([value: "Andy", 55: "somethingnottest"])  // covers a map in a map where at least one value is not found
+      doesNotContain(55: "foobar") // covers map where key exists but value doesn't
+      doesNotContain(notanother: "test") // covers map where key doesn't exist but value does
+      doesNotContain(value)
+    }
   }
 
   then "calls to shouldNotHave should throw a VerificationException if they are in the map", {
@@ -37,18 +44,30 @@ scenario "maps that should not be contained in other maps", {
       mp.shouldNotHave(55: "test")
     }
 
-// TODO the ensure based calls
-  }
-//  it "should find map key values", {
-//    def mp = [value: "Andy", another: 34, 55: "test"]
-//    ensure(mp) {
-//      contains("Andy")
-//      contains([value: "Andy", 55: "test"])
-//      contains(55: "test")
-//      contains(another: 34)
-//      contains(value)
-//    }
+    ensureThrows(VerificationException.class) {
+      ensure(mp){
+        doesNotContain("Andy") // covers a value in a map
+      }
+    }
 
+    ensureThrows(VerificationException.class) {
+      ensure(mp) {
+        doesNotContain(55)
+      }
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(mp) {
+        doesNotContain([value: "Andy", 55: "test"])
+      }
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(mp) {
+        doesNotContain(55: "test")
+      }
+    }
+  }
 }
 
 scenario "string should not have the given value in it", {
