@@ -11,6 +11,7 @@ interface BehaviorListener {
 
   BehaviorStep getGenesisStep()
   BehaviorStep getCurrentStep()
+  BehaviorStep getPreviousStep()
   
   long getPendingSpecificationCount()
   long getFailedSpecificationCount()

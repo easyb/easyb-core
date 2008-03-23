@@ -7,7 +7,8 @@ class DefaultListener implements BehaviorListener {
 
   private BehaviorStep currentStep
   private BehaviorStep genesisStep = new BehaviorStep(BehaviorStepType.GENESIS, "easyb-genesis", null)
-
+  private BehaviorStep previousStep
+  
   DefaultListener() {
     currentStep = genesisStep
   }
@@ -35,6 +36,10 @@ class DefaultListener implements BehaviorListener {
   BehaviorStep getCurrentStep() {
 	return currentStep
   }
+  
+  BehaviorStep getPreviousStep() {
+    return previousStep
+  }
  
   public void gotResult(result) {
     currentStep.setResult(result)
@@ -50,6 +55,7 @@ class DefaultListener implements BehaviorListener {
 
   public void stopStep() {
     // TODO set the metrics for the current step prior to popping it??
+    previousStep = currentStep
     currentStep = currentStep.parentStep
   }
 

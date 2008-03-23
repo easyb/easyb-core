@@ -6,13 +6,13 @@ import org.disco.easyb.delegates.PlugableDelegate
 import org.disco.easyb.BehaviorCategory
 import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.delegates.NarrativeDelegate
-
+import org.disco.easyb.BehaviorStep
 class StoryBinding {
 
   /**
 	 * This method returns a fully initialized Binding object (or context) that
-	 * has definitions for methods such as "it" and "given", which are used
-	 * in the context of behaviors (or stories).
+	 * has definitions for methods such as "when" and "given", which are used
+	 * in the context of stories.
 	 */
   static Binding getBinding(listener) {
 
@@ -53,32 +53,50 @@ class StoryBinding {
         listener.gotResult(new Result(ex))
       }
     }
-
-    binding.then = {spec, closure = pendingClosure ->
+    
+    def _thenClos = {spec, closure = pendingClosure ->
       listener.startStep(BehaviorStepType.THEN, spec)
-      thenClosure(spec, closure, BehaviorStepType.THEN)
+      thenClosure(spec, closure, STORY_THEN)
       listener.stopStep()
     }
+    
+    binding.then = {spec, closure = pendingClosure ->
+      _thenClos(spec, closure)
+    }
 
-    binding.when = {whenDescription, closure = {} ->
+    def _whenClos = {whenDescription, closure = {} ->
       listener.startStep(BehaviorStepType.WHEN, whenDescription)
       closure.delegate = basicDelegate
       closure()
       listener.stopStep()
+    } 
+    
+    binding.when = {whenDescription, closure = {} ->
+      _whenClos(whenDescription, closure)
     }
 
-    binding.given = {givenDescription, closure = {} ->
+    def _givenClos = {givenDescription, closure = {} ->
       listener.startStep(BehaviorStepType.GIVEN, givenDescription)
       closure.delegate = givenDelegate
       closure()
       listener.stopStep()
     }
+    
+    binding.given = {givenDescription, closure = {} ->
+      _givenClos(givenDescription, closure)
+    }
 
     binding.and = { description = "", closure = {} ->
-      println "binding.and's previous setp is ------> ${listener.getCurrentStep().stepType.type()}"
-    
-      listener.startStep(BehaviorStepType.AND, "")
-      listener.stopStep()
+      if(listener.getPreviousStep().stepType == BehaviorStepType.GIVEN){
+    	  _givenClos(description, closure)
+      }else if(listener.getPreviousStep().stepType == BehaviorStepType.WHEN){
+    	  _whenClos(description, closure)
+      }else if(listener.getPreviousStep().stepType == BehaviorStepType.THEN){
+    	  _thenClos(description, closure)
+      }else{
+    	  listener.startStep(BehaviorStepType.AND, "")
+    	  listener.stopStep()
+      }
     }
 
     binding.narrative = { storydescript = "", closure = {} ->
