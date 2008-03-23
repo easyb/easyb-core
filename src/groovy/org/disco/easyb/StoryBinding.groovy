@@ -9,14 +9,6 @@ import org.disco.easyb.delegates.NarrativeDelegate
 
 class StoryBinding {
 
-  public static final String STORY = "story"
-  public static final String STORY_SCENARIO = "scenario"
-  public static final String STORY_GIVEN = "given"
-  public static final String STORY_WHEN = "when"
-  public static final String STORY_THEN = "then"
-  public static final String AND = "and"
-  public static final String DESCRIPTION = "description"
-
   /**
 	 * This method returns a fully initialized Binding object (or context) that
 	 * has definitions for methods such as "it" and "given", which are used
@@ -64,7 +56,7 @@ class StoryBinding {
 
     binding.then = {spec, closure = pendingClosure ->
       listener.startStep(BehaviorStepType.THEN, spec)
-      thenClosure(spec, closure, STORY_THEN)
+      thenClosure(spec, closure, BehaviorStepType.THEN)
       listener.stopStep()
     }
 

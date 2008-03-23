@@ -11,7 +11,8 @@ public enum BehaviorStepType {
     THEN("then"),
     AND("and"),
     BEFORE("before"),
-    IT("it");
+    IT("it"),
+    DESCRIPTION("description");
 
     private final String type;
 
