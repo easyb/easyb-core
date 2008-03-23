@@ -1,6 +1,7 @@
 package org.disco.bdd.issues
 
 import org.disco.easyb.exception.VerificationException
+import org.disco.bdd.Person
 
 
 scenario "maps that should not be contained in other maps", {
@@ -152,29 +153,63 @@ scenario "list should not contain specified value", {
 
 scenario "object should not contain specified properties", {
 
-//it "should find properties on normal objects", {
-//  def person = new Person("Andy", 11)
-//  ensure(person) {
-//    contains(firstName: "Andy")
-//    contains(age: 11)
-//  }
-//
-//  //person.has(age:11)
-//  person.age.shouldBe 11
-//}
-//
-//it "should find properties, in a map, on normal objects", {
-//  def person = new Person("Jude", 41)
-//  ensure(person) {
-//    contains([firstName: "Jude", age: 41])
-//  }
-//}
-//
-//it "should find properties, in a map, on normal objects like contains", {
-//  def person = new Person("Jill", 11)
-//  ensure(person) {
-//    has([firstName: "Jill", age: 11])
-//  }
-//}
+  given "a person object with values of Andy and 11", {
+    person = new Person("Andy", 11)
+  }
+
+  then "calls to shouldNotHave should pass when the property doesn't match the values tested for", {
+    person.shouldNotHave(age:12)
+    person.shouldNotHave(firstName: "Frank")
+
+    ensure(person) {
+      doesNotContain(age:12)
+      doesNotContain(firstName: "Frank")
+    }
+  }
+
+  then "calls to shouldNotHave should pass when any of the properties don't match the values tested for", {
+    person.shouldNotHave([firstName: "Andy", age: 41])
+
+    ensure(person) {
+      doesNotContain([firstName: "Andy", age: 41])
+    }
+  }
+  
+  then "calls to shouldNotHave should throw a VerificationException if the property matches a property on the object", {
+
+    ensureThrows(VerificationException.class) {
+      person.shouldNotHave(age:11)
+    }
+
+    ensureThrows(VerificationException.class) {
+      person.shouldNotHave(firstName:"Andy")
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(person) {
+        doesNotContain(age:11)
+      }
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(person) {
+        doesNotContain(firstName: "Andy")
+      }
+    }
+
+  }
+
+  then "calls to shouldNotHave should throw a VerificationException if all the properties match those on the object", {
+
+    ensureThrows(VerificationException.class) {
+      person.shouldNotHave([firstName: "Andy", age: 11])
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(person) {
+        doesNotContain([firstName: "Andy", age: 11])
+      }
+    }
+  }
 
 }

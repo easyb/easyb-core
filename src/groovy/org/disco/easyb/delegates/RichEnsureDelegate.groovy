@@ -29,23 +29,38 @@ class RichEnsureDelegate {
         this.handleMapShouldNotContain(value)
       } else {
         if(this.verified.containsKey(value) || this.verified.containsValue(value)) {
-          throw new VerificationException("${verified.toString()} contains ${value.toString()} as a key or value")
+          throw new VerificationException("${verified.toString()} should not contain ${value.toString()} as a key or value")
         }
       }
     } else {
       if (value instanceof String) {
         if (verified.toString().contains(value.toString())) {
-          throw new VerificationException("${verified.toString()} contains ${value.toString()}")
+          throw new VerificationException("${verified.toString()} should not contain ${value.toString()}")
         }
       } else if (value instanceof Collection) {
         if (verified.containsAll(value)) {
-          throw new VerificationException("${verified} contains ${value}")
+          throw new VerificationException("${verified} should not contain ${value}")
         }
-      }
-
-      //  else if value instanceof map
-
-      else {
+      } else if (value instanceof Map) {
+        def matchedValues = []
+        value.each {ky, vl ->
+          def fld = this.verified.getClass().getDeclaredField(ky)
+          fld.setAccessible(true)
+          def ret = fld.get(this.verified)
+          if (ret.getClass() instanceof String) {
+            if (ret.equals(vl)) {
+              matchedValues << [ky, vl]
+            }
+          } else {
+            if (ret == vl) {
+              matchedValues << [ky, vl]
+            }
+          }
+          if(matchedValues.size() == value.size()) {
+            throw new VerificationException("${verified.getClass().getName()} should not contain ${matchedValues}")
+          }
+        }
+      } else {
         if (verified.contains(value)) {
           throw new VerificationException("${verified} contains ${value}")
         }

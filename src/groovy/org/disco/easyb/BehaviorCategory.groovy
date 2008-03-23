@@ -107,22 +107,38 @@ class BehaviorCategory {
         _handleMapShouldNotContain(self,value)
       } else {
         if(self.containsKey(value) || self.containsValue(value)) {
-          throw new VerificationException("${self.toString()} contains ${value.toString()} as a key or value")
+          throw new VerificationException("${self.toString()} should not contain ${value.toString()} as a key or value")
         }
       }
     } else {
       if (value instanceof String) {
         if (self.toString().contains(value.toString())) {
-          throw new VerificationException("${self.toString()} contains ${value.toString()}")
+          throw new VerificationException("${self.toString()} should not contain ${value.toString()}")
         }
       } else if (value instanceof Collection) {
         if (self.containsAll(value)) {
-          throw new VerificationException("${self} contains ${value}")
+          throw new VerificationException("${self} should not contain ${value}")
         }
-      }
-      //  else if value instanceof map
-
-      else {
+      } else if (value instanceof Map) {
+        def matchedValues = []
+        value.each {ky, vl ->
+          def fld = self.getClass().getDeclaredField(ky)
+          fld.setAccessible(true)
+          def ret = fld.get(self)
+          if (ret.getClass() instanceof String) {
+            if (ret.equals(vl)) {
+              matchedValues << [ky, vl]
+            }
+          } else {
+            if (ret == vl) {
+              matchedValues << [ky, vl]
+            }
+          }
+          if(matchedValues.size() == value.size()) {
+            throw new VerificationException("${self.getClass().getName()} should not contain ${matchedValues}")
+          }
+        }
+      } else {
         if (self.contains(value)) {
           throw new VerificationException("${self} contains ${value}")
         }
