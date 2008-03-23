@@ -131,9 +131,31 @@ public class BehaviorRunner {
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
+
+            printMetrics(behavior, startTime, currentStep, endTime);
+        }
+    }
+
+    private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
+        if(behavior instanceof Story) {
+            List<BehaviorStep> scenarioSteps = currentStep.getChildrenOfType(BehaviorStepType.SCENARIO);
+            long scenarioFailedCount = 0;
+            long scenarioPendingCount = 0;
+            for(BehaviorStep behaviorStep : currentStep.getChildrenOfType(BehaviorStepType.SCENARIO)) {
+              scenarioFailedCount += behaviorStep.getStepFailureCount();
+              scenarioPendingCount += behaviorStep.getStepPendingCount();
+            }
+            System.out.println((scenarioFailedCount == 0 ? "" : "FAILURE ") +
+                    "Scenarios run: " + scenarioSteps.size() +
+                    ", Failures: " + scenarioFailedCount +
+                    ", Pending: " + scenarioPendingCount +
+                    ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+        } else {
             System.out.println((currentStep.getChildStepFailureResultCount() == 0 ? "" : "FAILURE ") +
-            		"Behaviors run: " + currentStep.getChildStepResultCount() + ", Failures: " +
-            		currentStep.getChildStepFailureResultCount() + ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+                    "Specifications run: " + currentStep.getChildStepResultCount() +
+                    ", Failures: " + currentStep.getChildStepFailureResultCount() +
+                    ", Pending: " + currentStep.getChildStepPendingResultCount() + 
+                    ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
     }
 
