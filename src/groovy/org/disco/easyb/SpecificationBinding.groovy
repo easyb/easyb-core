@@ -9,11 +9,6 @@ import org.disco.easyb.delegates.NarrativeDelegate
 
 class SpecificationBinding {
 
-  public static final String SPECIFICATION = "specification"
-  public static final String SPECIFICATION_BEFORE = "before"
-  public static final String SPECIFICATION_IT = "it"
-  public static final String AND = "and"
-  public static final String DESCRIPTION = "description"
 
   /**
 	 * This method returns a fully initialized Binding object (or context) that
@@ -57,7 +52,7 @@ class SpecificationBinding {
 
     binding.it = {spec, closure = pendingClosure ->
       listener.startStep(BehaviorStepType.IT, spec)
-      itClosure(spec, closure, SPECIFICATION_IT)
+      itClosure(spec, closure, BehaviorStepType.IT)
       listener.stopStep()
     }
 

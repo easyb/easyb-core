@@ -1,7 +1,7 @@
 package org.disco.easyb.report
 
-import org.disco.easyb.SpecificationBinding
 import org.disco.easyb.result.Result
+import org.disco.easyb.util.BehaviorStepType
 
 public class TxtSpecificationReportWriter implements ReportWriter {
 
@@ -34,21 +34,21 @@ public class TxtSpecificationReportWriter implements ReportWriter {
 
   def writeElement(element) {
     switch (element.name()) {
-      case SpecificationBinding.SPECIFICATION:
+      case BehaviorStepType.SPECIFICATION:
         writer.newLine()
         writer.write("${' '.padRight(2)}Specification: ${element.@name}")
         break
-      case SpecificationBinding.DESCRIPTION:
+      case BehaviorStepType.DESCRIPTION:
       	writer.write("${' '.padRight(3)} ${element.text()}")
       	writer.newLine()
       	break
-      case SpecificationBinding.SPECIFICATION_BEFORE:
+      case BehaviorStepType.BEFORE:
         writer.write("${' '.padRight(4)}before ${element.@name}")
         break
-      case SpecificationBinding.SPECIFICATION_IT:
+      case BehaviorStepType.IT:
         writer.write("${' '.padRight(4)}it ${element.@name}")
         break
-      case SpecificationBinding.AND:
+      case BehaviorStepType.AND:
         writer.write("${' '.padRight(4)}and")
         break
       default:
