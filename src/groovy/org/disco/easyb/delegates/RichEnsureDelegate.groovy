@@ -47,18 +47,12 @@ class RichEnsureDelegate {
           def fld = this.verified.getClass().getDeclaredField(ky)
           fld.setAccessible(true)
           def ret = fld.get(this.verified)
-          if (ret.getClass() instanceof String) {
-            if (ret.equals(vl)) {
+          if ((ret.getClass() instanceof String && ret.equals(vl)) || ret == vl) {
               matchedValues << [ky, vl]
-            }
-          } else {
-            if (ret == vl) {
-              matchedValues << [ky, vl]
-            }
           }
-          if(matchedValues.size() == value.size()) {
-            throw new VerificationException("${verified.getClass().getName()} should not contain ${matchedValues}")
-          }
+        }
+        if(matchedValues.size() == value.size()) {
+          throw new VerificationException("${verified.getClass().getName()} should not contain ${matchedValues}")
         }
       } else {
         if (verified.contains(value)) {

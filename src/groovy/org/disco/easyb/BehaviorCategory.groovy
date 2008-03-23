@@ -125,18 +125,12 @@ class BehaviorCategory {
           def fld = self.getClass().getDeclaredField(ky)
           fld.setAccessible(true)
           def ret = fld.get(self)
-          if (ret.getClass() instanceof String) {
-            if (ret.equals(vl)) {
-              matchedValues << [ky, vl]
-            }
-          } else {
-            if (ret == vl) {
-              matchedValues << [ky, vl]
-            }
-          }
-          if(matchedValues.size() == value.size()) {
-            throw new VerificationException("${self.getClass().getName()} should not contain ${matchedValues}")
-          }
+          if ((ret.getClass() instanceof String && ret.equals(vl)) || ret == vl) {
+            matchedValues << [ky, vl]
+          } 
+        }
+        if(matchedValues.size() == value.size()) {
+          throw new VerificationException("${self.getClass().getName()} should not contain ${matchedValues}")
         }
       } else {
         if (self.contains(value)) {
