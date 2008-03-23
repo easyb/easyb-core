@@ -17,11 +17,6 @@ class EasybXmlReportWriter implements ReportWriter {
 
   def buildFailureMessage(result) {
     def buff = new StringBuffer()
-    buff << "Message: ${result.cause()?.getMessage()}"
-    buff << "\n"
-    buff << "StackTrace: "
-    buff << "\n"
-
     for (i in 1..10) {
 //       TODO needs better formatting ?
       buff << result.cause()?.getStackTrace()[i]
@@ -38,7 +33,9 @@ class EasybXmlReportWriter implements ReportWriter {
       } else {
         xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
           if (step.result.failed()) {
-            failuremessage(buildFailureMessage(step.result))
+            failure(message:step.result.cause()?.getMessage()){
+            	stacktrace(buildFailureMessage(step.result))
+            }
           }
         }
       }
@@ -77,7 +74,9 @@ class EasybXmlReportWriter implements ReportWriter {
       } else {
         xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
           if (step.result.failed()) {
-            failuremessage(buildFailureMessage(step.result))
+        	  failure(message:step.result.cause()?.getMessage()){
+              	stacktrace(buildFailureMessage(step.result))
+              }
           }
         }
       }
@@ -122,7 +121,7 @@ class EasybXmlReportWriter implements ReportWriter {
     def specificationsFailed = specificationChildren.inject(0) {count, item -> count + item.getChildStepFailureResultCount()}
     def specificationsPending = specificationChildren.inject(0) {count, item -> count + item.getChildStepPendingResultCount()}
 
-    xml.EasybRun(time: new Date(), totalbehaviors: specificationsCount + scenarioChildren.size(), totalfailedbehaviors: specificationsFailed + failedScenarios, totalpendingbehaviors: specificationsPending + pendingScenarios) {
+    xml.easyb(time: new Date(), totalbehaviors: specificationsCount + scenarioChildren.size(), totalfailedbehaviors: specificationsFailed + failedScenarios, totalpendingbehaviors: specificationsPending + pendingScenarios) {
       stories(scenarios: scenarioChildren.size(), failedscenarios: failedScenarios, pendingscenarios: pendingScenarios) {
         listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
           walkStoryChildren(xml, genesisChild)
