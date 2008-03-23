@@ -99,19 +99,54 @@ scenario "string should not have the given value in it", {
 }
 
 scenario "list should not contain specified value", {
-//  it "should find a value in an array", {
-//    ensure([1, 2, 3]) {
-//      contains(3)
-//    }
-//    //[1,2,3].has(3)
-//  }
-//
-//  it "should find some values in an array", {
-//    ensure([1, 2, 3]) {
-//      contains([2, 3])
-//    }
-//    //[1,2,3].has [2,3]
-//  }
+
+  given "a list of values 1, 2, 3", {
+    mylist = [1, 2, 3]
+  }
+
+  then "calls to shouldNotHave should pass for a value that isn't in mylist", {
+    mylist.shouldNotHave(5)
+
+    ensure(mylist) {
+      doesNotContain(5)
+    }
+  }
+
+  then "calls to shouldNotHave should pass for values that aren't in mylist", {
+    mylist.shouldNotHave([1,4])
+
+    ensure(mylist) {
+      doesNotContain([1,4])
+    }
+  }
+
+  then "calls to shouldNotHave should throw a VerificationException if the value appears in the list being tested", {
+
+    ensureThrows(VerificationException.class) {
+      mylist.shouldNotHave(3)
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(mylist) {
+        doesNotContain(3)
+      }
+    }
+
+  }
+
+  then "calls to shouldNotHave should throw a VerificationException if all values appear in the list being tested", {
+
+    ensureThrows(VerificationException.class) {
+      mylist.shouldNotHave([1,2])
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(mylist) {
+        doesNotContain([1,2])
+      }
+    }
+
+  }
 
 }
 

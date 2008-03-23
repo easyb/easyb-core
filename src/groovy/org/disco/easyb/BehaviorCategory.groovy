@@ -115,11 +115,18 @@ class BehaviorCategory {
         if (self.toString().contains(value.toString())) {
           throw new VerificationException("${self.toString()} contains ${value.toString()}")
         }
-      }// TODO else if value instanceof collectionself isn't a map
-
+      } else if (value instanceof Collection) {
+        if (self.containsAll(value)) {
+          throw new VerificationException("${self} contains ${value}")
+        }
+      }
       //  else if value instanceof map
 
-      // else
+      else {
+        if (self.contains(value)) {
+          throw new VerificationException("${self} contains ${value}")
+        }
+      }
     }
   }
 
