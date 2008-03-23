@@ -35,28 +35,28 @@ class TxtStoryReportWriter implements ReportWriter {
 
   def writeElement(element) {
     switch (element.name()) {
-      case BehaviorStepType.STORY:
+      case BehaviorStepType.STORY.type():
         writer.newLine()
         writer.write("${' '.padRight(2)}Story: ${element.@name}")
         break
-      case BehaviorStepType.DESCRIPTION:
+      case BehaviorStepType.DESCRIPTION.type():
       	writer.write("${' '.padRight(3)} ${element.text()}")
       	writer.newLine()
       	break
-      case BehaviorStepType.SCENARIO:
+      case BehaviorStepType.SCENARIO.type():
         writer.newLine()
         writer.write("${' '.padRight(4)}scenario ${element.@name}")
         break
-      case BehaviorStepType.GIVEN:
+      case BehaviorStepType.GIVEN.type():
         writer.write("${' '.padRight(6)}given ${element.@name}")
         break
-      case BehaviorStepType.WHEN:
+      case BehaviorStepType.WHEN.type():
         writer.write("${' '.padRight(6)}when ${element.@name}")
         break
-      case BehaviorStepType.THEN:
+      case BehaviorStepType.THEN.type():
         writer.write("${' '.padRight(6)}then ${element.@name}")
         break
-      case BehaviorStepType.AND:
+      case BehaviorStepType.AND.type():
         writer.write("${' '.padRight(6)}and")
         break
       default:

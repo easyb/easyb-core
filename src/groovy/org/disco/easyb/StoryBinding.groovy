@@ -56,7 +56,7 @@ class StoryBinding {
     
     def _thenClos = {spec, closure = pendingClosure ->
       listener.startStep(BehaviorStepType.THEN, spec)
-      thenClosure(spec, closure, STORY_THEN)
+      thenClosure(spec, closure, BehaviorStepType.THEN)
       listener.stopStep()
     }
     

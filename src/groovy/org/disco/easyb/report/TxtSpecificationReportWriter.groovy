@@ -34,21 +34,21 @@ public class TxtSpecificationReportWriter implements ReportWriter {
 
   def writeElement(element) {
     switch (element.name()) {
-      case BehaviorStepType.SPECIFICATION:
+      case BehaviorStepType.SPECIFICATION.type():
         writer.newLine()
         writer.write("${' '.padRight(2)}Specification: ${element.@name}")
         break
-      case BehaviorStepType.DESCRIPTION:
+      case BehaviorStepType.DESCRIPTION.type():
       	writer.write("${' '.padRight(3)} ${element.text()}")
       	writer.newLine()
       	break
-      case BehaviorStepType.BEFORE:
+      case BehaviorStepType.BEFORE.type():
         writer.write("${' '.padRight(4)}before ${element.@name}")
         break
-      case BehaviorStepType.IT:
+      case BehaviorStepType.IT.type():
         writer.write("${' '.padRight(4)}it ${element.@name}")
         break
-      case BehaviorStepType.AND:
+      case BehaviorStepType.AND.type():
         writer.write("${' '.padRight(4)}and")
         break
       default:
