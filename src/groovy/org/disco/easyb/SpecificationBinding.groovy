@@ -9,7 +9,6 @@ import org.disco.easyb.delegates.NarrativeDelegate
 
 class SpecificationBinding {
 
-
   /**
 	 * This method returns a fully initialized Binding object (or context) that
 	 * has definitions for methods such as "it" and "given", which are used

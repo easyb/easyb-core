@@ -110,7 +110,17 @@ class BehaviorCategory {
           throw new VerificationException("${self.toString()} contains ${value.toString()} as a key or value")
         }
       }
-    } // TODO self isn't a map
+    } else {
+      if (value instanceof String) {
+        if (self.toString().contains(value.toString())) {
+          throw new VerificationException("${self.toString()} contains ${value.toString()}")
+        }
+      }// TODO else if value instanceof collectionself isn't a map
+
+      //  else if value instanceof map
+
+      // else
+    }
   }
 
   private static void _has(Object self, value) {

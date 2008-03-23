@@ -32,7 +32,17 @@ class RichEnsureDelegate {
           throw new VerificationException("${verified.toString()} contains ${value.toString()} as a key or value")
         }
       }
-    } // TODO self isn't a map
+    } else {
+      if (value instanceof String) {
+        if (verified.toString().contains(value.toString())) {
+          throw new VerificationException("${verified.toString()} contains ${value.toString()}")
+        }
+      }// TODO else if value instanceof collection
+
+      //  else if value instanceof map
+
+      // else
+    }
   }
 
   /**

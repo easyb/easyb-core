@@ -72,16 +72,30 @@ scenario "maps that should not be contained in other maps", {
 
 scenario "string should not have the given value in it", {
 
-//  String value = "test"
-//
-//
-//  it "should contain est", {
-//    //ensure(value){
-//    //	contains("est")
-//    //}
-//    value.shouldHave("est")
-//  }
+  given "a string with value of test", {
+    value = "test"
+  }
 
+  then "calls to shouldNotHave should pass for values that aren't in the test value", {
+    value.shouldNotHave "foo"
+
+    ensure(value) {
+      doesNotContain "foo"
+    }
+  }
+
+  then "calls to shouldNotHave should throw a VerificationException if they are in the test value", {
+
+    ensureThrows(VerificationException.class) {
+      value.shouldNotHave "est"
+    }
+
+    ensureThrows(VerificationException.class) {
+      ensure(value) {
+        doesNotContain("est")
+      }
+    }
+  }
 }
 
 scenario "list should not contain specified value", {
