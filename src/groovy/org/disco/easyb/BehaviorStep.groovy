@@ -22,6 +22,35 @@ class BehaviorStep {
     childSteps.add(step)
   }
 
+  long getPendingScenarioCountForChildrenRecursively() {
+    return getScenarioCountForChildrenRecursively(Result.PENDING)
+  }
+
+//  long getPendingScenarioCount() {
+//    return (long)getChildrenOfType(BehaviorStepType.SCENARIO).inject(0) {count, item -> count + (item.result.status == Result.PENDING ? 1 : 0)}
+//  }
+
+  long getFailedScenarioCountForChildrenRecursively() {
+    return getScenarioCountForChildrenRecursively(Result.FAILED)
+  }
+
+//  long getFailedScenarioCount() {
+//    return (long)getChildrenOfType(BehaviorStepType.SCENARIO).inject(0) {count, item -> count + (item.result.status == Result.FAILED ? 1 : 0)}
+//  }
+
+  private long getScenarioCountForChildrenRecursively(resultStatus) {
+    long scenarioCount = 0
+
+    if((BehaviorStepType.SCENARIO == stepType) && (resultStatus == result?.status) ) {
+      scenarioCount++
+    }
+
+    for(childStep in childSteps) {
+      scenarioCount += childStep.getScenarioCountForChildrenRecursively(resultStatus)
+    }
+    return scenarioCount
+  }
+
   // TODO refactor into a getStepCount that can take the type its looking for (Fail, pass, pending)
   long getStepPendingCount() {
     return result != null && result.pending() ? 1 : 0

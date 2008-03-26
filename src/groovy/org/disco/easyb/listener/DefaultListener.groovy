@@ -2,6 +2,7 @@ package org.disco.easyb.listener;
 
 import org.disco.easyb.BehaviorStep
 import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.result.Result
 
 class DefaultListener implements BehaviorListener {
 
@@ -54,6 +55,19 @@ class DefaultListener implements BehaviorListener {
   }
 
   public void stopStep() {
+
+    if(BehaviorStepType.SCENARIO == currentStep.stepType) {
+      if(currentStep.childStepFailureResultCount > 0) {
+        gotResult(new Result(Result.FAILED))
+      } else {
+        if(currentStep.childStepPendingResultCount > 0) {
+          gotResult(new Result(Result.PENDING))
+        } else {
+          gotResult(new Result(Result.SUCCEEDED))
+        }
+      }
+    }
+
     // TODO set the metrics for the current step prior to popping it??
     previousStep = currentStep
     currentStep = currentStep.parentStep

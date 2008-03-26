@@ -28,16 +28,6 @@ class StoryBinding {
     binding.scenario = {scenarioDescription, scenarioClosure = {} ->
       listener.startStep(BehaviorStepType.SCENARIO, scenarioDescription)
       scenarioClosure()
-
-      if(listener.currentStep.childStepFailureResultCount > 0) {
-        listener.gotResult(new Result(Result.FAILED))
-      } else {
-        if(listener.currentStep.childStepPendingResultCount > 0) {
-          listener.gotResult(new Result(Result.PENDING))
-        } else {
-          listener.gotResult(new Result(Result.SUCCEEDED))
-        }
-      }
       listener.stopStep()
     }
 
