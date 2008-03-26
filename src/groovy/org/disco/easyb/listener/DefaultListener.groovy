@@ -15,21 +15,46 @@ class DefaultListener implements BehaviorListener {
   }
 
   long getFailedSpecificationCount() {
-    return genesisStep.getChildStepFailureResultCount()
+    return genesisStep.getFailedSpecificationCountRecursively()
   }
 
+  long getFailedScenarioCount() {
+    return genesisStep.getFailedScenarioCountRecursively()
+  }
+
+  // TODO implement this in the BehaviorStep
   long getSuccessfulSpecificationCount() {
     return genesisStep.getChildStepSuccessResultCount()
   }
 
   long getPendingSpecificationCount() {
-    return genesisStep.getChildStepPendingResultCount()
+    return genesisStep.getPendingSpecificationCountRecursively()
+  }
+
+  long getPendingScenarioCount() {
+    return genesisStep.getPendingScenarioCountRecursively()
   }
 
   long getSpecificationCount() {
-    return genesisStep.getChildStepResultCount()
+    return genesisStep.getSpecificationCountRecursively()
   }
 
+  long getScenarioCount() {
+    return genesisStep.getScenarioCountRecursively()
+  }
+
+  long getBehaviorCount() {
+    return genesisStep.getBehaviorCountRecursively()
+  }
+
+  long getFailedBehaviorCount() {
+    return genesisStep.getFailedBehaviorCountRecursively()
+  }
+
+  long getPendingBehaviorCount() {
+    return genesisStep.getPendingBehaviorCountRecursively()
+  }
+  
   BehaviorStep getGenesisStep() {
     return genesisStep
   }

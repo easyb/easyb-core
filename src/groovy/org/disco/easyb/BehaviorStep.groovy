@@ -22,48 +22,64 @@ class BehaviorStep {
     childSteps.add(step)
   }
 
-  long getScenarioCountForChildrenRecursively() {
-      long scenarioCount = 0
+  long getScenarioCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, null)
+  }
 
-      if((BehaviorStepType.SCENARIO == stepType)) {
-        scenarioCount++
+  long getPendingScenarioCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, Result.PENDING)
+  }
+
+  long getFailedScenarioCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, Result.FAILED)
+  }
+
+
+  long getBehaviorCountRecursively(type, resultStatus) {
+    long behaviorCount = 0
+
+    if(resultStatus == null) {
+      if(type == stepType) {
+        behaviorCount++
       }
-
-      for(childStep in childSteps) {
-        scenarioCount += childStep.getScenarioCountForChildrenRecursively()
-      }
-      return scenarioCount
-  }
-
-  long getPendingScenarioCountForChildrenRecursively() {
-    return getScenarioCountForChildrenRecursively(Result.PENDING)
-  }
-
-//  long getPendingScenarioCount() {
-//    return (long)getChildrenOfType(BehaviorStepType.SCENARIO).inject(0) {count, item -> count + (item.result.status == Result.PENDING ? 1 : 0)}
-//  }
-
-  long getFailedScenarioCountForChildrenRecursively() {
-    return getScenarioCountForChildrenRecursively(Result.FAILED)
-  }
-
-//  long getFailedScenarioCount() {
-//    return (long)getChildrenOfType(BehaviorStepType.SCENARIO).inject(0) {count, item -> count + (item.result.status == Result.FAILED ? 1 : 0)}
-//  }
-
-  private long getScenarioCountForChildrenRecursively(resultStatus) {
-    long scenarioCount = 0
-
-    if((BehaviorStepType.SCENARIO == stepType) && (resultStatus == result?.status) ) {
-      scenarioCount++
+    } else if ((type == stepType) && (resultStatus == result?.status)) {
+      behaviorCount++
     }
 
     for(childStep in childSteps) {
-      scenarioCount += childStep.getScenarioCountForChildrenRecursively(resultStatus)
+      behaviorCount += childStep.getBehaviorCountRecursively(type, resultStatus)
     }
-    return scenarioCount
+    return behaviorCount
   }
 
+
+
+  long getSpecificationCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.IT, null)
+  }
+
+  long getPendingSpecificationCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.IT, Result.PENDING)
+  }
+
+  long getFailedSpecificationCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.IT, Result.FAILED)
+  }
+
+
+  long getBehaviorCountRecursively() {
+    return getSpecificationCountRecursively() + getScenarioCountRecursively()
+  }
+
+  long getPendingBehaviorCountRecursively() {
+    return getPendingSpecificationCountRecursively() + getPendingScenarioCountRecursively()
+  }
+
+  long getFailedBehaviorCountRecursively() {
+    return getFailedSpecificationCountRecursively() + getFailedScenarioCountRecursively()
+  }
+
+  
   // TODO refactor into a getStepCount that can take the type its looking for (Fail, pass, pending)
   long getStepPendingCount() {
     return result != null && result.pending() ? 1 : 0

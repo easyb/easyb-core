@@ -18,6 +18,15 @@ interface BehaviorListener {
   long getSuccessfulSpecificationCount()
   long getSpecificationCount()
 
+  long getScenarioCount()
+  long getFailedScenarioCount()
+  long getPendingScenarioCount()
+
+  long getBehaviorCount()
+  long getFailedBehaviorCount()
+  long getPendingBehaviorCount()
+
+
   //probably expose a method here to get the executionLength
   void gotResult(result)
 }

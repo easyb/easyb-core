@@ -40,7 +40,7 @@ scenario "step with a failed then should report failed scenario", {
   }
 
   then "genesis step should report a 1 failed scenario", {
-    listener.genesisStep.failedScenarioCountForChildrenRecursively.shouldBe(1)
+    listener.genesisStep.failedScenarioCountRecursively.shouldBe(1)
   }
 
 }
@@ -59,7 +59,7 @@ scenario "step with no failed or pending then should report success scenario", {
   }
 
   then "genesis step should report a 0 failed scenario", {
-    listener.genesisStep.failedScenarioCountForChildrenRecursively.shouldBe(0)
+    listener.genesisStep.failedScenarioCountRecursively.shouldBe(0)
   }
 
 }
@@ -78,7 +78,7 @@ scenario "step with a pending then should report pending scenario", {
   }
 
   then "genesis step should report 1 pending scenario", {
-    listener.genesisStep.pendingScenarioCountForChildrenRecursively.shouldBe(1)
+    listener.genesisStep.pendingScenarioCountRecursively.shouldBe(1)
   }
 
 }
@@ -100,15 +100,15 @@ scenario "step with a pending and a failed then should report 1 failed scenario 
   }
 
   then "genesis step should report 1 failed scenario", {
-    listener.genesisStep.failedScenarioCountForChildrenRecursively.shouldBe(1)
+    listener.genesisStep.failedScenarioCountRecursively.shouldBe(1)
   }
 
   then "genesis step should report 0 pending scenario", {
-    listener.genesisStep.pendingScenarioCountForChildrenRecursively.shouldBe(0)
+    listener.genesisStep.pendingScenarioCountRecursively.shouldBe(0)
   }
 
   then "genesis step should report 1 scenario", {
-    listener.genesisStep.scenarioCountForChildrenRecursively.shouldBe(1)
+    listener.genesisStep.scenarioCountRecursively.shouldBe(1)
   }
 
 }

@@ -64,11 +64,11 @@ public class BehaviorRunner {
         
         System.out.println("\n" +
         	//prints "1 behavior run" or "x behaviors run" 
-        	(listener.getSpecificationCount() > 1 ? listener.getSpecificationCount()  + " total behaviors run" : "1 behavior run")
+        	(listener.getBehaviorCount() > 1 ? listener.getBehaviorCount()  + " total behaviors run" : "1 behavior run")
         	//outer ternary prints either 1..X failure(s) or no failures
         	//inner ternary determines if more than one failure and makes it plural if so
-        	+ (listener.getFailedSpecificationCount() > 0 ? " with " 
-        		+ (listener.getFailedSpecificationCount() == 1 ? "1 failure" : listener.getFailedSpecificationCount() + " failures") : " with no failures"));
+        	+ (listener.getFailedBehaviorCount() > 0 ? " with "
+        		+ (listener.getFailedBehaviorCount() == 1 ? "1 failure" : listener.getFailedBehaviorCount() + " failures") : " with no failures"));
 
         produceReports(listener);
 
@@ -138,23 +138,16 @@ public class BehaviorRunner {
 
     private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
         if(behavior instanceof Story) {
-            List<BehaviorStep> scenarioSteps = currentStep.getChildrenOfType(BehaviorStepType.SCENARIO);
-            long scenarioFailedCount = 0;
-            long scenarioPendingCount = 0;
-            for(BehaviorStep behaviorStep : currentStep.getChildrenOfType(BehaviorStepType.SCENARIO)) {
-              scenarioFailedCount += behaviorStep.getStepFailureCount();
-              scenarioPendingCount += behaviorStep.getStepPendingCount();
-            }
-            System.out.println((scenarioFailedCount == 0 ? "" : "FAILURE ") +
-                    "Scenarios run: " + scenarioSteps.size() +
-                    ", Failures: " + scenarioFailedCount +
-                    ", Pending: " + scenarioPendingCount +
+            System.out.println((currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE ") +
+                    "Scenarios run: " + currentStep.getScenarioCountRecursively() +
+                    ", Failures: " + currentStep.getFailedScenarioCountRecursively() +
+                    ", Pending: " + currentStep.getPendingScenarioCountRecursively() +
                     ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         } else {
-            System.out.println((currentStep.getChildStepFailureResultCount() == 0 ? "" : "FAILURE ") +
-                    "Specifications run: " + currentStep.getChildStepResultCount() +
-                    ", Failures: " + currentStep.getChildStepFailureResultCount() +
-                    ", Pending: " + currentStep.getChildStepPendingResultCount() + 
+            System.out.println((currentStep.getFailedSpecificationCountRecursively() == 0 ? "" : "FAILURE ") +
+                    "Specifications run: " + currentStep.getSpecificationCountRecursively() +
+                    ", Failures: " + currentStep.getFailedSpecificationCountRecursively() +
+                    ", Pending: " + currentStep.getPendingSpecificationCountRecursively() +
                     ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
     }
