@@ -34,6 +34,42 @@ class BehaviorStep {
     return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, Result.FAILED)
   }
 
+  long getSuccessScenarioCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, Result.SUCCEEDED)
+  }
+
+  long getSpecificationCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.IT, null)
+  }
+
+  long getPendingSpecificationCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.IT, Result.PENDING)
+  }
+
+  long getFailedSpecificationCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.IT, Result.FAILED)
+  }
+
+  long getSuccessSpecificationCountRecursively() {
+    return getBehaviorCountRecursively(BehaviorStepType.IT, Result.SUCCEEDED)
+  }
+
+
+  long getBehaviorCountRecursively() {
+    return getSpecificationCountRecursively() + getScenarioCountRecursively()
+  }
+
+  long getPendingBehaviorCountRecursively() {
+    return getPendingSpecificationCountRecursively() + getPendingScenarioCountRecursively()
+  }
+
+  long getFailedBehaviorCountRecursively() {
+    return getFailedSpecificationCountRecursively() + getFailedScenarioCountRecursively()
+  }
+
+  long getSuccessBehaviorCountRecursively() {
+    return getSuccessSpecificationCountRecursively() + getSuccessScenarioCountRecursively()
+  }
 
   long getBehaviorCountRecursively(type, resultStatus) {
     long behaviorCount = 0
@@ -50,33 +86,6 @@ class BehaviorStep {
       behaviorCount += childStep.getBehaviorCountRecursively(type, resultStatus)
     }
     return behaviorCount
-  }
-
-
-
-  long getSpecificationCountRecursively() {
-    return getBehaviorCountRecursively(BehaviorStepType.IT, null)
-  }
-
-  long getPendingSpecificationCountRecursively() {
-    return getBehaviorCountRecursively(BehaviorStepType.IT, Result.PENDING)
-  }
-
-  long getFailedSpecificationCountRecursively() {
-    return getBehaviorCountRecursively(BehaviorStepType.IT, Result.FAILED)
-  }
-
-
-  long getBehaviorCountRecursively() {
-    return getSpecificationCountRecursively() + getScenarioCountRecursively()
-  }
-
-  long getPendingBehaviorCountRecursively() {
-    return getPendingSpecificationCountRecursively() + getPendingScenarioCountRecursively()
-  }
-
-  long getFailedBehaviorCountRecursively() {
-    return getFailedSpecificationCountRecursively() + getFailedScenarioCountRecursively()
   }
 
   

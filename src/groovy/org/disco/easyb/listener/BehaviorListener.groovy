@@ -15,14 +15,16 @@ interface BehaviorListener {
   
   long getPendingSpecificationCount()
   long getFailedSpecificationCount()
-  long getSuccessfulSpecificationCount()
+  long getSuccessSpecificationCount()
   long getSpecificationCount()
 
   long getScenarioCount()
+  long getSuccessScenarioCount()
   long getFailedScenarioCount()
   long getPendingScenarioCount()
 
   long getBehaviorCount()
+  long getSuccessBehaviorCount()
   long getFailedBehaviorCount()
   long getPendingBehaviorCount()
 

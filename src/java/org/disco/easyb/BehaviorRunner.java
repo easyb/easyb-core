@@ -72,7 +72,7 @@ public class BehaviorRunner {
 
         produceReports(listener);
 
-        if (listener.getFailedSpecificationCount() > 0) {
+        if (listener.getFailedBehaviorCount() > 0) {
             System.exit(-6);
         }
     }
