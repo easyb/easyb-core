@@ -18,7 +18,6 @@ class EasybXmlReportWriter implements ReportWriter {
   def buildFailureMessage(result) {
     def buff = new StringBuffer()
     for (i in 1..10) {
-//       TODO needs better formatting ?
       buff << result.cause()?.getStackTrace()[i]
       buff << "\n"
     }
@@ -50,11 +49,7 @@ class EasybXmlReportWriter implements ReportWriter {
           }
         }
       } else { // assumed to be story now
-        def scenarioChildren = step.childSteps.findAll { it.stepType == BehaviorStepType.SCENARIO }
-        def failedScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.FAILED ? 1 : 0)}
-        def pendingScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.PENDING ? 1 : 0)}
-
-        xml."${step.stepType.type()}"(name: step.name, scenarios: scenarioChildren.size(), failedscenarios: failedScenarios, pendingscenarios: pendingScenarios) {
+        xml."${step.stepType.type()}"(name: step.name, scenarios: step.scenarioCountRecursively, failedscenarios: step.failedScenarioCountRecursively, pendingscenarios: step.pendingScenarioCountRecursively) {
           if(step.description){
           xml.description(step.description)
           }
@@ -81,11 +76,7 @@ class EasybXmlReportWriter implements ReportWriter {
         }
       }
     } else {
-      def stepSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepResultCount()}
-      def stepFailedSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepFailureResultCount()}
-      def stepPendingSpecifications = step.childSteps.inject(0) {count, item -> count + item.getChildStepPendingResultCount()}
-
-      xml."${step.stepType.type()}"(name: step.name, specifications: stepSpecifications, failedspecifications: stepFailedSpecifications, pendingspecifications: stepPendingSpecifications) {
+      xml."${step.stepType.type()}"(name: step.name, specifications: step.specificationCountRecursively, failedspecifications: step.failedSpecificationCountRecursively, pendingspecifications: step.pendingSpecificationCountRecursively) {
     	  if(step.description){
     		xml.description(step.description)
     	  }
@@ -104,31 +95,14 @@ class EasybXmlReportWriter implements ReportWriter {
 
     def xml = new MarkupBuilder(writer)
 
-    def storyList = listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY)
-    def scenarioChildren = []
-    for(story in storyList) {
-      for(storyChild in story.childSteps) {
-        if(storyChild.stepType == BehaviorStepType.SCENARIO) {
-          scenarioChildren.add(storyChild)
-        }
-      }
-    }
-    def failedScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.FAILED ? 1 : 0)}
-    def pendingScenarios = scenarioChildren.inject(0) {count, item -> count + (item.result.status == Result.PENDING ? 1 : 0)}
-
-    def specificationChildren = listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION)
-    def specificationsCount = specificationChildren.inject(0) {count, item -> count + item.getChildStepResultCount()}
-    def specificationsFailed = specificationChildren.inject(0) {count, item -> count + item.getChildStepFailureResultCount()}
-    def specificationsPending = specificationChildren.inject(0) {count, item -> count + item.getChildStepPendingResultCount()}
-
-    xml.easyb(time: new Date(), totalbehaviors: specificationsCount + scenarioChildren.size(), totalfailedbehaviors: specificationsFailed + failedScenarios, totalpendingbehaviors: specificationsPending + pendingScenarios) {
-      stories(scenarios: scenarioChildren.size(), failedscenarios: failedScenarios, pendingscenarios: pendingScenarios) {
+    xml.easyb(time: new Date(), totalbehaviors: listener.behaviorCount, totalfailedbehaviors: listener.failedBehaviorCount, totalpendingbehaviors: listener.pendingBehaviorCount) {
+      stories(scenarios: listener.scenarioCount, failedscenarios: listener.failedScenarioCount, pendingscenarios: listener.pendingScenarioCount) {
         listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
           walkStoryChildren(xml, genesisChild)
         }
       }
 
-      specifications(specifications: specificationsCount, failedspecifications: specificationsFailed, pendingspecifications: specificationsPending) {
+      specifications(specifications: listener.specificationCount, failedspecifications: listener.failedSpecificationCount, pendingspecifications: listener.pendingSpecificationCount) {
         listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
           walkSpecificationChildren(xml, genesisChild)
         }
