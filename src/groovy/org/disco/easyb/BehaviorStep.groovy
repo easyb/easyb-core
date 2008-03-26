@@ -22,6 +22,19 @@ class BehaviorStep {
     childSteps.add(step)
   }
 
+  long getScenarioCountForChildrenRecursively() {
+      long scenarioCount = 0
+
+      if((BehaviorStepType.SCENARIO == stepType)) {
+        scenarioCount++
+      }
+
+      for(childStep in childSteps) {
+        scenarioCount += childStep.getScenarioCountForChildrenRecursively()
+      }
+      return scenarioCount
+  }
+
   long getPendingScenarioCountForChildrenRecursively() {
     return getScenarioCountForChildrenRecursively(Result.PENDING)
   }

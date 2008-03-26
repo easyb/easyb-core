@@ -107,4 +107,8 @@ scenario "step with a pending and a failed then should report 1 failed scenario 
     listener.genesisStep.pendingScenarioCountForChildrenRecursively.shouldBe(0)
   }
 
+  then "genesis step should report 1 scenario", {
+    listener.genesisStep.scenarioCountForChildrenRecursively.shouldBe(1)
+  }
+
 }
