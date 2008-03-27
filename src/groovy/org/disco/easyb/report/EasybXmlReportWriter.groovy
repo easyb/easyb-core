@@ -4,6 +4,7 @@ import groovy.xml.MarkupBuilder
 import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.BehaviorStep
 import org.disco.easyb.result.Result
+import org.disco.easyb.exception.VerificationException
 
 class EasybXmlReportWriter implements ReportWriter {
 
@@ -33,7 +34,9 @@ class EasybXmlReportWriter implements ReportWriter {
         xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
           if (step.result.failed()) {
             failure(message:step.result.cause()?.getMessage()){
-            	stacktrace(buildFailureMessage(step.result))
+            	if(!(step.result.cause instanceof VerificationException)) {
+                stacktrace(buildFailureMessage(step.result))
+              }
             }
           }
         }
@@ -70,7 +73,8 @@ class EasybXmlReportWriter implements ReportWriter {
         xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
           if (step.result.failed()) {
         	  failure(message:step.result.cause()?.getMessage()){
-              	stacktrace(buildFailureMessage(step.result))
+              if(!(step.result.cause instanceof VerificationException))
+                stacktrace(buildFailureMessage(step.result))
               }
           }
         }
