@@ -44,7 +44,7 @@ target(configuregroovy:"configures environment to compile w/Groovy"){
 }
 
 target(getdeps:"retrieves dependencies"){
-  Ivy.configure(file:"./ivyconfig.xml")
+  Ivy.settings(file:"./ivyconfig.xml", id:"ivy.instance" )
   Ivy.retrieve(pattern:"./target/lib/[artifact]-[revision].[ext]")
 }
 

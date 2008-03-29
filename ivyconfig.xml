@@ -1,5 +1,5 @@
 <ivysettings>
-  <conf defaultResolver="chained"/>
+  <settings defaultResolver="chained"/>
   <resolvers>
 		<chain name="chained" returnFirst="true">
       <filesystem name="libraries">
