@@ -10,6 +10,10 @@
 					pattern="http://www.easyb.org/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
 			<ibiblio name="ibiblio" />
+      <url name="ibiblio-mirror">
+				<artifact
+          pattern="http://mirrors.ibiblio.org/pub/mirrors/maven2/[organisation]/[module]/[branch]/[revision]/[branch]-[revision].[ext]" />
+			</url>
 		</chain>
 	</resolvers>
 </ivysettings>
