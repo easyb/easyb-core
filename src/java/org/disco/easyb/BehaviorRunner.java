@@ -16,12 +16,12 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.disco.easyb.listener.DefaultListener;
 import org.disco.easyb.listener.BehaviorListener;
-import org.disco.easyb.report.EasybXmlReportWriter;
-import org.disco.easyb.report.TxtSpecificationReportWriter;
-import org.disco.easyb.report.Report;
+import org.disco.easyb.listener.DefaultListener;
+import org.disco.easyb.report.XmlReportWriter;
 import org.disco.easyb.report.ReportWriter;
+import org.disco.easyb.report.Report;
+import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.util.BehaviorStepType;
 import org.disco.easyb.util.ReportFormat;
@@ -76,34 +76,29 @@ public class BehaviorRunner {
             System.exit(-6);
         }
     }
-
+    /**
+     * 
+     * @param listener
+     */
     private void produceReports(BehaviorListener listener) {
-        String easybxmlreportlocation = null;
+       
         for (Report report : reports) {
             if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
-                easybxmlreportlocation = report.getLocation();
-                ReportWriter reportWriter = new EasybXmlReportWriter(report, listener);
-                reportWriter.writeReport();
-            }
-        }
-
-        if (reports.size() > 0 && easybxmlreportlocation == null) {
-            System.out.println("xmleasyb report is required");
-            System.exit(-1);
-        }
-
-        for (Report report : reports) {
-            if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
-                //do nothing, report was already run above.
+            	new XmlReportWriter(report, listener).writeReport();
             } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
-                new TxtStoryReportWriter(report, easybxmlreportlocation).writeReport();
+                new TxtStoryReportWriter(report, listener).writeReport();
             } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_SPECIFICATION)) {
-                new TxtSpecificationReportWriter(report, easybxmlreportlocation).writeReport();
+                new TxtSpecificationReportWriter(report, listener).writeReport();
             }
         }
 
     }
-
+    /**
+     * 
+     * @param behaviorFiles
+     * @param listener
+     * @throws IOException
+     */
     private void executeSpecifications(final Collection<File> behaviorFiles, final BehaviorListener listener) throws IOException {
         for (File behaviorFile : behaviorFiles) {
         	Behavior behavior = null;
@@ -180,7 +175,7 @@ public class BehaviorRunner {
 
     private static void validateArguments(CommandLine commandLine) throws IllegalArgumentException {
         if (commandLine.getArgs().length == 0) {
-            throw new IllegalArgumentException("Required Arguments not passed in.");
+            throw new IllegalArgumentException("Required arguments missing.");
         }
     }
 
@@ -245,7 +240,7 @@ public class BehaviorRunner {
      * @param options options that are available to this specification runner
      */
     private static void handleHelpForMain(Options options) {
-        new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyStory.groovy", options);
+        new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.groovy", options);
     }
 
     /**
@@ -266,17 +261,17 @@ public class BehaviorRunner {
         Options options = new Options();
 
         //noinspection AccessStaticViaInstance
-        Option xmleasybreport = OptionBuilder.withArgName("file").hasArg()
+        Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create an easyb report in xml format").create(Report.XML_EASYB);
         options.addOption(xmleasybreport);
 
         //noinspection AccessStaticViaInstance
-        Option storyreport = OptionBuilder.withArgName("file").hasArg()
+        Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create a story report").create(Report.TXT_STORY);
         options.addOption(storyreport);
 
         //noinspection AccessStaticViaInstance
-        Option behaviorreport = OptionBuilder.withArgName("file").hasArg()
+        Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create a behavior report").create(Report.TXT_SPECIFICATION);
         options.addOption(behaviorreport);
 

@@ -6,14 +6,14 @@ import org.disco.easyb.BehaviorStep
 import org.disco.easyb.result.Result
 import org.disco.easyb.exception.VerificationException
 
-class EasybXmlReportWriter implements ReportWriter {
+class XmlReportWriter implements ReportWriter {
 
   def report
   def listener
 
-  EasybXmlReportWriter(inReport, inListener) {
-    listener = inListener
+  XmlReportWriter(inReport, inListener) {
     report = inReport
+    listener = inListener
   }
 
   def buildFailureMessage(result) {
