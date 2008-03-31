@@ -44,21 +44,23 @@ pageTracker._trackPageview();
 			
 			<h2>Story DSL</h2>
 			
-			<p>Stories in easyb are files which contain scenarios; consequently, by convention, easyb story file names end in <code>Story</code>. For example, if you have a create account story, the file would be <code>CreateAccountStory.groovy</code> (by the way, the <code>.groovy</code> is convention but not required-- you could do <code>.gv</code> or <code>.story</code>-- what ever is easier for you).</p>
+			<p>Stories in easyb are files which contain scenarios; consequently, by convention, easyb story file names end in <code>.story</code>. For example, if you have a create account story, the file would be <code>CreateAccount.story</code>.</p>
 			
 			<p>Story files have 0..N <code>scenario</code>s in them. Scenarios then have a mixture of 0..N <code>given</code>s, <code>when</code>s, and <code>then</code>s, with <code>and</code>s linking them (if you desire).</p>	
 			
-			<p>Consequently, the definition of an easyb scenario is:
-<pre><code>
-scenario "text", {
+			<p>Consequently, the definition of an easyb scenario is:</p>
+<pre><code>scenario "text", {
  given "text", {}
  when "text", {}
  then "text", {}
 }
-</code></pre>				
-Remember, you can have as many <code>given</code>s, <code>when</code>s, and <code>then</code>s, with <code>and</code>s linking them; therefore, the DSL supports
-<pre><code>
-scenario "text",{
+</code></pre>
+
+<p>The body of any phrase (<code>given</code>, <code>when</code>, <code>then</code>) is optional as well (meaning <code>given "text"</code> without the trailing <code>, {}</code> implementation code is completely valid syntax)-- easyb will mark such an event as a pending one.</p>
+				
+<p>Remember, you can have as many <code>given</code>s, <code>when</code>s, and <code>then</code>s, with <code>and</code>s linking them; therefore, the DSL supports</p>
+
+<pre><code>scenario "text",{
  given "text", {}
  and
  given "text", {}
@@ -69,14 +71,25 @@ scenario "text",{
 }
 </code></pre>
 
-Don't forget that <code>when</code>s are not required. Accordingly, the following variation works too.
-<pre><code>
-scenario{
+<p>The DSL also permits chaining <code>and</code>s -- for instance, after a <code>given</code>, the next <code>and</code> is assumed to also imply <code>given</code>. The same would be true of any <code>when</code>'s or <code>then</code>'s that had proceeding <code>and</code>'s. Accordingly, the following syntax is also valid:</p>
+
+<pre><code>scenario "text",{
+ given "text", {}
+ and "given text", {}
+ when "text", {}
+ then "text", {}
+ and "then text", {}
+}
+</code></pre>
+
+<p>Don't forget that <code>when</code>s are not required. Accordingly, the following variation works too.</p>
+
+<pre><code>scenario{
  given "text", {}
  then "text", {}
 }
 </code></pre>	
-</p>
+
 
 <h2>Behavior DSL</h2>
 	<p>easyb supports an RSpec-like DSL for defining simple behaviors. Along with supporting <code>it</code>, you can create a fixture using the <code>before</code> syntax. 
@@ -131,6 +144,7 @@ shouldNotBeAn
 
 <pre><code>
 shouldHave	
+shouldNotHave
 </code></pre>	
 	
 <p>To see all of the above verifications in action, look at some of the stories and behaviors in easyb's source.</p>	
@@ -254,9 +268,8 @@ ensureThrows(RuntimeException.class) {
 				<ul>
 					<li><a href="./index.html">Home</a></li>
 					<li><a href="./howtos.html">Stories</a></li>
-					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./howtobb.html">Specifications</a></li>
 					<li><a href="./download.html">Download</a></li>
-          <li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>
@@ -267,6 +280,7 @@ ensureThrows(RuntimeException.class) {
 					<li><a href="./dsls.html">easyb syntax specification</a></li>
 					<li><a href="./lic.html">License</a></li>
 					<li><a href="./source.html">Source code</a></li>
+					<li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>

@@ -41,7 +41,7 @@ pageTracker._trackPageview();
 			
 			<p>BDD principles support the notion of stories quite nicely-- you can think of a story as narrative between a stakeholder and development (almost like a use case). 	In short, think of a story as a description of a requirement, which has  an associated benefit and criteria for validation.</p>
 				
-				<p>Stories can be made up of <code>scenario</code>s that group specifications. The specifications are money-- they are essentially steps that are friendly to read. They are:
+				<p>Stories can be made up of <code>scenario</code>s that group specifications. The specifications are essential-- they are essentially steps that are friendly to read. They are:
 				</p>
 
       <ul>
@@ -52,9 +52,9 @@ pageTracker._trackPageview();
 				
 				<h3>Stories in action</h3>
 
-      <p>The default convention for stories in easyb is to place each story in a file ending with Story.groovy. So if you have story regarding shipping calculations, for example, you'd have a file named <code>ShippingCalculationsStory.groovy</code>.</p>
+      <p>The default convention for stories in easyb is to place each story in a file ending with MyStory.story. So if you have story regarding shipping calculations, for example, you'd have a file named <code>ShippingCalculations.story</code>.</p>
 
-      <p>The code below shows a story in easyb in action-- the code has two scenarios which reside in a story file named <code>EmptyStackStory.groovy</code>.</p>
+      <p>The code below shows a story in easyb in action-- the code has two scenarios which reside in a story file named <code>EmptyStack.story</code>.</p>
 
          <pre><code>
 import org.disco.easyb.bdd.stack.Stack
@@ -76,9 +76,7 @@ scenario "null is pushed onto empty stack", {
     }
   }
 
-  and
-
-  then "the stack should still be empty", {
+  and "then the stack should still be empty", {
     stack.empty.shouldBe true
   }
 }
@@ -101,19 +99,28 @@ scenario "pop is called on empty stack", {
     }
   }
   
-  and
-  
-  then "the stack should still be empty", {
+  and "then the stack should still be empty", {
       stack.empty.shouldBe true
     }
 
-  then "an example pending" 
 }
 </code></pre>
 
 <p>Does it not convey the intention clearly? Of course it does!! It's so easy too.</p>
 <p>Take notice of multiple <code>scenario</code>s in that file, each with their own set of <code>given</code>s,<code>when</code>s and <code>then</code>s all coming together to create a <code>story</code>. </p>
-<p>Also pay attention to the last <code>then</code> as it doesn't have an implementation. Easyb also makes it easy to create stories with no coding and come back to fill in the implementation later. This will be marked as a pending specification.</p>
+
+<h3>Pending stories and scenarios</h3>
+
+<p>easyb makes it easy to create stories with no coding so that you can come back to fill in the implementation later. </p>
+
+<pre><code>scenario "customers should receive discounts", {
+ given "a shopping cart with 3 items"
+ when "a user checks out"
+ then "they should receive a 10% discount"
+}
+</code></pre>
+
+<p>Note how the above scenario has no code-- it's simply just the text of the scenario-- easyb will mark any unimplemented feature as a pending specification.</p>
 
 <h3>Printing stories</h3>
 
@@ -156,7 +163,8 @@ scenario "pop is called on empty stack", {
       when peek is called
       then it should provide the value of the most recent pushed value
       then the stack should not be empty
-      then calling pop should also return the peeked value which is the same as the original pushed value
+      then calling pop should also return the peeked value which is \
+        the same as the original pushed value
       then the stack should  be empty
       then an example pending [PENDING]
 
@@ -184,9 +192,8 @@ scenario "pop is called on empty stack", {
 				<ul>
 					<li><a href="./index.html">Home</a></li>
 					<li><a href="./howtos.html">Stories</a></li>
-					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./howtobb.html">Specifications</a></li>
 					<li><a href="./download.html">Download</a></li>
-          <li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>
@@ -197,6 +204,7 @@ scenario "pop is called on empty stack", {
 					<li><a href="./dsls.html">easyb syntax specification</a></li>
 					<li><a href="./lic.html">License</a></li>
 					<li><a href="./source.html">Source code</a></li>
+					<li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>

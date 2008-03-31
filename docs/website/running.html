@@ -60,7 +60,10 @@ pageTracker._trackPageview();
 <p>If no additional arguments are specified, you'll see a report printed to <code>System.out</code> that looks something
   like this: </p>
 <pre><code>
-9 behavior steps run successfully
+Running your story (Your.story)
+Scenarios run: 1, Failures: 0, Pending: 0, Time Elapsed: 0.454 sec
+
+1 behavior run with no failures
 </code></pre>
 
 <p>Want to run multiple behaviors or stories in a single run? Yep, easyb supports that too. Just pass multiple stories
@@ -70,7 +73,7 @@ on the command line.</p>
   c:>java org.disco.easyb.BehaviorRunner my/path/to/MyStory.groovy my/path/to/MySecondStory.groovy
 </code></pre>
 
-<p>Note, the runner doesn't care if you run a behavior or a story-- they are run the same either way! Easy, eh?</p>
+<p>Note, the runner doesn't care if you run a specification or a story-- they are run the same either way! Easy, eh?</p>
 
 <h3>Story reporting via the command line</h3>
 
@@ -86,14 +89,14 @@ on the command line.</p>
 
 <h3>XML reporting via the command line</h3>
 
-<p>If you'd rather produce an XML report, just pass in the <code>-xmlbehavior</code> flag and provide a path where the xml
+<p>If you'd rather produce an XML report, just pass in the <code>-xmleasyb</code> flag and provide a path where the xml
   report should be written. For instance, using the same example from earlier, if you'd rather have an XML report,
   simply type:</p>
 
 
 <pre><code>
   c:>java org.disco.easyb.BehaviorRunner my/path/to/MyStory.groovy \
-  -xmlbehavior my/path/report.xml
+  -xmleasyb my/path/report.xml
 </code></pre>
 
 <p>Note, the line break in the above example is for formatting purposes only.</p>
@@ -140,9 +143,10 @@ on the command line.</p>
 <p>Produces output:</p>
 
 <pre><code>
-    [easyb] easyb is preparing to process 1 file(s)
-    [easyb] 9 behavior steps run successfully  
-    [easyb] easyb execution passed
+    [easyb] Running story listener story (StoryListener.story)
+	[easyb] Scenarios run: 2, Failures: 0, Pending: 0, Time Elapsed: 0.06 sec
+	[easyb] 2 total behaviors run with no failures
+	[easyb] easyb execution passed
 
   BUILD SUCCESSFUL
   Total time: 3 seconds
@@ -150,7 +154,7 @@ on the command line.</p>
 
 <h3>Failures</h3>
 
-<p>The point of having your behaviors run as part of your build is to notify you when they catch possible code problems. Easyb also allows a user specified property to be set to true if the build fails.</p>
+<p>The point of having your behaviors run as part of your build is to notify you when they catch possible code problems. easyb also allows a user specified property to be set to true if the build fails.</p>
 
 <p>This property is called <code>failureProperty</code> and using it would look like this</p>
 <pre><code>
@@ -349,9 +353,8 @@ Total time: 3 seconds
 			<ul>
 				<li><a href="./index.html">Home</a></li>
 				<li><a href="./howtos.html">Stories</a></li>
-				<li><a href="./howtobb.html">Behaviors</a></li>
+				<li><a href="./howtobb.html">Specifications</a></li>
 				<li><a href="./download.html">Download</a></li>
-        <li><a href="./contact.html">Contact</a></li>
 			</ul>
 		</li>
 		<li>
@@ -362,6 +365,7 @@ Total time: 3 seconds
 				<li><a href="./dsls.html">easyb syntax specification</a></li>
 				<li><a href="./lic.html">License</a></li>
 				<li><a href="./source.html">Source code</a></li>
+				<li><a href="./contact.html">Contact</a></li>
 			</ul>
 		</li>
 		

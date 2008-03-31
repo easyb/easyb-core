@@ -86,9 +86,7 @@ pageTracker._trackPageview();
         invalidzipcode = "221o1"
       }
 
-      and
-
-      given "the zipcodevalidator is initialized", {
+      and "given the zipcodevalidator is initialized", {
         zipvalidate = new ZipCodeValidator()
       }
 
@@ -101,31 +99,21 @@ pageTracker._trackPageview();
       }
     </code></pre>
 
-      <p>Is that easy or what? Notice the <code>shouldBe</code> call in the <code>then</code> phrase-- neat, huh? You can, of course, also write the <code>then</code> clause as </p>
+      <p>Is that easy or what? Notice the <code>shouldBe</code> call in the <code>then</code> phrase-- neat, huh? 
+	</p>
+	<p>Requirements, ideas, code-- they're all evolutionary in ways; consequently, you can refactor the scenario above if you find it helpful. For instance, the same scenario can be written more tersely like so:
 
+   <pre><code>
+     "given the zipcodevalidator is initialized", {
+       zipvalidate = new ZipCodeValidator()
+     }
 
-    <pre><code>
-      then "the validator instance should return false", {
-        ensure(value){
-          isFalse
-        }
-      }
-    </code></pre>
+     then "the validator should return false with invalid zipcodes", {
+       zipvalidate.validate("22o1o").shouldBe false
+     }
+   </code></pre>	
 
-    <p>Hit the <a href="./howtos.html">Stories</a> page for a deeper dive.</p>
-
-
-    <h3>alternative easyb flavors</h3>
-    <p>Specifications come in many flavors. You just saw an example of a story specification. Easyb also supports the more terse behavior specification. Thus we can rewrite the test above as</p>
-
-      <pre><code>
-        it "should deny invalid zip code", {
-          new ZipCodeValidator().validate("221o1").shouldBe false
-        }
-      </code></pre>
-
-      <p>Hit the <a href="./howtobb.html">Behaviors</a> page for a deeper dive.</p>
-
+<p>The point being that easyb helps bridge the gap between stakeholders and development by using a language that everyone can understand.</p>
       <p>BDD in Java can't get any easier!</p>
     </div>
   </div>
@@ -142,9 +130,8 @@ pageTracker._trackPageview();
       <ul>
         <li><a href="./index.html">Home</a></li>
         <li><a href="./howtos.html">Stories</a></li>
-        <li><a href="./howtobb.html">Behaviors</a></li>
+        <li><a href="./howtobb.html">Specifications</a></li>
         <li><a href="./download.html">Download</a></li>
-        <li><a href="./contact.html">Contact</a></li>
       </ul>
     </li>
     <li>
@@ -155,6 +142,7 @@ pageTracker._trackPageview();
         <li><a href="./dsls.html">easyb syntax specification</a></li>
         <li><a href="./lic.html">License</a></li>
         <li><a href="./source.html">Source code</a></li>
+		<li><a href="./contact.html">Contact</a></li>
       </ul>
     </li>
 

@@ -79,7 +79,7 @@ then "an exception should be thrown", {
  }
 }
 
-then "the stack should still be empty", {
+and "then the stack should still be empty", {
  stack.empty.shouldBe true
 }	
 </code></pre>
@@ -141,7 +141,7 @@ then "an exception should be thrown", {
  }
 }
 
-then "the stack should still be empty", {
+and "then the stack should still be empty", {
  stack.empty.shouldBe true
 }
 </code></pre>
@@ -178,7 +178,7 @@ then "that object should be returned", {
  popVal.shouldBe pushVal
 }
 
-then "the stack should be empty", {
+and "then the stack should be empty", {
  stack.empty.shouldBe true
 }
 </code></pre>
@@ -288,7 +288,7 @@ then "the last item pushed should be returned", {
  popVal.shouldBe push2
 }
 
-then "the stack should not be empty", {
+and "then the stack should not be empty", {
  stack.empty.shouldBe false
 }
 </code></pre>
@@ -314,18 +314,18 @@ then "it should provide the value of the most recent pushed value", {
  peeked.shouldEqual "foo"
 }
 
-then "the stack should not be empty", {
+and "then the stack should not be empty", {
  stack.empty.shouldBe false
 }
 
-then "calling pop should also return the peeked value", {
+and "then calling pop should also return the peeked value", {
  	def popped = stack.pop()
     popped.shouldBe(push1)
     and
     popped.shouldBe(peeked)
 }
 
-then "the stack should be empty", {
+and "then the stack should be empty", {
  stack.empty.shouldBe true
 }
 </code></pre>
@@ -384,9 +384,8 @@ public E peek() {
 				<ul>
 					<li><a href="./index.html">Home</a></li>
 					<li><a href="./howtos.html">Stories</a></li>
-					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./howtobb.html">Specifications</a></li>
 					<li><a href="./download.html">Download</a></li>
-          <li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>
@@ -397,6 +396,7 @@ public E peek() {
 					<li><a href="./dsls.html">easyb syntax specification</a></li>
 					<li><a href="./lic.html">License</a></li>
 					<li><a href="./source.html">Source code</a></li>
+					<li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>

@@ -44,12 +44,12 @@ pageTracker._trackPageview();
 	
 	<div id="content">
 		<div class="post">
-			<h2 class="title">easyb behaviors</h2>
+			<h2 class="title">easyb specifications</h2>
 		
 			<div class="entry">
 				<p>easyb supports a few different mechanisms for defining behaviors. You can (depending on what's more comfortable for you):
 					<ul>
-						<li>define RSpec style behaviors using <code>before</code> and <code>it</code></li>
+						<li>define RSpec style specifications using <code>before</code> and <code>it</code></li>
 						<li>define stories via <code>given</code>, <code>when</code>, and <code>then</code></li>
 					</ul>
 				</p>
@@ -57,7 +57,7 @@ pageTracker._trackPageview();
 					Each style has a few associated semantical rules that turn out to be quite logical. 
 				 </p>
 				
-				<h2>Basic behaviors</h2>
+				<h2>Basic specifications</h2>
 				
 				<p>Just like with RSpec, easyb enables you to use the <code>it</code> style syntax to describe behavior-- this enables a more literate pattern of programming (i.e. "it should behave like this"). For example, if you have a <code>queue</code> object, then conceivably, the behavior of the <code>dequeue</code> method would be that it <i>should</i> return the last item <code>enqueue</code>d. </p>
 
@@ -87,13 +87,13 @@ it "should throw an exception when null is enqueued", {
 }
 </code></pre>
 
-<p>You can add as many behaviors as you'd like this way too-- you can also create fixture logic should you require it.</p>
+<p>You can add as many specifications as you'd like this way too-- you can also create fixture logic should you require it.</p>
 
 <h3>Before with easyb</h3>
 
-<p>Now you have two behaviors, in which case, you may decide that you'd like the <code>queue</code> initialized <i>for each</i> behavior rather than once. easyb supports a <code>before</code> construct that when utilized, ensures that the logic within it is run before each <code>it</code> behavior. </p>
+<p>Now you have two specifications, in which case, you may decide that you'd like the <code>queue</code> initialized <i>for each</i> behavior rather than once. easyb supports a <code>before</code> construct that when utilized, ensures that the logic within it is run before each <code>it</code> behavior. </p>
 
-<p>You could then rewrite the above behavior like so:</p>
+<p>You could then rewrite the above specification like so:</p>
 
 <pre><code>
 before "initialize the queue for each spec", {
@@ -133,9 +133,8 @@ it "should throw an exception when null is enqueued", {
 				<ul>
 					<li><a href="./index.html">Home</a></li>
 					<li><a href="./howtos.html">Stories</a></li>
-					<li><a href="./howtobb.html">Behaviors</a></li>
+					<li><a href="./howtobb.html">Specifications</a></li>
 					<li><a href="./download.html">Download</a></li>
-          <li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>
@@ -146,6 +145,7 @@ it "should throw an exception when null is enqueued", {
 					<li><a href="./dsls.html">easyb syntax specification</a></li>
 					<li><a href="./lic.html">License</a></li>
 					<li><a href="./source.html">Source code</a></li>
+					<li><a href="./contact.html">Contact</a></li>
 				</ul>
 			</li>
 			<li>
