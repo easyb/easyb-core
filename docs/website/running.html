@@ -43,6 +43,7 @@ pageTracker._trackPageview();
   <li><a href='#commandline'>the command line</a></li>
   <li><a href='#ant'>Ant</a></li>
   <li><a href='#maven'>Maven</a></li>
+  <li><a href='#intellij'>IntelliJ</a></li>
 </ul>
 
 <a name='commandline'>
@@ -216,127 +217,26 @@ Total time: 3 seconds
 <h2>Maven</h2>
 </a>
 
-<p>You can also run your behaviors and stories via easyb's Maven plugin. Since all the easyb artifacts are hosted on the maven central repository all you need to do is to add the following to your project's pom and your easyb stories and behaviors will automatically be executed as a part of the test phase:</p>
-<ol>
-  <li>A dependency on easyb</li>
-  <li>The easyb-plugin</li>
-</ol>
+<p>You can also run your behaviors and stories via easyb's Maven plugin as well as generate HTML story reports. It's easy as fully explained on the <a href='http://www.easyb.org/maven-easyb-plugin'>maven-easyb-plugin</a> site.  Just take note that it may take a couple of days for easyb to get uploaded to maven central.  In the meantime you can use the easyb repository by adding this snippet to your pom:</p>
 
-<p>The easyb dependency looks like this:</p>
 <pre><code>
-  &lt;dependencies&gt;
-    ...
-    &lt;dependency&gt;
-      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
-      &lt;artifactId&gt;easyb&lt;/artifactId&gt;
-      &lt;version&gt;0.7&lt;/version&gt;
-      &lt;scope&gt;test&lt;/scope&gt;
-    &lt;/dependency&gt;
-   ...
-  &lt;/dependencies&gt;
+  &lt;project&gt;
+  ...
+  &lt;repositories&gt;
+    &lt;repository&gt;
+      &lt;id&gt;easyb&lt;/id&gt;
+      &lt;url&gt;http://www.easyb.org/repo/&lt;/url&gt;
+    &lt;/repository&gt;
+  &lt;/repositories&gt;
+  ...
+  &lt;/project&gt;
 </code></pre>
 
-<p>And the plugin looks like this:</p>
-<pre><code>
-  &lt;plugins&gt;
-    &lt;plugin&gt;
-      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
-      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
-      &lt;version&gt;0.7&lt;/version&gt;
-      &lt;executions&gt;
-        &lt;execution&gt;
-          &lt;goals&gt;
-            &lt;goal&gt;test&lt;/goal&gt;
-          &lt;/goals&gt;
-        &lt;/execution&gt;
-      &lt;/executions&gt;
-    &lt;/plugin&gt;
-  ...
-  &lt;/plugins&gt;
-</code></pre>
+<a name='intellij'>
+<h2>IntelliJ</h2>
+</a>
 
-<p>By convention the easyb Maven plugin will look for specs in the <code>src/test/easyb</code> directory of your project.  It assumes that story tests have the suffix <code>Story</code> while behaviors have the suffix <code>Behavior</code>.
-
-<h3>Overriding default conventions</h3>
-
-<p>You can override the following properties of the easyb Maven plugin:</p>
-<ol>
-  <li>Test source directory</li>
-  <li>Test include patterns</li>
-  <li>The story report file</li>
-  <li>The behavior report file</li>
-</ol>
-
-<p>Defining the test source directory looks like this:</p>
-<pre><code>
-  &lt;plugins&gt;
-  ...
-    &lt;plugin&gt;
-      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
-      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
-      &lt;version&gt;0.7&lt;/version&gt;
-      ...
-      &lt;configuration&gt;
-        &lt;easybTestDirectory&gt;${basedir}/src/...&lt;/easybTestDirectory&gt;
-      &lt;/configuration&gt;
-    &lt;/plugin&gt;
-  ...
-  &lt;/plugins&gt;
-</code></pre>
-
-<p>Defining the test include patterns looks like this:</p>
-<pre><code>
-  &lt;plugins&gt;
-  ...
-    &lt;plugin&gt;
-      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
-      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
-      &lt;version&gt;0.7&lt;/version&gt;
-      ...
-      &lt;configuration&gt;
-        &lt;includes&gt;
-          &lt;include&gt;**/*.*&lt;/include&gt;
-          &lt;include&gt;**/*.*&lt;/include&gt;
-        &lt;/includes&gt;
-      &lt;/configuration&gt;
-    &lt;/plugin&gt;
-  ...
-  &lt;/plugins&gt;
-</code></pre>
-
-<p>Defining the story report file looks like this:</p>
-<pre><code>
-  &lt;plugins&gt;
-  ...
-    &lt;plugin&gt;
-      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
-      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
-      &lt;version&gt;0.7&lt;/version&gt;
-      ...
-      &lt;configuration&gt;
-        &lt;storyReport&gt;${project.build.directory}/...&lt;/storyReport&gt;
-      &lt;/configuration&gt;
-    &lt;/plugin&gt;
-  ...
-  &lt;/plugins&gt;
-</code></pre>
-
-<p>Defining the behavior report looks like this:</p>
-<pre><code>
-  &lt;plugins&gt;
-  ...
-    &lt;plugin&gt;
-      &lt;groupId&gt;org.easyb&lt;/groupId&gt;
-      &lt;artifactId&gt;maven-easyb-plugin&lt;/artifactId&gt;
-      &lt;version&gt;0.7&lt;/version&gt;
-      ...
-      &lt;configuration&gt;
-        &lt;behaviorReport&gt;${project.build.directory}/...&lt;/behaviorReport&gt;
-      &lt;/configuration&gt;
-    &lt;/plugin&gt;
-  ...
-  &lt;/plugins&gt;
-</code></pre>
+<p>We have created an easyb plugin for IntelliJ that makes it super easyb to work with easyb specifications and to run and debug them.  This plugin can be downloaded from <a href='http://easyb.googlecode.com/files/easyb-plugin-0.8.zip'>easyb-plugin-0.8.zip</a> and installing is as easyb as uncompressing this zip file into your IntelliJ plugin directory.
 
 </div>
 </div>
