@@ -16,15 +16,15 @@ public class BehaviorRunnerTask extends AbstractStoryTask {
   }
 
   public void setBehaviorsClassName(String behaviorsClassName) {
-    super.addTarget(behaviorsClassName)
+    addTarget(behaviorsClassName)
   }
 
   public void addBehaviors(FileSet fileset) {
-    super.addFilesetTarget(fileset)
+    addFilesetTarget(fileset)
   }
 
   void addConfiguredReport(Report report) {
-    super.addTarget("-${report.format} ${report.location}")
+    addTarget("-${report.type} ${report.location}")
   }
 
 }

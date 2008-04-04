@@ -18,14 +18,11 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.disco.easyb.listener.BehaviorListener;
 import org.disco.easyb.listener.DefaultListener;
-import org.disco.easyb.report.XmlReportWriter;
-import org.disco.easyb.report.ReportWriter;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
+import org.disco.easyb.report.XmlReportWriter;
 import org.disco.easyb.util.BehaviorStepType;
-import org.disco.easyb.util.ReportFormat;
-import org.disco.easyb.util.ReportType;
 
 /**
  * usage is:
@@ -83,11 +80,11 @@ public class BehaviorRunner {
     private void produceReports(BehaviorListener listener) {
        
         for (Report report : reports) {
-            if (report.getFormat().concat(report.getType()).equals(Report.XML_EASYB)) {
+            if (report.getType().equals(Report.EASYB_TYPE)) {
             	new XmlReportWriter(report, listener).writeReport();
-            } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_STORY)) {
+            } else if (report.getType().equals(Report.STORY_TYPE)) {
                 new TxtStoryReportWriter(report, listener).writeReport();
-            } else if (report.getFormat().concat(report.getType()).equals(Report.TXT_SPECIFICATION)) {
+            } else if (report.getType().equals(Report.SPECIFICATION_TYPE)) {
                 new TxtSpecificationReportWriter(report, listener).writeReport();
             }
         }
@@ -156,9 +153,7 @@ public class BehaviorRunner {
         try {
             CommandLine commandLine = getCommandLineForMain(args, options);
             validateArguments(commandLine);
-
             BehaviorRunner runner = new BehaviorRunner(getConfiguredReports(commandLine));
-
             runner.runBehavior(getFileCollection(commandLine.getArgs()));
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
@@ -183,44 +178,19 @@ public class BehaviorRunner {
 
         List<Report> configuredReports = new ArrayList<Report>();
         if (line.hasOption(Report.TXT_STORY)) {
-            Report report = new Report();
-            report.setFormat(ReportFormat.TXT.format());
-            if (line.getOptionValue(Report.TXT_STORY) == null) {
-                report.setLocation("easyb-story-report.txt");
-            } else {
-                report.setLocation(line.getOptionValue(Report.TXT_STORY));
-            }
-            report.setType(ReportType.STORY.type());
-
-            configuredReports.add(report);
+        	Report report = Report.build(Report.TXT_STORY, line.getOptionValue(Report.TXT_STORY));
+        	configuredReports.add(report);
         }
-
+            
         if (line.hasOption(Report.TXT_SPECIFICATION)) {
-            Report report = new Report();
-            report.setFormat(ReportFormat.TXT.format());
-            if (line.getOptionValue(Report.TXT_SPECIFICATION) == null) {
-                report.setLocation("easyb-specification-report.txt");
-            } else {
-                report.setLocation(line.getOptionValue(Report.TXT_SPECIFICATION));
-            }
-            report.setType(ReportType.SPECIFICATION.type());
-
-            configuredReports.add(report);
+        	Report report = Report.build(Report.TXT_SPECIFICATION, line.getOptionValue(Report.TXT_SPECIFICATION));
+        	configuredReports.add(report);
         }
-
-        if (line.hasOption(Report.XML_EASYB)) {
-            Report report = new Report();
-            report.setFormat(ReportFormat.XML.format());
-            if (line.getOptionValue(Report.XML_EASYB) == null) {
-                report.setLocation("easyb-report.xml");
-            } else {
-                report.setLocation(line.getOptionValue(Report.XML_EASYB));
-            }
-            report.setType(ReportType.EASYB.type());
-
-            configuredReports.add(report);
+        
+        if (line.hasOption(Report.XML_EASYB)) {        	
+        	Report report = Report.build(Report.EASYB_TYPE, line.getOptionValue(Report.XML_EASYB));
+        	configuredReports.add(report);
         }
-
         return configuredReports;
     }
 
@@ -229,20 +199,20 @@ public class BehaviorRunner {
      * @return collection of files where the only element is the file of the spec to be run
      */
     private static Collection<File> getFileCollection(String[] paths) {
-        Collection<File> coll = new ArrayList<File>();
-        for (String path : paths) {
-            coll.add(new File(path));
-        }
-        return coll;
+    	Collection<File> coll = new ArrayList<File>();
+    	for (String path : paths) {
+    		coll.add(new File(path));
+    	}
+    	return coll;
     }
-
+    
     /**
      * @param options options that are available to this specification runner
      */
     private static void handleHelpForMain(Options options) {
-        new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.groovy", options);
+    	new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.groovy", options);
     }
-
+    
     /**
      * @param args    command line arguments passed into main
      * @param options options that are available to this specification runner
@@ -250,41 +220,40 @@ public class BehaviorRunner {
      * @throws ParseException if there are any problems encountered while parsing the command line tokens
      */
     private static CommandLine getCommandLineForMain(String[] args, Options options) throws ParseException {
-        CommandLineParser commandLineParser = new GnuParser();
-        return commandLineParser.parse(options, args);
+    	CommandLineParser commandLineParser = new GnuParser();
+    	return commandLineParser.parse(options, args);
     }
-
+    
     /**
      * @return representation of a collection of Option objects, which describe the possible options for a command-line.
      */
+    @SuppressWarnings("static-access")
     private static Options getOptionsForMain() {
-        Options options = new Options();
-
-        //noinspection AccessStaticViaInstance
-        Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create an easyb report in xml format").create(Report.XML_EASYB);
-        options.addOption(xmleasybreport);
-
-        //noinspection AccessStaticViaInstance
-        Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create a story report").create(Report.TXT_STORY);
-        options.addOption(storyreport);
-
-        //noinspection AccessStaticViaInstance
-        Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create a behavior report").create(Report.TXT_SPECIFICATION);
-        options.addOption(behaviorreport);
-
-        return options;
+    	Options options = new Options();
+    	
+    	//noinspection AccessStaticViaInstance
+    	Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
+    	.withDescription("create an easyb report in xml format").create(Report.XML_EASYB);
+    	options.addOption(xmleasybreport);
+    	//noinspection AccessStaticViaInstance
+    	Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
+    	.withDescription("create a story report").create(Report.TXT_STORY);
+    	options.addOption(storyreport);
+    	//noinspection AccessStaticViaInstance
+    	Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
+    	.withDescription("create a behavior report").create(Report.TXT_SPECIFICATION);
+    	options.addOption(behaviorreport);
+    	
+    	return options;
     }
-
+    
     private List<Report> addDefaultReports(List<Report> userConfiguredReports) {
-        List<Report> configuredReports = new ArrayList<Report>();
-
-        if (userConfiguredReports != null) {
-            configuredReports.addAll(userConfiguredReports);
-        }
-
-        return configuredReports;
+    	List<Report> configuredReports = new ArrayList<Report>();
+    	
+    	if (userConfiguredReports != null) {
+    		configuredReports.addAll(userConfiguredReports);
+    	}
+    	
+    	return configuredReports;
     }
 }

@@ -77,7 +77,9 @@ class TxtStoryReportWriter implements ReportWriter {
          }
          if (it.result?.pending()) {
              writer.write(" [PENDING]")
-           }
+         }else if(it.result?.failed()){
+        	 writer.write(" [FAILURE: ${it.result?.cause()?.getMessage()}]")
+         }
         }
         break
       case BehaviorStepType.GIVEN:

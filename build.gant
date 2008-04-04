@@ -7,7 +7,7 @@ includeTargets << new File("default_tasks.gant")
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.8")
+version = detectOrDefaultVersion("0.8.1")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**
@@ -120,17 +120,58 @@ target("ant-task":"runs the easyb ant task"){
         pathelement(location:behaviorclassdir)
       }
 
-      report(location:"${defaultdir}/easyb-report.xml", format:"xmleasyb")
-      report(location:"${defaultdir}/story-report.txt", format:"txtstory")
-      report(location:"${defaultdir}/specification-report.txt", format:"txtspecification")
+      report(location:"${defaultdir}/easyb-report.xml", type:"xml")
+      report(location:"${defaultdir}/story-report.txt", type:"txtstory")
+      report(location:"${defaultdir}/specification-report.txt", type:"txtspecification")
 
       behaviors(dir:gbehaviordir){
         include(name:"**/*Story.groovy")
         include(name:"**/*.story")
 	    include(name:"**/*Specification.groovy")
 	    include(name:"**/*.specification")
+	    exclude(name:"**/TextStoryReportingValidation.story")
 	  }
 	}
 
   Ant.fail(if:"easyb.failed", message:"Execution halted as specifications failed")
+}
+
+
+target("validate-reports":"runs the easyb and validates reports"){
+	  depends("ant-task")
+
+		Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
+			classpath(){
+	        	pathelement(location:"${defaultdir}/easyb-${version}.jar")
+	    	}
+		}
+
+		Ant.easyb(){
+	      classpath() {
+	        fileset(dir:libdir, includes:jarincludes)
+	        pathelement(location:"${defaultdir}/easyb-${version}.jar")
+	        pathelement(location:behaviorclassdir)
+	      }
+	      report(location:"${defaultdir}/valid-report.txt", type:"txtstory")
+		
+	      behaviors(dir:gbehaviordir){
+	        include(name:"**/AndChainedFeature.story")
+		  }
+		}
+		
+		Ant.easyb(failureProperty:"easyb.invalidreport"){
+		      classpath() {
+		        fileset(dir:libdir, includes:jarincludes)
+		        pathelement(location:"${defaultdir}/easyb-${version}.jar")
+		        pathelement(location:behaviorclassdir)
+		      }
+		      report(location:"${defaultdir}/valid-reporting.txt", type:"txtstory")
+			
+		      behaviors(dir:gbehaviordir){
+		        include(name:"**/TextStoryReportingValidation.story")
+			  }
+		}
+		
+		Ant.fail(if:"easyb.invalidreport", message:"Execution halted as specifications failed"  +
+				" with respect to reports")
 }
