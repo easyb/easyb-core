@@ -139,39 +139,40 @@ target("ant-task":"runs the easyb ant task"){
 
 target("validate-reports":"runs the easyb and validates reports"){
 	  depends("ant-task")
+	  
+	   runAntTask(["**/AndChainedFeature.story"])
+	   runAntTask(["**/TextStoryReportingValidation.story"], 
+			   "Execution halted as specifications failed with respect to reports")
+		
+}
+/**
+ * runs easyb ant task and allows for failure if
+ * failureMessage isn't null
+ */
+def runAntTask(includes, failureMessage=null){
+	
+	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
+		classpath(){
+        	pathelement(location:"${defaultdir}/easyb-${version}.jar")
+    	}
+	}
 
-		Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
-			classpath(){
-	        	pathelement(location:"${defaultdir}/easyb-${version}.jar")
-	    	}
-		}
-
-		Ant.easyb(){
-	      classpath() {
-	        fileset(dir:libdir, includes:jarincludes)
-	        pathelement(location:"${defaultdir}/easyb-${version}.jar")
-	        pathelement(location:behaviorclassdir)
-	      }
-	      report(location:"${defaultdir}/valid-report.txt", type:"txtstory")
-		
-	      behaviors(dir:gbehaviordir){
-	        include(name:"**/AndChainedFeature.story")
-		  }
-		}
-		
-		Ant.easyb(failureProperty:"easyb.invalidreport"){
-		      classpath() {
-		        fileset(dir:libdir, includes:jarincludes)
-		        pathelement(location:"${defaultdir}/easyb-${version}.jar")
-		        pathelement(location:behaviorclassdir)
-		      }
-		      report(location:"${defaultdir}/valid-reporting.txt", type:"txtstory")
-			
-		      behaviors(dir:gbehaviordir){
-		        include(name:"**/TextStoryReportingValidation.story")
-			  }
-		}
-		
-		Ant.fail(if:"easyb.invalidreport", message:"Execution halted as specifications failed"  +
-				" with respect to reports")
+	Ant.easyb(failureProperty:"easyb.invalidness"){
+      classpath() {
+        fileset(dir:libdir, includes:jarincludes)
+        pathelement(location:"${defaultdir}/easyb-${version}.jar")
+        pathelement(location:behaviorclassdir)
+      }
+      report(location:"${defaultdir}/valid-report.txt", type:"txtstory")
+	
+      behaviors(dir:gbehaviordir){
+    	  includes.each{
+    		  include(name:"${it}")
+    	  }
+	  }
+	}
+	if(failureMessage != null){
+		Ant.fail(if:"easyb.invalidness", message:failureMessage)
+	}
+	
 }
