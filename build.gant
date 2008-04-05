@@ -130,6 +130,7 @@ target("ant-task":"runs the easyb ant task"){
 	    include(name:"**/*Specification.groovy")
 	    include(name:"**/*.specification")
 	    exclude(name:"**/TextStoryReportingValidation.story")
+	    exclude(name:"**/FailureReport.story")
 	  }
 	}
 
@@ -139,9 +140,16 @@ target("ant-task":"runs the easyb ant task"){
 
 target("validate-reports":"runs the easyb and validates reports"){
 	  depends("ant-task")
-	  
-	   runAntTask(["**/AndChainedFeature.story"])
+	   runAntTask(["**/AndChainedFeature.story"], 
+			   [["${defaultdir}/valid-report.txt", "txtstory"]])
+	   
+	   Ant.echo("***********Ignore FAILURE text that follows-- it is on purpose************")		   
+	   runAntTask(["**/FailureReport.story"], 
+			   [["${defaultdir}/valid-report-failure.txt", "txtstory"]])	
+	   Ant.echo("***********End failure text-- build should continue on as usual***********")	
+	   
 	   runAntTask(["**/TextStoryReportingValidation.story"], 
+			   [["${defaultdir}/valid-reporting.txt", "txtstory"]],
 			   "Execution halted as specifications failed with respect to reports")
 		
 }
@@ -149,7 +157,7 @@ target("validate-reports":"runs the easyb and validates reports"){
  * runs easyb ant task and allows for failure if
  * failureMessage isn't null
  */
-def runAntTask(includes, failureMessage=null){
+def runAntTask(includes, reports, failureMessage=null){
 	
 	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
 		classpath(){
@@ -163,7 +171,9 @@ def runAntTask(includes, failureMessage=null){
         pathelement(location:"${defaultdir}/easyb-${version}.jar")
         pathelement(location:behaviorclassdir)
       }
-      report(location:"${defaultdir}/valid-report.txt", type:"txtstory")
+      reports.each{
+    	  report(location:it[0], type:it[1])
+      }
 	
       behaviors(dir:gbehaviordir){
     	  includes.each{

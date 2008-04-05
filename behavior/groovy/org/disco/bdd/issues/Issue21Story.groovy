@@ -4,8 +4,7 @@ import org.disco.easyb.listener.DefaultListener
 import org.disco.easyb.result.Result
 import org.disco.easyb.report.TxtStoryReportWriter
 import org.disco.easyb.report.Report
-import org.disco.easyb.util.ReportFormat
-import org.disco.easyb.util.ReportType
+
 
 scenario "text story format should have newline prior to story or scenario part", {
   // TODO reimplement issue 21 once the report formatting has been reimplemented
