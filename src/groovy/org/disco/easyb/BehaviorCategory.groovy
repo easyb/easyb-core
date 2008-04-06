@@ -54,13 +54,17 @@ class BehaviorCategory {
   }
 
   private static void _notEquals(self, value) {
-    if (self.getClass() == String.class) {
+    if (self?.getClass() == String.class) {
       if (value.toString().equals(self.toString())) {
         throw new VerificationException("expected values to differ but both were ${value.toString()}")
       }
     } else {
       if (value == self) {
         throw new VerificationException("expected values to differ but both were ${value}")
+      } else{
+         if(self.is(null) && value.is(null)){
+             throw new VerificationException("expected values to differ but both were null")
+         }
       }
     }
   }
