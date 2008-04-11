@@ -1,11 +1,10 @@
 package org.disco.easyb
 
-import org.disco.easyb.listener.StepListener
-import org.disco.easyb.listener.DefaultStepListener
-import org.disco.easyb.listener.StepListener
+import org.disco.easyb.listener.ResultsCollector
+import org.disco.easyb.listener.ExecutionListener
 
 before "obtain a reference to the binding object", {
-  StepListener behaviorListener = new DefaultStepListener()
+  ExecutionListener behaviorListener = new ResultsCollector()
   binding = SpecificationBinding.getBinding(behaviorListener)
 }
 

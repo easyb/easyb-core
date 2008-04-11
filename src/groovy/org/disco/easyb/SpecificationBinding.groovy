@@ -8,6 +8,8 @@ import org.disco.easyb.util.BehaviorStepType
 
 class SpecificationBinding {
 
+  static BehaviorStepStack stepStack = new BehaviorStepStack()
+
   /**
    * This method returns a fully initialized Binding object (or context) that
    * has definitions for methods such as "it" and "given", which are used
@@ -27,9 +29,9 @@ class SpecificationBinding {
 
 
     binding.before = {beforeDescription, closure = {} ->
-      listener.startStep(BehaviorStepType.BEFORE, beforeDescription)
+      stepStack.startStep(listener, BehaviorStepType.BEFORE, beforeDescription)
       beforeIt = closure
-      listener.stopStep()
+      stepStack.stopStep(listener)
     }
 
     def itClosure = {spec, closure, storyPart ->
@@ -49,14 +51,14 @@ class SpecificationBinding {
     }
 
     binding.it = {spec, closure = pendingClosure ->
-      listener.startStep(BehaviorStepType.IT, spec)
+      stepStack.startStep(listener, BehaviorStepType.IT, spec)
       itClosure(spec, closure, BehaviorStepType.IT)
-      listener.stopStep()
+      stepStack.stopStep(listener)
     }
 
     binding.and = {
-      listener.startStep(BehaviorStepType.AND, "")
-      listener.stopStep()
+      stepStack.startStep(listener, BehaviorStepType.AND, "")
+      stepStack.stopStep(listener)
     }
 
     binding.narrative = {storydescript = "", closure = {} ->
@@ -64,7 +66,7 @@ class SpecificationBinding {
     }
 
     binding.description = {description ->
-      listener.getCurrentStep().setDescription(description)
+      listener.describeStep(description)
     }
 
     return binding

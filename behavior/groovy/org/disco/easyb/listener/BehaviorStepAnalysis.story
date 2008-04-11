@@ -1,19 +1,19 @@
 package org.disco.easyb.listener
 
-import org.disco.easyb.listener.DefaultListener
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.BehaviorStep
 
 description "this is a story for working on the behavior step class along with the listener stuff"
 
 scenario "listner should expose previous step", {
 	
 	given "a listener instance", {
-		listener = new DefaultListener()
+		listener = new ResultsCollector()
 	}
 	
 	when "an event is recorded and stop has been called", {
-		listener.startStep(BehaviorStepType.THEN, "success then step")
+		listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "success then step"))
 	    listener.gotResult(new Result(Result.SUCCEEDED))
 	    listener.stopStep()
 	}
@@ -28,12 +28,12 @@ scenario "listner should expose previous step", {
 
 scenario "step with a failed then should report failed scenario", {
   given "a listener instance", {
-    listener = new DefaultListener()
+    listener = new ResultsCollector()
   }
 
   when "scenario is recorded with a failed then inside", {
-    listener.startStep(BehaviorStepType.SCENARIO, "failure then scenario")
-      listener.startStep(BehaviorStepType.THEN, "failure then step")
+    listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "failure then scenario"))
+      listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "failure then step"))
       listener.gotResult(new Result(Result.FAILED))
       listener.stopStep()
     listener.stopStep()
@@ -47,12 +47,12 @@ scenario "step with a failed then should report failed scenario", {
 
 scenario "step with no failed or pending then should report success scenario", {
   given "a listener instance", {
-    listener = new DefaultListener()
+    listener = new ResultsCollector()
   }
 
   when "scenario is recorded with a suceeded then inside", {
-    listener.startStep(BehaviorStepType.SCENARIO, "success then scenario")
-      listener.startStep(BehaviorStepType.THEN, "success then step")
+    listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "success then scenario"))
+      listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "success then step"))
       listener.gotResult(new Result(Result.SUCCEEDED))
       listener.stopStep()
     listener.stopStep()
@@ -66,12 +66,12 @@ scenario "step with no failed or pending then should report success scenario", {
 
 scenario "step with a pending then should report pending scenario", {
   given "a listener instance", {
-    listener = new DefaultListener()
+    listener = new ResultsCollector()
   }
 
   when "scenario is recorded with a suceeded then inside", {
-    listener.startStep(BehaviorStepType.SCENARIO, "pending then scenario")
-      listener.startStep(BehaviorStepType.THEN, "pending then step")
+    listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "pending then scenario"))
+      listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "pending then step"))
       listener.gotResult(new Result(Result.PENDING))
       listener.stopStep()
     listener.stopStep()
@@ -85,15 +85,15 @@ scenario "step with a pending then should report pending scenario", {
 
 scenario "step with a pending and a failed then should report 1 failed scenario and 0 pending scenario", {
   given "a listener instance", {
-    listener = new DefaultListener()
+    listener = new ResultsCollector()
   }
 
   when "scenario is recorded with 1 pending and 1 failed then inside", {
-    listener.startStep(BehaviorStepType.SCENARIO, "failed then scenario")
-      listener.startStep(BehaviorStepType.THEN, "pending then step")
+    listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "failed then scenario"))
+      listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "pending then step"))
       listener.gotResult(new Result(Result.PENDING))
       listener.stopStep()
-      listener.startStep(BehaviorStepType.THEN, "failed then step")
+      listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "failed then step"))
       listener.gotResult(new Result(Result.FAILED))
       listener.stopStep()
     listener.stopStep()

@@ -9,6 +9,8 @@ import org.disco.easyb.util.BehaviorStepType
 
 class StoryBinding {
 
+  static BehaviorStepStack stepStack = new BehaviorStepStack()
+
   /**
    * This method returns a fully initialized Binding object (or context) that
    * has definitions for methods such as "when" and "given", which are used
@@ -26,9 +28,9 @@ class StoryBinding {
     }
 
     binding.scenario = {scenarioDescription, scenarioClosure = {} ->
-      listener.startStep(BehaviorStepType.SCENARIO, scenarioDescription)
+      stepStack.startStep(listener, BehaviorStepType.SCENARIO, scenarioDescription)
       scenarioClosure()
-      listener.stopStep()
+      stepStack.stopStep(listener)
     }
 
     def thenClosure = {spec, closure, storyPart ->
@@ -45,9 +47,9 @@ class StoryBinding {
     }
 
     def _thenClos = {spec, closure = pendingClosure ->
-      listener.startStep(BehaviorStepType.THEN, spec)
+      stepStack.startStep(listener, BehaviorStepType.THEN, spec)
       thenClosure(spec, closure, BehaviorStepType.THEN)
-      listener.stopStep()
+      stepStack.stopStep(listener)
     }
 
     binding.then = {spec, closure = pendingClosure ->
@@ -55,10 +57,10 @@ class StoryBinding {
     }
 
     def _whenClos = {whenDescription, closure = {} ->
-      listener.startStep(BehaviorStepType.WHEN, whenDescription)
+      stepStack.startStep(listener, BehaviorStepType.WHEN, whenDescription)
       closure.delegate = basicDelegate
       closure()
-      listener.stopStep()
+      stepStack.stopStep(listener)
     }
 
     binding.when = {whenDescription, closure = {} ->
@@ -66,10 +68,10 @@ class StoryBinding {
     }
 
     def _givenClos = {givenDescription, closure = {} ->
-      listener.startStep(BehaviorStepType.GIVEN, givenDescription)
+      stepStack.startStep(listener, BehaviorStepType.GIVEN, givenDescription)
       closure.delegate = givenDelegate
       closure()
-      listener.stopStep()
+      stepStack.stopStep(listener)
     }
 
     binding.given = {givenDescription, closure = {} ->
@@ -77,15 +79,15 @@ class StoryBinding {
     }
 
     binding.and = {description = "", closure = {} ->
-      if (listener.getPreviousStep().stepType == BehaviorStepType.GIVEN) {
+      if (stepStack.lastStep().stepType == BehaviorStepType.GIVEN) {
         _givenClos(description, closure)
-      } else if (listener.getPreviousStep().stepType == BehaviorStepType.WHEN) {
+      } else if (stepStack.lastStep().stepType == BehaviorStepType.WHEN) {
         _whenClos(description, closure)
-      } else if (listener.getPreviousStep().stepType == BehaviorStepType.THEN) {
+      } else if (stepStack.lastStep().stepType == BehaviorStepType.THEN) {
         _thenClos(description, closure)
       } else {
-        listener.startStep(BehaviorStepType.AND, "")
-        listener.stopStep()
+        stepStack.startStep(listener, BehaviorStepType.AND, "")
+        stepStack.stopStep(listener)
       }
     }
 
@@ -94,7 +96,7 @@ class StoryBinding {
     }
 
     binding.description = {description ->
-      listener.getCurrentStep().setDescription(description)
+      listener.describeStep(description)
     }
 
     return binding

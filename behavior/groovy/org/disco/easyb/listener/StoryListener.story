@@ -2,16 +2,17 @@ package org.disco.easyb.listener
 
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.BehaviorStep
 
 scenario "listener is given all successful results", {
 
   given "a story listener", {
-    listener = new DefaultListener()
+    listener = new ResultsCollector()
   }
 
   when "a successful result is added", {
-    listener.startStep(BehaviorStepType.SCENARIO, "success scenario")
-      listener.startStep(BehaviorStepType.THEN, "success then step")
+    listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "success scenario"))
+      listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "success then step"))
       listener.gotResult(new Result(Result.SUCCEEDED))
       listener.stopStep()
     listener.stopStep()
@@ -44,12 +45,12 @@ scenario "listener is given all successful results", {
 scenario "listener is given a single failure", {
 
   given "a story listener", {
-    listener = new DefaultListener()
+    listener = new ResultsCollector()
   }
 
   when "a failure result is added", {
-    listener.startStep(BehaviorStepType.SCENARIO, "success scenario")
-      listener.startStep(BehaviorStepType.THEN, "failure then step")
+    listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "success scenario"))
+      listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "failure then step"))
       listener.gotResult(new Result(new Exception("FailureExceptionReason")))
       listener.stopStep()
     listener.stopStep()

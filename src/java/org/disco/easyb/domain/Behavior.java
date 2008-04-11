@@ -3,8 +3,8 @@ package org.disco.easyb.domain;
 import java.io.File;
 import java.io.IOException;
 
-import org.disco.easyb.listener.StepListener;
 import org.disco.easyb.BehaviorStep;
+import org.disco.easyb.listener.ExecutionListener;
 
 public interface Behavior {
     String getPhrase();
@@ -13,5 +13,5 @@ public interface Behavior {
 
     String getTypeDescriptor();
 
-    BehaviorStep execute(StepListener listener) throws IOException;
+    BehaviorStep execute(ExecutionListener listener) throws IOException;
 }

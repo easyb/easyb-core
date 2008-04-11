@@ -2,8 +2,9 @@ package org.disco.easyb;
 
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.Story;
+import org.disco.easyb.listener.ResultsCollector;
 
-public class ConsoleReporter implements BehaviorExecutionListener {
+public class ConsoleReporter extends ResultsCollector {
     private long startTime;
 
     public void behaviorFileStarting(Behavior behavior) {
@@ -15,6 +16,13 @@ public class ConsoleReporter implements BehaviorExecutionListener {
     public void behaviorFileComplete(BehaviorStep currentStep, Behavior behavior) {
         long endTime = System.currentTimeMillis();
         printMetrics(behavior, startTime, currentStep, endTime);
+    }
+
+    public void testingComplete() {
+        System.out.println("\n" +
+            (getBehaviorCount() > 1 ? getBehaviorCount() + " total behaviors run" : "1 behavior run")
+            + (getFailedBehaviorCount() > 0 ? " with "
+            + (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures"));
     }
 
     private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {

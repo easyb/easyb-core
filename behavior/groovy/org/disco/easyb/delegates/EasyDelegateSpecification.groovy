@@ -1,12 +1,11 @@
 package org.disco.easyb.delegates
 
 import org.disco.easyb.SpecificationBinding
-import org.disco.easyb.listener.StepListener
-import org.disco.easyb.listener.DefaultStepListener
-import org.disco.easyb.listener.DefaultStepListener
+import org.disco.easyb.listener.ExecutionListener
+import org.disco.easyb.listener.ResultsCollector
 
 before "obtain a reference to the binding object", {
-  StepListener behaviorListener = new DefaultStepListener()
+  ExecutionListener behaviorListener = new ResultsCollector()
   itbehave = SpecificationBinding.getBinding(behaviorListener).it
 }
 

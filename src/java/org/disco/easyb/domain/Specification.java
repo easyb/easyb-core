@@ -6,7 +6,7 @@ import java.io.IOException;
 import groovy.lang.GroovyShell;
 import org.disco.easyb.BehaviorStep;
 import org.disco.easyb.SpecificationBinding;
-import org.disco.easyb.listener.StepListener;
+import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.util.BehaviorStepType;
 
 public class Specification extends BehaviorBase {
@@ -18,8 +18,9 @@ public class Specification extends BehaviorBase {
         return "specification";
     }
 
-    public BehaviorStep execute(StepListener listener) throws IOException {
-        BehaviorStep currentStep = listener.startStep(BehaviorStepType.SPECIFICATION, getPhrase());
+    public BehaviorStep execute(ExecutionListener listener) throws IOException {
+        BehaviorStep currentStep = new BehaviorStep(BehaviorStepType.SPECIFICATION, getPhrase());
+        listener.startStep(currentStep);
         new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(getFile());
         listener.stopStep();
 

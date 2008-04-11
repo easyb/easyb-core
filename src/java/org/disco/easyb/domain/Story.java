@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.disco.easyb.util.BehaviorStepType;
 import org.disco.easyb.StoryBinding;
 import org.disco.easyb.BehaviorStep;
-import org.disco.easyb.listener.StepListener;
+import org.disco.easyb.listener.ExecutionListener;
 import groovy.lang.GroovyShell;
 
 public class Story extends BehaviorBase {
@@ -18,8 +18,9 @@ public class Story extends BehaviorBase {
         return "story";
     }
 
-    public BehaviorStep execute(StepListener listener) throws IOException {
-        BehaviorStep currentStep = listener.startStep(BehaviorStepType.STORY, getPhrase());
+    public BehaviorStep execute(ExecutionListener listener) throws IOException {
+        BehaviorStep currentStep = new BehaviorStep(BehaviorStepType.STORY, getPhrase());
+        listener.startStep(currentStep);
         new GroovyShell(StoryBinding.getBinding(listener)).evaluate(getFile());
         listener.stopStep();
 

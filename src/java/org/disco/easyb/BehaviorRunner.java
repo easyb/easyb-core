@@ -8,12 +8,14 @@ import java.util.List;
 
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.BehaviorFactory;
-import org.disco.easyb.listener.DefaultStepListener;
-import org.disco.easyb.listener.StepListener;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.report.XmlReportWriter;
+import org.disco.easyb.listener.ExecutionListener;
+import org.disco.easyb.listener.BroadcastListener;
+import org.disco.easyb.listener.FailureDetector;
+import org.disco.easyb.listener.ResultsCollector;
 
 /**
  * usage is:
@@ -30,15 +32,24 @@ import org.disco.easyb.report.XmlReportWriter;
  */
 public class BehaviorRunner {
     private List<Report> reports;
-    private BehaviorExecutionListener executionListener;
+    private BroadcastListener broadcastListener;
+    private ResultsCollector resultsCollector;
+    private FailureDetector failureDetector;
 
-    public BehaviorRunner(BehaviorExecutionListener executionListener) {
+    public BehaviorRunner(ExecutionListener executionListener) {
         this(executionListener, null);
     }
 
-    public BehaviorRunner(BehaviorExecutionListener executionListener, List<Report> reports) {
-        this.executionListener = executionListener;
+    public BehaviorRunner(ExecutionListener executionListener, List<Report> reports) {
         this.reports = addDefaultReports(reports);
+
+        resultsCollector = new ResultsCollector();
+        failureDetector = new FailureDetector();
+
+        broadcastListener = new BroadcastListener();
+        broadcastListener.registerListener(resultsCollector);
+        broadcastListener.registerListener(failureDetector);
+        broadcastListener.registerListener(executionListener);
     }
 
     /**
@@ -47,21 +58,13 @@ public class BehaviorRunner {
      */
     public void runBehavior(Collection<File> specs) throws Exception {
 
-        StepListener listener = new DefaultStepListener();
+        executeBehaviors(specs);
 
-        executeBehaviors(specs, listener);
+        broadcastListener.testingComplete();
 
-        System.out.println("\n" +
-            //prints "1 behavior run" or "x behaviors run"
-            (listener.getBehaviorCount() > 1 ? listener.getBehaviorCount() + " total behaviors run" : "1 behavior run")
-            //outer ternary prints either 1..X failure(s) or no failures
-            //inner ternary determines if more than one failure and makes it plural if so
-            + (listener.getFailedBehaviorCount() > 0 ? " with "
-            + (listener.getFailedBehaviorCount() == 1 ? "1 failure" : listener.getFailedBehaviorCount() + " failures") : " with no failures"));
+        produceReports(resultsCollector);
 
-        produceReports(listener);
-
-        if (listener.getFailedBehaviorCount() > 0) {
+        if (failureDetector.failuresDetected()) {
             System.exit(-6);
         }
     }
@@ -69,7 +72,7 @@ public class BehaviorRunner {
     /**
      * @param listener Listener to receive specification events
      */
-    private void produceReports(StepListener listener) {
+    private void produceReports(ExecutionListener listener) {
 
         for (Report report : reports) {
             if (report.getType().equals(Report.EASYB_TYPE)) {
@@ -84,10 +87,9 @@ public class BehaviorRunner {
 
     /**
      * @param behaviors Specifications to run
-     * @param listener  Listener to receive specification events
      * @throws IOException IO exception running groovy script
      */
-    private void executeBehaviors(final Collection<File> behaviors, final StepListener listener) throws IOException {
+    private void executeBehaviors(final Collection<File> behaviors) throws IOException {
         for (File behaviorFile : behaviors) {
             Behavior behavior = null;
             try {
@@ -97,11 +99,11 @@ public class BehaviorRunner {
                 System.exit(-1);
             }
 
-            executionListener.behaviorFileStarting(behavior);
+            broadcastListener.behaviorFileStarting(behavior);
 
-            BehaviorStep results = behavior.execute(listener);
+            BehaviorStep results = behavior.execute(broadcastListener);
 
-            executionListener.behaviorFileComplete(results, behavior);
+            broadcastListener.behaviorFileComplete(results, behavior);
         }
     }
 

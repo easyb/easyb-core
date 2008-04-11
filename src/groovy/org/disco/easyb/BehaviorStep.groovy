@@ -5,17 +5,20 @@ import org.disco.easyb.util.BehaviorStepType
 
 class BehaviorStep {
 
-  BehaviorStepType stepType
+  public BehaviorStepType stepType
   ArrayList<BehaviorStep> childSteps = new ArrayList()
-  private BehaviorStep parentStep
+  public BehaviorStep parentStep
   private Result result
   private String name
   private String description
 
-  BehaviorStep(BehaviorStepType inStepType, String inStepName, BehaviorStep inParentStep) {
+  BehaviorStep(BehaviorStepType inStepType, String inStepName) {
     stepType = inStepType
-    parentStep = inParentStep
     name = inStepName
+  }
+
+  def setParentStep(BehaviorStep inParentStep) {
+    parentStep = inParentStep
   }
 
   def addChildStep(BehaviorStep step) {
@@ -126,7 +129,7 @@ class BehaviorStep {
     return result != null && result.failed() ? 1 : 0
   }
 
-  long getChildStepFailureResultCount() {
+  public long getChildStepFailureResultCount() {
     if (childSteps.size() == 0) {
       return getStepFailureCount()
     } else {

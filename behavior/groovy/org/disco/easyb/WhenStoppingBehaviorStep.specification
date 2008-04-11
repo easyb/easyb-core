@@ -1,0 +1,20 @@
+import org.disco.easyb.BehaviorStepStack
+import org.disco.easyb.listener.ExecutionListenerAdaptor
+import org.disco.easyb.util.BehaviorStepType
+
+def stack
+def listener
+
+before "create behavior step stack", {
+  stack = new BehaviorStepStack()
+  listener = new ExecutionListenerAdaptor()
+}
+
+it "should pop step from stack", {
+    stack.startStep(listener, BehaviorStepType.SCENARIO, 'description')
+    stack.stopStep(listener)
+  
+    stack.lastStep().shouldBe null
+}
+
+it "should notify listener"
