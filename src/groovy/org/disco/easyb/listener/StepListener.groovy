@@ -3,7 +3,7 @@ package org.disco.easyb.listener
 import org.disco.easyb.BehaviorStep
 import org.disco.easyb.util.BehaviorStepType
 
-interface BehaviorListener {
+interface StepListener {
 
   BehaviorStep startStep(BehaviorStepType specificationStepType, String stepName)
 

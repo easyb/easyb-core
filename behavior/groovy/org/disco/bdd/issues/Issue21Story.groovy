@@ -3,7 +3,7 @@ package org.disco.bdd.issues
 scenario "text story format should have newline prior to story or scenario part", {
   // TODO reimplement issue 21 once the report formatting has been reimplemented
   //  given "a listener populated with some stories and scenarios", {
-  //    listener = new DefaultListener()
+  //    listener = new DefaultStepListener()
   //    listener.gotResult(new Result("story description", StoryBinding.STORY, Result.SUCCEEDED));
   //    listener.gotResult(new Result("scenario description", StoryBinding.STORY_SCENARIO, Result.SUCCEEDED))
   //    listener.gotResult(new Result("given description", StoryBinding.STORY_GIVEN, Result.SUCCEEDED));

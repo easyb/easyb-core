@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.List;
 
 import groovy.lang.GroovyShell;
-import org.disco.easyb.listener.BehaviorListener;
-import org.disco.easyb.listener.DefaultListener;
+import org.disco.easyb.listener.StepListener;
+import org.disco.easyb.listener.DefaultStepListener;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
@@ -46,7 +46,7 @@ public class BehaviorRunner {
      */
     public void runBehavior(Collection<File> specs) throws Exception {
 
-        BehaviorListener listener = new DefaultListener();
+        StepListener listener = new DefaultStepListener();
 
         executeSpecifications(specs, listener);
 
@@ -68,7 +68,7 @@ public class BehaviorRunner {
     /**
      * @param listener Listener to receive specification events
      */
-    private void produceReports(BehaviorListener listener) {
+    private void produceReports(StepListener listener) {
 
         for (Report report : reports) {
             if (report.getType().equals(Report.EASYB_TYPE)) {
@@ -86,7 +86,7 @@ public class BehaviorRunner {
      * @param listener Listener to receive specification events
      * @throws IOException IO exception running groovy script
      */
-    private void executeSpecifications(final Collection<File> specifications, final BehaviorListener listener) throws IOException {
+    private void executeSpecifications(final Collection<File> specifications, final StepListener listener) throws IOException {
         for (File behaviorFile : specifications) {
             Behavior behavior = null;
             try {

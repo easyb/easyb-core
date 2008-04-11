@@ -4,13 +4,13 @@ import org.disco.easyb.BehaviorStep
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType;
 
-class DefaultListener implements BehaviorListener {
+class DefaultStepListener implements StepListener {
 
   private BehaviorStep currentStep
   private BehaviorStep genesisStep = new BehaviorStep(BehaviorStepType.GENESIS, "easyb-genesis", null)
   private BehaviorStep previousStep
 
-  DefaultListener() {
+  DefaultStepListener() {
     currentStep = genesisStep
   }
 
