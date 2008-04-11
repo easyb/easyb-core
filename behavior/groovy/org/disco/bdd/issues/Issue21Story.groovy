@@ -1,11 +1,5 @@
 package org.disco.bdd.issues
 
-import org.disco.easyb.listener.DefaultListener
-import org.disco.easyb.result.Result
-import org.disco.easyb.report.TxtStoryReportWriter
-import org.disco.easyb.report.Report
-
-
 scenario "text story format should have newline prior to story or scenario part", {
   // TODO reimplement issue 21 once the report formatting has been reimplemented
   //  given "a listener populated with some stories and scenarios", {

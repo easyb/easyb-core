@@ -1,10 +1,9 @@
 package org.disco.easyb.report
 
 import groovy.xml.MarkupBuilder
-import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.BehaviorStep
-import org.disco.easyb.result.Result
 import org.disco.easyb.exception.VerificationException
+import org.disco.easyb.util.BehaviorStepType
 
 class XmlReportWriter implements ReportWriter {
 
@@ -33,8 +32,8 @@ class XmlReportWriter implements ReportWriter {
       } else {
         xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
           if (step.result.failed()) {
-            failure(message:step.result.cause()?.getMessage()){
-            	if(!(step.result.cause instanceof VerificationException)) {
+            failure(message: step.result.cause()?.getMessage()) {
+              if (!(step.result.cause instanceof VerificationException)) {
                 stacktrace(buildFailureMessage(step.result))
               }
             }
@@ -42,9 +41,9 @@ class XmlReportWriter implements ReportWriter {
         }
       }
     } else {
-      if(step.stepType == BehaviorStepType.SCENARIO) {
+      if (step.stepType == BehaviorStepType.SCENARIO) {
         xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
-          if(step.description){
+          if (step.description) {
             xml.description(step.description)
           }
           for (child in step.childSteps) {
@@ -53,8 +52,8 @@ class XmlReportWriter implements ReportWriter {
         }
       } else { // assumed to be story now
         xml."${step.stepType.type()}"(name: step.name, scenarios: step.scenarioCountRecursively, failedscenarios: step.failedScenarioCountRecursively, pendingscenarios: step.pendingScenarioCountRecursively) {
-          if(step.description){
-          xml.description(step.description)
+          if (step.description) {
+            xml.description(step.description)
           }
           for (child in step.childSteps) {
             walkStoryChildren(xml, child)
@@ -72,19 +71,19 @@ class XmlReportWriter implements ReportWriter {
       } else {
         xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
           if (step.result.failed()) {
-        	  failure(message:step.result.cause()?.getMessage()){
-              if(!(step.result.cause instanceof VerificationException))
+            failure(message: step.result.cause()?.getMessage()) {
+              if (!(step.result.cause instanceof VerificationException))
                 stacktrace(buildFailureMessage(step.result))
-              }
+            }
           }
         }
       }
     } else {
       xml."${step.stepType.type()}"(name: step.name, specifications: step.specificationCountRecursively, failedspecifications: step.failedSpecificationCountRecursively, pendingspecifications: step.pendingSpecificationCountRecursively) {
-    	  if(step.description){
-    		xml.description(step.description)
-    	  }
-    	  for (child in step.childSteps) {
+        if (step.description) {
+          xml.description(step.description)
+        }
+        for (child in step.childSteps) {
           walkSpecificationChildren(xml, child)
         }
       }
@@ -114,5 +113,4 @@ class XmlReportWriter implements ReportWriter {
     }
     writer.close()
   }
-
 }

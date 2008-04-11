@@ -1,15 +1,15 @@
-package org.disco.easyb.listener;
+package org.disco.easyb.listener
 
 import org.disco.easyb.BehaviorStep
-import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.result.Result
+import org.disco.easyb.util.BehaviorStepType;
 
 class DefaultListener implements BehaviorListener {
 
   private BehaviorStep currentStep
   private BehaviorStep genesisStep = new BehaviorStep(BehaviorStepType.GENESIS, "easyb-genesis", null)
   private BehaviorStep previousStep
-  
+
   DefaultListener() {
     currentStep = genesisStep
   }
@@ -61,19 +61,19 @@ class DefaultListener implements BehaviorListener {
   long getPendingBehaviorCount() {
     return genesisStep.getPendingBehaviorCountRecursively()
   }
-  
+
   BehaviorStep getGenesisStep() {
     return genesisStep
   }
-  
+
   BehaviorStep getCurrentStep() {
-	return currentStep
+    return currentStep
   }
-  
+
   BehaviorStep getPreviousStep() {
     return previousStep
   }
- 
+
   public void gotResult(result) {
     currentStep.setResult(result)
   }
@@ -88,11 +88,11 @@ class DefaultListener implements BehaviorListener {
 
   public void stopStep() {
 
-    if(BehaviorStepType.SCENARIO == currentStep.stepType) {
-      if(currentStep.childStepFailureResultCount > 0) {
+    if (BehaviorStepType.SCENARIO == currentStep.stepType) {
+      if (currentStep.childStepFailureResultCount > 0) {
         gotResult(new Result(Result.FAILED))
       } else {
-        if(currentStep.childStepPendingResultCount > 0) {
+        if (currentStep.childStepPendingResultCount > 0) {
           gotResult(new Result(Result.PENDING))
         } else {
           gotResult(new Result(Result.SUCCEEDED))
@@ -104,5 +104,4 @@ class DefaultListener implements BehaviorListener {
     previousStep = currentStep
     currentStep = currentStep.parentStep
   }
-
 }

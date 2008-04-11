@@ -1,8 +1,8 @@
 package org.disco.easyb;
 
 import java.io.File;
-import java.util.List;
 import static java.util.Arrays.asList;
+import java.util.List;
 
 import org.disco.easyb.util.CamelCaseConverter;
 

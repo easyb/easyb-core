@@ -1,7 +1,6 @@
 package org.disco.easyb.ant
 
 import org.apache.tools.ant.types.FileSet
-
 import org.disco.easyb.BehaviorRunner
 import org.disco.easyb.report.Report
 
@@ -26,5 +25,4 @@ public class BehaviorRunnerTask extends AbstractStoryTask {
   void addConfiguredReport(Report report) {
     addTarget("-${report.type} ${report.location}")
   }
-
 }

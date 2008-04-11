@@ -3,7 +3,6 @@ package org.disco.easyb
 import org.disco.easyb.listener.BehaviorListener
 import org.disco.easyb.listener.DefaultListener
 
-
 before "obtain a reference to the binding object", {
   BehaviorListener behaviorListener = new DefaultListener()
   binding = SpecificationBinding.getBinding(behaviorListener)

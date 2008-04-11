@@ -1,19 +1,19 @@
 package org.disco.easyb
 
-import org.disco.easyb.delegates.EnsuringDelegate
-import org.disco.easyb.result.Result
-import org.disco.easyb.delegates.PlugableDelegate
 import org.disco.easyb.BehaviorCategory
-import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.delegates.EnsuringDelegate
 import org.disco.easyb.delegates.NarrativeDelegate
-import org.disco.easyb.BehaviorStep
+import org.disco.easyb.delegates.PlugableDelegate
+import org.disco.easyb.result.Result
+import org.disco.easyb.util.BehaviorStepType
+
 class StoryBinding {
 
   /**
-	 * This method returns a fully initialized Binding object (or context) that
-	 * has definitions for methods such as "when" and "given", which are used
-	 * in the context of stories.
-	 */
+   * This method returns a fully initialized Binding object (or context) that
+   * has definitions for methods such as "when" and "given", which are used
+   * in the context of stories.
+   */
   static Binding getBinding(listener) {
 
     def binding = new Binding()
@@ -43,13 +43,13 @@ class StoryBinding {
         listener.gotResult(new Result(ex))
       }
     }
-    
+
     def _thenClos = {spec, closure = pendingClosure ->
       listener.startStep(BehaviorStepType.THEN, spec)
       thenClosure(spec, closure, BehaviorStepType.THEN)
       listener.stopStep()
     }
-    
+
     binding.then = {spec, closure = pendingClosure ->
       _thenClos(spec, closure)
     }
@@ -59,8 +59,8 @@ class StoryBinding {
       closure.delegate = basicDelegate
       closure()
       listener.stopStep()
-    } 
-    
+    }
+
     binding.when = {whenDescription, closure = {} ->
       _whenClos(whenDescription, closure)
     }
@@ -71,38 +71,39 @@ class StoryBinding {
       closure()
       listener.stopStep()
     }
-    
+
     binding.given = {givenDescription, closure = {} ->
       _givenClos(givenDescription, closure)
     }
 
-    binding.and = { description = "", closure = {} ->
-      if(listener.getPreviousStep().stepType == BehaviorStepType.GIVEN){
-    	  _givenClos(description, closure)
-      }else if(listener.getPreviousStep().stepType == BehaviorStepType.WHEN){
-    	  _whenClos(description, closure)
-      }else if(listener.getPreviousStep().stepType == BehaviorStepType.THEN){
-    	  _thenClos(description, closure)
-      }else{
-    	  listener.startStep(BehaviorStepType.AND, "")
-    	  listener.stopStep()
+    binding.and = {description = "", closure = {} ->
+      if (listener.getPreviousStep().stepType == BehaviorStepType.GIVEN) {
+        _givenClos(description, closure)
+      } else if (listener.getPreviousStep().stepType == BehaviorStepType.WHEN) {
+        _whenClos(description, closure)
+      } else if (listener.getPreviousStep().stepType == BehaviorStepType.THEN) {
+        _thenClos(description, closure)
+      } else {
+        listener.startStep(BehaviorStepType.AND, "")
+        listener.stopStep()
       }
     }
 
-    binding.narrative = { storydescript = "", closure = {} ->
-    	closure.delegate = narrativeDelegate()
+    binding.narrative = {storydescript = "", closure = {} ->
+      closure.delegate = narrativeDelegate()
     }
 
-    binding.description = { description ->
-    	listener.getCurrentStep().setDescription(description)
+    binding.description = {description ->
+      listener.getCurrentStep().setDescription(description)
     }
 
     return binding
   }
 
-  private static narrativeDelegate(){
-	  return new NarrativeDelegate()
+  private static narrativeDelegate() {
+    return new NarrativeDelegate()
   }
+
   /**
    * The easy delegate handles "it", "then", and "when"
    * Currently, this delegate isn't plug and play.
@@ -110,6 +111,7 @@ class StoryBinding {
   private static basicDelegate() {
     return new EnsuringDelegate()
   }
+
   /**
    * The "given" delegate supports plug-ins, consequently,
    * the flex guys are utlized. Currently, there is a DbUnit

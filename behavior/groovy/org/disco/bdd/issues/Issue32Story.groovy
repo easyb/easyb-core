@@ -1,8 +1,7 @@
 package org.disco.bdd.issues
 
-import org.disco.easyb.exception.VerificationException
 import org.disco.bdd.Person
-
+import org.disco.easyb.exception.VerificationException
 
 scenario "maps that should not be contained in other maps", {
   given "a map with 3 values", {
@@ -46,7 +45,7 @@ scenario "maps that should not be contained in other maps", {
     }
 
     ensureThrows(VerificationException.class) {
-      ensure(mp){
+      ensure(mp) {
         doesNotContain("Andy") // covers a value in a map
       }
     }
@@ -114,10 +113,10 @@ scenario "list should not contain specified value", {
   }
 
   then "calls to shouldNotHave should pass for values that aren't in mylist", {
-    mylist.shouldNotHave([1,4])
+    mylist.shouldNotHave([1, 4])
 
     ensure(mylist) {
-      doesNotContain([1,4])
+      doesNotContain([1, 4])
     }
   }
 
@@ -138,12 +137,12 @@ scenario "list should not contain specified value", {
   then "calls to shouldNotHave should throw a VerificationException if all values appear in the list being tested", {
 
     ensureThrows(VerificationException.class) {
-      mylist.shouldNotHave([1,2])
+      mylist.shouldNotHave([1, 2])
     }
 
     ensureThrows(VerificationException.class) {
       ensure(mylist) {
-        doesNotContain([1,2])
+        doesNotContain([1, 2])
       }
     }
 
@@ -158,11 +157,11 @@ scenario "object should not contain specified properties", {
   }
 
   then "calls to shouldNotHave should pass when the property doesn't match the values tested for", {
-    person.shouldNotHave(age:12)
+    person.shouldNotHave(age: 12)
     person.shouldNotHave(firstName: "Frank")
 
     ensure(person) {
-      doesNotContain(age:12)
+      doesNotContain(age: 12)
       doesNotContain(firstName: "Frank")
     }
   }
@@ -174,20 +173,20 @@ scenario "object should not contain specified properties", {
       doesNotContain([firstName: "Andy", age: 41])
     }
   }
-  
+
   then "calls to shouldNotHave should throw a VerificationException if the property matches a property on the object", {
 
     ensureThrows(VerificationException.class) {
-      person.shouldNotHave(age:11)
+      person.shouldNotHave(age: 11)
     }
 
     ensureThrows(VerificationException.class) {
-      person.shouldNotHave(firstName:"Andy")
+      person.shouldNotHave(firstName: "Andy")
     }
 
     ensureThrows(VerificationException.class) {
       ensure(person) {
-        doesNotContain(age:11)
+        doesNotContain(age: 11)
       }
     }
 

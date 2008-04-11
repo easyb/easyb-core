@@ -2,14 +2,13 @@ package org.disco.easyb;
 
 public class Specification implements Behavior {
 
-	private String phrase;
+    private String phrase;
 
-	public Specification(String specificationPhrase) {
-		phrase = specificationPhrase;
-	}
+    public Specification(String specificationPhrase) {
+        phrase = specificationPhrase;
+    }
 
-	public String getPhrase() {
-		return phrase;
-	}
-
+    public String getPhrase() {
+        return phrase;
+    }
 }

@@ -1,7 +1,5 @@
 package org.disco.easyb.delegates;
 
-import org.disco.easyb.delegates.RichlyEnsurable;
-
 /**
  * this class is needed it seems to support compilation--
  * we've hit a wall with using groovy and java together in

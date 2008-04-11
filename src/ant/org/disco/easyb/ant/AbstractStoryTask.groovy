@@ -1,14 +1,5 @@
 package org.disco.easyb.ant
 
-import java.io.File
-import java.net.URI
-import java.net.URISyntaxException
-import java.net.URL
-import java.util.ArrayList
-import java.util.LinkedList
-import java.util.List
-import java.util.StringTokenizer
-
 import org.apache.tools.ant.DirectoryScanner
 import org.apache.tools.ant.types.FileSet
 import org.apache.tools.ant.types.Path

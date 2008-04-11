@@ -1,6 +1,8 @@
-package org.disco.easyb //needed for eclipse
+package org.disco.easyb
 
 import org.disco.easyb.Specification
+
+//needed for eclipse
 
 it "should identify files ending with *Story.groovy as stories", {
   behavior = BehaviorFactory.createBehavior(new File('EmptyStackStory.groovy'))

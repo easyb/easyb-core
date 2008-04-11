@@ -9,12 +9,13 @@ class RichEnsureDelegate {
 
   def verified
   /**
-  *
-  */
+   *
+   */
   def void and() {
     //println "noop!! with and"
     //noop
   }
+
   /**
    * This method isn't currently working
    */
@@ -24,11 +25,11 @@ class RichEnsureDelegate {
 
 
   def void doesNotContain(Object value) {
-    if(this.verified instanceof Map) {
+    if (this.verified instanceof Map) {
       if (value instanceof Map) {
         this.handleMapShouldNotContain(value)
       } else {
-        if(this.verified.containsKey(value) || this.verified.containsValue(value)) {
+        if (this.verified.containsKey(value) || this.verified.containsValue(value)) {
           throw new VerificationException("${verified.toString()} should not contain ${value.toString()} as a key or value")
         }
       }
@@ -48,10 +49,10 @@ class RichEnsureDelegate {
           fld.setAccessible(true)
           def ret = fld.get(this.verified)
           if ((ret.getClass() instanceof String && ret.equals(vl)) || ret == vl) {
-              matchedValues << [ky, vl]
+            matchedValues << [ky, vl]
           }
         }
-        if(matchedValues.size() == value.size()) {
+        if (matchedValues.size() == value.size()) {
           throw new VerificationException("${verified.getClass().getName()} should not contain ${matchedValues}")
         }
       } else {
@@ -63,7 +64,7 @@ class RichEnsureDelegate {
   }
 
   /**
-   * 
+   *
    */
   def void contains(Object value) {
     //println "in rich contains"
@@ -140,9 +141,9 @@ class RichEnsureDelegate {
       throw new VerificationException("values ${values} not found in ${verified}")
     }
   }
-  /**
-   **/
 
+  /**
+   * */
   def void isEqualTo(Object value) {
     if (value.getClass() == String.class) {
       if (!value.toString().equals(verified.toString())) {
@@ -154,9 +155,9 @@ class RichEnsureDelegate {
       }
     }
   }
-  /**
-   **/
 
+  /**
+   * */
   def void isNotEqualTo(Object value) {
     if (value.getClass() == String.class) {
       if (value.toString().equals(verified.toString())) {
@@ -168,8 +169,9 @@ class RichEnsureDelegate {
       }
     }
   }
+
   /**
-   * 
+   *
    */
   def void isA(Object type) {
     String val = this.getUnqualifiedClassName()
@@ -177,8 +179,9 @@ class RichEnsureDelegate {
       throw new VerificationException("expected ${type} but was ${val}")
     }
   }
+
   /**
-   * 
+   *
    */
   def void isNotA(Object type) {
     String val = this.getUnqualifiedClassName()
@@ -186,6 +189,7 @@ class RichEnsureDelegate {
       throw new VerificationException("expected not to be ${type} but was")
     }
   }
+
   /**
    *
    */
@@ -193,8 +197,9 @@ class RichEnsureDelegate {
     String verClassName = verified.getClass().getName()
     return verClassName.substring((verClassName.lastIndexOf(".")) + 1, verClassName.length())
   }
+
   /**
-   * 
+   *
    */
   def void isNotNull() {
     //println "in rich ensure isNotNull"
@@ -202,8 +207,9 @@ class RichEnsureDelegate {
       throw new VerificationException("value is null")
     }
   }
+
   /**
-   * 
+   *
    */
   def void isNull() {
     // println "in rich ensure isNull"
@@ -211,8 +217,9 @@ class RichEnsureDelegate {
       throw new VerificationException("value isn't null")
     }
   }
+
   /**
-   * 
+   *
    */
   def void startsWith(Object value) {
     if (value instanceof String) {
@@ -223,8 +230,9 @@ class RichEnsureDelegate {
       throw new VerificationException("startsWith not supported on non String objects")
     }
   }
+
   /**
-   * 
+   *
    */
   def void endsWith(Object value) {
     if (value instanceof String) {
@@ -235,8 +243,9 @@ class RichEnsureDelegate {
       throw new VerificationException("endsWith not supported on non String objects")
     }
   }
+
   /**
-   * 
+   *
    */
   def void isContainedIn(Object value) {
     if (!value.contains(verified)) {

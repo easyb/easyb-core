@@ -8,29 +8,30 @@ public class TxtSpecificationReportWriter implements ReportWriter {
   def listener
   def report
 
-  TxtSpecificationReportWriter(report, listener){
-	  this.report = report
-	  this.listener = listener
+  TxtSpecificationReportWriter(report, listener) {
+    this.report = report
+    this.listener = listener
   }
+
   /**
-   * 
+   *
    */
   void writeReport() {
     Writer writer = new BufferedWriter(new FileWriter(new File(report.location)))
-	  def count = listener.getSpecificationCount()
-	  writer.writeLine("${(count > 1) ? "${count} specifications" : " 1 specification"}" + 
-			     " (including ${listener.getPendingSpecificationCount()} pending) executed" +
-	            "${listener.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
-	            "${listener.getFailedSpecificationCount().toInteger() > 0 ? " Total failures: ${listener.getFailedSpecificationCount()}" : ""}")
-	 listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each { genesisChild ->
-  		handleElement(writer, genesisChild)
+    def count = listener.getSpecificationCount()
+    writer.writeLine("${(count > 1) ? "${count} specifications" : " 1 specification"}" +
+            " (including ${listener.getPendingSpecificationCount()} pending) executed" +
+            "${listener.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
+            "${listener.getFailedSpecificationCount().toInteger() > 0 ? " Total failures: ${listener.getFailedSpecificationCount()}" : ""}")
+    listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
+      handleElement(writer, genesisChild)
     }
-  
+
     writer.close()
   }
-  
+
   /**
-   * 
+   *
    */
   def handleElement(writer, element) {
     writeElement(writer, element)
@@ -38,8 +39,9 @@ public class TxtSpecificationReportWriter implements ReportWriter {
       handleElement(writer, it)
     }
   }
+
   /**
-   * 
+   *
    */
   def writeElement(writer, element) {
     switch (element.stepType) {
@@ -48,9 +50,9 @@ public class TxtSpecificationReportWriter implements ReportWriter {
         writer.write("${' '.padRight(2)}Specification: ${element.name}")
         break
       case BehaviorStepType.DESCRIPTION:
-      	writer.write("${' '.padRight(3)} ${element.description}")
-      	writer.newLine()
-      	break
+        writer.write("${' '.padRight(3)} ${element.description}")
+        writer.newLine()
+        break
       case BehaviorStepType.BEFORE:
         writer.write("${' '.padRight(4)}before ${element.name}")
         break

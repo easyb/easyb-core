@@ -74,21 +74,20 @@ class BehaviorStep {
   long getBehaviorCountRecursively(type, resultStatus) {
     long behaviorCount = 0
 
-    if(resultStatus == null) {
-      if(type == stepType) {
+    if (resultStatus == null) {
+      if (type == stepType) {
         behaviorCount++
       }
     } else if ((type == stepType) && (resultStatus == result?.status)) {
       behaviorCount++
     }
 
-    for(childStep in childSteps) {
+    for (childStep in childSteps) {
       behaviorCount += childStep.getBehaviorCountRecursively(type, resultStatus)
     }
     return behaviorCount
   }
 
-  
   // TODO refactor into a getStepCount that can take the type its looking for (Fail, pass, pending)
   long getStepPendingCount() {
     return result != null && result.pending() ? 1 : 0
@@ -166,9 +165,8 @@ class BehaviorStep {
   def setResult(inResult) {
     result = inResult
   }
-  
-  def setDescription(inDescription){
-	  description = inDescription
-  }
 
+  def setDescription(inDescription) {
+    description = inDescription
+  }
 }

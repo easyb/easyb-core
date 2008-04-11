@@ -1,7 +1,7 @@
 package org.disco.easyb
 
-import org.disco.easyb.exception.VerificationException
 import org.codehaus.groovy.runtime.NullObject
+import org.disco.easyb.exception.VerificationException
 
 class BehaviorCategory {
 
@@ -61,10 +61,10 @@ class BehaviorCategory {
     } else {
       if (value == self) {
         throw new VerificationException("expected values to differ but both were ${value}")
-      } else{
-         if(self.is(null) && value.is(null)){
-             throw new VerificationException("expected values to differ but both were null")
-         }
+      } else {
+        if (self.is(null) && value.is(null)) {
+          throw new VerificationException("expected values to differ but both were null")
+        }
       }
     }
   }
@@ -106,11 +106,11 @@ class BehaviorCategory {
   }
 
   private static void _hasNot(Object self, value) {
-    if(self instanceof Map) {
+    if (self instanceof Map) {
       if (value instanceof Map) {
-        _handleMapShouldNotContain(self,value)
+        _handleMapShouldNotContain(self, value)
       } else {
-        if(self.containsKey(value) || self.containsValue(value)) {
+        if (self.containsKey(value) || self.containsValue(value)) {
           throw new VerificationException("${self.toString()} should not contain ${value.toString()} as a key or value")
         }
       }
@@ -131,9 +131,9 @@ class BehaviorCategory {
           def ret = fld.get(self)
           if ((ret.getClass() instanceof String && ret.equals(vl)) || ret == vl) {
             matchedValues << [ky, vl]
-          } 
+          }
         }
-        if(matchedValues.size() == value.size()) {
+        if (matchedValues.size() == value.size()) {
           throw new VerificationException("${self.getClass().getName()} should not contain ${matchedValues}")
         }
       } else {
@@ -189,31 +189,30 @@ class BehaviorCategory {
     }
   }
 
-  private static int findItems(delegate, values){
-	  def foundcount = 0
-	    values.each {key, val ->
-	      delegate.each {vkey, vvalue ->
-	        if ((vkey.equals(key) && (val == vvalue))) {
-	          foundcount++
-	        }
-	      }
-	    }
-	  return foundcount
+  private static int findItems(delegate, values) {
+    def foundcount = 0
+    values.each {key, val ->
+      delegate.each {vkey, vvalue ->
+        if ((vkey.equals(key) && (val == vvalue))) {
+          foundcount++
+        }
+      }
+    }
+    return foundcount
   }
 
   private static void _handleMapShouldNotContain(delegate, values) {
-	def foundcount = findItems(delegate, values)
-	    if (foundcount == values.size()) {
-	      throw new VerificationException("values ${values} found in ${delegate}")
-	}
-   }
+    def foundcount = findItems(delegate, values)
+    if (foundcount == values.size()) {
+      throw new VerificationException("values ${values} found in ${delegate}")
+    }
+  }
 
-  
+
   private static void _handleMapContains(delegate, values) {
-	def foundcount = findItems(delegate, values)
+    def foundcount = findItems(delegate, values)
     if (foundcount != values.size()) {
       throw new VerificationException("values ${values} not found in ${delegate}")
     }
   }
-
 }

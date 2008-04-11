@@ -18,12 +18,14 @@ class RichEnsureProxyDelegate implements RichlyEnsurable {
   public RichEnsureProxyDelegate() {
     this.flex = new RichEnsureDelegate()
   }
+
   /**
    *
    */
   public void setVerified(Object verified) {
     this.flex.verified = verified
   }
+
   /**
    *
    */
@@ -47,6 +49,7 @@ class RichEnsureProxyDelegate implements RichlyEnsurable {
       throw new RuntimeException("No further routes available in invokeMethod, method name was ${method}")
     }
   }
+
   /**
    * this method provides some level of isolation for refactoring
    *
@@ -88,6 +91,7 @@ class RichEnsureProxyDelegate implements RichlyEnsurable {
       throw new RuntimeException("No further routes available in invokeMethod")
     }
   }
+
   /**
    *
    */

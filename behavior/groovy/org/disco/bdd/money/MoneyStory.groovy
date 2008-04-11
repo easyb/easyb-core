@@ -3,9 +3,9 @@ package org.disco.bdd.money
 description "This story is about currency management"
 
 narrative {
-	as_a "person who uses money"
-	i_want "to be able to add them together"
-	so_that "that I can become rich (and wierd)"
+  as_a "person who uses money"
+  i_want "to be able to add them together"
+  so_that "that I can become rich (and wierd)"
 }
 
 scenario "two moneys of the same currency are added", {

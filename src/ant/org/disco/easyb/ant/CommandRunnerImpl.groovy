@@ -1,10 +1,8 @@
-package org.disco.easyb.ant;
+package org.disco.easyb.ant
 
-import java.io.IOException;
-
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.BuildException
+import org.apache.tools.ant.Task
+import org.apache.tools.ant.taskdefs.Execute
 import org.apache.tools.ant.taskdefs.Redirector;
 
 public class CommandRunnerImpl implements CommandRunner {
@@ -23,5 +21,4 @@ public class CommandRunnerImpl implements CommandRunner {
       throw new BuildException(e, task.getLocation());
     }
   }
-
 }

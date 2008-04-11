@@ -1,19 +1,18 @@
 package org.disco.easyb
 
-import org.disco.easyb.delegates.EnsuringDelegate
-import org.disco.easyb.result.Result
-import org.disco.easyb.delegates.PlugableDelegate
 import org.disco.easyb.BehaviorCategory
-import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.delegates.EnsuringDelegate
 import org.disco.easyb.delegates.NarrativeDelegate
+import org.disco.easyb.result.Result
+import org.disco.easyb.util.BehaviorStepType
 
 class SpecificationBinding {
 
   /**
-	 * This method returns a fully initialized Binding object (or context) that
-	 * has definitions for methods such as "it" and "given", which are used
-	 * in the context of behaviors (or stories).
-	 */
+   * This method returns a fully initialized Binding object (or context) that
+   * has definitions for methods such as "it" and "given", which are used
+   * in the context of behaviors (or stories).
+   */
   static Binding getBinding(listener) {
 
     def binding = new Binding()
@@ -60,20 +59,21 @@ class SpecificationBinding {
       listener.stopStep()
     }
 
-    binding.narrative = { storydescript = "", closure = {} ->
-    	closure.delegate = narrativeDelegate()
+    binding.narrative = {storydescript = "", closure = {} ->
+      closure.delegate = narrativeDelegate()
     }
 
-    binding.description = { description ->
-    	listener.getCurrentStep().setDescription(description)
+    binding.description = {description ->
+      listener.getCurrentStep().setDescription(description)
     }
 
     return binding
   }
 
-  private static narrativeDelegate(){
-	  return new NarrativeDelegate()
+  private static narrativeDelegate() {
+    return new NarrativeDelegate()
   }
+
   /**
    * The easy delegate handles "it", "then", and "when"
    * Currently, this delegate isn't plug and play.

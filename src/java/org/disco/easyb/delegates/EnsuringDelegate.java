@@ -1,7 +1,6 @@
 package org.disco.easyb.delegates;
 
 import groovy.lang.Closure;
-
 import org.disco.easyb.exception.VerificationException;
 
 /**
