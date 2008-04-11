@@ -1,4 +1,4 @@
-package org.disco.easyb;
+package org.disco.easyb.domain;
 
 import java.io.File;
 import static java.util.Arrays.asList;
@@ -17,15 +17,19 @@ public class BehaviorFactory {
     public static Behavior createBehavior(File behaviorFile) {
         for (String pattern : STORY_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
-                return new Story(new CamelCaseConverter(stripPattern(behaviorFile.getName(), pattern)).toPhrase());
+                return new Story(createPhrase(behaviorFile, pattern), behaviorFile);
             }
         }
         for (String pattern : SPECIFICATION_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
-                return new Specification(new CamelCaseConverter(stripPattern(behaviorFile.getName(), pattern)).toPhrase());
+                return new Specification(createPhrase(behaviorFile, pattern), behaviorFile);
             }
         }
         throw new IllegalArgumentException("Easyb behavior file must end in Story.groovy, .story, Specification.groovy or .specification. See easyb documentation for more details.");
+    }
+
+    private static String createPhrase(File behaviorFile, String pattern) {
+        return new CamelCaseConverter(stripPattern(behaviorFile.getName(), pattern)).toPhrase();
     }
 
     private static String stripPattern(String string, String pattern) {

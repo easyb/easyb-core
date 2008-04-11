@@ -1,6 +1,8 @@
 package org.disco.easyb
 
-import org.disco.easyb.Specification
+import org.disco.easyb.domain.Specification
+import org.disco.easyb.domain.Story
+import org.disco.easyb.domain.BehaviorFactory
 
 //needed for eclipse
 

@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import groovy.lang.GroovyShell;
-import org.disco.easyb.listener.StepListener;
+import org.disco.easyb.domain.Behavior;
+import org.disco.easyb.domain.BehaviorFactory;
+import org.disco.easyb.domain.Story;
 import org.disco.easyb.listener.DefaultStepListener;
+import org.disco.easyb.listener.StepListener;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.report.XmlReportWriter;
-import org.disco.easyb.util.BehaviorStepType;
 
 /**
  * usage is:
@@ -29,14 +30,15 @@ import org.disco.easyb.util.BehaviorStepType;
  * java BehaviorRunner my/path/to/spec/MyStory.groovy my/path/to/spec/AnotherStory.groovy
  */
 public class BehaviorRunner {
+    private List<Report> reports;
+    private BehaviorExecutionListener executionListener;
 
-    List<Report> reports;
-
-    public BehaviorRunner() {
-        this(null);
+    public BehaviorRunner(BehaviorExecutionListener executionListener) {
+        this(executionListener, null);
     }
 
-    public BehaviorRunner(List<Report> reports) {
+    public BehaviorRunner(BehaviorExecutionListener executionListener, List<Report> reports) {
+        this.executionListener = executionListener;
         this.reports = addDefaultReports(reports);
     }
 
@@ -48,7 +50,7 @@ public class BehaviorRunner {
 
         StepListener listener = new DefaultStepListener();
 
-        executeSpecifications(specs, listener);
+        executeBehaviors(specs, listener);
 
         System.out.println("\n" +
             //prints "1 behavior run" or "x behaviors run"
@@ -82,12 +84,12 @@ public class BehaviorRunner {
     }
 
     /**
-     * @param specifications Specifications to run
-     * @param listener Listener to receive specification events
+     * @param behaviors Specifications to run
+     * @param listener  Listener to receive specification events
      * @throws IOException IO exception running groovy script
      */
-    private void executeSpecifications(final Collection<File> specifications, final StepListener listener) throws IOException {
-        for (File behaviorFile : specifications) {
+    private void executeBehaviors(final Collection<File> behaviors, final StepListener listener) throws IOException {
+        for (File behaviorFile : behaviors) {
             Behavior behavior = null;
             try {
                 behavior = BehaviorFactory.createBehavior(behaviorFile);
@@ -97,18 +99,9 @@ public class BehaviorRunner {
             }
 
             long startTime = System.currentTimeMillis();
-            System.out.println("Running " + behavior.getPhrase()
-                + ((behavior instanceof Story) ? " story" : " specification")
-                + " (" + behaviorFile.getName() + ")");
+            executionListener.startBehavior(behavior);
 
-            BehaviorStep currentStep;
-            if (behavior instanceof Story) {
-                currentStep = listener.startStep(BehaviorStepType.STORY, behavior.getPhrase());
-                new GroovyShell(StoryBinding.getBinding(listener)).evaluate(behaviorFile);
-            } else {
-                currentStep = listener.startStep(BehaviorStepType.SPECIFICATION, behavior.getPhrase());
-                new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(behaviorFile);
-            }
+            BehaviorStep currentStep = behavior.execute(listener);
             listener.stopStep();
 
             long endTime = System.currentTimeMillis();
@@ -139,7 +132,7 @@ public class BehaviorRunner {
     public static void main(String[] args) {
         Configuration configuration = new ConsoleConfigurator().configure(args);
         if (configuration != null) {
-            BehaviorRunner runner = new BehaviorRunner(configuration.configuredReports);
+            BehaviorRunner runner = new BehaviorRunner(new ConsoleReporter(), configuration.configuredReports);
             try {
                 runner.runBehavior(getFileCollection(configuration.commandLine.getArgs()));
             }
