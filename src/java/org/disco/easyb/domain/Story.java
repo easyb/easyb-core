@@ -21,6 +21,7 @@ public class Story extends BehaviorBase {
     public BehaviorStep execute(StepListener listener) throws IOException {
         BehaviorStep currentStep = listener.startStep(BehaviorStepType.STORY, getPhrase());
         new GroovyShell(StoryBinding.getBinding(listener)).evaluate(getFile());
+        listener.stopStep();
 
         return currentStep;
     }

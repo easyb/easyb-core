@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.BehaviorFactory;
-import org.disco.easyb.domain.Story;
 import org.disco.easyb.listener.DefaultStepListener;
 import org.disco.easyb.listener.StepListener;
 import org.disco.easyb.report.Report;
@@ -98,31 +97,11 @@ public class BehaviorRunner {
                 System.exit(-1);
             }
 
-            long startTime = System.currentTimeMillis();
-            executionListener.startBehavior(behavior);
+            executionListener.behaviorFileStarting(behavior);
 
-            BehaviorStep currentStep = behavior.execute(listener);
-            listener.stopStep();
+            BehaviorStep results = behavior.execute(listener);
 
-            long endTime = System.currentTimeMillis();
-
-            printMetrics(behavior, startTime, currentStep, endTime);
-        }
-    }
-
-    private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
-        if (behavior instanceof Story) {
-            System.out.println((currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE ") +
-                "Scenarios run: " + currentStep.getScenarioCountRecursively() +
-                ", Failures: " + currentStep.getFailedScenarioCountRecursively() +
-                ", Pending: " + currentStep.getPendingScenarioCountRecursively() +
-                ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
-        } else {
-            System.out.println((currentStep.getFailedSpecificationCountRecursively() == 0 ? "" : "FAILURE ") +
-                "Specifications run: " + currentStep.getSpecificationCountRecursively() +
-                ", Failures: " + currentStep.getFailedSpecificationCountRecursively() +
-                ", Pending: " + currentStep.getPendingSpecificationCountRecursively() +
-                ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+            executionListener.behaviorFileComplete(results, behavior);
         }
     }
 

@@ -21,6 +21,7 @@ public class Specification extends BehaviorBase {
     public BehaviorStep execute(StepListener listener) throws IOException {
         BehaviorStep currentStep = listener.startStep(BehaviorStepType.SPECIFICATION, getPhrase());
         new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(getFile());
+        listener.stopStep();
 
         return currentStep;
     }
