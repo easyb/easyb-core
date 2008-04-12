@@ -11,9 +11,16 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.disco.easyb.report.Report;
+import org.disco.easyb.report.ReportWriter;
+import org.disco.easyb.report.TxtSpecificationReportWriter;
+import org.disco.easyb.report.TxtStoryReportWriter;
+import org.disco.easyb.report.XmlReportWriter;
 
 public class ConsoleConfigurator {
+    private static final String TXT_SPECIFICATION = "txtspecification";
+    private static final String TXT_STORY = "txtstory";
+    private static final String XML_EASYB = "xml";
+
     public Configuration configure(String[] args) {
         Options options = getOptionsForMain();
 
@@ -29,7 +36,6 @@ public class ConsoleConfigurator {
             handleHelpForMain(options);
         }
 
-        // TODO: Find another way to communicate that configuration was not successful
         return null;
     }
 
@@ -51,22 +57,18 @@ public class ConsoleConfigurator {
         }
     }
 
-    private static List<Report> getConfiguredReports(CommandLine line) {
-
-        List<Report> configuredReports = new ArrayList<Report>();
-        if (line.hasOption(Report.TXT_STORY)) {
-            Report report = Report.build(Report.TXT_STORY, line.getOptionValue(Report.TXT_STORY));
-            configuredReports.add(report);
+    private static List<ReportWriter> getConfiguredReports(CommandLine line) {
+        List<ReportWriter> configuredReports = new ArrayList<ReportWriter>();
+        if (line.hasOption(TXT_STORY)) {
+            configuredReports.add(new TxtStoryReportWriter(line.getOptionValue(TXT_STORY)));
         }
 
-        if (line.hasOption(Report.TXT_SPECIFICATION)) {
-            Report report = Report.build(Report.TXT_SPECIFICATION, line.getOptionValue(Report.TXT_SPECIFICATION));
-            configuredReports.add(report);
+        if (line.hasOption(TXT_SPECIFICATION)) {
+            configuredReports.add(new TxtSpecificationReportWriter(line.getOptionValue(TXT_SPECIFICATION)));
         }
 
-        if (line.hasOption(Report.XML_EASYB)) {
-            Report report = Report.build(Report.EASYB_TYPE, line.getOptionValue(Report.XML_EASYB));
-            configuredReports.add(report);
+        if (line.hasOption(XML_EASYB)) {
+            configuredReports.add(new XmlReportWriter(line.getOptionValue(XML_EASYB)));
         }
         return configuredReports;
     }
@@ -87,15 +89,15 @@ public class ConsoleConfigurator {
 
         //noinspection AccessStaticViaInstance
         Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create an easyb report in xml format").create(Report.XML_EASYB);
+            .withDescription("create an easyb report in xml format").create(XML_EASYB);
         options.addOption(xmleasybreport);
         //noinspection AccessStaticViaInstance
         Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create a story report").create(Report.TXT_STORY);
+            .withDescription("create a story report").create(TXT_STORY);
         options.addOption(storyreport);
         //noinspection AccessStaticViaInstance
         Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create a behavior report").create(Report.TXT_SPECIFICATION);
+            .withDescription("create a behavior report").create(TXT_SPECIFICATION);
         options.addOption(behaviorreport);
 
         return options;

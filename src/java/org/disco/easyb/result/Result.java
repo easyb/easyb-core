@@ -28,8 +28,8 @@ public class Result {
         }
     }
 
-    private final Type status;
-    private final Throwable cause;
+    public final Type status;
+    public final Throwable cause;
 
     //added to support better error handling
     private String source;

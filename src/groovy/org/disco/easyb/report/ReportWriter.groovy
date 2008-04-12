@@ -1,10 +1,10 @@
 package org.disco.easyb.report
 
+import org.disco.easyb.listener.ResultsCollector
+
 /**
- *  This is arguably needed as the reportin
- *  writing is done in a Java class and not 
- *  inside Groovy where we'd leverage duck typing
+ * Common interface for easyb reports
  */
 interface ReportWriter {
-  void writeReport()
+  void writeReport(ResultsCollector results)
 }

@@ -2,28 +2,30 @@ package org.disco.easyb.report
 
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.listener.ResultsCollector
 
 class TxtStoryReportWriter implements ReportWriter {
+  private String location
 
-  def listener
-  def report
+  public TxtStoryReportWriter() {
+    this("easyb-story-report.txt")
+  }
 
-  TxtStoryReportWriter(report, listener) {
-    this.report = report
-    this.listener = listener
+  public TxtStoryReportWriter(String location) {
+    this.location = location
   }
 
   /**
-   *
+   * Render a text story report
    */
-  void writeReport() {
-    Writer writer = new BufferedWriter(new FileWriter(new File(report.location)))
-    def count = listener.scenarioCount
+  void writeReport(ResultsCollector results) {
+    Writer writer = new BufferedWriter(new FileWriter(new File(location)))
+    def count = results.scenarioCount
     writer.writeLine("${(count > 1) ? "${count} scenarios" : " 1 scenario"}" +
-            " (including ${listener.pendingScenarioCount} pending) executed" +
-            "${listener.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
-            "${listener.failedScenarioCount.toInteger() > 0 ? " Total failures: ${listener.failedScenarioCount}" : ""}")
-    listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
+            " (including ${results.pendingScenarioCount} pending) executed" +
+            "${results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
+            "${results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : ""}")
+    results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
       handleElement(writer, genesisChild)
     }
 

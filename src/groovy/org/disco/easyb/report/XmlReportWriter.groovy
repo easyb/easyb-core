@@ -4,15 +4,13 @@ import groovy.xml.MarkupBuilder
 import org.disco.easyb.BehaviorStep
 import org.disco.easyb.exception.VerificationException
 import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.listener.ResultsCollector
 
 class XmlReportWriter implements ReportWriter {
+  private String location
 
-  def report
-  def listener
-
-  XmlReportWriter(inReport, inListener) {
-    report = inReport
-    listener = inListener
+  XmlReportWriter(String location) {
+    this.location = location
   }
 
   def buildFailureMessage(result) {
@@ -91,22 +89,21 @@ class XmlReportWriter implements ReportWriter {
 
   }
 
-  public void writeReport() {
-
-    Writer writer = new BufferedWriter(new FileWriter(new File(report.location)))
+  public void writeReport(ResultsCollector results) {
+    Writer writer = new BufferedWriter(new FileWriter(new File(location)))
 
 
     def xml = new MarkupBuilder(writer)
 
-    xml.easyb(time: new Date(), totalbehaviors: listener.behaviorCount, totalfailedbehaviors: listener.failedBehaviorCount, totalpendingbehaviors: listener.pendingBehaviorCount) {
-      stories(scenarios: listener.scenarioCount, failedscenarios: listener.failedScenarioCount, pendingscenarios: listener.pendingScenarioCount) {
-        listener.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
+    xml.easyb(time: new Date(), totalbehaviors: results.behaviorCount, totalfailedbehaviors: results.failedBehaviorCount, totalpendingbehaviors: results.pendingBehaviorCount) {
+      stories(scenarios: results.scenarioCount, failedscenarios: results.failedScenarioCount, pendingscenarios: results.pendingScenarioCount) {
+        results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
           walkStoryChildren(xml, genesisChild)
         }
       }
 
-      specifications(specifications: listener.specificationCount, failedspecifications: listener.failedSpecificationCount, pendingspecifications: listener.pendingSpecificationCount) {
-        listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
+      specifications(specifications: results.specificationCount, failedspecifications: results.failedSpecificationCount, pendingspecifications: results.pendingSpecificationCount) {
+        results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
           walkSpecificationChildren(xml, genesisChild)
         }
       }

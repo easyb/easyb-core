@@ -1,7 +1,6 @@
 package org.disco.easyb;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,97 +10,47 @@ import org.disco.easyb.listener.BroadcastListener;
 import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.listener.FailureDetector;
 import org.disco.easyb.listener.ResultsCollector;
-import org.disco.easyb.report.Report;
-import org.disco.easyb.report.TxtSpecificationReportWriter;
-import org.disco.easyb.report.TxtStoryReportWriter;
-import org.disco.easyb.report.XmlReportWriter;
+import org.disco.easyb.report.ReportWriter;
 
-/**
- * usage is:
- * <p/>
- * java BehaviorRunner my/path/to/spec/MyStory.groovy -txtstory ./reports/story-report.txt
- * <p/>
- * You don't need to pass in the file name for the report either-- if no
- * path is present, then the runner will create a report in the current directory
- * with a default filename following this convention: easyb-<type>-report.<format>
- * <p/>
- * Multiple specifications can be passed in on the command line
- * <p/>
- * java BehaviorRunner my/path/to/spec/MyStory.groovy my/path/to/spec/AnotherStory.groovy
- */
 public class BehaviorRunner {
-    private List<Report> reports;
-    private BroadcastListener broadcastListener;
-    private ResultsCollector resultsCollector;
-    private FailureDetector failureDetector;
+    private List<ReportWriter> reports;
+    private BroadcastListener broadcastListener = new BroadcastListener();
+    private ResultsCollector resultsCollector = new ResultsCollector();
+    private FailureDetector failureDetector = new FailureDetector();
 
-    public BehaviorRunner(ExecutionListener executionListener) {
-        this(executionListener, null);
+    public BehaviorRunner(ExecutionListener... listeners) {
+        this(null, listeners);
     }
 
-    public BehaviorRunner(ExecutionListener executionListener, List<Report> reports) {
-        this.reports = addDefaultReports(reports);
+    public BehaviorRunner(List<ReportWriter> reports, ExecutionListener... listeners) {
+        this.reports = reports;
 
-        resultsCollector = new ResultsCollector();
-        failureDetector = new FailureDetector();
-
-        broadcastListener = new BroadcastListener();
         broadcastListener.registerListener(resultsCollector);
         broadcastListener.registerListener(failureDetector);
-        broadcastListener.registerListener(executionListener);
-    }
 
-    /**
-     * @param behaviors collection of files that contain the specifications
-     * @throws Exception if unable to write report file
-     */
-    public void runBehavior(List<Behavior> behaviors) throws Exception {
-        executeBehaviors(behaviors);
-
-        broadcastListener.completeTesting();
-
-        produceReports(resultsCollector);
-
-        if (failureDetector.failuresDetected()) {
-            System.exit(-6);
-        }
-    }
-
-    /**
-     * @param listener Listener to receive specification events
-     */
-    private void produceReports(ExecutionListener listener) {
-
-        for (Report report : reports) {
-            if (report.getType().equals(Report.EASYB_TYPE)) {
-                new XmlReportWriter(report, listener).writeReport();
-            } else if (report.getType().equals(Report.STORY_TYPE)) {
-                new TxtStoryReportWriter(report, listener).writeReport();
-            } else if (report.getType().equals(Report.SPECIFICATION_TYPE)) {
-                new TxtSpecificationReportWriter(report, listener).writeReport();
-            }
-        }
-    }
-
-    /**
-     * @param behaviors Behaviors to run
-     * @throws IOException IO exception running groovy script
-     */
-    private void executeBehaviors(final List<Behavior> behaviors) throws IOException {
-        for (Behavior behavior: behaviors) {
-            broadcastListener.startBehavior(behavior);
-            BehaviorStep results = behavior.execute(broadcastListener);
-            broadcastListener.stopBehavior(results, behavior);
+        for (ExecutionListener listener : listeners) {
+            broadcastListener.registerListener(listener);
         }
     }
 
     /**
      * @param args the command line arguments
+     *             usage is:
+     *             <p/>
+     *             java BehaviorRunner my/path/to/spec/MyStory.groovy -txtstory ./reports/story-report.txt
+     *             <p/>
+     *             You don't need to pass in the file name for the report either-- if no
+     *             path is present, then the runner will create a report in the current directory
+     *             with a default filename following this convention: easyb-<type>-report.<format>
+     *             <p/>
+     *             Multiple specifications can be passed in on the command line
+     *             <p/>
+     *             java BehaviorRunner my/path/to/spec/MyStory.groovy my/path/to/spec/AnotherStory.groovy
      */
     public static void main(String[] args) {
         Configuration configuration = new ConsoleConfigurator().configure(args);
         if (configuration != null) {
-            BehaviorRunner runner = new BehaviorRunner(new ConsoleReporter(), configuration.configuredReports);
+            BehaviorRunner runner = new BehaviorRunner(configuration.configuredReports, new ConsoleReporter());
             try {
                 runner.runBehavior(getBehaviors(configuration.commandLine.getArgs()));
             }
@@ -113,15 +62,26 @@ public class BehaviorRunner {
         }
     }
 
-    private List<Report> addDefaultReports
-        (List<Report> userConfiguredReports) {
-        List<Report> configuredReports = new ArrayList<Report>();
-
-        if (userConfiguredReports != null) {
-            configuredReports.addAll(userConfiguredReports);
+    /**
+     * @param behaviors collection of files that contain the specifications
+     * @throws Exception if unable to write report file
+     */
+    public void runBehavior(List<Behavior> behaviors) throws Exception {
+        for (Behavior behavior : behaviors) {
+            broadcastListener.startBehavior(behavior);
+            BehaviorStep results = behavior.execute(broadcastListener);
+            broadcastListener.stopBehavior(results, behavior);
         }
 
-        return configuredReports;
+        broadcastListener.completeTesting();
+
+        for (ReportWriter report : reports) {
+            report.writeReport(resultsCollector);
+        }
+
+        if (failureDetector.failuresDetected()) {
+            System.exit(-6);
+        }
     }
 
     /**

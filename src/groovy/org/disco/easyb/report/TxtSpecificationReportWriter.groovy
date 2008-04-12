@@ -2,28 +2,26 @@ package org.disco.easyb.report
 
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
+import org.disco.easyb.listener.ResultsCollector
 
 public class TxtSpecificationReportWriter implements ReportWriter {
+  String location
 
-  def listener
-  def report
-
-  TxtSpecificationReportWriter(report, listener) {
-    this.report = report
-    this.listener = listener
+  TxtSpecificationReportWriter(String location) {
+    this.location = location
   }
 
   /**
    *
    */
-  void writeReport() {
-    Writer writer = new BufferedWriter(new FileWriter(new File(report.location)))
-    def count = listener.getSpecificationCount()
+  void writeReport(ResultsCollector results) {
+    Writer writer = new BufferedWriter(new FileWriter(new File(location)))
+    def count = results.getSpecificationCount()
     writer.writeLine("${(count > 1) ? "${count} specifications" : " 1 specification"}" +
-            " (including ${listener.getPendingSpecificationCount()} pending) executed" +
-            "${listener.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
-            "${listener.getFailedSpecificationCount().toInteger() > 0 ? " Total failures: ${listener.getFailedSpecificationCount()}" : ""}")
-    listener.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
+            " (including ${results.getPendingSpecificationCount()} pending) executed" +
+            "${results.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
+            "${results.getFailedSpecificationCount().toInteger() > 0 ? " Total failures: ${results.getFailedSpecificationCount()}" : ""}")
+    results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
       handleElement(writer, genesisChild)
     }
 

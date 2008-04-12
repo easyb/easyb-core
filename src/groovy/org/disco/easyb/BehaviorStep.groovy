@@ -4,13 +4,13 @@ import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
 
 class BehaviorStep {
-
   public BehaviorStepType stepType
-  ArrayList<BehaviorStep> childSteps = new ArrayList()
   public BehaviorStep parentStep
-  private Result result
-  private String name
-  private String description
+  public Result result
+  public String name
+  public String description
+  
+  ArrayList<BehaviorStep> childSteps = new ArrayList()
 
   BehaviorStep(BehaviorStepType inStepType, String inStepName) {
     stepType = inStepType
