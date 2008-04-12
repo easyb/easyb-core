@@ -5,10 +5,10 @@ import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.result.Result;
 
 public class ExecutionListenerAdaptor implements ExecutionListener {
-    public void behaviorFileStarting(Behavior behavior) {
+    public void startBehavior(Behavior behavior) {
     }
 
-    public void behaviorFileComplete(BehaviorStep currentStep, Behavior behavior) {
+    public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
     }
 
     public void startStep(BehaviorStep step) {
@@ -23,6 +23,6 @@ public class ExecutionListenerAdaptor implements ExecutionListener {
     public void gotResult(Result result) {
     }
 
-    public void testingComplete() {
+    public void completeTesting() {
     }
 }

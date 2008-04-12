@@ -7,18 +7,18 @@ import org.disco.easyb.listener.ResultsCollector;
 public class ConsoleReporter extends ResultsCollector {
     private long startTime;
 
-    public void behaviorFileStarting(Behavior behavior) {
+    public void startBehavior(Behavior behavior) {
         System.out.println("Running " + behavior.getPhrase() + " " + behavior.getTypeDescriptor()
             + " (" + behavior.getFile().getName() + ")");
         startTime = System.currentTimeMillis();
     }
 
-    public void behaviorFileComplete(BehaviorStep currentStep, Behavior behavior) {
+    public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
         long endTime = System.currentTimeMillis();
         printMetrics(behavior, startTime, currentStep, endTime);
     }
 
-    public void testingComplete() {
+    public void completeTesting() {
         System.out.println("\n" +
             (getBehaviorCount() > 1 ? getBehaviorCount() + " total behaviors run" : "1 behavior run")
             + (getFailedBehaviorCount() > 0 ? " with "

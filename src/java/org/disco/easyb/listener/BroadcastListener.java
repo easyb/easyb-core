@@ -14,15 +14,15 @@ public class BroadcastListener implements ExecutionListener {
         listeners.add(recipient);
     }
 
-    public void behaviorFileStarting(Behavior behavior) {
+    public void startBehavior(Behavior behavior) {
         for (ExecutionListener listener : listeners) {
-            listener.behaviorFileStarting(behavior);
+            listener.startBehavior(behavior);
         }
     }
 
-    public void behaviorFileComplete(BehaviorStep currentStep, Behavior behavior) {
+    public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
         for (ExecutionListener listener : listeners) {
-            listener.behaviorFileComplete(currentStep, behavior);
+            listener.stopBehavior(currentStep, behavior);
         }
     }
 
@@ -38,9 +38,9 @@ public class BroadcastListener implements ExecutionListener {
         }
     }
 
-    public void testingComplete() {
+    public void completeTesting() {
         for (ExecutionListener listener : listeners) {
-            listener.testingComplete();
+            listener.completeTesting();
         }
     }
 

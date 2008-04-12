@@ -5,17 +5,17 @@ import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.result.Result;
 
 public interface ExecutionListener {
-    void behaviorFileStarting(Behavior behavior);
-
-    void behaviorFileComplete(BehaviorStep currentStep, Behavior behavior);
+    void startBehavior(Behavior behavior);
 
     void startStep(BehaviorStep step);
 
     void describeStep(String description);
 
-    void testingComplete();
+    void gotResult(Result result);
 
     void stopStep();
 
-    void gotResult(Result result);
+    void stopBehavior(BehaviorStep currentStep, Behavior behavior);
+
+    void completeTesting();
 }

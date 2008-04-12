@@ -60,7 +60,7 @@ public class BehaviorRunner {
 
         executeBehaviors(specs);
 
-        broadcastListener.testingComplete();
+        broadcastListener.completeTesting();
 
         produceReports(resultsCollector);
 
@@ -99,11 +99,11 @@ public class BehaviorRunner {
                 System.exit(-1);
             }
 
-            broadcastListener.behaviorFileStarting(behavior);
+            broadcastListener.startBehavior(behavior);
 
             BehaviorStep results = behavior.execute(broadcastListener);
 
-            broadcastListener.behaviorFileComplete(results, behavior);
+            broadcastListener.stopBehavior(results, behavior);
         }
     }
 

@@ -79,10 +79,10 @@ public class ResultsCollector implements ExecutionListener {
         currentStep.setResult(result);
     }
 
-    public void behaviorFileStarting(Behavior behavior) {
+    public void startBehavior(Behavior behavior) {
     }
 
-    public void behaviorFileComplete(BehaviorStep currentStep, Behavior behavior) {
+    public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
     }
 
     public void startStep(BehaviorStep step) {
@@ -95,7 +95,7 @@ public class ResultsCollector implements ExecutionListener {
      currentStep.setDescription(description);   
     }
 
-    public void testingComplete() {
+    public void completeTesting() {
     }
 
     public void stopStep() {
