@@ -3,19 +3,18 @@ package org.disco.easyb;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.BehaviorFactory;
+import org.disco.easyb.listener.BroadcastListener;
+import org.disco.easyb.listener.ExecutionListener;
+import org.disco.easyb.listener.FailureDetector;
+import org.disco.easyb.listener.ResultsCollector;
 import org.disco.easyb.report.Report;
 import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.report.XmlReportWriter;
-import org.disco.easyb.listener.ExecutionListener;
-import org.disco.easyb.listener.BroadcastListener;
-import org.disco.easyb.listener.FailureDetector;
-import org.disco.easyb.listener.ResultsCollector;
 
 /**
  * usage is:
@@ -53,12 +52,11 @@ public class BehaviorRunner {
     }
 
     /**
-     * @param specs collection of files that contain the specifications
+     * @param behaviors collection of files that contain the specifications
      * @throws Exception if unable to write report file
      */
-    public void runBehavior(Collection<File> specs) throws Exception {
-
-        executeBehaviors(specs);
+    public void runBehavior(List<Behavior> behaviors) throws Exception {
+        executeBehaviors(behaviors);
 
         broadcastListener.completeTesting();
 
@@ -86,23 +84,13 @@ public class BehaviorRunner {
     }
 
     /**
-     * @param behaviors Specifications to run
+     * @param behaviors Behaviors to run
      * @throws IOException IO exception running groovy script
      */
-    private void executeBehaviors(final Collection<File> behaviors) throws IOException {
-        for (File behaviorFile : behaviors) {
-            Behavior behavior = null;
-            try {
-                behavior = BehaviorFactory.createBehavior(behaviorFile);
-            } catch (IllegalArgumentException iae) {
-                System.out.println(iae.getMessage());
-                System.exit(-1);
-            }
-
+    private void executeBehaviors(final List<Behavior> behaviors) throws IOException {
+        for (Behavior behavior: behaviors) {
             broadcastListener.startBehavior(behavior);
-
             BehaviorStep results = behavior.execute(broadcastListener);
-
             broadcastListener.stopBehavior(results, behavior);
         }
     }
@@ -115,7 +103,7 @@ public class BehaviorRunner {
         if (configuration != null) {
             BehaviorRunner runner = new BehaviorRunner(new ConsoleReporter(), configuration.configuredReports);
             try {
-                runner.runBehavior(getFileCollection(configuration.commandLine.getArgs()));
+                runner.runBehavior(getBehaviors(configuration.commandLine.getArgs()));
             }
             catch (Exception e) {
                 System.err.println("There was an error running the script");
@@ -140,12 +128,16 @@ public class BehaviorRunner {
      * @param paths locations of the specifications to be loaded
      * @return collection of files where the only element is the file of the spec to be run
      */
-    private static Collection<File> getFileCollection
-        (String[] paths) {
-        Collection<File> coll = new ArrayList<File>();
+    private static List<Behavior> getBehaviors(String[] paths) {
+        List<Behavior> behaviors = new ArrayList<Behavior>();
         for (String path : paths) {
-            coll.add(new File(path));
+            try {
+                behaviors.add(BehaviorFactory.createBehavior(new File(path)));
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                System.exit(-1);
+            }
         }
-        return coll;
+        return behaviors;
     }
 }
