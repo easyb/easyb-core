@@ -3,13 +3,13 @@ package org.disco.easyb
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
 
-class BehaviorStep {
+class BehaviorStep implements Serializable {
   public BehaviorStepType stepType
   public BehaviorStep parentStep
   public Result result
   public String name
   public String description
-  
+
   ArrayList<BehaviorStep> childSteps = new ArrayList()
 
   BehaviorStep(BehaviorStepType inStepType, String inStepName) {
@@ -171,5 +171,17 @@ class BehaviorStep {
 
   def setDescription(inDescription) {
     description = inDescription
+  }
+
+  public boolean equals(Object other) {
+    if (other == null) {
+      return false
+    }
+
+    return name.equals(other.name)
+  }
+
+  public int hashCode() {
+    return name.hashCode();
   }
 }

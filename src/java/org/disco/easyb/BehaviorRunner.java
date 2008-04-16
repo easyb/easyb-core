@@ -69,8 +69,8 @@ public class BehaviorRunner {
     public void runBehavior(List<Behavior> behaviors) throws Exception {
         for (Behavior behavior : behaviors) {
             broadcastListener.startBehavior(behavior);
-            BehaviorStep results = behavior.execute(broadcastListener);
-            broadcastListener.stopBehavior(results, behavior);
+            behavior.execute(broadcastListener);
+            broadcastListener.stopBehavior(behavior);
         }
 
         broadcastListener.completeTesting();

@@ -8,7 +8,7 @@ public class ExecutionListenerAdaptor implements ExecutionListener {
     public void startBehavior(Behavior behavior) {
     }
 
-    public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
+    public void stopBehavior(Behavior behavior) {
     }
 
     public void startStep(BehaviorStep step) {

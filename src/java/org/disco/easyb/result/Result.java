@@ -1,16 +1,18 @@
 package org.disco.easyb.result;
 
+import java.io.Serializable;
+
 /**
  * Represents the result of verifying an individual behavior.
  *
  * @author sevensoft [Ken Brooks]
  */
-public class Result {
+public class Result implements Serializable {
     public static final Type SUCCEEDED = new Type("success", ".");
     public static final Type FAILED = new Type("failure", "F");
     public static final Type PENDING = new Type("pending", "P");
 
-    public static class Type {
+    public static class Type implements Serializable {
         private final String description;
         private final String symbol;
 
@@ -25,6 +27,34 @@ public class Result {
 
         public String symbol() {
             return symbol;
+        }
+
+        @SuppressWarnings("RedundantIfStatement")
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            Type type = (Type) o;
+
+            if (description != null ? !description.equals(type.description) : type.description != null) {
+                return false;
+            }
+            if (symbol != null ? !symbol.equals(type.symbol) : type.symbol != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public int hashCode() {
+            int result;
+            result = (description != null ? description.hashCode() : 0);
+            result = 31 * result + (symbol != null ? symbol.hashCode() : 0);
+            return result;
         }
     }
 
@@ -76,30 +106,32 @@ public class Result {
         return "status: " + status + ", targetException: " + cause;
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null) {
-            return false;
-        }
-        if (o.getClass() != getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        Result other = (Result) o;
-        return (status == other.status)
-            && (cause == null ? other.cause == null : cause.equals(other.cause));
+        Result result = (Result) o;
+
+        if (cause != null ? !cause.equals(result.cause) : result.cause != null) {
+            return false;
+        }
+        if (status != null ? !status.equals(result.status) : result.status != null) {
+            return false;
+        }
+
+        return true;
     }
 
-    /**
-     * Override hashCode because we implemented {@link #equals(Object)}
-     */
     public int hashCode() {
-        int hashCode = 1;
-        hashCode = 31 * hashCode + status.hashCode();
-        hashCode = 31 * hashCode + (cause == null ? 0 : cause.hashCode());
-        return hashCode;
+        int result;
+        result = (status != null ? status.hashCode() : 0);
+        result = 31 * result + (cause != null ? cause.hashCode() : 0);
+        return result;
     }
 
     public String getSource() {

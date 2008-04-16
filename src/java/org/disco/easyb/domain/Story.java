@@ -2,6 +2,7 @@ package org.disco.easyb.domain;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.disco.easyb.util.BehaviorStepType;
 import org.disco.easyb.StoryBinding;
