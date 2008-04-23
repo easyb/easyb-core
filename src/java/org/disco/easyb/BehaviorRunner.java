@@ -88,7 +88,7 @@ public class BehaviorRunner {
      * @param paths locations of the specifications to be loaded
      * @return collection of files where the only element is the file of the spec to be run
      */
-    private static List<Behavior> getBehaviors(String[] paths) {
+    public static List<Behavior> getBehaviors(String[] paths) {
         List<Behavior> behaviors = new ArrayList<Behavior>();
         for (String path : paths) {
             try {

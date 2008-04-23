@@ -91,15 +91,15 @@ public class Result implements Serializable {
     }
 
     public boolean succeeded() {
-        return status == SUCCEEDED;
+        return status.equals(SUCCEEDED);
     }
 
     public boolean failed() {
-        return status == FAILED;
+        return status.equals(FAILED);
     }
 
     public boolean pending() {
-        return status == PENDING;
+        return status.equals(PENDING);
     }
 
     public String toString() {
