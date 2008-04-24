@@ -20,9 +20,9 @@ public class BroadcastListener implements ExecutionListener {
         }
     }
 
-    public void stopBehavior(Behavior behavior) {
+    public void stopBehavior(BehaviorStep step, Behavior behavior) {
         for (ExecutionListener listener : listeners) {
-            listener.stopBehavior(behavior);
+            listener.stopBehavior(step, behavior);
         }
     }
 

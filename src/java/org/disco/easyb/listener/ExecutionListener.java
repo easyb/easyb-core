@@ -15,7 +15,7 @@ public interface ExecutionListener {
 
     void stopStep();
 
-    void stopBehavior(Behavior behavior);
+    void stopBehavior(BehaviorStep step, Behavior behavior);
 
     void completeTesting();
 }

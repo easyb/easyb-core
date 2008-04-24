@@ -82,7 +82,7 @@ public class ResultsCollector implements ExecutionListener {
     public void startBehavior(Behavior behavior) {
     }
 
-    public void stopBehavior(Behavior behavior) {
+    public void stopBehavior(BehaviorStep step, Behavior behavior) {
     }
 
     public void startStep(BehaviorStep step) {
