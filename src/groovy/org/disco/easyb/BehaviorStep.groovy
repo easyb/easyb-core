@@ -17,7 +17,7 @@ class BehaviorStep implements Serializable {
     name = inStepName
   }
 
-  def setParentStep(BehaviorStep inParentStep) {
+  public void setParentStep(BehaviorStep inParentStep) {
     parentStep = inParentStep
   }
 
