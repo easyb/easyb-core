@@ -7,9 +7,9 @@ import org.disco.easyb.BehaviorStep;
 
 public class ResultsCollector implements ExecutionListener {
 
-    private BehaviorStep currentStep;
-    private BehaviorStep genesisStep = new BehaviorStep(BehaviorStepType.GENESIS, "easyb-genesis");
-    private BehaviorStep previousStep;
+    protected BehaviorStep currentStep;
+    protected BehaviorStep genesisStep = new BehaviorStep(BehaviorStepType.GENESIS, "easyb-genesis");
+    protected BehaviorStep previousStep;
 
     public ResultsCollector() {
         currentStep = genesisStep;
@@ -86,7 +86,7 @@ public class ResultsCollector implements ExecutionListener {
     }
 
     public void startStep(BehaviorStep step) {
-        BehaviorStep clone = new BehaviorStep(step.stepType, step.name);
+        BehaviorStep clone = new BehaviorStep(step.getStepType(), step.getName());
         clone.setParentStep(currentStep);
         currentStep.addChildStep(clone);
         currentStep = clone;
@@ -101,7 +101,7 @@ public class ResultsCollector implements ExecutionListener {
 
     public void stopStep() {
 
-        if (BehaviorStepType.SCENARIO == currentStep.stepType) {
+        if (BehaviorStepType.SCENARIO == currentStep.getStepType()) {
             if (currentStep.getChildStepFailureResultCount() > 0) {
                 gotResult(new Result(Result.FAILED));
             } else {
@@ -114,6 +114,6 @@ public class ResultsCollector implements ExecutionListener {
         }
 
         previousStep = currentStep;
-        currentStep = currentStep.parentStep;
+        currentStep = currentStep.getParentStep();
     }
 }

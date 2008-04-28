@@ -4,11 +4,11 @@ import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
 
 class BehaviorStep implements Serializable {
-  public BehaviorStepType stepType
-  public BehaviorStep parentStep
-  public Result result
-  public String name
-  public String description
+  BehaviorStepType stepType
+  BehaviorStep parentStep
+  Result result
+  String name
+  String description
 
   ArrayList<BehaviorStep> childSteps = new ArrayList()
 
@@ -183,5 +183,9 @@ class BehaviorStep implements Serializable {
 
   public int hashCode() {
     return name.hashCode();
+  }
+
+  public String toString(){
+      "BehaviorStep Type: ${stepType.toString()}"
   }
 }

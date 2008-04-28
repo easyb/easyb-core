@@ -3,6 +3,7 @@ package org.disco.easyb;
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.Story;
 import org.disco.easyb.listener.ResultsCollector;
+import org.disco.easyb.util.BehaviorStepType;
 
 public class ConsoleReporter extends ResultsCollector {
     private long startTime;
@@ -15,7 +16,8 @@ public class ConsoleReporter extends ResultsCollector {
 
     public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
         long endTime = System.currentTimeMillis();
-        printMetrics(behavior, startTime, currentStep, endTime);
+        //printMetrics(behavior, startTime, currentStep, endTime);
+        printMetrics(behavior, startTime, this.genesisStep, endTime);
     }
 
     public void completeTesting() {
@@ -32,6 +34,9 @@ public class ConsoleReporter extends ResultsCollector {
                 ", Failures: " + currentStep.getFailedScenarioCountRecursively() +
                 ", Pending: " + currentStep.getPendingScenarioCountRecursively() +
                 ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+            if(currentStep.getFailedScenarioCountRecursively() > 0){
+                handleFailurePrinting(currentStep);
+            }
         } else {
             System.out.println((currentStep.getFailedSpecificationCountRecursively() == 0 ? "" : "FAILURE ") +
                 "Specifications run: " + currentStep.getSpecificationCountRecursively() +
@@ -40,4 +45,25 @@ public class ConsoleReporter extends ResultsCollector {
                 ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
     }
+
+    private void handleFailurePrinting(BehaviorStep currentStep) {
+		for(BehaviorStep step : currentStep.getChildSteps()){
+			if(step.getStepType().equals(BehaviorStepType.SCENARIO) ||
+                    step.getStepType().equals(BehaviorStepType.GENESIS) ||
+                    step.getStepType().equals(BehaviorStepType.STORY)){
+				handleFailurePrinting(step);
+			}else{
+				printFailureMessage(step);
+			}
+		}
+	}
+
+    private void printFailureMessage(BehaviorStep istep) {
+		if(istep.getResult() != null && istep.getResult().failed()
+				&& istep.getResult().cause() != null){
+		        System.out.println("\t Message is \""+
+		        		istep.getResult().cause().getMessage() +
+		        		"\"");
+		  }
+	}
 }
