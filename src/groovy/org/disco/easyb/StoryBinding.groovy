@@ -9,7 +9,7 @@ import org.disco.easyb.util.BehaviorStepType
 
 class StoryBinding {
 
-  static BehaviorStepStack stepStack = new BehaviorStepStack()
+  //static BehaviorStepStack stepStack = new BehaviorStepStack()
 
   /**
    * This method returns a fully initialized Binding object (or context) that
@@ -17,9 +17,9 @@ class StoryBinding {
    * in the context of stories.
    */
   static Binding getBinding(listener) {
-
+    def stepStack = new BehaviorStepStack()
     def binding = new Binding()
-
+    def beforeScenario
     def basicDelegate = basicDelegate()
     def givenDelegate = givenDelegate()
 
@@ -29,6 +29,9 @@ class StoryBinding {
 
     binding.scenario = {scenarioDescription, scenarioClosure = {} ->
       stepStack.startStep(listener, BehaviorStepType.SCENARIO, scenarioDescription)
+      if(beforeScenario != null){
+          beforeScenario()
+      }
       scenarioClosure()
       stepStack.stopStep(listener)
     }
@@ -99,6 +102,9 @@ class StoryBinding {
       listener.describeStep(description)
     }
 
+    binding.each = {  description = "", closure = {} ->
+        beforeScenario = closure
+    }
     return binding
   }
 

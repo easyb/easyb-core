@@ -14,7 +14,9 @@ it "should pop step from stack", {
     stack.startStep(listener, BehaviorStepType.SCENARIO, 'description')
     stack.stopStep(listener)
   
-    stack.lastStep().shouldBe null
+    stack.lastStep().shouldNotBe null
+    and
+    stack.lastStep().stepType.shouldBe BehaviorStepType.SCENARIO
 }
 
 it "should notify listener"

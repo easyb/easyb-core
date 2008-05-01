@@ -26,7 +26,8 @@ public class ConsoleReporter extends ResultsCollector {
             + (getFailedBehaviorCount() > 0 ? " with "
             + (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures"));
     }
-
+    //TODO by using the genesis step, counts on the console are incorrect-- they are all being
+    //aggregated instead for each story/spec
     private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
         if (behavior instanceof Story) {
             System.out.println((currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE ") +
@@ -34,9 +35,6 @@ public class ConsoleReporter extends ResultsCollector {
                 ", Failures: " + currentStep.getFailedScenarioCountRecursively() +
                 ", Pending: " + currentStep.getPendingScenarioCountRecursively() +
                 ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
-            if(currentStep.getFailedScenarioCountRecursively() > 0){
-                handleFailurePrinting(currentStep);
-            }
         } else {
             System.out.println((currentStep.getFailedSpecificationCountRecursively() == 0 ? "" : "FAILURE ") +
                 "Specifications run: " + currentStep.getSpecificationCountRecursively() +
@@ -44,13 +42,18 @@ public class ConsoleReporter extends ResultsCollector {
                 ", Pending: " + currentStep.getPendingSpecificationCountRecursively() +
                 ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
+        if((currentStep.getFailedSpecificationCountRecursively() > 0) ||
+                (currentStep.getFailedScenarioCountRecursively() > 0)){
+                    handleFailurePrinting(currentStep);
+            }
     }
 
     private void handleFailurePrinting(BehaviorStep currentStep) {
 		for(BehaviorStep step : currentStep.getChildSteps()){
-			if(step.getStepType().equals(BehaviorStepType.SCENARIO) ||
+            if(step.getStepType().equals(BehaviorStepType.SCENARIO) ||
                     step.getStepType().equals(BehaviorStepType.GENESIS) ||
-                    step.getStepType().equals(BehaviorStepType.STORY)){
+                    step.getStepType().equals(BehaviorStepType.STORY) ||
+                    step.getStepType().equals(BehaviorStepType.SPECIFICATION)){
 				handleFailurePrinting(step);
 			}else{
 				printFailureMessage(step);
