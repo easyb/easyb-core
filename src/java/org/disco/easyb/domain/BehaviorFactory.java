@@ -15,6 +15,7 @@ public class BehaviorFactory {
     }
 
     public static Behavior createBehavior(File behaviorFile) {
+
         for (String pattern : STORY_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
                 return new Story(createPhrase(behaviorFile, pattern), behaviorFile);
@@ -25,7 +26,43 @@ public class BehaviorFactory {
                 return new Specification(createPhrase(behaviorFile, pattern), behaviorFile);
             }
         }
-        throw new IllegalArgumentException("Easyb behavior file must end in Story.groovy, .story, Specification.groovy or .specification. See easyb documentation for more details.");
+
+        throw new IllegalArgumentException(verifyFile(behaviorFile));
+    }
+
+    /**
+     * This method builds a user friendly error message, which
+     * assists in debugging why a particular behavior file
+     * can't be run
+     */
+    private static String verifyFile(File behaviorFile){
+        StringBuffer errorMessage = new StringBuffer("Your file, ")
+                .append(behaviorFile.getName()).append(", ");
+        
+        if(!behaviorFile.isFile()){
+            if(behaviorFile.getParentFile() != null &&
+                    behaviorFile.getParentFile().isDirectory()){
+                /**
+                 * the next logical step is to look at this
+                 * directory and find a file that is similar in name
+                 * to the incoming file and suggest they try that file
+                 * instead...
+                 */
+               errorMessage.append("appears to be mispelled as it doesn't exist in the directory \"")
+                       .append(behaviorFile.getParentFile())
+                       .append("\" -- verify you have the correct path and that the ")
+                       .append("file name is spelled correctly.");
+            }else{
+              errorMessage.append("doesn't appear to exist. Verify your path and ")
+                      .append("file name are spelled correctly.");
+            }
+
+        }else{
+            errorMessage.append("cannot be run as its name or extension is ambigious. ")
+                .append("easyb behavior files must end in Story.groovy, .story, ")
+                .append("Specification.groovy or .specification. ");
+        }
+        return errorMessage.toString();
     }
 
     private static String createPhrase(File behaviorFile, String pattern) {

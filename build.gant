@@ -7,7 +7,7 @@ includeTargets << new File("default_tasks.gant")
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.8.1")
+version = detectOrDefaultVersion("0.8.2")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**
@@ -150,14 +150,15 @@ target("validate-reports":"runs the easyb and validates reports"){
 	   
 	   runAntTask(["**/TextStoryReportingValidation.story"], 
 			   [["${defaultdir}/valid-reporting.txt", "txtstory"]],
-			   "Execution halted as specifications failed with respect to reports")
+			   "Execution halted as specifications failed with respect to reports",
+                "failure.reporting")
 		
 }
 /**
  * runs easyb ant task and allows for failure if
  * failureMessage isn't null
  */
-def runAntTask(includes, reports, failureMessage=null){
+def runAntTask(includes, reports, failureMessage=null, failureprop=null){
 	
 	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
 		classpath(){
@@ -165,14 +166,14 @@ def runAntTask(includes, reports, failureMessage=null){
     	}
 	}
 
-	Ant.easyb(failureProperty:"easyb.invalidness"){
+	Ant.easyb(failureProperty:failureprop){
       classpath() {
         fileset(dir:libdir, includes:jarincludes)
         pathelement(location:"${defaultdir}/easyb-${version}.jar")
         pathelement(location:behaviorclassdir)
       }
       reports.each{
-    	  report(location:it[0], type:it[1])
+    	  report(location:it[0], format:it[1])
       }
 	
       behaviors(dir:gbehaviordir){
@@ -182,7 +183,7 @@ def runAntTask(includes, reports, failureMessage=null){
 	  }
 	}
 	if(failureMessage != null){
-		Ant.fail(if:"easyb.invalidness", message:failureMessage)
+		Ant.fail(if:failureprop, message:failureMessage)
 	}
 	
 }

@@ -77,7 +77,7 @@ public class ConsoleConfigurator {
      * @param options options that are available to this specification runner
      */
     private static void handleHelpForMain(Options options) {
-        new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.groovy", options);
+        new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.story", options);
     }
 
     /**

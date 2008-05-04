@@ -100,7 +100,6 @@ public class ResultsCollector implements ExecutionListener {
     }
 
     public void stopStep() {
-
         if (BehaviorStepType.SCENARIO == currentStep.getStepType()) {
             if (currentStep.getChildStepFailureResultCount() > 0) {
                 gotResult(new Result(Result.FAILED));

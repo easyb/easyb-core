@@ -16,8 +16,7 @@ public class ConsoleReporter extends ResultsCollector {
 
     public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
         long endTime = System.currentTimeMillis();
-        //printMetrics(behavior, startTime, currentStep, endTime);
-        printMetrics(behavior, startTime, this.genesisStep, endTime);
+        printMetrics(behavior, startTime, this.getPreviousStep(), endTime);
     }
 
     public void completeTesting() {
@@ -26,8 +25,7 @@ public class ConsoleReporter extends ResultsCollector {
             + (getFailedBehaviorCount() > 0 ? " with "
             + (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures"));
     }
-    //TODO by using the genesis step, counts on the console are incorrect-- they are all being
-    //aggregated instead for each story/spec
+    
     private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
         if (behavior instanceof Story) {
             System.out.println((currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE ") +
@@ -64,9 +62,8 @@ public class ConsoleReporter extends ResultsCollector {
     private void printFailureMessage(BehaviorStep istep) {
 		if(istep.getResult() != null && istep.getResult().failed()
 				&& istep.getResult().cause() != null){
-		        System.out.println("\t Message is \""+
-		        		istep.getResult().cause().getMessage() +
-		        		"\"");
+                System.out.println("\t\""+ istep.getName() + "\" -- "+ 
+		        		istep.getResult().cause().getMessage());
 		  }
 	}
 }

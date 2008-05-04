@@ -59,7 +59,7 @@ public class BehaviorRunner {
                 System.exit(-6);
             }
             catch (Exception e) {
-                System.err.println("There was an error running the script");
+                System.err.println("There was an error running your easyb story or specification");
                 e.printStackTrace(System.err);
                 System.exit(-6);
             }
