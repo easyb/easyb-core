@@ -11,6 +11,7 @@ import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.listener.FailureDetector;
 import org.disco.easyb.listener.ResultsCollector;
 import org.disco.easyb.report.ReportWriter;
+import org.disco.easyb.exception.VerificationException;
 
 public class BehaviorRunner {
     private List<ReportWriter> reports;
@@ -54,6 +55,9 @@ public class BehaviorRunner {
             try {
                 runner.runBehavior(getBehaviors(configuration.commandLine.getArgs()));
             }
+            catch (VerificationException e) {
+                System.exit(-6);
+            }
             catch (Exception e) {
                 System.err.println("There was an error running the script");
                 e.printStackTrace(System.err);
@@ -77,7 +81,7 @@ public class BehaviorRunner {
         }
 
         if (failureDetector.failuresDetected()) {
-            System.exit(-6);
+            throw new VerificationException("There were specification failures");
         }
     }
 
