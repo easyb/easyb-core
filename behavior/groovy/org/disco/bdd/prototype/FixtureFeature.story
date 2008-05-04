@@ -5,11 +5,11 @@ description "this story is fleshing out fixture logic for scenarios"
 
 
 each "some description" , {
-    given "blah", {
+    given "a value", {
         value = 12
     }
-    and "given another value", {
-        avalue = "test"
+    and "and another value", {
+        otherValue = "test"
     }
 }
 
@@ -28,11 +28,11 @@ scenario "two times", {
        value = value * 3
    }
 
-   then "value should be 24" , {
+   then "value should be 36" , {
        value.shouldBe 36
    }
 
-   and "then othe value should still be test", {
-       avalue.shouldBe "test"
+   and "the other value should still be test", {
+       otherValue.shouldBe "test"
    }
 }
