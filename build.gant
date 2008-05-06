@@ -185,5 +185,4 @@ def runAntTask(includes, reports, failureMessage=null, failureprop=null){
 	if(failureMessage != null){
 		Ant.fail(if:failureprop, message:failureMessage)
 	}
-	
 }
