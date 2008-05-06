@@ -102,7 +102,7 @@ class StoryBinding {
       listener.describeStep(description)
     }
 
-    binding.each = {  description = "", closure = {} ->
+    binding.every = {  description = "", closure = {} ->
         beforeScenario = closure
     }
     return binding
