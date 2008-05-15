@@ -4,7 +4,7 @@ package org.disco.bdd.prototype
 description "this story is fleshing out fixture logic for scenarios"
 
 
-before_every "some description" , {
+before_each "some description" , {
     given "a value", {
         value = 12
     }
@@ -13,7 +13,7 @@ before_every "some description" , {
     }
 }
 
-after_every "blah", {
+after_each "blah", {
     then "the value test should always be test", {
        otherValue.shouldBe "test"
     }
