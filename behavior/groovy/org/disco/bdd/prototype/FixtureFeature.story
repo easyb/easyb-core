@@ -4,7 +4,7 @@ package org.disco.bdd.prototype
 description "this story is fleshing out fixture logic for scenarios"
 
 
-every "some description" , {
+before_every "some description" , {
     given "a value", {
         value = 12
     }
@@ -12,6 +12,13 @@ every "some description" , {
         otherValue = "test"
     }
 }
+
+after_every "blah", {
+    then "the value test should always be test", {
+       otherValue.shouldBe "test"
+    }
+}
+
 
 scenario "one time" , {
    when "value is multiplied by 2", {
@@ -36,3 +43,4 @@ scenario "two times", {
        otherValue.shouldBe "test"
    }
 }
+

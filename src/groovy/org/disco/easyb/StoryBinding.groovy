@@ -20,6 +20,7 @@ class StoryBinding {
     def stepStack = new BehaviorStepStack()
     def binding = new Binding()
     def beforeScenario
+    def afterScenario
     def basicDelegate = basicDelegate()
     def givenDelegate = givenDelegate()
 
@@ -33,6 +34,9 @@ class StoryBinding {
           beforeScenario()
       }
       scenarioClosure()
+      if(afterScenario != null){
+          afterScenario()
+      }
       stepStack.stopStep(listener)
     }
 
@@ -102,8 +106,12 @@ class StoryBinding {
       listener.describeStep(description)
     }
 
-    binding.every = {  description = "", closure = {} ->
+    binding.before_every = {  description = "", closure = {} ->
         beforeScenario = closure
+    }
+
+    binding.after_every = {  description = "", closure = {} ->
+        afterScenario = closure
     }
     return binding
   }
