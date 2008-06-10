@@ -44,10 +44,10 @@ class StoryBinding {
       closure.delegate = basicDelegate
 
       try {
-        listener.gotResult(new Result(Result.SUCCEEDED))
         use(BehaviorCategory) {
           closure()
         }
+        listener.gotResult(new Result(Result.SUCCEEDED))
       } catch (ex) {
         listener.gotResult(new Result(ex))
       }
