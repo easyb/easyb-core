@@ -1,5 +1,4 @@
 import org.disco.easyb.StoryBinding
-import static org.junit.Assert.assertEquals
 
 it "should notify listener of exceptions", {
     def listener = new FakeListener()
@@ -10,5 +9,5 @@ it "should notify listener of exceptions", {
             }
         ''');
 
-    assertEquals 'test', listener.result.cause.message
+    listener.result.cause.message.shouldBe 'test'
 }
