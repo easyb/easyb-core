@@ -81,7 +81,11 @@ class StoryBinding {
     def _givenClos = {givenDescription, closure = {} ->
       stepStack.startStep(listener, BehaviorStepType.GIVEN, givenDescription)
       closure.delegate = givenDelegate
-      closure()
+      try {
+        closure()
+      } catch (Throwable t) {
+        listener.gotResult(new Result(t))
+      }
       stepStack.stopStep(listener)
     }
 
