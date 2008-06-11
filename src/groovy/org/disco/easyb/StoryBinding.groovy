@@ -48,8 +48,8 @@ class StoryBinding {
           closure()
         }
         listener.gotResult(new Result(Result.SUCCEEDED))
-      } catch (ex) {
-        listener.gotResult(new Result(ex))
+      } catch (Throwable t) {
+        listener.gotResult(new Result(t))
       }
     }
 
@@ -66,7 +66,11 @@ class StoryBinding {
     def _whenClos = {whenDescription, closure = {} ->
       stepStack.startStep(listener, BehaviorStepType.WHEN, whenDescription)
       closure.delegate = basicDelegate
-      closure()
+      try {
+        closure()
+      } catch (Throwable t) {
+        listener.gotResult(new Result(t))
+      }
       stepStack.stopStep(listener)
     }
 
