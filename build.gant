@@ -26,14 +26,14 @@ Ant.property(file: 'local.build.properties')
  */
 def detectOrDefaultVersion(version) {
   if(Ant.project.properties."version" != null){
-	  return Ant.project.properties."version"
+    return Ant.project.properties."version"
   }else{
-  	return version
+    return version
   }
 }
 
 target("default":"validate"){
-   	depends("validate")
+  depends("validate")
 }
 
 target(release:"compile and archive"){
@@ -42,16 +42,16 @@ target(release:"compile and archive"){
   Ant.mkdir(dir:"${defaultdir}/release")
   Ant.copy(file:"${defaultdir}/easyb-${version}.jar", todir:"${defaultdir}/release")
   Ant.copy(todir:"${defaultdir}/release"){
-  	fileset(dir:"./target/lib/"){
-  		exclude(name:"**/ant-*.jar")
-  	}
+    fileset(dir:"./target/lib/"){
+      exclude(name:"**/ant-*.jar")
+    }
   }
 }
 
 target(jar:"create an archive of the project's classfiles"){
-   depends("compile-all")
+  depends("compile-all")
    
-   Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:classdir)
+  Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:classdir)
 }
 
 target("publish-easyb":"uploads easyb distribution to googlecode") {
@@ -63,15 +63,15 @@ target("publish-easyb":"uploads easyb distribution to googlecode") {
 
   Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
     classpath(){
-          pathelement(location:"${defaultdir}/easyb-${version}.jar")
-      }
+      pathelement(location:"${defaultdir}/easyb-${version}.jar")
+    }
   }
 
   Ant.taskdef (name:"googlecodeupload",
           classname:"net.bluecow.googlecode.ant.GoogleCodeUploadTask"){
     classpath(){
-          pathelement(location:"${libdir}/ant-googlecode-0.0.0test.jar")
-      }
+      pathelement(location:"${libdir}/ant-googlecode-0.0.0test.jar")
+    }
   }
 
   Ant.googlecodeupload(username:"${Ant.project.properties.'googleuser'}",
@@ -84,19 +84,19 @@ target("publish-easyb":"uploads easyb distribution to googlecode") {
 }
 
 target("compile-all":"compile Groovy & Java classes"){
-	depends("compile-core")
-	depends("compile-behaviors")
+  depends("compile-core")
+  depends("compile-behaviors")
 }
 
 target("compile-core":"compile Groovy & Java classes in easyb core"){
-	depends(configuregroovy)
-	genericgroovyc([sourcedir, gsourcedir, antsourcedir], classdir)
+  depends(configuregroovy)
+  genericgroovyc([sourcedir, gsourcedir, antsourcedir], classdir)
 }
 
 target("compile-behaviors":"compile Groovy & Java classes in easyb behavior"){
-	depends(configuregroovy)
-	depends("compile-core")
-	genericgroovyc([behaviordir, gbehaviordir], behaviorclassdir)
+  depends(configuregroovy)
+  depends("compile-core")
+  genericgroovyc([behaviordir, gbehaviordir], behaviorclassdir)
 }
 
 target("validate":"runs behaviors"){
@@ -106,83 +106,82 @@ target("validate":"runs behaviors"){
 target("ant-task":"runs the easyb ant task"){
   depends(jar)
 
-	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
-		classpath(){
-        	pathelement(location:"${defaultdir}/easyb-${version}.jar")
-    	}
-	}
+  Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
+    classpath(){
+      pathelement(location:"${defaultdir}/easyb-${version}.jar")
+    }
+  }
 
-	Ant.easyb(failureProperty:"easyb.failed"){
-	
-      classpath() {
-        fileset(dir:libdir, includes:jarincludes)
-        pathelement(location:"${defaultdir}/easyb-${version}.jar")
-        pathelement(location:behaviorclassdir)
-      }
+  Ant.easyb(failureProperty:"easyb.failed"){
+  
+    classpath(){
+      fileset(dir:libdir, includes:jarincludes)
+      pathelement(location:"${defaultdir}/easyb-${version}.jar")
+      pathelement(location:behaviorclassdir)
+    }
 
-      report(location:"${defaultdir}/easyb-report.xml", format:"xml")
-      report(location:"${defaultdir}/story-report.txt", format:"txtstory")
-      report(location:"${defaultdir}/specification-report.txt", format:"txtspecification")
+    report(location:"${defaultdir}/easyb-report.xml", format:"xml")
+    report(location:"${defaultdir}/story-report.txt", format:"txtstory")
+    report(location:"${defaultdir}/specification-report.txt", format:"txtspecification")
 
-      behaviors(dir:gbehaviordir){
-        include(name:"**/*Story.groovy")
-        include(name:"**/*.story")
-	    include(name:"**/*Specification.groovy")
-	    include(name:"**/*.specification")
-	    exclude(name:"**/TextStoryReportingValidation.story")
-	    exclude(name:"**/FailureReport.story")
-	  }
-	}
+    behaviors(dir:gbehaviordir){
+      include(name:"**/*Story.groovy")
+      include(name:"**/*.story")
+      include(name:"**/*Specification.groovy")
+      include(name:"**/*.specification")
+      exclude(name:"**/TextStoryReportingValidation.story")
+      exclude(name:"**/FailureReport.story")
+    }
+  }
 
   Ant.fail(if:"easyb.failed", message:"Execution halted as specifications failed")
 }
 
 
 target("validate-reports":"runs the easyb and validates reports"){
-	  depends("ant-task")
-	   runAntTask(["**/AndChainedFeature.story"], 
-			   [["${defaultdir}/valid-report.txt", "txtstory"]])
-	   
-	   Ant.echo("***********Ignore FAILURE text that follows-- it is on purpose************")		   
-	   runAntTask(["**/FailureReport.story"], 
-			   [["${defaultdir}/valid-report-failure.txt", "txtstory"]])	
-	   Ant.echo("***********End failure text-- build should continue on as usual***********")	
-	   
-	   runAntTask(["**/TextStoryReportingValidation.story"], 
-			   [["${defaultdir}/valid-reporting.txt", "txtstory"]],
-			   "Execution halted as specifications failed with respect to reports",
+  depends("ant-task")
+  runAntTask(["**/AndChainedFeature.story"], 
+         [["${defaultdir}/valid-report.txt", "txtstory"]])
+     
+  Ant.echo("***********Ignore FAILURE text that follows-- it is on purpose************")       
+  runAntTask(["**/FailureReport.story"], 
+         [["${defaultdir}/valid-report-failure.txt", "txtstory"]])  
+  Ant.echo("***********End failure text-- build should continue on as usual***********")  
+     
+  runAntTask(["**/TextStoryReportingValidation.story"], 
+         [["${defaultdir}/valid-reporting.txt", "txtstory"]],
+         "Execution halted as specifications failed with respect to reports",
                 "failure.reporting")
-		
 }
 /**
  * runs easyb ant task and allows for failure if
  * failureMessage isn't null
  */
 def runAntTask(includes, reports, failureMessage=null, failureprop=null){
-	
-	Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
-		classpath(){
-        	pathelement(location:"${defaultdir}/easyb-${version}.jar")
-    	}
-	}
+  
+  Ant.taskdef(name:"easyb", classname:"org.disco.easyb.ant.BehaviorRunnerTask"){
+    classpath(){
+      pathelement(location:"${defaultdir}/easyb-${version}.jar")
+    }
+  }
 
-	Ant.easyb(failureProperty:failureprop){
-      classpath() {
-        fileset(dir:libdir, includes:jarincludes)
-        pathelement(location:"${defaultdir}/easyb-${version}.jar")
-        pathelement(location:behaviorclassdir)
+  Ant.easyb(failureProperty:failureprop){
+    classpath() {
+      fileset(dir:libdir, includes:jarincludes)
+      pathelement(location:"${defaultdir}/easyb-${version}.jar")
+      pathelement(location:behaviorclassdir)
+    }
+    reports.each{
+      report(location:it[0], format:it[1])
+    }
+  
+    behaviors(dir:gbehaviordir){
+      includes.each{
+        include(name:"${it}")
       }
-      reports.each{
-    	  report(location:it[0], format:it[1])
-      }
-	
-      behaviors(dir:gbehaviordir){
-    	  includes.each{
-    		  include(name:"${it}")
-    	  }
-	  }
-	}
-	if(failureMessage != null){
-		Ant.fail(if:failureprop, message:failureMessage)
-	}
+    }
+  }
+  if(failureMessage != null){
+    Ant.fail(if:failureprop, message:failureMessage)
+  }
 }
