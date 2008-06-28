@@ -9,8 +9,6 @@ import org.disco.easyb.util.BehaviorStepType
 
 class StoryBinding {
 
-    //static BehaviorStepStack stepStack = new BehaviorStepStack()
-
     /**
      * This method returns a fully initialized Binding object (or context) that
      * has definitions for methods such as "when" and "given", which are used
@@ -28,12 +26,7 @@ class StoryBinding {
             listener.gotResult(new Result(Result.PENDING))
         }
 
-        /**
-         * these before and after aspects are prototypes
-         * and are not currently being logged
-         *
-         * TODO: add these too listener/reporting
-         */
+        //TODO: add these too listener/reporting
         def beforeDone = false
         def afterDone = false
 
@@ -44,6 +37,9 @@ class StoryBinding {
             }
         }
 
+        binding.assumption = binding.before.curry("story assumption")
+        binding.assuming = binding.before.curry("story assumes")
+
         binding.after = {description = "", afterClosure = {} ->
             if (!afterClosure) {
                 afterClosure()
@@ -51,7 +47,16 @@ class StoryBinding {
             }
         }
 
-        binding.scenario = {scenarioDescription, scenarioClosure = {} ->
+        //todo: this signature requires fixtures have a description-- consider removing 1st param
+        binding.before_each = {description = "", closure = {} ->
+            beforeScenario = closure
+        }
+
+        binding.after_each = {description = "", closure = {} ->
+            afterScenario = closure
+        }
+
+        binding.scenario = {scenarioDescription, scenarioClosure = pendingClosure ->
             stepStack.startStep(listener, BehaviorStepType.SCENARIO, scenarioDescription)
             if (beforeScenario != null) {
                 beforeScenario()
@@ -70,7 +75,9 @@ class StoryBinding {
                 use(BehaviorCategory) {
                     closure()
                 }
-                listener.gotResult(new Result(Result.SUCCEEDED))
+                if(!closure.is(pendingClosure)){
+                    listener.gotResult(new Result(Result.SUCCEEDED))
+                }
             } catch (Throwable t) {
                 listener.gotResult(new Result(t))
             }
@@ -136,14 +143,7 @@ class StoryBinding {
         binding.description = {description ->
             listener.describeStep(description)
         }
-        //todo: this signature requires fixtures have a description-- consider removing 1st param
-        binding.before_each = {description = "", closure = {} ->
-            beforeScenario = closure
-        }
 
-        binding.after_each = {description = "", closure = {} ->
-            afterScenario = closure
-        }
         return binding
     }
 
