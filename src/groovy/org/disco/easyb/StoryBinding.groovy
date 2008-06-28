@@ -63,7 +63,7 @@ class StoryBinding {
             stepStack.stopStep(listener)
         }
 
-        def thenClosure = {spec, closure, storyPart ->
+        def thenClosure = {spec, closure ->
             closure.delegate = basicDelegate
 
             try {
@@ -78,7 +78,7 @@ class StoryBinding {
 
         def _thenClos = {spec, closure = pendingClosure ->
             stepStack.startStep(listener, BehaviorStepType.THEN, spec)
-            thenClosure(spec, closure, BehaviorStepType.THEN)
+            thenClosure(spec, closure)
             stepStack.stopStep(listener)
         }
 
