@@ -4,10 +4,10 @@ the following three scenarios would yield a report that contains
 3 pending scenarios. For example, the output of the console should be
 something like:
 
-Running issue with pending counts story (IssueWithPendingCounts.story)
-Scenarios run: 3, Failures: 0, Pending: 3, Time Elapsed: 0.402 sec
+    Running issue with pending counts story (IssueWithPendingCounts.story)
+    Scenarios run: 3, Failures: 0, Pending: 3, Time Elapsed: 0.402 sec
 
-3 total behaviors run with no failures
+    3 total behaviors run with no failures
 
 And the text report would have a [pending] flag next to each scenario or
 then clause
