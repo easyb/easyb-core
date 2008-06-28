@@ -136,7 +136,7 @@ class StoryBinding {
         binding.description = {description ->
             listener.describeStep(description)
         }
-
+        //todo: this signature requires fixtures have a description-- consider removing 1st param
         binding.before_each = {description = "", closure = {} ->
             beforeScenario = closure
         }
