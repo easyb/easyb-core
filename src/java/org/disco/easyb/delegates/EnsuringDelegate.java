@@ -4,6 +4,9 @@ import groovy.lang.Closure;
 import org.disco.easyb.exception.VerificationException;
 
 /**
+ * The easy delegate handles "it", "then", and "when"
+ * Currently, this delegate isn't plug and play.
+ *
  * @author aglover
  */
 public class EnsuringDelegate {
