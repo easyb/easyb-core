@@ -23,7 +23,7 @@ class TxtStoryReportWriter implements ReportWriter {
         Writer writer = new BufferedWriter(new FileWriter(new File(location)))
         def count = results.scenarioCount
         writer.writeLine("${(count > 1) ? "${count} scenarios" : " 1 scenario"}" +
-                " (including ${results.pendingScenarioCount} pending) executed" +
+                "${results.pendingScenarioCount.toInteger() > 0 ? "(including ${results.pendingScenarioCount} pending)" : ""} executed" +
                 "${results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
                 "${results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : ""}")
         results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
@@ -59,9 +59,9 @@ class TxtStoryReportWriter implements ReportWriter {
             case BehaviorStepType.NARRATIVE:
                 writer.write("${' '.padRight(3)}Narrative: ${element.description}")
                 element.getChildSteps().each {
-                   writer.newLine()
+                    writer.newLine()
                     switch (it.stepType) {
-                       case BehaviorStepType.NARRATIVE_ROLE:
+                        case BehaviorStepType.NARRATIVE_ROLE:
                             writer.write("${' '.padRight(6)}As a ${it.name}")
                             break
                         case BehaviorStepType.NARRATIVE_FEATURE:
