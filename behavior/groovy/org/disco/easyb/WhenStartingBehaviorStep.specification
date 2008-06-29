@@ -7,14 +7,14 @@ def stack
 def listener
 
 before "create behavior step stack", {
-  stack = new BehaviorStepStack()
-  listener = new ExecutionListenerAdaptor()
+    stack = new BehaviorStepStack()
+    listener = new ExecutionListenerAdaptor()
 }
 
 it "should create step and push step onto stack", {
-  stack.startStep(listener, BehaviorStepType.SCENARIO, 'description')
-  BehaviorStep lastStep = stack.lastStep()
-  lastStep.shouldNotBe null
+    stack.startStep(listener, BehaviorStepType.SCENARIO, 'description')
+    BehaviorStep lastStep = stack.lastStep()
+    lastStep.shouldNotBe null
 }
 
 it "should notify listener"

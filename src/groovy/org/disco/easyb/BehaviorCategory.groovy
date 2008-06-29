@@ -16,7 +16,7 @@ class BehaviorCategory {
     static void shouldBeLessThan(Object self, value) {
         if ((self.getClass() == NullObject.class) || (value == null)) {
             throw new VerificationException("${value} can not be compared to ${self}")
-        }else if (value < self) {
+        } else if (value < self) {
             throw new VerificationException("${value} was less than ${self}")
         } else if (value == self) {
             throw new VerificationException("${value} was equal to ${self}")

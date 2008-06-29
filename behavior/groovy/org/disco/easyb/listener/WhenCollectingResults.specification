@@ -3,12 +3,12 @@ import org.disco.easyb.listener.ResultsCollector
 import org.disco.easyb.util.BehaviorStepType
 
 it "should not modify the supplied behavior step", {
-  try {
-    def step = new BehaviorStep(BehaviorStepType.SCENARIO, "Test step")
-    def collector = new ResultsCollector()
-    collector.startStep step
-    step.getParentStep().shouldBe null
-  } catch (Exception e) {
-    e.printStackTrace()
-  }
+    try {
+        def step = new BehaviorStep(BehaviorStepType.SCENARIO, "Test step")
+        def collector = new ResultsCollector()
+        collector.startStep step
+        step.getParentStep().shouldBe null
+    } catch (Exception e) {
+        e.printStackTrace()
+    }
 }

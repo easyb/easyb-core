@@ -6,5 +6,5 @@ import org.disco.easyb.listener.ResultsCollector
  * Common interface for easyb reports
  */
 interface ReportWriter {
-  void writeReport(ResultsCollector results)
+    void writeReport(ResultsCollector results)
 }

@@ -71,8 +71,9 @@ public class BehaviorRunner {
      * @throws Exception if unable to write report file
      */
     public void runBehavior(List<Behavior> behaviors) throws Exception {
-        for (Behavior behavior : behaviors)
+        for (Behavior behavior : behaviors) {
             behavior.execute(broadcastListener);
+        }
 
         broadcastListener.completeTesting();
 

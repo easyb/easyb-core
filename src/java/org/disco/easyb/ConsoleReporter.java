@@ -25,7 +25,7 @@ public class ConsoleReporter extends ResultsCollector {
             + (getFailedBehaviorCount() > 0 ? " with "
             + (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures"));
     }
-    
+
     private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
         if (behavior instanceof Story) {
             System.out.println((currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE ") +
@@ -40,30 +40,30 @@ public class ConsoleReporter extends ResultsCollector {
                 ", Pending: " + currentStep.getPendingSpecificationCountRecursively() +
                 ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
-        if((currentStep.getFailedSpecificationCountRecursively() > 0) ||
-                (currentStep.getFailedScenarioCountRecursively() > 0)){
-                    handleFailurePrinting(currentStep);
-            }
+        if ((currentStep.getFailedSpecificationCountRecursively() > 0) ||
+            (currentStep.getFailedScenarioCountRecursively() > 0)) {
+            handleFailurePrinting(currentStep);
+        }
     }
 
     private void handleFailurePrinting(BehaviorStep currentStep) {
-		for(BehaviorStep step : currentStep.getChildSteps()){
-            if(step.getStepType().equals(BehaviorStepType.SCENARIO) ||
-                    step.getStepType().equals(BehaviorStepType.GENESIS) ||
-                    step.getStepType().equals(BehaviorStepType.STORY) ||
-                    step.getStepType().equals(BehaviorStepType.SPECIFICATION)){
-				handleFailurePrinting(step);
-			}else{
-				printFailureMessage(step);
-			}
-		}
-	}
+        for (BehaviorStep step : currentStep.getChildSteps()) {
+            if (step.getStepType().equals(BehaviorStepType.SCENARIO) ||
+                step.getStepType().equals(BehaviorStepType.GENESIS) ||
+                step.getStepType().equals(BehaviorStepType.STORY) ||
+                step.getStepType().equals(BehaviorStepType.SPECIFICATION)) {
+                handleFailurePrinting(step);
+            } else {
+                printFailureMessage(step);
+            }
+        }
+    }
 
     private void printFailureMessage(BehaviorStep istep) {
-		if(istep.getResult() != null && istep.getResult().failed()
-				&& istep.getResult().cause() != null){
-                System.out.println("\t\""+ istep.getName() + "\" -- "+ 
-		        		istep.getResult().cause().getMessage());
-		  }
-	}
+        if (istep.getResult() != null && istep.getResult().failed()
+            && istep.getResult().cause() != null) {
+            System.out.println("\t\"" + istep.getName() + "\" -- " +
+                istep.getResult().cause().getMessage());
+        }
+    }
 }

@@ -93,7 +93,7 @@ public class ResultsCollector implements ExecutionListener {
     }
 
     public void describeStep(String description) {
-     currentStep.setDescription(description);   
+        currentStep.setDescription(description);
     }
 
     public void completeTesting() {

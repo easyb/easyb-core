@@ -1,4 +1,4 @@
-/** 
+/**
  * this is a default set of tasks
  * that other projects within easyb
  * can include. See easyb core build
@@ -16,115 +16,115 @@ gbehaviordir = "behavior/groovy"
 gsourcedir = "src/groovy"
 sourcedir = "src/java"
 antsourcedir = "src/ant"
-behaviordir =  "behavior/java"
+behaviordir = "behavior/java"
 homedir = System.properties.'user.home'
 mavenrepo = "${homedir}/.m2/repository"
 
-target(clean:"cleans target dir"){
-	Ant.delete(dir:defaultdir)
+target(clean: "cleans target dir") {
+    Ant.delete(dir: defaultdir)
 }
 
-Ant.path(id:"build.classpath"){
-	fileset(dir:libdir, includes:jarincludes)
+Ant.path(id: "build.classpath") {
+    fileset(dir: libdir, includes: jarincludes)
 }
 
-target(dist:"create a distribution from the release"){
-	depends(release)
-	Ant.mkdir(dir:"${defaultdir}/dist")
-	Ant.tar(tarfile:tarfilename, basedir:"${defaultdir}/release")
-    Ant.gzip(zipfile:"${tarfilename}.gz", src:tarfilename)
-    Ant.delete(file:tarfilename)
+target(dist: "create a distribution from the release") {
+    depends(release)
+    Ant.mkdir(dir: "${defaultdir}/dist")
+    Ant.tar(tarfile: tarfilename, basedir: "${defaultdir}/release")
+    Ant.gzip(zipfile: "${tarfilename}.gz", src: tarfilename)
+    Ant.delete(file: tarfilename)
 }
 
-target(configuregroovy:"configures environment to compile w/Groovy"){
- depends(init)
- Ant.taskdef(name:"groovyc",
-    classname:"org.codehaus.groovy.ant.Groovyc", classpathref:"build.classpath"){
- }
-}
-
-target(getdeps:"retrieves dependencies"){
-  Ivy.settings(file:"./ivyconfig.xml", id:"ivy.instance" )
-  Ivy.retrieve(pattern:"./target/lib/[artifact]-[revision].[ext]")
-}
-
-target(init:"init dirs"){
-	Ant.mkdir(dir:classdir)
-	Ant.mkdir(dir:libdir)
-	Ant.mkdir(dir:behaviorclassdir)
-	getdeps()
-}
-
-genericgroovyc = { sourcedirs, destination ->
-  Ant.groovyc(destdir:destination){
-    javac(source:"1.5", target:"1.5", debug:"on")
-    src() {
-      sourcedirs.each() {
-        dirset(dir:it)        
-      }
+target(configuregroovy: "configures environment to compile w/Groovy") {
+    depends(init)
+    Ant.taskdef(name: "groovyc",
+            classname: "org.codehaus.groovy.ant.Groovyc", classpathref: "build.classpath") {
     }
-    classpath(){
-	    fileset(dir:libdir){
-	      include(name:jarincludes)
-	    }
-	    dirset(dir:classdir)
-	  }
-	}
 }
 
-target("jar-sources":"creates a sources jar"){
-   depends("init")
-
-   Ant.jar(destfile:"${defaultdir}/${artifactid}-${version}-sources.jar"){
-     sourcedirs.each {
-       fileset(dir: it)
-     }
-   }
+target(getdeps: "retrieves dependencies") {
+    Ivy.settings(file: "./ivyconfig.xml", id: "ivy.instance")
+    Ivy.retrieve(pattern: "./target/lib/[artifact]-[revision].[ext]")
 }
 
-target("jar-javadocs":"creates a javadocs jar"){
-   taskdef (name:'groovydoc', classname:'org.codehaus.groovy.ant.Groovydoc')
-
-   // Groovydoc doesn't seem to support multiple sources at this time so combine them on disk first
-   Ant.copy(toDir:"${defaultdir}/javadoc-sources"){
-     sourcedirs.each {
-       fileset(dir: it)
-     }
-   }
-
-   Ant.groovydoc(destdir:"${defaultdir}/javadoc", sourcepath:"${defaultdir}/javadoc-sources", windowtitle:"${artifactid}")
-   Ant.jar(destfile:"${defaultdir}/${artifactid}-${version}-javadoc.jar") {
-     fileset(dir: "${defaultdir}/javadoc")
-   }
+target(init: "init dirs") {
+    Ant.mkdir(dir: classdir)
+    Ant.mkdir(dir: libdir)
+    Ant.mkdir(dir: behaviorclassdir)
+    getdeps()
 }
 
-target("maven-install":"install into the default local maven repository") {
+genericgroovyc = {sourcedirs, destination ->
+    Ant.groovyc(destdir: destination) {
+        javac(source: "1.5", target: "1.5", debug: "on")
+        src() {
+            sourcedirs.each() {
+                dirset(dir: it)
+            }
+        }
+        classpath() {
+            fileset(dir: libdir) {
+                include(name: jarincludes)
+            }
+            dirset(dir: classdir)
+        }
+    }
+}
+
+target("jar-sources": "creates a sources jar") {
+    depends("init")
+
+    Ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-sources.jar") {
+        sourcedirs.each {
+            fileset(dir: it)
+        }
+    }
+}
+
+target("jar-javadocs": "creates a javadocs jar") {
+    taskdef(name: 'groovydoc', classname: 'org.codehaus.groovy.ant.Groovydoc')
+
+    // Groovydoc doesn't seem to support multiple sources at this time so combine them on disk first
+    Ant.copy(toDir: "${defaultdir}/javadoc-sources") {
+        sourcedirs.each {
+            fileset(dir: it)
+        }
+    }
+
+    Ant.groovydoc(destdir: "${defaultdir}/javadoc", sourcepath: "${defaultdir}/javadoc-sources", windowtitle: "${artifactid}")
+    Ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-javadoc.jar") {
+        fileset(dir: "${defaultdir}/javadoc")
+    }
+}
+
+target("maven-install": "install into the default local maven repository") {
     depends(jar)
     depends("jar-sources")
     depends("jar-javadocs")
 
-	def reader = new FileReader("pom-template.xml")
-	def writer = new FileWriter("${defaultdir}/${artifactid}-${version}.pom")
-	
-	reader.transformLine(writer) { line ->
-	    line.replace("VERSION", version.toString())
-	}
+    def reader = new FileReader("pom-template.xml")
+    def writer = new FileWriter("${defaultdir}/${artifactid}-${version}.pom")
 
-    Ant.path(id: "maven.artifacts"){
-      fileset(dir:"${defaultdir}"){
-        include(name:"${artifactid}-${version}*.jar")
-        include(name:"${artifactid}-${version}*.pom")
-      }
+    reader.transformLine(writer) {line ->
+        line.replace("VERSION", version.toString())
     }
-	Ant.copy(toDir: "${mavenrepo}/org/easyb/${artifactid}/${version}/"){
-	  path(refid:"maven.artifacts")
-	}
+
+    Ant.path(id: "maven.artifacts") {
+        fileset(dir: "${defaultdir}") {
+            include(name: "${artifactid}-${version}*.jar")
+            include(name: "${artifactid}-${version}*.pom")
+        }
+    }
+    Ant.copy(toDir: "${mavenrepo}/org/easyb/${artifactid}/${version}/") {
+        path(refid: "maven.artifacts")
+    }
 }
 
-target("maven-bundle":"creates an upload bundle for the central maven repository"){
-   depends("maven-install")
+target("maven-bundle": "creates an upload bundle for the central maven repository") {
+    depends("maven-install")
 
-   Ant.jar(destfile:"${defaultdir}/${artifactid}-${version}-bundle.jar"){
-     path(refid:"maven.artifacts")
-   }
+    Ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-bundle.jar") {
+        path(refid: "maven.artifacts")
+    }
 }

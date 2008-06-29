@@ -75,7 +75,7 @@ class StoryBinding {
                 use(BehaviorCategory) {
                     closure()
                 }
-                if(!closure.is(pendingClosure)){
+                if (!closure.is(pendingClosure)) {
                     listener.gotResult(new Result(Result.SUCCEEDED))
                 }
             } catch (Throwable t) {

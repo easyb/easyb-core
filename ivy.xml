@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <?xml-stylesheet type="text/xsl" href="./docs/ivy/ivy-doc.xsl"?>
 <ivy-module version="1.0">
-	<info organisation="org" module="easyb" />
-	<dependencies>
-		<dependency name="ant-googlecode" rev="0.0.0test" />
-		<dependency org="org/codehaus" name="groovy" branch="groovy-all" rev="1.5.4" />
-		<dependency name="commons-cli" rev="1.1" />
-		<dependency name="ant" rev="1.6.5" />
-	</dependencies>
+  <info organisation="org" module="easyb"/>
+  <dependencies>
+    <dependency name="ant-googlecode" rev="0.0.0test"/>
+    <dependency org="org/codehaus" name="groovy" branch="groovy-all" rev="1.5.4"/>
+    <dependency name="commons-cli" rev="1.1"/>
+    <dependency name="ant" rev="1.6.5"/>
+  </dependencies>
 </ivy-module>
 
