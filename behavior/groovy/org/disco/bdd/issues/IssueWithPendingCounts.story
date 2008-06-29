@@ -1,3 +1,5 @@
+import org.disco.easyb.exception.VerificationException
+
 description """
 Ideally, easyb should report scenarios/stories that are pending; thus,
 the following three scenarios would yield a report that contains
@@ -27,3 +29,8 @@ scenario "this is another pending scenario", {
 }
 
 scenario "this is finally a pending scenario with nothing in it"
+
+// I think this is 4 because the enclosing specification element is stil considered pending
+if (easybResults().getPendingScenarioCount() != 4) {
+    throw new VerificationException('Pending scenarios count not correct')
+}

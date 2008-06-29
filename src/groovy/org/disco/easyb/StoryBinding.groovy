@@ -3,10 +3,10 @@ package org.disco.easyb
 import org.disco.easyb.listener.ExecutionListener
 
 class StoryBinding extends Binding {
-    StoryConstructs story
+    StoryKeywords story
 
     def StoryBinding(ExecutionListener listener) {
-        this.story = new StoryConstructs(listener)
+        this.story = new StoryKeywords(listener)
 
         before = {description = "", closure = {} ->
             story.before(description, closure)
@@ -53,6 +53,10 @@ class StoryBinding extends Binding {
 
         description = {description ->
             story.description description
+        }
+
+        easybResults = {
+            story.easybResults()
         }
     }
 

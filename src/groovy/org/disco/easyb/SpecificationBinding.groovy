@@ -4,10 +4,10 @@ import org.disco.easyb.listener.ExecutionListener
 import org.disco.easyb.result.Result
 
 class SpecificationBinding extends Binding {
-    SpecificationConstructs specification;
+    SpecificationKeywords specification;
 
     def SpecificationBinding(ExecutionListener listener) {
-        specification = new SpecificationConstructs(listener)
+        specification = new SpecificationKeywords(listener)
 
         def pendingClosure = {
             listener.gotResult(new Result(Result.PENDING))

@@ -8,7 +8,7 @@ import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.result.Result;
 
 public class BroadcastListener implements ExecutionListener {
-    List<ExecutionListener> listeners = new ArrayList<ExecutionListener>();
+    public List<ExecutionListener> listeners = new ArrayList<ExecutionListener>();
 
     public void registerListener(ExecutionListener recipient) {
         listeners.add(recipient);
