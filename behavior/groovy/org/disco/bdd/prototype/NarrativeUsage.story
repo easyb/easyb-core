@@ -18,3 +18,5 @@ scenario "this is a simple scenario" , {
         val.shouldBe "b"
     }
 }
+
+scenario "one pending scenario for no reason at all"
