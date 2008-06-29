@@ -12,7 +12,11 @@ public enum BehaviorStepType {
     AND("and"),
     BEFORE("before"),
     IT("it"),
-    DESCRIPTION("description");
+    DESCRIPTION("description"),
+    NARRATIVE("narrative"),
+    NARRATIVE_ROLE("narrative role"),
+    NARRATIVE_FEATURE("narrative feature"),
+    NARRATIVE_BENEFIT("narrative benefit");
 
     private final String type;
 

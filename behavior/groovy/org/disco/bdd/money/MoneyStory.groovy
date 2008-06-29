@@ -2,7 +2,7 @@ package org.disco.bdd.money
 
 description "This story is about currency management"
 
-narrative {
+narrative "this string is required for now", {
     as_a "person who uses money"
     i_want "to be able to add them together"
     so_that "that I can become rich (and wierd)"

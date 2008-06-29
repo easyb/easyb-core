@@ -54,7 +54,24 @@ class TxtStoryReportWriter implements ReportWriter {
                 writer.write("${' '.padRight(2)}Story: ${element.name}")
                 break
             case BehaviorStepType.DESCRIPTION:
-                writer.write("${' '.padRight(3)}description: ${element.description}")
+                writer.write("${' '.padRight(3)}Description: ${element.description}")
+                break
+            case BehaviorStepType.NARRATIVE:
+                writer.write("${' '.padRight(3)}Narrative: ${element.description}")
+                element.getChildSteps().each {
+                   writer.newLine()
+                    switch (it.stepType) {
+                       case BehaviorStepType.NARRATIVE_ROLE:
+                            writer.write("${' '.padRight(6)}As a ${it.name}")
+                            break
+                        case BehaviorStepType.NARRATIVE_FEATURE:
+                            writer.write("${' '.padRight(6)}I want ${it.name}")
+                            break
+                        case BehaviorStepType.NARRATIVE_BENEFIT:
+                            writer.write("${' '.padRight(6)}So that ${it.name}")
+                            break
+                    }
+                }
                 break
             case BehaviorStepType.SCENARIO:
                 writer.newLine()

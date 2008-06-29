@@ -14,7 +14,11 @@ class BehaviorKeywords {
     }
 
     def narrative(description, closure) {
-        closure.delegate = new NarrativeDelegate()
+        stepStack.startStep listener, BehaviorStepType.NARRATIVE, description
+        listener.describeStep description
+        closure.delegate = new NarrativeDelegate(listener, stepStack)
+        closure()
+        stepStack.stopStep listener
     }
 
     def description(description) {
