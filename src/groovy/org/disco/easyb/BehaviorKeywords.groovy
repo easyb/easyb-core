@@ -4,6 +4,7 @@ import org.disco.easyb.listener.ExecutionListener
 import org.disco.easyb.delegates.NarrativeDelegate
 import org.disco.easyb.listener.BroadcastListener
 import org.disco.easyb.listener.ResultsCollector
+import org.disco.easyb.util.BehaviorStepType
 
 class BehaviorKeywords {
     ExecutionListener listener
@@ -17,12 +18,14 @@ class BehaviorKeywords {
     }
 
     def description(description) {
+        stepStack.startStep listener, BehaviorStepType.DESCRIPTION, description
         listener.describeStep(description)
+        stepStack.stopStep listener
     }
 
     ResultsCollector easybResults() {
         if (listener instanceof ResultsCollector)
-            return (ResultsCollector)listener
+            return (ResultsCollector) listener
 
         if (listener instanceof BroadcastListener) {
             BroadcastListener broadcaster = (BroadcastListener) listener
@@ -31,7 +34,7 @@ class BehaviorKeywords {
                     return true
             }
             if (result != null)
-                return (ResultsCollector)result
+                return (ResultsCollector) result
         }
 
         throw new IllegalStateException('No results collector available to provide easyb results')
