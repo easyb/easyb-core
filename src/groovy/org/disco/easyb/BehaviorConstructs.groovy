@@ -2,6 +2,7 @@ package org.disco.easyb
 
 import org.disco.easyb.listener.ExecutionListener
 import org.disco.easyb.delegates.NarrativeDelegate
+import org.disco.easyb.util.BehaviorStepType
 
 class BehaviorConstructs {
     ExecutionListener listener
@@ -15,6 +16,8 @@ class BehaviorConstructs {
     }
 
     def description(description) {
+        stepStack.startStep listener, BehaviorStepType.DESCRIPTION, description
         listener.describeStep(description)
+        stepStack.stopStep listener
     }
 }

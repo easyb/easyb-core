@@ -54,8 +54,7 @@ class TxtStoryReportWriter implements ReportWriter {
                 writer.write("${' '.padRight(2)}Story: ${element.name}")
                 break
             case BehaviorStepType.DESCRIPTION:
-                writer.write("${' '.padRight(3)} ${element.description}")
-                writer.newLine()
+                writer.write("${' '.padRight(3)}description: ${element.description}")
                 break
             case BehaviorStepType.SCENARIO:
                 writer.newLine()

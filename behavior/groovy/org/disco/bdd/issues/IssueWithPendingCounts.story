@@ -11,7 +11,6 @@ something like:
 
 And the text report would have a [pending] flag next to each scenario or
 then clause
-
 """
 
 scenario "this is a pending scenario", {
