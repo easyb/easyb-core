@@ -84,11 +84,69 @@ pageTracker._trackPageview();
 
 <p>Don't forget that <code>when</code>s are not required. Accordingly, the following variation works too.</p>
 
-<pre><code>scenario{
+<pre><code>scenario "text", {
  given "text", {}
  then "text", {}
 }
 </code></pre>	
+
+
+<h3>Further documenting stories</h3>
+
+<p>easyb supports capturing additional information regarding stories, such as a story's description and some detail regarding the features, benefits, and roles of a persona related to a story. For instance, the DSL supports a description syntax that takes a String value -- single quote or Groovy's triple quote trick. </p>
+
+<pre><code>description "some description"
+scenario "text"
+</code></pre>
+
+or
+
+
+<pre><code>description """some long description that requires
+multiple lines, etc
+"""
+scenario "text"
+</code></pre> 
+
+<p>What's more, you can provide additional details of a story via the <code>narrative</code> syntax:</p>
+
+
+<pre><code>description "text"
+
+narrative "description", {
+	as_a "role"
+	i_want "feature"
+	so_that "benefit"
+}
+
+scenario "text"
+</code></pre>
+
+<p>Both the <code>narrative</code> and <code>description</code> keywords are optional and they don't have to be used together-- i.e. you can use the <code>narrative</code> one without providing a <code>description</code>. These aspects will be captured in the output (i.e. story report) of an easyb run too.</p>
+
+
+<h3>Running non-implemented stories</h3>
+
+<p>easyb permits running stories that are not implemented yet-- thus, you can execute your documentation and see which stories are still <i>pending</i>. For instance, the closure (i.e. <code>{}</code>'s following a <code>scenario</code> or <code>given</code>/<code>when</code>/<code>then</code> phrase) is optional. Thus, the following story with two scenarios could be run:</p>
+
+<pre><code>
+scenario "this is a pending scenario", {
+ given "something"
+ when "something is done"
+ then "there is a way to handle it"
+}
+
+scenario "this is also pending"
+</code></pre>
+
+<p>Both scenarios will be executed and easyb will consider them pending and thus report that-- in this case, easyb will have run one story with two scenarios, each in a pending state:</p>
+
+<pre><code>
+Running pending example story (PendingExample.story)
+Scenarios run: 2, Failures: 0, Pending: 2, Time Elapsed: 0.444 sec
+
+2 total behaviors run (including 2 pending behaviors) with no failures
+</code></pre>
 
 
 <h2>Behavior DSL</h2>
@@ -138,6 +196,13 @@ shouldBeA
 shouldBeAn
 shouldNotBeA
 shouldNotBeAn
+</code></pre>
+
+<p>You can compare values with the <code>should</code> syntax as well:</p>
+
+<pre><code>
+shouldBeGreaterThan
+shouldBeLessThan
 </code></pre>
 
 <p>Lastly, easyb supports verifying objects in a collection or properties of objects via the <code>shouldHave</code> method.</p>
