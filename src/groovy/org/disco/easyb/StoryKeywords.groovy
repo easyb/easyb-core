@@ -50,7 +50,15 @@ class StoryKeywords extends BehaviorKeywords {
         if (beforeScenario != null) {
             beforeScenario()
         }
+
+        def initialsteps = stepStack.steps.size()
+
         scenarioClosure()
+
+        if(initialsteps.equals(stepStack.steps.size())){
+            listener.gotResult(new Result(Result.PENDING))
+        }
+
         if (afterScenario != null) {
             afterScenario()
         }

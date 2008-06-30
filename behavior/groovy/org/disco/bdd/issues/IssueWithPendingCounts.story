@@ -15,6 +15,8 @@ And the text report would have a [pending] flag next to each scenario or
 then clause
 """
 
+int initcount = easybResults().getPendingScenarioCount()
+
 scenario "this is a pending scenario", {
     given "something"
     when "something is done"
@@ -30,7 +32,7 @@ scenario "this is another pending scenario", {
 
 scenario "this is finally a pending scenario with nothing in it"
 
-// I think this is 4 because the enclosing specification element is stil considered pending
-if (easybResults().getPendingScenarioCount() != 4) {
+
+if (easybResults().getPendingScenarioCount() > (initcount + 3)) {
     throw new VerificationException('Pending scenarios count not correct')
 }
