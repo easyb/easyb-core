@@ -64,8 +64,10 @@ public class ConsoleReporter extends ResultsCollector {
     private void printFailureMessage(BehaviorStep istep) {
         if (istep.getResult() != null && istep.getResult().failed()
                 && istep.getResult().cause() != null) {
-            System.out.println("\t\"" + istep.getName() + "\" -- " +
+            System.out.println("\tscenario \"" + istep.getParentStep().getName()+ "\"");
+            System.out.println("\tstep \"" + istep.getName() + "\" -- " +
                     istep.getResult().cause().getMessage());
+
         }
     }
 }
