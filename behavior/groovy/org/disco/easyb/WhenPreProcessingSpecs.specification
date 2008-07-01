@@ -1,4 +1,5 @@
-import org.disco.easyb.domain.SpecificationPreProcessor
+import org.disco.easyb.domain.NarrativePreProcessor
+import org.disco.easyb.domain.NarrativePreProcessor
 
 String narrative = '''
         narrative 'good stuff', {
@@ -14,7 +15,7 @@ String trickySpec = '''
         so that i can make some money
     '''
 
-SpecificationPreProcessor preProcessor = new SpecificationPreProcessor()
+NarrativePreProcessor preProcessor = new NarrativePreProcessor()
 
 it "should replace occurences of 'as a' with 'as_a'", {
     ensure (preProcessor.process(narrative)) {

@@ -1,7 +1,11 @@
 package org.disco.easyb.domain;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import groovy.lang.GroovyShell;
 import org.disco.easyb.BehaviorStep;
@@ -23,10 +27,24 @@ public class Story extends BehaviorBase {
 
         listener.startBehavior(this);
         listener.startStep(currentStep);
-        new GroovyShell(StoryBinding.getBinding(listener)).evaluate(getFile());
+        new GroovyShell(StoryBinding.getBinding(listener)).evaluate(readStory(getFile()));
         listener.stopStep();
         listener.stopBehavior(currentStep, this);
 
         return currentStep;
+    }
+
+    private String readStory(File story) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        InputStream input = new BufferedInputStream(new FileInputStream(story));
+        int character;
+        while ((character = input.read()) != -1) {
+            output.write(character);
+        }
+        input.close();
+
+        NarrativePreProcessor preProcessor = new NarrativePreProcessor();
+        return preProcessor.process(output.toString());
     }
 }
