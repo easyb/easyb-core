@@ -26,6 +26,14 @@ public class NarrativeDelegate {
         this.processType(BehaviorStepType.NARRATIVE_BENEFIT, benefit);
     }
 
+    public void as_an(String role) {
+        this.as_a(role);
+    }
+
+    public void asAn(String role) {
+        this.as_a(role);
+    }
+
     public void asA(String role) {
         this.as_a(role);
     }

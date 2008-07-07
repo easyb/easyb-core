@@ -1,5 +1,4 @@
 import org.disco.easyb.domain.NarrativePreProcessor
-import org.disco.easyb.domain.NarrativePreProcessor
 
 String narrative = '''
         narrative 'good stuff', {
@@ -18,7 +17,7 @@ String trickySpec = '''
 NarrativePreProcessor preProcessor = new NarrativePreProcessor()
 
 it "should replace occurences of 'as a' with 'as_a'", {
-    ensure (preProcessor.process(narrative)) {
+    ensure(preProcessor.process(narrative)) {
         contains('as_a')
     }
 }
@@ -31,26 +30,26 @@ it "should not replace occurences of 'as a' which occur outside of a narrative b
 }
 
 it "should replace occurences of 'i want' with 'i_want'", {
-    ensure (preProcessor.process(narrative)) {
+    ensure(preProcessor.process(narrative)) {
         contains('i_want')
     }
 }
 
 it "should not replace occurences of 'i want' which occur outside of a narrative block", {
-    ensure (preProcessor.process(trickySpec)) {
+    ensure(preProcessor.process(trickySpec)) {
         contains('i want')
     }
 }
 
 it "should replace occurences of 'so that' with 'so_that'", {
-    ensure (preProcessor.process(narrative)) {
+    ensure(preProcessor.process(narrative)) {
         contains('so_that')
     }
 }
 
 
 it "should not replace occurences of 'so that' which occur outside of a narrative block", {
-    ensure (preProcessor.process(trickySpec)) {
+    ensure(preProcessor.process(trickySpec)) {
         contains('so that')
     }
 }
