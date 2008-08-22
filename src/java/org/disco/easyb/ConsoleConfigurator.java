@@ -15,11 +15,13 @@ import org.disco.easyb.report.ReportWriter;
 import org.disco.easyb.report.TxtSpecificationReportWriter;
 import org.disco.easyb.report.TxtStoryReportWriter;
 import org.disco.easyb.report.XmlReportWriter;
+import org.disco.easyb.report.HtmlReportWriter;
 
 public class ConsoleConfigurator {
     private static final String TXT_SPECIFICATION = "txtspecification";
     private static final String TXT_STORY = "txtstory";
     private static final String XML_EASYB = "xml";
+    private static final String HTML_EASYB = "html";
 
     public Configuration configure(String[] args) {
         Options options = getOptionsForMain();
@@ -70,6 +72,10 @@ public class ConsoleConfigurator {
         if (line.hasOption(XML_EASYB)) {
             configuredReports.add(new XmlReportWriter(line.getOptionValue(XML_EASYB)));
         }
+
+        if (line.hasOption(HTML_EASYB)) {
+            configuredReports.add(new HtmlReportWriter(line.getOptionValue(HTML_EASYB)));
+        }
         return configuredReports;
     }
 
@@ -87,6 +93,10 @@ public class ConsoleConfigurator {
     private static Options getOptionsForMain() {
         Options options = new Options();
 
+        //noinspection AccessStaticViaInstance
+        Option htmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
+            .withDescription("create an easyb report in html format").create(HTML_EASYB);
+        options.addOption(htmleasybreport);
         //noinspection AccessStaticViaInstance
         Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create an easyb report in xml format").create(XML_EASYB);

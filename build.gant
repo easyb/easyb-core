@@ -120,6 +120,7 @@ target("ant-task":"runs the easyb ant task"){
       pathelement(location:behaviorclassdir)
     }
 
+    report(location:"${defaultdir}/easyb-report.html", format:"html")
     report(location:"${defaultdir}/easyb-report.xml", format:"xml")
     report(location:"${defaultdir}/story-report.txt", format:"txtstory")
     report(location:"${defaultdir}/specification-report.txt", format:"txtspecification")
