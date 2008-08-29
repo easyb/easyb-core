@@ -40,7 +40,7 @@ class XmlReportWriter implements ReportWriter {
             }
         } else {
             if (step.stepType == BehaviorStepType.SCENARIO) {
-                xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
+                xml."${step.stepType.type()}"(name: step.name, result: step.result.status, executionTime: step.executionTotalTimeInMillis) {
                     if (step.description) {
                         xml.description(step.description)
                     }
@@ -49,7 +49,7 @@ class XmlReportWriter implements ReportWriter {
                     }
                 }
             } else { // assumed to be story now
-                xml."${step.stepType.type()}"(name: step.name, scenarios: step.scenarioCountRecursively, failedscenarios: step.failedScenarioCountRecursively, pendingscenarios: step.pendingScenarioCountRecursively) {
+                xml."${step.stepType.type()}"(name: step.name, scenarios: step.scenarioCountRecursively, failedscenarios: step.failedScenarioCountRecursively, pendingscenarios: step.pendingScenarioCountRecursively, executionTime: step.executionTotalTimeInMillis) {
                     if (step.description) {
                         xml.description(step.description)
                     }
@@ -67,7 +67,7 @@ class XmlReportWriter implements ReportWriter {
             if (step.result == null) {
                 xml."${step.stepType.type()}"(name: step.name)
             } else {
-                xml."${step.stepType.type()}"(name: step.name, result: step.result.status) {
+                xml."${step.stepType.type()}"(name: step.name, result: step.result.status, executionTime: step.executionTotalTimeInMillis) {
                     if (step.result.failed()) {
                         failure(message: step.result.cause()?.getMessage()) {
                             if (!(step.result.cause instanceof VerificationException))
@@ -77,7 +77,7 @@ class XmlReportWriter implements ReportWriter {
                 }
             }
         } else {
-            xml."${step.stepType.type()}"(name: step.name, specifications: step.specificationCountRecursively, failedspecifications: step.failedSpecificationCountRecursively, pendingspecifications: step.pendingSpecificationCountRecursively) {
+            xml."${step.stepType.type()}"(name: step.name, specifications: step.specificationCountRecursively, failedspecifications: step.failedSpecificationCountRecursively, pendingspecifications: step.pendingSpecificationCountRecursively, executionTime: step.executionTotalTimeInMillis) {
                 if (step.description) {
                     xml.description(step.description)
                 }
@@ -95,14 +95,14 @@ class XmlReportWriter implements ReportWriter {
 
         def xml = new MarkupBuilder(writer)
 
-        xml.easyb(time: new Date(), totalbehaviors: results.behaviorCount, totalfailedbehaviors: results.failedBehaviorCount, totalpendingbehaviors: results.pendingBehaviorCount) {
-            stories(scenarios: results.scenarioCount, failedscenarios: results.failedScenarioCount, pendingscenarios: results.pendingScenarioCount) {
+        xml.easyb(time: new Date(), totalbehaviors: results.behaviorCount, totalfailedbehaviors: results.failedBehaviorCount, totalpendingbehaviors: results.pendingBehaviorCount, executionTime: results.genesisStep.storyExecutionTimeRecursively + results.genesisStep.specificationExecutionTimeRecursively) {
+            stories(scenarios: results.scenarioCount, failedscenarios: results.failedScenarioCount, pendingscenarios: results.pendingScenarioCount, executionTime: results.genesisStep.storyExecutionTimeRecursively) {
                 results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
                     walkStoryChildren(xml, genesisChild)
                 }
             }
 
-            specifications(specifications: results.specificationCount, failedspecifications: results.failedSpecificationCount, pendingspecifications: results.pendingSpecificationCount) {
+            specifications(specifications: results.specificationCount, failedspecifications: results.failedSpecificationCount, pendingspecifications: results.pendingSpecificationCount, executionTime: results.genesisStep.specificationExecutionTimeRecursively) {
                 results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
                     walkSpecificationChildren(xml, genesisChild)
                 }

@@ -9,6 +9,8 @@ class BehaviorStep implements Serializable {
     Result result
     String name
     String description
+    long executionStartTime = 0
+    long executionFinishTime = 0
 
     ArrayList<BehaviorStep> childSteps = new ArrayList()
 
@@ -73,6 +75,28 @@ class BehaviorStep implements Serializable {
     long getSuccessBehaviorCountRecursively() {
         return getSuccessSpecificationCountRecursively() + getSuccessScenarioCountRecursively()
     }
+
+    long getStoryExecutionTimeRecursively() {
+      return getBehaviorExecutionTimeRecursively(BehaviorStepType.STORY)
+    }
+
+    long getSpecificationExecutionTimeRecursively() {
+      return getBehaviorExecutionTimeRecursively(BehaviorStepType.SPECIFICATION)
+    }
+
+    long getBehaviorExecutionTimeRecursively(type) {
+        long executionTime = 0
+
+        if ((type == stepType)) {
+            executionTime += (executionFinishTime - executionStartTime)
+        }
+
+        for (childStep in childSteps) {
+          executionTime += childStep.getBehaviorExecutionTimeRecursively(type)
+        }
+        return executionTime
+    }
+
 
     long getBehaviorCountRecursively(type, resultStatus) {
         long behaviorCount = 0
@@ -171,6 +195,18 @@ class BehaviorStep implements Serializable {
 
     def setDescription(inDescription) {
         description = inDescription
+    }
+
+    def startExecutionTimer() {
+      executionStartTime = System.currentTimeMillis();
+    }
+
+    def stopExecutionTimer() {
+      executionFinishTime = System.currentTimeMillis()
+    }
+
+    public long getExecutionTotalTimeInMillis() {
+      return executionFinishTime - executionStartTime
     }
 
     public boolean equals(Object other) {
