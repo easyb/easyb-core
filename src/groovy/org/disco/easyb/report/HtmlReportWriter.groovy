@@ -101,7 +101,7 @@ class HtmlReportWriter implements ReportWriter {
                 th('Behaviors')
                 th('Failed')
                 th('Pending')
-                th('Time')
+                th('Time (sec)')
               }
             }
             tbody {
@@ -109,7 +109,7 @@ class HtmlReportWriter implements ReportWriter {
                 td(results.behaviorCount)
                 td(results.failedBehaviorCount)
                 td(results.pendingBehaviorCount)
-                td('TODO add in the time')
+                td((results.genesisStep.storyExecutionTimeRecursively + results.genesisStep.specificationExecutionTimeRecursively)/ 1000f )
               }
             }
           }
@@ -122,7 +122,7 @@ class HtmlReportWriter implements ReportWriter {
                 th('Scenarios')
                 th('Failed')
                 th('Pending')
-                th('Time')
+                th('Time (sec)')
               }
             }
             tbody {
@@ -131,7 +131,7 @@ class HtmlReportWriter implements ReportWriter {
                 td(results.scenarioCount)
                 td(results.failedScenarioCount)
                 td(results.pendingScenarioCount)
-                td('TODO put in the time for stories run')
+                td(results.genesisStep.storyExecutionTimeRecursively / 1000f)
               }
             }
           }
@@ -143,7 +143,7 @@ class HtmlReportWriter implements ReportWriter {
                 th('Specifications')
                 th('Failed')
                 th('Pending')
-                th('Time')
+                th('Time (sec)')
               }
             }
             tbody {
@@ -153,7 +153,7 @@ class HtmlReportWriter implements ReportWriter {
                   td(results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size())
                   td(results.failedSpecificationCount)
                   td(results.pendingSpecificationCount)
-                  td('TODO put in time for this spec')
+                  td(results.genesisStep.specificationExecutionTimeRecursively / 1000f)
                 }
             }
           }
@@ -166,7 +166,7 @@ class HtmlReportWriter implements ReportWriter {
                 th('Scenarios')
                 th('Failed')
                 th('Pending')
-                th('Time')
+                th('Time (sec)')
               }
             }
             tbody {
@@ -179,7 +179,7 @@ class HtmlReportWriter implements ReportWriter {
                   td(storyStep.scenarioCountRecursively)
                   td(storyStep.failedScenarioCountRecursively)
                   td(storyStep.pendingScenarioCountRecursively)
-                  td('TODO put in time for this story')
+                  td(storyStep.executionTotalTimeInMillis / 1000f)
                 }
                 rowNum++
               }
@@ -195,7 +195,7 @@ class HtmlReportWriter implements ReportWriter {
                 th('Specifications')
                 th('Failed')
                 th('Pending')
-                th('Time')
+                th('Time (sec)')
               }
             }
             tbody {
@@ -208,7 +208,7 @@ class HtmlReportWriter implements ReportWriter {
                   td(specificationStep.specificationCountRecursively)
                   td(specificationStep.failedSpecificationCountRecursively)
                   td(specificationStep.pendingSpecificationCountRecursively)
-                  td('TODO put in time for this spec')
+                  td(specificationStep.executionTotalTimeInMillis / 1000f)
                 }
                 rowNum++
               }
