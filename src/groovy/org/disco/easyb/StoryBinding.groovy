@@ -58,6 +58,33 @@ class StoryBinding extends Binding {
         easybResults = {
             story.easybResults()
         }
+
+        all = {
+            story.all()
+        }
+
+        ignore = {Object ... scenarios ->
+            if (scenarios.size() == 1) {
+                def objscn = scenarios[0]
+                try {
+                    objscn.call()
+                } catch (excep) {
+                    if (scenarios[0].getClass() == String) {
+                        story.ignore([scenarios[0]])
+                    } else {
+                        story.ignore(scenarios[0])
+                    }
+                }
+            } else if (scenarios.size() > 1) {
+                story.ignore(scenarios as List)
+            } else{
+                //no argument but this isn't working
+            }
+        }
+    }
+
+    def getAt(ArrayList list){
+        this.story.ignoreList = list
     }
 
     /**

@@ -15,6 +15,9 @@ class StoryKeywords extends BehaviorKeywords {
     def beforeDone = false
     def afterDone = false
 
+    def ignoreAll = false
+    def ignoreList = []
+
     StoryKeywords(ExecutionListener listener) {
         super(listener)
     }
@@ -46,6 +49,14 @@ class StoryKeywords extends BehaviorKeywords {
     }
 
     def scenario(scenarioDescription, scenarioClosure) {
+        if (!ignoreAll && !this.ignoreList.contains(scenarioDescription)) {
+            runScenario(scenarioClosure, scenarioDescription)
+        } else {
+            //do nothing for now, just ignore the scenario
+        }
+    }
+
+    def runScenario(scenarioClosure, scenarioDescription) {
         stepStack.startStep(listener, BehaviorStepType.SCENARIO, scenarioDescription)
         if (beforeScenario != null) {
             beforeScenario()
@@ -55,7 +66,7 @@ class StoryKeywords extends BehaviorKeywords {
 
         scenarioClosure()
 
-        if(initialsteps.equals(stepStack.steps.size())){
+        if (initialsteps.equals(stepStack.steps.size())) {
             listener.gotResult(new Result(Result.PENDING))
         }
 
@@ -113,6 +124,16 @@ class StoryKeywords extends BehaviorKeywords {
         } else {
             stepStack.startStep(listener, BehaviorStepType.AND, "")
             stepStack.stopStep(listener)
+        }
+    }
+
+    def all() {
+        this.ignoreAll = true
+    }
+
+    def ignore(scenarios) {
+        if (!this.ignoreAll) {
+            this.ignoreList = scenarios
         }
     }
 }
