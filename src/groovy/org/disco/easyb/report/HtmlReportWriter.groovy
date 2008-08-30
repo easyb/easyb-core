@@ -37,18 +37,30 @@ class HtmlReportWriter implements ReportWriter {
       rowNum % 2 == 0 ? 'primaryRow' : 'secondaryRow'
     }
 
+    private getScenarioRowClass(int scenarioRowNum) {
+      scenarioRowNum % 2 == 0 ? 'primaryScenarioRow' : 'secondaryScenarioRow'
+    }
+
     public void writeReport(ResultsCollector results) {
 
       Writer writer = new BufferedWriter(new FileWriter(new File(location)))
 
       def html = new MarkupBuilder(writer)
 
-      writer << '<?xml version="1.0" encoding="UTF-8"?>\r\n'
-      writer << '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\r\n'
+      writer << '<?xml version="1.0" encoding="UTF-8"?>\n'
+      writer << '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n'
 
       html.html(xmlns:'http://www.w3.org/1999/xhtml', 'xml:lang':'en', lang:'en') {
         head {
           title('easyb-report')
+          script(src:'prototype.js', type:'text/javascript', '')
+          script(type:'text/javascript',
+                  '''
+                  function toggleScenariosForStory(storyNumber) {
+                    $('scenarios_for_story_' + storyNumber).toggle();
+                    return false;
+                  }
+                  ''')
           style(type:'text/css',
               '''
               body {
@@ -89,6 +101,10 @@ class HtmlReportWriter implements ReportWriter {
 
               tr.secondaryRow {
                 background: #E6E6E5;
+              }
+
+              tr.scenariosForStory {
+                background: #F5F5F5;
               }
               ''')
         }
@@ -170,17 +186,57 @@ class HtmlReportWriter implements ReportWriter {
               }
             }
             tbody {
+
               int rowNum = 0;
               results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each { storyStep ->
               // TODO here we need to walk the children and spit out storyname, scenarios, failed, time
               // TODO but there is a problem since some scenarios,etc aren't in a story
+                int scenarioChildrenCount = storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).size
+
                 tr(class:getRowClass(rowNum)) {
-                  td(storyStep.name)
+                  td{
+                    if(scenarioChildrenCount > 0) {
+                      a(href:"#", onclick:"return toggleScenariosForStory(${rowNum});", storyStep.name)
+                    } else {
+                        a(storyStep.name)
+                    }
+                  }
                   td(storyStep.scenarioCountRecursively)
                   td(storyStep.failedScenarioCountRecursively)
                   td(storyStep.pendingScenarioCountRecursively)
                   td(storyStep.executionTotalTimeInMillis / 1000f)
                 }
+
+                  //TODO put the scenarios_for_story_1
+                if(scenarioChildrenCount > 0) {
+                  tr(id:"scenarios_for_story_${rowNum}", class:"scenariosForStory", style:"display:none;") {
+                    td(colspan:'4') {
+                      table {
+                        thead {
+                          tr {
+                            td('Scenario')
+                            td('Result')
+                            td('Time (sec)')
+                          }
+                        }
+                        tbody {
+                          int scenarioRowNum = 0;
+                          storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).each { scenarioStep ->
+                            tr(class:getScenarioRowClass(scenarioRowNum)) {
+                              td(scenarioStep.name)
+                              td(scenarioStep.result.status)
+                              td(scenarioStep.executionTotalTimeInMillis / 1000f)
+                            }
+                          // TODO put the
+                          scenarioRowNum++
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+
+
                 rowNum++
               }
 
