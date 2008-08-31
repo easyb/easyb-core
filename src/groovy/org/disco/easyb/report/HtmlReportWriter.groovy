@@ -228,19 +228,11 @@ class HtmlReportWriter implements ReportWriter {
                               td(title:"Time (sec)", scenarioStep.executionTotalTimeInMillis / 1000f)
                             }
                             if(scenarioStep.childSteps.size > 0) {
+                              scenarioStep.childSteps.each { componentStep ->
                               tr(id:"components_for_story_${storyRowNum}_scenario_${scenarioRowNum}", class:"scenarioComponents") {
-                                td(colspan:"3") {
-                                  table {
-                                    tbody {
-                                      scenarioStep.childSteps.each { componentStep ->
-                                        tr {
-                                          td(componentStep.stepType.type)
-                                          td(componentStep.name)
+                                          td("${componentStep.stepType.type} ${componentStep.name}")
                                           td(componentStep.result?.status)
-                                        }
-                                      }
-                                    }
-                                  }
+                                          td()
                                 }
                               }
                             }
