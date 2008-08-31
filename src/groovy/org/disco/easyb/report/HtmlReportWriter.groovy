@@ -5,6 +5,7 @@ import org.disco.easyb.BehaviorStep
 import org.disco.easyb.exception.VerificationException
 import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.listener.ResultsCollector
+import org.disco.easyb.result.Result
 
 class HtmlReportWriter implements ReportWriter {
     private String location
@@ -39,6 +40,22 @@ class HtmlReportWriter implements ReportWriter {
 
     private getScenarioRowClass(int scenarioRowNum) {
       scenarioRowNum % 2 == 0 ? 'primaryScenarioRow' : 'secondaryScenarioRow'
+    }
+
+    private getStepStatusClass(Result stepResult) {
+      switch(stepResult?.status) {
+        case Result.SUCCEEDED:
+          return 'stepResultSuccess'
+          break
+        case Result.FAILED:
+          return 'stepResultFailed'
+          break
+        case Result.PENDING:
+          return 'stepResultPending'
+          break
+        default:
+          return ''
+      }
     }
 
     public void writeReport(ResultsCollector results) {
@@ -109,6 +126,16 @@ class HtmlReportWriter implements ReportWriter {
 
               tr.secondaryScenarioRow {
                 background: #E2EAF3;
+              }
+              td.stepResultFailed {
+                background: #FF8080;
+                color: white;
+              }
+              td.stepResultSuccess {
+              }
+              td.stepResultPending {
+                background: #8A8FEE;
+                color: white;
               }
 
               tr.scenariosForStory {
@@ -224,14 +251,14 @@ class HtmlReportWriter implements ReportWriter {
                           storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).each { scenarioStep ->
                             tr(class:getScenarioRowClass(scenarioRowNum)) {
                               td(title:"Scenario", scenarioStep.name)
-                              td(title:"Result", scenarioStep.result.status)
+                              td(title:"Result", class:getStepStatusClass(scenarioStep.result), scenarioStep.result.status)
                               td(title:"Time (sec)", scenarioStep.executionTotalTimeInMillis / 1000f)
                             }
                             if(scenarioStep.childSteps.size > 0) {
                               scenarioStep.childSteps.each { componentStep ->
                               tr(id:"components_for_story_${storyRowNum}_scenario_${scenarioRowNum}", class:"scenarioComponents") {
                                           td("${componentStep.stepType.type} ${componentStep.name}")
-                                          td(componentStep.result?.status)
+                                          td(class:getStepStatusClass(componentStep.result), componentStep.result?.status)
                                           td()
                                 }
                               }
