@@ -58,6 +58,14 @@ class HtmlReportWriter implements ReportWriter {
       }
     }
 
+    private getBehaviorResultFailureSummaryClass(long numberOfFailures) {
+      (numberOfFailures > 0) ? 'stepResultFailed' : ''
+    }
+
+    private getBehaviorResultPendingSummaryClass(long numberOfFailures) {
+      (numberOfFailures > 0) ? 'stepResultPending' : ''
+    }
+
     public void writeReport(ResultsCollector results) {
 
       Writer writer = new BufferedWriter(new FileWriter(new File(location)))
@@ -134,7 +142,7 @@ class HtmlReportWriter implements ReportWriter {
               td.stepResultSuccess {
               }
               td.stepResultPending {
-                background: #8A8FEE;
+                background: #BABFEE;
                 color: white;
               }
 
@@ -237,8 +245,8 @@ class HtmlReportWriter implements ReportWriter {
                     }
                   }
                   td(storyStep.scenarioCountRecursively)
-                  td(storyStep.failedScenarioCountRecursively)
-                  td(storyStep.pendingScenarioCountRecursively)
+                  td(class:getBehaviorResultFailureSummaryClass(storyStep.failedScenarioCountRecursively), storyStep.failedScenarioCountRecursively)
+                  td(class:getBehaviorResultPendingSummaryClass(storyStep.pendingScenarioCountRecursively), storyStep.pendingScenarioCountRecursively)
                   td(storyStep.executionTotalTimeInMillis / 1000f)
                 }
 
