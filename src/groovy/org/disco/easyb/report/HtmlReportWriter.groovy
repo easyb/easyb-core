@@ -103,8 +103,16 @@ class HtmlReportWriter implements ReportWriter {
                 background: #E6E6E5;
               }
 
+              tr.primaryScenarioRow {
+                background: #C3D4E5;
+              }
+
+              tr.secondaryScenarioRow {
+                background: #E2EAF3;
+              }
+
               tr.scenariosForStory {
-                background: #F5F5F5;
+                background: #F5FFF5;
               }
               ''')
         }
@@ -187,16 +195,16 @@ class HtmlReportWriter implements ReportWriter {
             }
             tbody {
 
-              int rowNum = 0;
+              int storyRowNum = 0;
               results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each { storyStep ->
               // TODO here we need to walk the children and spit out storyname, scenarios, failed, time
               // TODO but there is a problem since some scenarios,etc aren't in a story
                 int scenarioChildrenCount = storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).size
 
-                tr(class:getRowClass(rowNum)) {
+                tr(class:getRowClass(storyRowNum)) {
                   td{
                     if(scenarioChildrenCount > 0) {
-                      a(href:"#", onclick:"return toggleScenariosForStory(${rowNum});", storyStep.name)
+                      a(href:"#", onclick:"return toggleScenariosForStory(${storyRowNum});", storyStep.name)
                     } else {
                         a(storyStep.name)
                     }
@@ -207,27 +215,36 @@ class HtmlReportWriter implements ReportWriter {
                   td(storyStep.executionTotalTimeInMillis / 1000f)
                 }
 
-                  //TODO put the scenarios_for_story_1
                 if(scenarioChildrenCount > 0) {
-                  tr(id:"scenarios_for_story_${rowNum}", class:"scenariosForStory", style:"display:none;") {
+                  tr(id:"scenarios_for_story_${storyRowNum}", class:"scenariosForStory", style:"display:none;") {
                     td(colspan:'4') {
                       table {
-                        thead {
-                          tr {
-                            td('Scenario')
-                            td('Result')
-                            td('Time (sec)')
-                          }
-                        }
                         tbody {
                           int scenarioRowNum = 0;
                           storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).each { scenarioStep ->
                             tr(class:getScenarioRowClass(scenarioRowNum)) {
-                              td(scenarioStep.name)
-                              td(scenarioStep.result.status)
-                              td(scenarioStep.executionTotalTimeInMillis / 1000f)
+                              td(title:"Scenario", scenarioStep.name)
+                              td(title:"Result", scenarioStep.result.status)
+                              td(title:"Time (sec)", scenarioStep.executionTotalTimeInMillis / 1000f)
                             }
-                          // TODO put the
+                            if(scenarioStep.childSteps.size > 0) {
+                              tr(id:"components_for_story_${storyRowNum}_scenario_${scenarioRowNum}", class:"scenarioComponents") {
+                                td(colspan:"3") {
+                                  table {
+                                    tbody {
+                                      scenarioStep.childSteps.each { componentStep ->
+                                        tr {
+                                          td(componentStep.stepType.type)
+                                          td(componentStep.name)
+                                          td(componentStep.result?.status)
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+
                           scenarioRowNum++
                           }
                         }
@@ -237,7 +254,7 @@ class HtmlReportWriter implements ReportWriter {
                 }
 
 
-                rowNum++
+                storyRowNum++
               }
 
             }
