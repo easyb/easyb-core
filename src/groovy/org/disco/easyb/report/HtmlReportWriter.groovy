@@ -2,7 +2,6 @@ package org.disco.easyb.report
 
 import groovy.xml.MarkupBuilder
 import org.disco.easyb.BehaviorStep
-import org.disco.easyb.exception.VerificationException
 import org.disco.easyb.util.BehaviorStepType
 import org.disco.easyb.listener.ResultsCollector
 import org.disco.easyb.result.Result
@@ -66,17 +65,27 @@ class HtmlReportWriter implements ReportWriter {
       (numberOfFailures > 0) ? 'stepResultPending' : ''
     }
 
-    private writeJavascriptDependenciesToDisk(String location) {
+    private writeJavascriptDependenciesToDisk() {
       String prototypeFile = "thirdparty/prototype/prototype.js"
 
       InputStream inputStream = this.class.getClassLoader().getResourceAsStream(prototypeFile);
 
       if(inputStream != null) {
         Writer prototypeWriter = new BufferedWriter(new FileWriter(new File(location + "_prototype.js")))
-        inputStream.eachLine { line ->
-          prototypeWriter << line + "\n"
+        inputStream.eachByte { singleByte ->
+          prototypeWriter.write(singleByte)
         }
         prototypeWriter.close()
+      }
+    }
+
+    private getPrototypeFilename() {
+      if(location.indexOf("\\") != -1) {
+        return location.substring(location.lastIndexOf("\\") + 1) + '_prototype.js'
+      } else if(location.indexOf("/") != -1) {
+        return location.substring(location.lastIndexOf("/") + 1) + '_prototype.js'
+      } else {
+        return location + '_prototype.js'
       }
     }
 
@@ -84,7 +93,7 @@ class HtmlReportWriter implements ReportWriter {
 
       Writer writer = new BufferedWriter(new FileWriter(new File(location)))
 
-      writeJavascriptDependenciesToDisk(location);
+      writeJavascriptDependenciesToDisk();
 
       def html = new MarkupBuilder(writer)
 
@@ -94,7 +103,7 @@ class HtmlReportWriter implements ReportWriter {
       html.html(xmlns:'http://www.w3.org/1999/xhtml', 'xml:lang':'en', lang:'en') {
         head {
           title('easyb-report')
-          script(src:location + '_prototype.js', type:'text/javascript', '')
+          script(src:getPrototypeFilename(), type:'text/javascript', '')
           script(type:'text/javascript',
                   '''
                   function toggleScenariosForStory(storyNumber) {
