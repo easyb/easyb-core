@@ -85,6 +85,11 @@ class HtmlReportWriter implements ReportWriter {
                     $('scenarios_for_story_' + storyNumber).toggle();
                     return false;
                   }
+                  function toggleComponentsForSpecification(specificationNumber) {
+                    $('components_for_specification_' + specificationNumber).toggle();
+                    return false;
+                  }
+
                   ''')
           style(type:'text/css',
               '''
@@ -93,7 +98,7 @@ class HtmlReportWriter implements ReportWriter {
                 background-position: bottom;
                 background-attachment: fixed;
                 color: #6F6F6F;
-                font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';
+                font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans', serif;
                 font-size: 8pt;
                 line-height: 1.8em;
                 height: 99%;
@@ -107,6 +112,13 @@ class HtmlReportWriter implements ReportWriter {
 
               h2 {
                 font-size: 1.25em;
+              }
+
+              table.componentsForSpecificationTable {
+                width:100%;
+              }
+              table.scenariosForStoriesTable {
+                width:100%;
               }
 
               th {
@@ -149,6 +161,10 @@ class HtmlReportWriter implements ReportWriter {
               tr.scenariosForStory {
                 background: #F5FFF5;
               }
+              tr.componentsForSpecification {
+                background: #F5FFF5;
+              }
+
               ''')
         }
         body {
@@ -166,8 +182,8 @@ class HtmlReportWriter implements ReportWriter {
             tbody {
               tr(class:'primaryRow') {
                 td(results.behaviorCount)
-                td(results.failedBehaviorCount)
-                td(results.pendingBehaviorCount)
+                td(class:getBehaviorResultFailureSummaryClass(results.failedBehaviorCount),results.failedBehaviorCount)
+                td(class:getBehaviorResultPendingSummaryClass(results.pendingBehaviorCount),results.pendingBehaviorCount)
                 td((results.genesisStep.storyExecutionTimeRecursively + results.genesisStep.specificationExecutionTimeRecursively)/ 1000f )
               }
             }
@@ -188,8 +204,8 @@ class HtmlReportWriter implements ReportWriter {
               tr(class:'primaryRow') {
                 td(results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).size())
                 td(results.scenarioCount)
-                td(results.failedScenarioCount)
-                td(results.pendingScenarioCount)
+                td(class:getBehaviorResultFailureSummaryClass(results.failedScenarioCount),results.failedScenarioCount)
+                td(class:getBehaviorResultPendingSummaryClass(results.pendingScenarioCount),results.pendingScenarioCount)
                 td(results.genesisStep.storyExecutionTimeRecursively / 1000f)
               }
             }
@@ -210,8 +226,8 @@ class HtmlReportWriter implements ReportWriter {
               // TODO but there is a problem since some scenarios,etc aren't in a story
                 tr(class:'primaryRow') {
                   td(results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size())
-                  td(results.failedSpecificationCount)
-                  td(results.pendingSpecificationCount)
+                  td(class:getBehaviorResultFailureSummaryClass(results.failedSpecificationCount), results.failedSpecificationCount)
+                  td(class:getBehaviorResultPendingSummaryClass(results.pendingSpecificationCount),results.pendingSpecificationCount)
                   td(results.genesisStep.specificationExecutionTimeRecursively / 1000f)
                 }
             }
@@ -252,8 +268,8 @@ class HtmlReportWriter implements ReportWriter {
 
                 if(scenarioChildrenCount > 0) {
                   tr(id:"scenarios_for_story_${storyRowNum}", class:"scenariosForStory", style:"display:none;") {
-                    td(colspan:'4') {
-                      table {
+                    td(colspan:'5') {
+                      table(class:'scenariosForStoriesTable') {
                         tbody {
                           int scenarioRowNum = 0;
                           storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).each { scenarioStep ->
@@ -264,7 +280,7 @@ class HtmlReportWriter implements ReportWriter {
                             }
                             if(scenarioStep.childSteps.size > 0) {
                               scenarioStep.childSteps.each { componentStep ->
-                              tr(id:"components_for_story_${storyRowNum}_scenario_${scenarioRowNum}", class:"scenarioComponents") {
+                              tr(class:"scenarioComponents") {
                                           td("${componentStep.stepType.type} ${componentStep.name}")
                                           td(class:getStepStatusClass(componentStep.result), componentStep.result?.status)
                                           td()
@@ -304,11 +320,33 @@ class HtmlReportWriter implements ReportWriter {
               // TODO here we need to walk the children and spit out storyname, scenarios, failed, time
               // TODO but there is a problem since some scenarios,etc aren't in a story
                 tr(class:getRowClass(rowNum)) {
-                  td(specificationStep.name)
+                  td{
+                    if(specificationStep.childSteps.size > 0) {
+                      a(href:"#", onclick:"return toggleComponentsForSpecification(${rowNum});", specificationStep.name)
+                    } else {
+                        a(specificationStep.name)
+                    }
+                  }
                   td(specificationStep.specificationCountRecursively)
-                  td(specificationStep.failedSpecificationCountRecursively)
-                  td(specificationStep.pendingSpecificationCountRecursively)
+                  td(class:getBehaviorResultFailureSummaryClass(specificationStep.failedSpecificationCountRecursively), specificationStep.failedSpecificationCountRecursively)
+                  td(class:getBehaviorResultPendingSummaryClass(specificationStep.pendingSpecificationCountRecursively), specificationStep.pendingSpecificationCountRecursively)
                   td(specificationStep.executionTotalTimeInMillis / 1000f)
+                }
+                if(specificationStep.childSteps.size > 0) {
+                  tr(id:"components_for_specification_${rowNum}", class:"componentsForSpecification", style:"display:none;"){
+                    td(colspan:'5') {
+                      table(class:'componentsForSpecificationTable') {
+                        tbody {
+                          specificationStep.childSteps.each { componentStep ->
+                            tr {
+                              td("${componentStep.stepType.type} ${componentStep.name}")
+                              td(class:getStepStatusClass(componentStep.result), componentStep.result?.status, style:'text-align:right;')
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
                 rowNum++
               }
