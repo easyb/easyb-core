@@ -238,8 +238,6 @@ class HtmlReportWriter implements ReportWriter {
               }
             }
             tbody {
-              // TODO here we need to walk the children and spit out storyname, scenarios, failed, time
-              // TODO but there is a problem since some scenarios,etc aren't in a story
                 tr(class:'primaryRow') {
                   td(results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size())
                   td(class:getBehaviorResultFailureSummaryClass(results.failedSpecificationCount), results.failedSpecificationCount)
