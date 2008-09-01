@@ -66,9 +66,25 @@ class HtmlReportWriter implements ReportWriter {
       (numberOfFailures > 0) ? 'stepResultPending' : ''
     }
 
+    private writeJavascriptDependenciesToDisk(String location) {
+      String prototypeFile = "thirdparty/prototype/prototype.js"
+
+      InputStream inputStream = this.class.getClassLoader().getResourceAsStream(prototypeFile);
+
+      if(inputStream != null) {
+        Writer prototypeWriter = new BufferedWriter(new FileWriter(new File(location + "_prototype.js")))
+        inputStream.eachLine { line ->
+          prototypeWriter << line + "\n"
+        }
+        prototypeWriter.close()
+      }
+    }
+
     public void writeReport(ResultsCollector results) {
 
       Writer writer = new BufferedWriter(new FileWriter(new File(location)))
+
+      writeJavascriptDependenciesToDisk(location);
 
       def html = new MarkupBuilder(writer)
 
@@ -78,7 +94,7 @@ class HtmlReportWriter implements ReportWriter {
       html.html(xmlns:'http://www.w3.org/1999/xhtml', 'xml:lang':'en', lang:'en') {
         head {
           title('easyb-report')
-          script(src:'prototype.js', type:'text/javascript', '')
+          script(src:location + '_prototype.js', type:'text/javascript', '')
           script(type:'text/javascript',
                   '''
                   function toggleScenariosForStory(storyNumber) {
@@ -317,8 +333,6 @@ class HtmlReportWriter implements ReportWriter {
             tbody {
               int rowNum = 0;
               results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each { specificationStep ->
-              // TODO here we need to walk the children and spit out storyname, scenarios, failed, time
-              // TODO but there is a problem since some scenarios,etc aren't in a story
                 tr(class:getRowClass(rowNum)) {
                   td{
                     if(specificationStep.childSteps.size > 0) {
