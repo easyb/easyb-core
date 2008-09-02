@@ -48,6 +48,12 @@ class XmlReportWriter implements ReportWriter {
                         walkStoryChildren(xml, child)
                     }
                 }
+            } else if (step.stepType == BehaviorStepType.NARRATIVE) {
+                xml."${step.stepType.type()}"(name: step.name) {
+                  for (child in step.childSteps) {
+                      walkStoryChildren(xml, child)
+                  }
+                }
             } else { // assumed to be story now
                 xml."${step.stepType.type()}"(name: step.name, scenarios: step.scenarioCountRecursively, failedscenarios: step.failedScenarioCountRecursively, pendingscenarios: step.pendingScenarioCountRecursively, executionTime: step.executionTotalTimeInMillis) {
                     if (step.description) {

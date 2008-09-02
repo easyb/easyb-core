@@ -14,9 +14,9 @@ public enum BehaviorStepType {
     IT("it"),
     DESCRIPTION("description"),
     NARRATIVE("narrative"),
-    NARRATIVE_ROLE("narrative role"),
-    NARRATIVE_FEATURE("narrative feature"),
-    NARRATIVE_BENEFIT("narrative benefit");
+    NARRATIVE_ROLE("role"),
+    NARRATIVE_FEATURE("feature"),
+    NARRATIVE_BENEFIT("benefit");
 
     private final String type;
 
