@@ -35,6 +35,7 @@ public class BehaviorFactory {
      * assists in debugging why a particular behavior file
      * can't be run
      */
+    // TODO this method appears to be named wrong. its function is not to verify a file at all.. it appears to solely just build up an error message
     private static String verifyFile(File behaviorFile) {
         StringBuffer errorMessage = new StringBuffer("Your file, ")
             .append(behaviorFile.getName()).append(", ");

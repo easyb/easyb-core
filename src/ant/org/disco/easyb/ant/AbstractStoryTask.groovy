@@ -50,7 +50,7 @@ public class AbstractStoryTask extends AbstractJavaTask {
             String[] includedFiles = ds.getIncludedFiles()
 
             for (i in 0..<includedFiles.length) {
-                addTarget(ds.getBasedir().toString() + "/" + includedFiles[i])
+                addTarget("\"${ds.getBasedir().toString()}/${includedFiles[i]}\"")
             }
             log("easyb is preparing to process ${includedFiles.length} file(s)")
         }
