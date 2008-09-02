@@ -1,16 +1,21 @@
 package org.disco.easyb.domain;
 
+import groovy.lang.GroovyShell;
+
 import java.io.File;
 import java.io.Serializable;
+import java.util.Map;
 
 public abstract class BehaviorBase implements Behavior, Serializable {
     private String phrase;
     private File file;
+	private GroovyShellConfiguration gShellConfig;
 
-    protected BehaviorBase(String phrase, File file) {
-        this.phrase = phrase;
-        this.file = file;
-    }
+	protected BehaviorBase(GroovyShellConfiguration gShellConfig, String phrase, File file) {
+		this.gShellConfig = gShellConfig;
+		this.phrase = phrase;
+		this.file = file;
+	}
 
     public String getPhrase() {
         return phrase;
@@ -18,6 +23,17 @@ public abstract class BehaviorBase implements Behavior, Serializable {
 
     public File getFile() {
         return file;
+    }
+
+	public ClassLoader getClassLoader() {
+		return gShellConfig.getClassLoader();
+	}
+
+    protected void bindShellVariables(GroovyShell groovyShell) {
+        Map<String,Object> shellContextVariables = gShellConfig.getShellContextVariables();
+        for (String key : shellContextVariables.keySet()) {
+            groovyShell.getContext().setVariable(key, shellContextVariables.get(key));    
+        }
     }
 
     @SuppressWarnings("RedundantIfStatement")

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.BehaviorFactory;
+import org.disco.easyb.domain.GroovyShellConfiguration;
 import org.disco.easyb.listener.BroadcastListener;
 import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.listener.FailureDetector;
@@ -86,20 +87,23 @@ public class BehaviorRunner {
         }
     }
 
-    /**
-     * @param paths locations of the specifications to be loaded
-     * @return collection of files where the only element is the file of the spec to be run
-     */
-    public static List<Behavior> getBehaviors(String[] paths) {
+    public static List<Behavior> getBehaviors(GroovyShellConfiguration groovyShellConfiguration, String[] paths) {
         List<Behavior> behaviors = new ArrayList<Behavior>();
         for (String path : paths) {
             try {
-                behaviors.add(BehaviorFactory.createBehavior(new File(path)));
+                behaviors.add(BehaviorFactory.createBehavior(groovyShellConfiguration, new File(path)));
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
                 System.exit(-1);
             }
         }
         return behaviors;
+    }
+    /**
+     * @param paths locations of the specifications to be loaded
+     * @return collection of files where the only element is the file of the spec to be run
+     */
+    public static List<Behavior> getBehaviors(String[] paths) {
+        return getBehaviors(BehaviorFactory.DEFAULT_GROOVY_SHELL_CONFIG, paths);
     }
 }

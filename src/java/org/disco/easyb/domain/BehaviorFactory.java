@@ -8,26 +8,31 @@ import org.disco.easyb.util.CamelCaseConverter;
 
 public class BehaviorFactory {
 
+    public static final GroovyShellConfiguration DEFAULT_GROOVY_SHELL_CONFIG = new GroovyShellConfiguration();
+
     private static final List<String> STORY_PATTERNS = asList("Story.groovy", ".story");
     private static final List<String> SPECIFICATION_PATTERNS = asList("Specification.groovy", ".specification");
 
     private BehaviorFactory() {
     }
 
-    public static Behavior createBehavior(File behaviorFile) {
+	public static Behavior createBehavior(GroovyShellConfiguration gShellConfig, File behaviorFile) {
+		for (String pattern : STORY_PATTERNS) {
+			if (behaviorFile.getName().endsWith(pattern)) {
+				return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+			}
+		}
+		for (String pattern : SPECIFICATION_PATTERNS) {
+			if (behaviorFile.getName().endsWith(pattern)) {
+				return new Specification(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+			}
+		}
 
-        for (String pattern : STORY_PATTERNS) {
-            if (behaviorFile.getName().endsWith(pattern)) {
-                return new Story(createPhrase(behaviorFile, pattern), behaviorFile);
-            }
-        }
-        for (String pattern : SPECIFICATION_PATTERNS) {
-            if (behaviorFile.getName().endsWith(pattern)) {
-                return new Specification(createPhrase(behaviorFile, pattern), behaviorFile);
-            }
-        }
+		throw new IllegalArgumentException(verifyFile(behaviorFile));
+	}
 
-        throw new IllegalArgumentException(verifyFile(behaviorFile));
+	public static Behavior createBehavior(File behaviorFile) {
+		return createBehavior(DEFAULT_GROOVY_SHELL_CONFIG, behaviorFile);
     }
 
     /**

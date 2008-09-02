@@ -10,9 +10,9 @@ import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.util.BehaviorStepType;
 
 public class Specification extends BehaviorBase {
-    public Specification(String phrase, File file) {
-        super(phrase, file);
-    }
+	public Specification(GroovyShellConfiguration gShellConfig, String phrase, File file) {
+		super(gShellConfig, phrase, file);
+	}
 
     public String getTypeDescriptor() {
         return "specification";
@@ -23,7 +23,11 @@ public class Specification extends BehaviorBase {
 
         listener.startBehavior(this);
         listener.startStep(currentStep);
-        new GroovyShell(SpecificationBinding.getBinding(listener)).evaluate(getFile());
+
+        GroovyShell g = new GroovyShell(getClassLoader(), SpecificationBinding.getBinding(listener));
+        bindShellVariables(g);
+
+        g.evaluate(getFile());
         listener.stopStep();
         listener.stopBehavior(currentStep, this);
 

@@ -14,9 +14,9 @@ import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.util.BehaviorStepType;
 
 public class Story extends BehaviorBase {
-    public Story(String phrase, File file) {
-        super(phrase, file);
-    }
+	public Story(GroovyShellConfiguration gShellConfig, String phrase, File file) {
+		super(gShellConfig, phrase, file);
+	}
 
     public String getTypeDescriptor() {
         return "story";
@@ -27,7 +27,11 @@ public class Story extends BehaviorBase {
 
         listener.startBehavior(this);
         listener.startStep(currentStep);
-        new GroovyShell(StoryBinding.getBinding(listener)).evaluate(readStory(getFile()));
+        
+        GroovyShell g = new GroovyShell(getClassLoader(), StoryBinding.getBinding(listener));
+        bindShellVariables(g);
+        
+        g.evaluate(readStory(getFile()));
         listener.stopStep();
         listener.stopBehavior(currentStep, this);
 
