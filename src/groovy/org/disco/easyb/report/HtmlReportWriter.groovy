@@ -13,6 +13,21 @@ class HtmlReportWriter implements ReportWriter {
         this.location = location
     }
 
+//  def buildFailureMessage(MarkupBuilder html, result) {
+//      def buff = new StringBuffer()
+//      result.cause()?.getMessage())
+//      for (i in 1..10) {
+//          html.p(result.cause()?.getStackTrace()[i], style:'margin:0px')
+//        yield result.cause()?.getStackTrace()[i]
+//      }
+//      buff << "...<br/>"
+//      return buff.toString()
+//  }
+
+//                                    if (!(step.result.cause instanceof VerificationException)) {
+//                                        stacktrace(buildFailureMessage(step.result))
+//                                    }
+
 
     def walkStoryChildrenForList(MarkupBuilder html, BehaviorStep step) {
         if (step.childSteps.size() == 0) {
@@ -308,6 +323,19 @@ class HtmlReportWriter implements ReportWriter {
                                           td(class:getStepStatusClass(componentStep.result), componentStep.result?.status)
                                           td()
                                 }
+                              if (componentStep.result?.failed()) {
+                                tr {
+                                  td(colspan:'3', style:'color:red; padding-left: 1cm;') {
+                                    strong(componentStep.result.cause()?.getMessage())
+                                    br()
+                                    for (i in 1..10) {
+                                      yield componentStep.result.cause()?.getStackTrace()[i]
+                                      br()
+                                    }
+                                  }
+                                }
+                              }
+                              
                               }
                             }
 
@@ -362,6 +390,18 @@ class HtmlReportWriter implements ReportWriter {
                             tr {
                               td("${componentStep.stepType.type} ${componentStep.name}")
                               td(class:getStepStatusClass(componentStep.result), componentStep.result?.status, style:'text-align:right;')
+                            }
+                            if (componentStep.result?.failed()) {
+                              tr {
+                                td(colspan:'2', style:'color:red; padding-left: 1cm;') {
+                                  strong(componentStep.result.cause()?.getMessage())
+                                  br()
+                                  for (i in 1..10) {
+                                    yield componentStep.result.cause()?.getStackTrace()[i]
+                                    br()
+                                  }
+                                }
+                              }
                             }
                           }
                         }
