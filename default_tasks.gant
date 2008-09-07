@@ -18,7 +18,7 @@ sourcedir = "src/java"
 antsourcedir = "src/ant"
 behaviordir = "behavior/java"
 homedir = System.properties.'user.home'
-resourcedir = "cfg/resource"
+cfgdir = "cfg"
 mavenrepo = "${homedir}/.m2/repository"
 
 target(clean: "cleans target dir") {

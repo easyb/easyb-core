@@ -52,7 +52,7 @@ target(jar:"create an archive of the project's classfiles"){
   depends("compile-all")
    
   Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:classdir)
-  Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:resourcedir, update:true)
+  Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:cfgdir, update:true)
 }
 
 target("publish-easyb":"uploads easyb distribution to googlecode") {
