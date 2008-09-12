@@ -97,6 +97,56 @@ class HtmlReportWriter implements ReportWriter {
       return getLocationDir() + File.separator + resourceName
     }
 
+    def handleSpecificationPlainElement(MarkupBuilder html, element) {
+        writeSpecificationPlainElement(html, element)
+        element.getChildSteps().each {
+            writeSpecificationPlainElement(html, it)
+        }
+    }
+
+  def writeSpecificationPlainElement(html, element) {
+      switch (element.stepType) {
+          case BehaviorStepType.SPECIFICATION:
+            html.br()
+            html.yieldUnescaped "${'&nbsp;'.multiply(2)}"
+            html.yield "Specification: ${element.name}"
+            break
+          case BehaviorStepType.DESCRIPTION:
+            html.yieldUnescaped "${'&nbsp;'.multiply(3)}"
+            html.yield "${element.description}"
+            html.br()
+            break
+          case BehaviorStepType.BEFORE:
+            html.yieldUnescaped "${'&nbsp;'.multiply(4)}"
+            html.yield "before ${element.name}"
+              break
+          case BehaviorStepType.IT:
+            html.yieldUnescaped "${'&nbsp;'.multiply(4)}"
+            html.yield "it ${element.name}"
+              break
+          case BehaviorStepType.AND:
+            html.yieldUnescaped "${'&nbsp;'.multiply(4)}"
+            html.yield "and"
+              break
+          default:
+              //no op to avoid having alerts in story text
+              break
+      }
+
+      if (element.result == Result.FAILED) {
+        html.br()
+        html.br()
+        html.yield "	Failure -> ${element.name} ${element.description}"
+        html.br()
+        html.yield "${element.failuremessage}"
+      }
+      if (element.result?.pending()) {
+        html.yield " [PENDING]"
+      }
+    html.br()
+  }
+
+
     public void writeReport(ResultsCollector results) {
 
       Writer writer = new BufferedWriter(new FileWriter(new File(location)))
@@ -131,6 +181,7 @@ class HtmlReportWriter implements ReportWriter {
                     $('Summaries').hide();
                     $('StoriesList').hide();
                     $('SpecificationsList').hide();
+                    $('SpecificationsListPlain').hide();
                     $(contentDiv).show();
                   }
                   function toggleScenariosForStory(storyNumber) {
@@ -375,6 +426,26 @@ class HtmlReportWriter implements ReportWriter {
                       }
                     }
                   }
+                  div(id:'SpecificationsListPlain', style:"display:none;") {
+                    a(name:"SpecificationsListPlain")
+                    h2('Specifications List Plain')
+
+                    def specificationCount = results.specificationCount
+                    div(
+                        """${(specificationCount > 1) ? "${specificationCount} specifications" : " 1 specification"}
+                             (including ${results.getPendingSpecificationCount()} pending) executed
+                            ${results.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure!" : " successfully"}
+                            ${results.getFailedSpecificationCount().toInteger() > 0 ? " Total failures: ${results.getFailedSpecificationCount()}" : ""}
+                        """)
+
+                    div() {
+                      results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
+                        handleSpecificationPlainElement(html, genesisChild)
+                      }
+                    }
+
+
+                  }
                 }
               }
             }
@@ -394,6 +465,9 @@ class HtmlReportWriter implements ReportWriter {
                     }
                     li {
                       a(href:"#", onclick:"showOnlyContent('SpecificationsList')", "Specifications List")
+                    }
+                    li {
+                      a(href:"#", onclick:"showOnlyContent('SpecificationsListPlain')", "Specifications List Plain")
                     }
                   }
                 }
