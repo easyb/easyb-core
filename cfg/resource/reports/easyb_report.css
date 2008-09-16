@@ -299,6 +299,11 @@ img.right {
 	border: none;
 }
 
+.selected-menu-link {
+  color: red;
+  font-size: 14px;
+}
+
 /* Footer */
 
 #footer {

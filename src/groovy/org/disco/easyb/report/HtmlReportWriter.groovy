@@ -177,11 +177,16 @@ class HtmlReportWriter implements ReportWriter {
           script(src:"prototype.js", type:'text/javascript', '')
           script(type:'text/javascript',
                   '''
-                  function showOnlyContent(contentDiv) {
+                  function showOnlyContent(contentDiv, linkId) {
                     $('Summaries').hide();
                     $('StoriesList').hide();
                     $('SpecificationsList').hide();
                     $('SpecificationsListPlain').hide();
+                    $('summary-menu-link').removeClassName('selected-menu-link');
+                    $('stories-list-menu-link').removeClassName('selected-menu-link');
+                    $('specifications-list-menu-link').removeClassName('selected-menu-link');
+                    $('specifications-list-plain-menu-link').removeClassName('selected-menu-link');
+                    $(linkId).addClassName('selected-menu-link');
                     $(contentDiv).show();
                   }
                   function toggleScenariosForStory(storyNumber) {
@@ -458,16 +463,16 @@ class HtmlReportWriter implements ReportWriter {
                   h2("Sections")
                   ul {
                     li {
-                      a(href:"#", onclick:"showOnlyContent('Summaries')", "Summary")
+                      a( id:"summary-menu-link", class:'selected-menu-link', href:"#", onclick:"showOnlyContent('Summaries', 'summary-menu-link')", "Summary")
                     }
                     li {
-                      a(href:"#", onclick:"showOnlyContent('StoriesList')", "Stories List")
+                      a( id:"stories-list-menu-link", href:"#", onclick:"showOnlyContent('StoriesList', 'stories-list-menu-link')", "Stories List")
                     }
                     li {
-                      a(href:"#", onclick:"showOnlyContent('SpecificationsList')", "Specifications List")
+                      a( id:"specifications-list-menu-link", href:"#", onclick:"showOnlyContent('SpecificationsList', 'specifications-list-menu-link')", "Specifications List")
                     }
                     li {
-                      a(href:"#", onclick:"showOnlyContent('SpecificationsListPlain')", "Specifications List Plain")
+                      a( id:"specifications-list-plain-menu-link", href:"#", onclick:"showOnlyContent('SpecificationsListPlain', 'specifications-list-plain-menu-link')", "Specifications List Plain")
                     }
                   }
                 }
