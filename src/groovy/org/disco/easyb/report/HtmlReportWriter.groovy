@@ -13,25 +13,6 @@ class HtmlReportWriter implements ReportWriter {
         this.location = location
     }
 
-    def walkStoryChildrenForList(MarkupBuilder html, BehaviorStep step) {
-        if (step.childSteps.size() == 0) {
-        } else {
-            if (step.stepType == BehaviorStepType.SCENARIO) {
-            } else { // assumed to be story now
-              html.
-                xml."${step.stepType.type()}"(name: step.name, scenarios: step.scenarioCountRecursively, failedscenarios: step.failedScenarioCountRecursively, pendingscenarios: step.pendingScenarioCountRecursively) {
-                    if (step.description) {
-                        xml.description(step.description)
-                    }
-                    for (child in step.childSteps) {
-                        walkStoryChildren(xml, child)
-                    }
-                }
-            }
-        }
-
-    }
-
     private getRowClass(int rowNum) {
       rowNum % 2 == 0 ? 'primaryRow' : 'secondaryRow'
     }
@@ -104,6 +85,14 @@ class HtmlReportWriter implements ReportWriter {
         }
     }
 
+
+  def handleStoryPlainElement(MarkupBuilder html, element) {
+      writeStoryPlainElement(html, element)
+      element.getChildSteps().each {
+          writeStoryPlainElement(html, it)
+      }
+  }
+
   def writeSpecificationPlainElement(html, element) {
       switch (element.stepType) {
           case BehaviorStepType.SPECIFICATION:
@@ -119,32 +108,135 @@ class HtmlReportWriter implements ReportWriter {
           case BehaviorStepType.BEFORE:
             html.yieldUnescaped "${'&nbsp;'.multiply(4)}"
             html.yield "before ${element.name}"
-              break
+            break
           case BehaviorStepType.IT:
             html.yieldUnescaped "${'&nbsp;'.multiply(4)}"
             html.yield "it ${element.name}"
-              break
+            break
           case BehaviorStepType.AND:
             html.yieldUnescaped "${'&nbsp;'.multiply(4)}"
             html.yield "and"
-              break
+            break
           default:
-              //no op to avoid having alerts in story text
-              break
+            //no op to avoid having alerts in story text
+            break
       }
 
-      if (element.result == Result.FAILED) {
-        html.br()
-        html.br()
-        html.yield "	Failure -> ${element.name} ${element.description}"
-        html.br()
-        html.yield "${element.failuremessage}"
+      if (element.result?.failed()) {
+        html.yieldUnescaped "${'&nbsp;'.multiply(1)}"
+        html.yieldUnescaped "<span style='color:#FF8080;'>"
+        html.yield "[FAILURE: ${element.result?.cause()?.getMessage()}]"
+        html.yieldUnescaped "</span>"
       }
       if (element.result?.pending()) {
-        html.yield " [PENDING]"
+        html.yieldUnescaped "<span style='color:#BABFEE;'>"
+        html.yieldUnescaped "${'&nbsp;'.multiply(1)}"
+        html.yield "[PENDING]"
+        html.yieldUnescaped "</span>"
       }
     html.br()
   }
+
+
+  def writeStoryPlainElement(html, element) {
+
+      switch (element.stepType) {
+          case BehaviorStepType.STORY:
+            html.br()
+            html.yieldUnescaped "${'&nbsp;'.multiply(2)}"
+            html.yield "Story: ${element.name}"
+            break
+          case BehaviorStepType.DESCRIPTION:
+            html.yieldUnescaped "${'&nbsp;'.multiply(3)}"
+            html.yield "Description: ${element.description}"
+            break
+          case BehaviorStepType.NARRATIVE:
+            html.yieldUnescaped "${'&nbsp;'.multiply(3)}"
+            html.yield "Narrative: ${element.description}"
+            element.getChildSteps().each {
+              html.br()
+              switch (it.stepType) {
+                case BehaviorStepType.NARRATIVE_ROLE:
+                  html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+                  html.yield "As a ${it.name}"
+                  break
+                case BehaviorStepType.NARRATIVE_FEATURE:
+                  html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+                  html.yield "I want ${it.name}"
+                  break
+                case BehaviorStepType.NARRATIVE_BENEFIT:
+                  html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+                  html.yield "So that ${it.name}"
+                  break
+                }
+            }
+            break
+          case BehaviorStepType.SCENARIO:
+            html.br()
+            html.yieldUnescaped "${'&nbsp;'.multiply(4)}"
+            html.yield "scenario ${element.name}"
+            element.getChildSteps().each {
+                html.br()
+                switch (it.stepType) {
+                  case BehaviorStepType.GIVEN:
+                    html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+                    html.yield "given ${it.name}"
+                    break
+                  case BehaviorStepType.WHEN:
+                    html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+                    html.yield "when ${it.name}"
+                    break
+                  case BehaviorStepType.THEN:
+                    html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+                    html.yield "then ${it.name}"
+                    break
+                  case BehaviorStepType.AND:
+                    html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+                    html.yield "and"
+                    break
+                  default:
+                    //no op to avoid having alerts in story text
+                    break
+                } //end it.stepType switch
+                if (it.result?.failed()) {
+                  html.yieldUnescaped "${'&nbsp;'.multiply(1)}"
+                  html.yieldUnescaped "<span style='color:#FF8080;'>"
+                  html.yield "[FAILURE: ${it.result?.cause()?.getMessage()}]"
+                  html.yieldUnescaped "</span>"
+                }
+            }//end child steps
+            break
+          case BehaviorStepType.GIVEN:
+            html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+            html.yield "given ${element.name}"
+            break
+          case BehaviorStepType.WHEN:
+            html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+            html.yield "when ${element.name}"
+            break
+          case BehaviorStepType.THEN:
+            html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+            html.yield "then ${element.name}"
+            break
+          case BehaviorStepType.AND:
+            html.yieldUnescaped "${'&nbsp;'.multiply(6)}"
+            html.yield "and"
+            break
+          default:
+            //no op to avoid having alerts in story text
+            break
+      }
+
+      if (element.result?.pending()) {
+        html.yieldUnescaped "${'&nbsp;'.multiply(1)}"
+        html.yieldUnescaped "<span style='color:#BABFEE;'>"
+        html.yield "[PENDING]"
+        html.yieldUnescaped "</span>"
+      }
+      html.br()
+
+  }
+
 
 
     public void writeReport(ResultsCollector results) {
@@ -182,10 +274,12 @@ class HtmlReportWriter implements ReportWriter {
                     $('StoriesList').hide();
                     $('SpecificationsList').hide();
                     $('SpecificationsListPlain').hide();
+                    $('StoriesListPlain').hide();
                     $('summary-menu-link').removeClassName('selected-menu-link');
                     $('stories-list-menu-link').removeClassName('selected-menu-link');
                     $('specifications-list-menu-link').removeClassName('selected-menu-link');
                     $('specifications-list-plain-menu-link').removeClassName('selected-menu-link');
+                    $('stories-list-plain-menu-link').removeClassName('selected-menu-link');
                     $(linkId).addClassName('selected-menu-link');
                     $(contentDiv).show();
                   }
@@ -439,7 +533,7 @@ class HtmlReportWriter implements ReportWriter {
                     div(
                         """${(specificationCount > 1) ? "${specificationCount} specifications" : " 1 specification"}
                              (including ${results.getPendingSpecificationCount()} pending) executed
-                            ${results.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure!" : " successfully"}
+                            ${results.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure" : " successfully"}
                             ${results.getFailedSpecificationCount().toInteger() > 0 ? " Total failures: ${results.getFailedSpecificationCount()}" : ""}
                         """)
 
@@ -450,6 +544,23 @@ class HtmlReportWriter implements ReportWriter {
                     }
 
 
+                  }
+                  div(id:'StoriesListPlain', style:"display:none;") {
+                    a(name:"StoriesListPlain")
+                    h2('Stories List Plain')
+
+                    def storyCount = results.scenarioCount
+                    div(
+                        """${(storyCount > 1) ? "${storyCount} scenarios" : " 1 scenario"}
+                            ${results.pendingScenarioCount.toInteger() > 0 ? " (including ${results.pendingScenarioCount} pending)" : ""} executed
+                            ${results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"}
+                            ${results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : ""}
+                        """)
+                    div() {
+                      results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
+                          handleStoryPlainElement(html, genesisChild)
+                      }
+                    }
                   }
                 }
               }
@@ -473,6 +584,9 @@ class HtmlReportWriter implements ReportWriter {
                     }
                     li {
                       a( id:"specifications-list-plain-menu-link", href:"#", onclick:"showOnlyContent('SpecificationsListPlain', 'specifications-list-plain-menu-link')", "Specifications List Plain")
+                    }
+                    li {
+                      a( id:"stories-list-plain-menu-link", href:"#", onclick:"showOnlyContent('StoriesListPlain', 'stories-list-plain-menu-link')", "Stories List Plain")
                     }
                   }
                 }
