@@ -1,0 +1,69 @@
+<%
+  import org.disco.easyb.util.BehaviorStepType
+  import org.disco.easyb.report.HtmlReportWriter
+%>
+
+<div id='SpecificationsList' style='display:none;'>
+  <a name='SpecificationsList' />
+  <h2>Specifications List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Specifications</th>
+        <th>Failed</th>
+        <th>Pending</th>
+        <th>Time (sec)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%
+        results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).eachWithIndex { specificationStep, rowNum ->
+      %>
+      <tr class='${HtmlReportWriter.getRowClass(rowNum)}'>
+        <td>
+          <% if(specificationStep.childSteps.size > 0) { %>
+            <a href="#" onclick="\$('components_for_specification_' + ${rowNum}).toggle(); return false;">${specificationStep.name}</a>
+          <% } else { %>
+            <a>${specificationStep.name}</a>
+          <% } %>
+        </td>
+        <td>${specificationStep.specificationCountRecursively}</td>
+        <td class="${HtmlReportWriter.getBehaviorResultFailureSummaryClass(specificationStep.failedSpecificationCountRecursively)}">${specificationStep.failedSpecificationCountRecursively}</td>
+        <td class="${HtmlReportWriter.getBehaviorResultPendingSummaryClass(specificationStep.pendingSpecificationCountRecursively)}">${specificationStep.pendingSpecificationCountRecursively}</td>
+        <td>${specificationStep.executionTotalTimeInMillis / 1000f}</td>
+      </tr>
+
+      <% if(specificationStep.childSteps.size > 0) { %>
+      <tr id='components_for_specification_${rowNum}' class='componentsForSpecification' style='display:none;'>
+        <td colspan='5'>
+          <table class='componentsForSpecificationTable'>
+            <tbody>
+             <% specificationStep.childSteps.each { componentStep -> %>
+              <tr>
+                <td>${componentStep.stepType.type} ${componentStep.name}</td>
+                <td class='${HtmlReportWriter.getStepStatusClass(componentStep.result)}' style='text-align:right;'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
+              </tr>
+              <% if (componentStep.result?.failed()) { %>
+              <tr>
+                <td colspan='2' style='color:red; padding-left: 1cm;'>
+                  <strong>${componentStep.result.cause()?.getMessage()}</strong>
+                  <% for (i in 1..10) { %>
+                   <br />${componentStep.result.cause()?.getStackTrace()[i]}
+                  <% } %>
+                  <br />
+                </td>
+
+              </tr>
+              <% } %>
+             <% } %>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <% } %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
