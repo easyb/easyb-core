@@ -1,6 +1,6 @@
 <%
   import org.disco.easyb.util.BehaviorStepType
-  import org.disco.easyb.report.HtmlReportWriter
+  import org.disco.easyb.report.HtmlReportHelper
 %>
 
 <?xml version="1.0" encoding="UTF-8"?>
@@ -72,9 +72,9 @@
             <tbody>
               <tr class='primaryRow'>
                 <td>${results.behaviorCount}</td>
-                <td class='${HtmlReportWriter.getBehaviorResultFailureSummaryClass(results.failedBehaviorCount)}'>${results.failedBehaviorCount}</td>
-                <td class='${HtmlReportWriter.getBehaviorResultPendingSummaryClass(results.pendingBehaviorCount)}'>${results.pendingBehaviorCount}</td>
-                <td>${HtmlReportWriter.formatBehaviorExecutionTime(results)}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(results.failedBehaviorCount)}'>${results.failedBehaviorCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(results.pendingBehaviorCount)}'>${results.pendingBehaviorCount}</td>
+                <td>${HtmlReportHelper.formatBehaviorExecutionTime(results)}</td>
               </tr>
             </tbody>
           </table>
@@ -94,9 +94,9 @@
               <tr class='primaryRow'>
                 <td>${results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).size()}</td>
                 <td>${results.scenarioCount}</td>
-                <td class='${HtmlReportWriter.getBehaviorResultFailureSummaryClass(results.failedScenarioCount)}'>${results.failedScenarioCount}</td>
-                <td class='${HtmlReportWriter.getBehaviorResultPendingSummaryClass(results.pendingScenarioCount)}'>${results.pendingScenarioCount}</td>
-                <td>${HtmlReportWriter.formatStoryExecutionTime(results)}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(results.failedScenarioCount)}'>${results.failedScenarioCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(results.pendingScenarioCount)}'>${results.pendingScenarioCount}</td>
+                <td>${HtmlReportHelper.formatStoryExecutionTime(results)}</td>
               </tr>
             </tbody>
           </table>
@@ -114,17 +114,17 @@
             <tbody>
               <tr class='primaryRow'>
                 <td>${results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size()}</td>
-                <td class='${HtmlReportWriter.getBehaviorResultFailureSummaryClass(results.failedSpecificationCount)}'>${results.failedSpecificationCount}</td>
-                <td class='${HtmlReportWriter.getBehaviorResultPendingSummaryClass(results.pendingSpecificationCount)}'>${results.pendingSpecificationCount}</td>
-                <td>${HtmlReportWriter.formatSpecificationExecutionTime(results)}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(results.failedSpecificationCount)}'>${results.failedSpecificationCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(results.pendingSpecificationCount)}'>${results.pendingSpecificationCount}</td>
+                <td>${HtmlReportHelper.formatSpecificationExecutionTime(results)}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <% HtmlReportWriter.writeStoriesList(results, reportWriter) %>
-        <% HtmlReportWriter.writeSpecificationsList(results, reportWriter) %>
-        <% HtmlReportWriter.writeSpecificationsListPlain(results, reportWriter) %>
-        <% HtmlReportWriter.writeStoriesListPlain(results, reportWriter) %>
+        <% HtmlReportHelper.writeStoriesList(results, reportWriter) %>
+        <% HtmlReportHelper.writeSpecificationsList(results, reportWriter) %>
+        <% HtmlReportHelper.writeSpecificationsListPlain(results, reportWriter) %>
+        <% HtmlReportHelper.writeStoriesListPlain(results, reportWriter) %>
       </div>
     </div>
 

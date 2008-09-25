@@ -1,6 +1,6 @@
 <%
   import org.disco.easyb.util.BehaviorStepType
-  import org.disco.easyb.report.HtmlReportWriter
+  import org.disco.easyb.report.HtmlReportHelper
 %>
 <div id='StoriesList' style='display:none;'>
   <a name='StoriesList' />
@@ -20,7 +20,7 @@
         results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).eachWithIndex { storyStep, rowNum ->
           int scenarioChildrenCount = storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).size
       %>
-      <tr class='${HtmlReportWriter.getRowClass(rowNum)}'>
+      <tr class='${HtmlReportHelper.getRowClass(rowNum)}'>
         <td>
          <% if(scenarioChildrenCount > 0) { %>
           <a href="#" onclick="\$('scenarios_for_story_' + ${rowNum}).toggle(); return false;">${storyStep.name}</a>
@@ -29,8 +29,8 @@
          <% } %>
         </td>
         <td>${storyStep.scenarioCountRecursively}</td>
-        <td class='${HtmlReportWriter.getBehaviorResultFailureSummaryClass(storyStep.failedScenarioCountRecursively)}'>${storyStep.failedScenarioCountRecursively}</td>
-        <td class='${HtmlReportWriter.getBehaviorResultPendingSummaryClass(storyStep.pendingScenarioCountRecursively)}'>${storyStep.pendingScenarioCountRecursively}</td>
+        <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(storyStep.failedScenarioCountRecursively)}'>${storyStep.failedScenarioCountRecursively}</td>
+        <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(storyStep.pendingScenarioCountRecursively)}'>${storyStep.pendingScenarioCountRecursively}</td>
         <td>${storyStep.executionTotalTimeInMillis / 1000f}</td>
       </tr>
 
@@ -40,15 +40,15 @@
           <table class='scenariosForStoriesTable'>
             <tbody>
               <% storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).eachWithIndex { scenarioStep, scenarioRowNum -> %>
-              <tr class='${HtmlReportWriter.getScenarioRowClass(scenarioRowNum)}'>
+              <tr class='${HtmlReportHelper.getScenarioRowClass(scenarioRowNum)}'>
                 <td title='Scenario'>${scenarioStep.name}</td>
-                <td title='Result' class='${HtmlReportWriter.getStepStatusClass(scenarioStep.result)}'>${scenarioStep.result.status}</td>
+                <td title='Result' class='${HtmlReportHelper.getStepStatusClass(scenarioStep.result)}'>${scenarioStep.result.status}</td>
                 <td title='Time (sec)'>${scenarioStep.executionTotalTimeInMillis / 1000f}</td>
               </tr>
               <% scenarioStep.childSteps.each { componentStep -> %>
               <tr class='scenarioComponents'>
                 <td>${componentStep.stepType.type} ${componentStep.name}</td>
-                <td class='${HtmlReportWriter.getStepStatusClass(componentStep.result)}'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
+                <td class='${HtmlReportHelper.getStepStatusClass(componentStep.result)}'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
                 <td />
               </tr>
               <% if (componentStep.result?.failed()) { %>

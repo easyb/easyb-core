@@ -1,11 +1,11 @@
 <%
   import org.disco.easyb.util.BehaviorStepType
-  import org.disco.easyb.report.HtmlReportWriter
+  import org.disco.easyb.report.HtmlReportHelper
 
 
   def handleSpecificationPlainElement(element) {
 %>
-      <%= "<br/>${HtmlReportWriter.formatSpecificationPlainElement(element)}" %>
+      <%= "<br/>${HtmlReportHelper.formatSpecificationPlainElement(element)}" %>
 <%      element.getChildSteps().each {
           handleSpecificationPlainElement(it)
       }

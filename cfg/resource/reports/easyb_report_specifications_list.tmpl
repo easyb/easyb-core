@@ -1,6 +1,6 @@
 <%
   import org.disco.easyb.util.BehaviorStepType
-  import org.disco.easyb.report.HtmlReportWriter
+  import org.disco.easyb.report.HtmlReportHelper
 %>
 
 <div id='SpecificationsList' style='display:none;'>
@@ -20,7 +20,7 @@
       <%
         results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).eachWithIndex { specificationStep, rowNum ->
       %>
-      <tr class='${HtmlReportWriter.getRowClass(rowNum)}'>
+      <tr class='${HtmlReportHelper.getRowClass(rowNum)}'>
         <td>
           <% if(specificationStep.childSteps.size > 0) { %>
             <a href="#" onclick="\$('components_for_specification_' + ${rowNum}).toggle(); return false;">${specificationStep.name}</a>
@@ -29,8 +29,8 @@
           <% } %>
         </td>
         <td>${specificationStep.specificationCountRecursively}</td>
-        <td class="${HtmlReportWriter.getBehaviorResultFailureSummaryClass(specificationStep.failedSpecificationCountRecursively)}">${specificationStep.failedSpecificationCountRecursively}</td>
-        <td class="${HtmlReportWriter.getBehaviorResultPendingSummaryClass(specificationStep.pendingSpecificationCountRecursively)}">${specificationStep.pendingSpecificationCountRecursively}</td>
+        <td class="${HtmlReportHelper.getBehaviorResultFailureSummaryClass(specificationStep.failedSpecificationCountRecursively)}">${specificationStep.failedSpecificationCountRecursively}</td>
+        <td class="${HtmlReportHelper.getBehaviorResultPendingSummaryClass(specificationStep.pendingSpecificationCountRecursively)}">${specificationStep.pendingSpecificationCountRecursively}</td>
         <td>${specificationStep.executionTotalTimeInMillis / 1000f}</td>
       </tr>
 
@@ -42,7 +42,7 @@
              <% specificationStep.childSteps.each { componentStep -> %>
               <tr>
                 <td>${componentStep.stepType.type} ${componentStep.name}</td>
-                <td class='${HtmlReportWriter.getStepStatusClass(componentStep.result)}' style='text-align:right;'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
+                <td class='${HtmlReportHelper.getStepStatusClass(componentStep.result)}' style='text-align:right;'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
               </tr>
               <% if (componentStep.result?.failed()) { %>
               <tr>

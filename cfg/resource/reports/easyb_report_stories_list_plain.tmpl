@@ -1,11 +1,11 @@
 <%
   import org.disco.easyb.util.BehaviorStepType
-  import org.disco.easyb.report.HtmlReportWriter
+  import org.disco.easyb.report.HtmlReportHelper
 
 
   def handleStoryPlainElement(element) {
 %>    
-      <%= "<br/>${HtmlReportWriter.formatStoryPlainElement(element)}" %>
+      <%= "<br/>${HtmlReportHelper.formatStoryPlainElement(element)}" %>
 <%      element.getChildSteps().each {
           handleStoryPlainElement(it)
       }
