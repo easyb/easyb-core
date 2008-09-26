@@ -17,7 +17,7 @@ public class TxtSpecificationReportWriter implements ReportWriter {
     void writeReport(ResultsCollector results) {
         Writer writer = new BufferedWriter(new FileWriter(new File(location)))
         def count = results.getSpecificationCount()
-        writer.writeLine("${(count > 1) ? "${count} specifications" : " 1 specification"}" +
+        writer.writeLine("${(count == 1) ? "1 specification" : "${count} specifications"}" +
                 " (including ${results.getPendingSpecificationCount()} pending) executed" +
                 "${results.getFailedSpecificationCount().toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
                 "${results.getFailedSpecificationCount().toInteger() > 0 ? " Total failures: ${results.getFailedSpecificationCount()}" : ""}")

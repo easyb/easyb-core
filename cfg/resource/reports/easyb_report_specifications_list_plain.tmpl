@@ -18,7 +18,7 @@
   <h2>Specifications List Plain</h2>
   <div>
     <% def specificationCount = results.specificationCount %>
-    <%= (specificationCount > 1) ? "${specificationCount} specifications" : " 1 specification" %>
+    <%= (specificationCount == 1) ? "1 specification" : "${specificationCount} specifications" %>
     <%= "(including ${results.pendingSpecificationCount} pending) executed" %>
     <%= results.failedSpecificationCount.toInteger() > 0 ? ", but status is failure" : " successfully" %>
     <%= results.failedSpecificationCount.toInteger() > 0 ? " Total failures: ${results.failedSpecificationCount}" : "" %>

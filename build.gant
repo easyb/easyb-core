@@ -133,6 +133,7 @@ target("ant-task":"runs the easyb ant task"){
       include(name:"**/*.specification")
       exclude(name:"**/TextStoryReportingValidation.story")
       exclude(name:"**/FailureReport.story")
+      exclude(name:"**/SinglePendingStory.groovy")
     }
   }
 

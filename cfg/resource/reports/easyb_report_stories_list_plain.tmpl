@@ -16,18 +16,12 @@
 <div id='StoriesListPlain' style='display:none;'>
   <a name='StoriesListPlain' />
   <h2>Stories List Plain</h2>
-  <div>
-    <%  def storyCount = results.scenarioCount %>
-    <%= (storyCount > 1) ? "${storyCount} scenarios" : " 1 scenario" %>
-    <%= results.pendingScenarioCount.toInteger() > 0 ? " (including ${results.pendingScenarioCount} pending)" : "" + "executed" %>
-    <%= results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully" %>
-    <%= results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : "" %>
-  </div>
-  <div>
-    <%
-    results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
-      handleStoryPlainElement(genesisChild)
-    }
-    %>
-  </div>
+  <% def storyCount = results.scenarioCount %>
+  <% summaryText = (storyCount == 1) ? "1 scenario" : "${storyCount} scenarios"
+     summaryText += results.pendingScenarioCount.toInteger() > 0 ? " (including ${results.pendingScenarioCount} pending)" : " executed"
+     summaryText += results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"
+     summaryText += results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : ""
+  %>
+  <div><%= summaryText %></div>
+  <div><% results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild -> handleStoryPlainElement(genesisChild) } %></div>
 </div>
