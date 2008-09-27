@@ -43,11 +43,15 @@ class HtmlReportWriter implements ReportWriter {
     private getLocationDir() {
         String normalizedPath =  new File(location).canonicalPath
 
-        if (normalizedPath.contains("/")) {
-            return normalizedPath.substring(0, normalizedPath.lastIndexOf("/"))
-        } else {
-            return "."
-        }
+      if (normalizedPath.contains("\\")) {
+        return normalizedPath.substring(0, normalizedPath.lastIndexOf("\\"))
+      } else if (location.contains("/")) {
+        return normalizedPath.substring(0, normalizedPath.lastIndexOf("/"))
+      } else {
+        return "."
+      }
+
     }
+
 
 }
