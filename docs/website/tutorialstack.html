@@ -74,7 +74,7 @@ when "null is pushed", {
 }
 
 then "an exception should be thrown", {
- ensureThrows(RuntimeException.class){
+ ensureThrows(RuntimeException){
   pushnull()
  }
 }
@@ -136,7 +136,7 @@ when "pop is called", {
 }
 
 then "an exception should be thrown", {
- ensureThrows(RuntimeException.class){
+ ensureThrows(RuntimeException){
   popnull()
  }
 }

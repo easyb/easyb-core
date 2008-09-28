@@ -71,7 +71,7 @@ scenario "null is pushed onto empty stack", {
   }
 
   then "an exception should be thrown", {
-    ensureThrows(RuntimeException.class){
+    ensureThrows(RuntimeException){
       pushnull()
     }
   }
@@ -94,7 +94,7 @@ scenario "pop is called on empty stack", {
   }
 
   then "an exception should be thrown", {
-    ensureThrows(RuntimeException.class){
+    ensureThrows(RuntimeException){
       popnull()
     }
   }

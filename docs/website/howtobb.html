@@ -81,7 +81,7 @@ queue.dequeue().shouldBe 2
 
 <pre><code>
 it "should throw an exception when null is enqueued", {
- ensureThrows(RuntimeException.class){
+ ensureThrows(RuntimeException){
   queue.enqueue(null)
  }
 }
@@ -106,7 +106,7 @@ it "should dequeue gives item just enqueued", {
 }
 
 it "should throw an exception when null is enqueued", {
- ensureThrows(RuntimeException.class){
+ ensureThrows(RuntimeException){
   queue.enqueue(null)
  }
 }
