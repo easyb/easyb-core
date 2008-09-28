@@ -7,7 +7,7 @@ includeTargets << new File("default_tasks.gant")
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.9")
+version = detectOrDefaultVersion("0.9.3")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**
@@ -53,6 +53,16 @@ target(jar:"create an archive of the project's classfiles"){
    
   Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:classdir)
   Ant.jar(destfile:"${defaultdir}/easyb-${version}.jar", basedir:cfgdir, update:true)
+}
+
+
+target("bundle-docs":"creates a war file containing static html docs"){
+    Ant.mkdir(dir:"${defaultdir}/docs")
+    Ant.war(destfile:"${defaultdir}/docs/ROOT.war", needxmlfile:false){
+        fileset(dir:"./docs/website/"){
+            include(name:"**/*.*")
+        }
+    }
 }
 
 target("publish-easyb":"uploads easyb distribution to googlecode") {
