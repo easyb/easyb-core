@@ -24,8 +24,146 @@ findStoriesListPlainDiv = {
   findContentDiv().div.find { it['@class'] == 'post' }.div.find { it['@class'] == 'entry' }.div.find { it['@id'] == 'StoriesListPlain' }
 }
 
+findSpecificationsListPlainDiv = {
+  findContentDiv().div.find { it['@class'] == 'post' }.div.find { it['@class'] == 'entry' }.div.find { it['@id'] == 'SpecificationsListPlain' }
+}
+
 findStoriesListDiv = {
   findContentDiv().div.find { it['@class'] == 'post' }.div.find { it['@class'] == 'entry' }.div.find { it['@id'] == 'StoriesList' }
+}
+
+findSpecificationsListDiv = {
+  findContentDiv().div.find { it['@class'] == 'post' }.div.find { it['@class'] == 'entry' }.div.find { it['@id'] == 'SpecificationsList' }
+}
+
+scenario "a passing, failing and pending specification", {
+  given "a specification file with passing, failing and pending specifications is loaded", {
+    storyBehavior = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/disco/bdd/reporting/html/PassingPendingFailing.specification'))
+  }
+
+  when "the specification is executed", {
+    storyBehavior.execute(broadcastListener)
+  }
+
+  and
+  when "the reports are written", {
+    htmlReportLocation = "./target/PassingPendingFailing-specification-report.html"
+    new HtmlReportWriter(htmlReportLocation).writeReport(resultsCollector)
+  }
+
+  then "the resulting html should have 3 total behaviors in the behavior summary", {
+    xmlReport = new XmlSlurper().parse(new File((String)htmlReportLocation))
+    contentDiv = findContentDiv()
+    summariesDiv = findSummariesDiv()
+
+    behaviorsSummaryRow = summariesDiv.table[0].tbody.tr
+
+    behaviorsSummaryRow.td[0].text().shouldBe '3'
+  }
+
+  and "1 failed", {
+    behaviorsSummaryRow.td[1].text().shouldBe '1'
+    behaviorsSummaryRow.td[1].@class.shouldBe 'stepResultFailed'
+  }
+
+  and "1 pending" , {
+    behaviorsSummaryRow.td[2].text().shouldBe '1'
+    behaviorsSummaryRow.td[2].@class.shouldBe 'stepResultPending'
+  }
+
+  and
+  then "should have a specifications summary with one specification", {
+    specificationsSummaryRow = summariesDiv.table[2].tbody.tr
+    specificationsSummaryRow.td[0].text().shouldBe '1'
+  }
+
+  and "1 failed specification", {
+    specificationsSummaryRow.td[1].text().shouldBe '1'
+    specificationsSummaryRow.td[1].@class.shouldBe 'stepResultFailed'
+  }
+
+  and "1 pending specification", {
+    specificationsSummaryRow.td[2].text().shouldBe '1'
+    specificationsSummaryRow.td[2].@class.shouldBe 'stepResultPending'
+  }
+
+  and
+  then "should have a stories summary with no results", {
+    storiesSummaryRow = summariesDiv.table[1].tbody.tr
+    storiesSummaryRow.td[0].text().shouldBe '0'
+    storiesSummaryRow.td[1].text().shouldBe '0'
+
+    storiesSummaryRow.td[2].text().shouldBe '0'
+    storiesSummaryRow.td[2].@class.shouldBe ''
+    storiesSummaryRow.td[3].text().shouldBe '0'
+    storiesSummaryRow.td[3].@class.shouldBe ''
+  }
+
+  and
+  then "should have a specifications list with a specification name passing pending failing", {
+    specificationsListDiv = findSpecificationsListDiv()
+    specificationRow = specificationsListDiv.table.tbody.tr[0]
+    specificationRow.td[0].a.text().shouldBe 'passing pending failing'
+  }
+
+  and "3 specifications", {
+    specificationRow.td[1].text().shouldBe '3'
+  }
+
+  and "1 failed", {
+    specificationRow.td[2].text().shouldBe '1'
+    specificationRow.td[2].@class.shouldBe 'stepResultFailed'
+  }
+
+  and "1 pending", {
+    specificationRow.td[3].text().shouldBe '1'
+    specificationRow.td[3].@class.shouldBe 'stepResultPending'
+  }
+
+  and
+  then "should have a specification named 'it should be passing'", {
+    specificationsRow = specificationsListDiv.table.tbody.tr[1]
+    passingSpecificationRow = specificationsRow.td.table.tbody.tr[0]
+    passingSpecificationRow.td[0].text().shouldBe 'it should be passing'
+    passingSpecificationRow.td[1].text().shouldBe 'success'
+    passingSpecificationRow.td[1].@class.shouldBe 'stepResultSuccess'
+  }
+
+  and
+  then "should have a specification named 'it should be pending'", {
+    pendingSpecificationRow = specificationsRow.td.table.tbody.tr[1]
+    pendingSpecificationRow.td[0].text().shouldBe 'it should be pending'
+    pendingSpecificationRow.td[1].text().shouldBe 'pending'
+    pendingSpecificationRow.td[1].@class.shouldBe 'stepResultPending'
+  }
+
+  and
+  then "should have a specification named 'it should be failing'", {
+    failingSpecificationRow = specificationsRow.td.table.tbody.tr[2]
+    failingSpecificationRow.td[0].text().shouldBe 'it should be failing'
+    failingSpecificationRow.td[1].text().shouldBe 'failure'
+    failingSpecificationRow.td[1].@class.shouldBe 'stepResultFailed'
+
+    failingSpecificationComponentDetailsRow = specificationsRow.td.table.tbody.tr[3]
+    failingSpecificationComponentDetailsRow.td.strong.text().shouldBe "expected false but was true"
+  }
+
+  and
+  then "should have a plain specification with name of passing pending failing", {
+    specificationsListPlainDiv = findSpecificationsListPlainDiv()
+
+    specificationsListPlainDiv.div[0].text().shouldBe "3 specifications (including 1 pending) executed, but status is failure. Total failures: 1"
+    specificationsListPlainDiv.div[1].text().contains "&nbsp;&nbsp;Specification: passing pending failing"
+  }
+
+  and "passing pending failing specifications", {
+    specificationsListPlainDiv.div[1].text().contains "&nbsp;&nbsp;&nbsp;&nbsp;it should be passing"
+    specificationsListPlainDiv.div[1].text().contains "&nbsp;&nbsp;&nbsp;&nbsp;it should be pending"
+    specificationsListPlainDiv.div[1].text().contains "&nbsp;&nbsp;&nbsp;&nbsp;it should be failing"
+    specificationsListPlainDiv.div[1].text().contains "[FAILURE:"
+    specificationsListPlainDiv.div[1].text().contains "[PENDING]"
+  }
+
 }
 
 scenario "a passing, failing and pending scenario", {
@@ -39,7 +177,7 @@ scenario "a passing, failing and pending scenario", {
 
   and
   when "the html reports are written", {
-    htmlReportLocation = "./target/PassingPendingFailing-report.html"
+    htmlReportLocation = "./target/PassingPendingFailing-story-report.html"
     new HtmlReportWriter(htmlReportLocation).writeReport(resultsCollector)
   }
 

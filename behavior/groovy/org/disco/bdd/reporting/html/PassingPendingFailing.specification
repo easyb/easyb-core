@@ -1,0 +1,9 @@
+it "should be passing", {
+  true.shouldBe true
+}
+
+it "should be pending"
+
+it "should be failing", {
+  true.shouldBe false
+}
