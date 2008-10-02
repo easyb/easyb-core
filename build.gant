@@ -57,9 +57,9 @@ target(jar:"create an archive of the project's classfiles"){
 
 
 target("bundle-docs":"creates a war file containing static html docs"){
-    Ant.mkdir(dir:"${defaultdir}/docs")
+  depends(doc)
     Ant.war(destfile:"${defaultdir}/docs/ROOT.war", needxmlfile:false){
-        fileset(dir:"./docs/website/"){
+        fileset(dir: websiteoutputdir){
             include(name:"**/*.*")
         }
     }
@@ -131,10 +131,10 @@ target("ant-task":"runs the easyb ant task"){
       pathelement(location:behaviorclassdir)
     }
 
-    report(location:"${defaultdir}/easyb-report.html", format:"html")
-    report(location:"${defaultdir}/easyb-report.xml", format:"xml")
-    report(location:"${defaultdir}/story-report.txt", format:"txtstory")
-    report(location:"${defaultdir}/specification-report.txt", format:"txtspecification")
+    report(location:"${reportsoutputdir}/easyb-report.html", format:"html")
+    report(location:"${reportsoutputdir}/easyb-report.xml", format:"xml")
+    report(location:"${reportsoutputdir}/story-report.txt", format:"txtstory")
+    report(location:"${reportsoutputdir}/specification-report.txt", format:"txtspecification")
 
     behaviors(dir:gbehaviordir){
       include(name:"**/*Story.groovy")
@@ -156,15 +156,15 @@ target("ant-task":"runs the easyb ant task"){
 target("validate-reports":"runs the easyb and validates reports"){
   depends("ant-task")
   runAntTask(["**/AndChainedFeature.story"], 
-         [["${defaultdir}/valid-report.txt", "txtstory"]])
+         [["${reportsoutputdir}/valid-report.txt", "txtstory"]])
      
   Ant.echo("***********Ignore FAILURE text that follows-- it is on purpose************")       
   runAntTask(["**/FailureReport.story"], 
-         [["${defaultdir}/valid-report-failure.txt", "txtstory"]])  
+         [["${reportsoutputdir}/valid-report-failure.txt", "txtstory"]])
   Ant.echo("***********End failure text-- build should continue on as usual***********")  
      
   runAntTask(["**/TextStoryReportingValidation.story"], 
-         [["${defaultdir}/valid-reporting.txt", "txtstory"]],
+         [["${reportsoutputdir}/valid-reporting.txt", "txtstory"]],
          "Execution halted as specifications failed with respect to reports",
                 "failure.reporting")
 }

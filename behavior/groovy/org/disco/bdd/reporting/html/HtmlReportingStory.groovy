@@ -47,7 +47,7 @@ scenario "a passing, failing and pending specification", {
 
   and
   when "the reports are written", {
-    htmlReportLocation = "./target/PassingPendingFailing-specification-report.html"
+    htmlReportLocation = "./target/reports/PassingPendingFailing-specification-report.html"
     new HtmlReportWriter(htmlReportLocation).writeReport(resultsCollector)
   }
 
@@ -177,7 +177,7 @@ scenario "a passing, failing and pending scenario", {
 
   and
   when "the html reports are written", {
-    htmlReportLocation = "./target/PassingPendingFailing-story-report.html"
+    htmlReportLocation = "./target/reports/PassingPendingFailing-story-report.html"
     new HtmlReportWriter(htmlReportLocation).writeReport(resultsCollector)
   }
 

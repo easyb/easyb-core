@@ -20,6 +20,10 @@ behaviordir = "behavior/java"
 homedir = System.properties.'user.home'
 cfgdir = "cfg"
 mavenrepo = "${homedir}/.m2/repository"
+reportsoutputdir = "${defaultdir}/reports"
+
+docsoutputdir = "${defaultdir}/docs"
+websiteoutputdir = "${docsoutputdir}/website"
 
 target(clean: "cleans target dir") {
     Ant.delete(dir: defaultdir)
@@ -44,6 +48,52 @@ target(configuregroovy: "configures environment to compile w/Groovy") {
     }
 }
 
+target(doc: "create documenation from docbook") {
+  depends("init-doc")
+
+  Ant.tstamp {
+    format(property: "build.date", pattern: "MM/dd/yyyy")
+    format(property: "build.year", pattern: "yyyy")
+  }
+
+  if ( new File("${docbookdir}").exists()) {
+    def docbookfiles = ~/.*xml/
+
+    new File("${docbookdir}").eachFileMatch(docbookfiles) { docbookfile ->
+      Ant.echo("Creating docbook[${docbookfile.name}]")
+      docbookdestinationdir = "${docsoutputdir}/docbook"
+
+      Ant.mkdir(dir:"${docbookdestinationdir}")
+
+      
+
+
+    }
+  }
+
+}
+
+target("init-doc": "initialize the doc environment") {
+  docbookdir = "docs/docbook"
+  docbooksupportdir = "cfg/etc/docbook"
+
+  Ant.mkdir(dir: docsoutputdir)
+  Ant.mkdir(dir: websiteoutputdir)
+
+  Ant.path(id: "docbook.lib.classpath") {
+    fileset(dir: "repository/docbook-dependencies") {
+      include(name: "**/*.jar")
+    }
+  }
+
+  Ant.copy(todir: websiteoutputdir){
+    fileset(dir:"./docs/website/"){
+      include(name:"**/*.*")
+    }
+  }
+
+}
+
 target(getdeps: "retrieves dependencies") {
     Ivy.settings(file: "./ivyconfig.xml", id: "ivy.instance")
     Ivy.retrieve(pattern: "./target/lib/[artifact]-[revision].[ext]")
@@ -53,6 +103,8 @@ target(init: "init dirs") {
     Ant.mkdir(dir: classdir)
     Ant.mkdir(dir: libdir)
     Ant.mkdir(dir: behaviorclassdir)
+    Ant.mkdir(dir: defaultdir)
+    Ant.mkdir(dir: reportsoutputdir)
     getdeps()
 }
 
