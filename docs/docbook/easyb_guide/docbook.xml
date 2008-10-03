@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"file:////@docbook.base@/dtd/docbookx.dtd">
+<book>
+  <bookinfo>
+    <title>@docbook.project.name@ User Guide</title>
+
+    <pubdate>@build.date@</pubdate>
+
+    <copyright>
+      <year>Copyright @build.year@ easyb.org</year>
+    </copyright>
+
+    <releaseinfo>@docbook.project.version@</releaseinfo>
+
+    <author>
+      <surname>easyb Development Team</surname>
+
+      <email><ulink
+      url="mailto:easyb-users@googlegroups.com">easyb-users@googlegroups.com
+      </ulink></email>
+    </author>
+  </bookinfo>
+
+  <chapter>
+    <title>Overview</title>
+
+    <para>easyb is a behavior driven development framework for the Java
+    platform. By using a Domain Specific Language, easyb aims to enable
+    executable, yet readable documentation. </para>
+
+    <section>
+      <title>History</title>
+
+      <para>Behavior driven development (or BDD) isn't anything new or
+      revolutionary-- it's just an evolutionary offshoot of test driven
+      development, in which the word test is replaced by the word should.
+      Semantics aside, a lot of people have found that the concept of should
+      is a much more natural development driver than the concept of testing.
+      In fact, when you think in terms of behavior (i.e. shoulds) you'll find
+      that writing specifications is easier to do first, which is the intent
+      of test driven development in the first place.</para>
+    </section>
+
+    <section>
+      <title>Goals</title>
+
+      <orderedlist>
+        <listitem>
+          <para>test</para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </chapter>
+
+  <chapter>
+    <title>Appendix</title>
+
+    <section>
+      <title>Glossary<anchor id="glossary" /></title>
+
+      <glosslist>
+        <glossentry>
+          <glossterm>BDD</glossterm>
+
+          <glossdef>
+            <para>See Behavior Driven Development</para>
+          </glossdef>
+        </glossentry>
+
+        <glossentry>
+          <glossterm>Behavior Driven Development</glossterm>
+
+          <glossdef>
+            <para> Agile software development technique that encourages
+            collaboration between developers, QA and non-technical or business
+            participants in a software project. It was originally conceived in
+            2003 by Dan North [1] as a response to Test Driven Development,
+            and has evolved over the last few years. The focus of BDD is the
+            language and interactions used in the process of software
+            development. Behavior-driven developers use their native language
+            in combination with the ubiquitous language of Domain Driven
+            Design to describe the purpose and benefit of their code. This
+            allows the developers to focus on why the code should be created,
+            rather than the technical details, and minimizes translation
+            between the technical language in which the code is written and
+            the domain language spoken by the business, users, stakeholders,
+            project management etc. (Courtesy:
+            http://en.wikipedia.org/wiki/Behavior_driven_development)</para>
+          </glossdef>
+        </glossentry>
+
+        <glossentry>
+          <glossterm>Story</glossterm>
+
+          <glossdef>
+            <para>Description of a requirement, which has an associated
+            benefit and criteria for validation. Contains any of the following
+            components: scenario, given, when then. It also may contain a
+            narrative with the following components: narrative, as_a, i_want,
+            so_that.</para>
+          </glossdef>
+        </glossentry>
+      </glosslist>
+
+      <para></para>
+    </section>
+  </chapter>
+</book>

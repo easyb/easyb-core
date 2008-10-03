@@ -35,6 +35,7 @@ Ant.path(id: "build.classpath") {
 
 target(dist: "create a distribution from the release") {
     depends(release)
+    depends(doc)
     Ant.mkdir(dir: "${defaultdir}/dist")
     Ant.tar(tarfile: tarfilename, basedir: "${defaultdir}/release")
     Ant.gzip(zipfile: "${tarfilename}.gz", src: tarfilename)
@@ -56,26 +57,99 @@ target(doc: "create documenation from docbook") {
     format(property: "build.year", pattern: "yyyy")
   }
 
-  if ( new File("${docbookdir}").exists()) {
-    def docbookfiles = ~/.*xml/
+  if ( new File("${docbooksourcedir}").exists()) {
 
-    new File("${docbookdir}").eachFileMatch(docbookfiles) { docbookfile ->
-      Ant.echo("Creating docbook[${docbookfile.name}]")
-      docbookdestinationdir = "${docsoutputdir}/docbook"
+    new File("${docbooksourcedir}").eachDir { docbooksourcedirectory ->
+      docbooksourcexmlfile = new File(docbooksourcedirectory, 'docbook.xml')
+      if(docbooksourcexmlfile.exists()) {
 
-      Ant.mkdir(dir:"${docbookdestinationdir}")
+        Ant.echo("Creating docbook [${docbooksourcedirectory.name}]")
 
-      
+        docbookdestdir = "${docsoutputdir}/${docbooksourcedirectory.name}"
+        Ant.mkdir(dir: docbookdestdir)
+
+        Ant.copy(todir: docbookdestdir) {
+          filterset {
+            filter(token: "docbook.base", value: new File(docbooksupportdir).canonicalPath)
+            filter(token: "docbook.project.name", value: artifactid)
+            filter(token: "docbook.project.version", value: version)
+            filter(token: "build.date", value: "${Ant.project.properties.'build.date'}")
+            filter(token: "build.year", value: "${Ant.project.properties.'build.year'}")
+          }
+          filterset(begintoken: "%{", endtoken: "}") {
+            filter(token: "at", value: "@")
+          }
+          fileset(dir: docbooksourcedirectory) {
+            include(name: "**/*.xml")
+          }
+        }
+
+        Ant.copy(toDir: docbookdestdir) {
+          fileset(dir: docbooksourcedirectory) {
+            include(name: "**/*")
+            exclude(name: "**/*.xml")
+
+          }
+        }
+
+        Ant.mkdir(dir: "${docbookdestdir}/images")
+        Ant.copy(todir: "${docbookdestdir}/images") {
+          fileset(dir: "${docbooksupportdir}/xsl/images") {
+            include(name: "**/*")
+          }
+        }
+
+        docbookdisplayname = docbooksourcedirectory.name.replaceAll(/_/, " ")
+        partialhtml = new File("${docbookdestdir}/partial.html") << """
+          <h1>${docbookdisplayname}</h1>
+          <ul>
+            <li><a href="docbook.html">html version</a></li>
+            <li><a href="${docbooksourcedirectory.name}.pdf">pdf version</a></li>
+          </ul>
+        """
 
 
+        // create the xsl/fo temporary file.
+        Ant.java(classname: "com.icl.saxon.StyleSheet", fork:"true", dir:".", maxmemory:"256m") {
+          classpath(refid: "docbook.lib.classpath")
+          arg(value: "-o")
+          arg(value: "${docbookdestdir}/docbook_fop.tmp")
+          arg(value: "${docbookdestdir}/docbook.xml")
+          arg(value: "${new File(docbooksupportdir).canonicalPath}/easyb_fopdf.xsl")
+          arg(value: "project.version=${version}")
+          arg(value: "build.year=${Ant.project.properties.'build.year'}")
+          arg(value: "build.date=${Ant.project.properties.'build.date'}")
+        }
+
+        Ant.java(classname: "org.apache.fop.apps.Fop", fork:"true", dir:".") {
+          classpath(refid: "docbook.lib.classpath")
+          arg(value: "${docbookdestdir}/docbook_fop.tmp")
+          arg(value: "${docbookdestdir}/${docbooksourcedirectory.name}-${version}.pdf")
+        }
+
+
+        Ant.java(classname: "com.icl.saxon.StyleSheet", fork: "true", dir: ".", maxmemory: "256m") {
+          classpath(refid: "docbook.lib.classpath")
+          arg(value: "-o")
+          arg(value: "${docbookdestdir}/docbook.html")
+          arg(value: "${docbookdestdir}/docbook.xml")
+          arg(value: "${new File(docbooksupportdir).canonicalPath}/easyb_xhtml.xsl")
+          arg(value: "project.version=${version}")
+          arg(value: "build.year=${Ant.project.properties.'build.year'}")
+          arg(value: "build.date=${Ant.project.properties.'build.date'}")
+        }
+
+        [new File("${docbookdestdir}/docbook_fop.tmp"), new File("${docbookdestdir}/docbook.xml")].each{ it.delete() }
+
+      }
     }
   }
 
 }
 
 target("init-doc": "initialize the doc environment") {
-  docbookdir = "docs/docbook"
-  docbooksupportdir = "cfg/etc/docbook"
+  docbooksourcedir = "docs/docbook"
+  docbooksupportdir = "cfg/resource/thirdparty/docbook"
 
   Ant.mkdir(dir: docsoutputdir)
   Ant.mkdir(dir: websiteoutputdir)
