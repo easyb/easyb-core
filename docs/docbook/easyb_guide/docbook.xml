@@ -27,7 +27,7 @@
 
     <para>easyb is a behavior driven development framework for the Java
     platform. By using a Domain Specific Language, easyb aims to enable
-    executable, yet readable documentation. </para>
+    executable, yet readable documentation.</para>
 
     <section>
       <title>History</title>
@@ -54,6 +54,290 @@
   </chapter>
 
   <chapter>
+    <title>Syntax</title>
+
+    <para>easyb contains a rich language for capturing behaviors as executable
+    documentation. </para>
+
+    <section>
+      <title>Stories</title>
+
+      <para>TODO</para>
+
+      <itemizedlist>
+        <listitem>
+          <formalpara>
+            <title>scenario</title>
+
+            <para>illustrate a specific aspect of behavior of the
+            application</para>
+          </formalpara>
+
+          <programlisting>scenario "description here", {
+  ...
+}</programlisting>
+        </listitem>
+
+        <listitem>
+          <formalpara>
+            <title>given</title>
+
+            <para>a context specific to this scenario. Object and Data setup
+            will often happen in a given.</para>
+          </formalpara>
+
+          <programlisting>scenario "scenario description here", {
+  given "given description here", {
+    // given impl here
+  }
+
+  ...
+}</programlisting>
+        </listitem>
+
+        <listitem>
+          <formalpara>
+            <title>andGiven</title>
+
+            <para>a context specific to this scenario. Additional object and
+            data setup will often happen in a given.</para>
+          </formalpara>
+
+          <programlisting>scenario "scenario description here", {
+  andGiven "given description here", {
+    // given impl here
+  }
+
+  ...
+}</programlisting>
+        </listitem>
+
+        <listitem>
+          <formalpara>
+            <title>when</title>
+
+            <para>TODO</para>
+          </formalpara>
+
+          <programlisting>scenario "scenario description here", {
+  when "when description here", {
+    // when impl here
+  }
+
+  ...
+}</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>then</para>
+        </listitem>
+
+        <listitem>
+          <para>andThen</para>
+        </listitem>
+
+        <listitem>
+          <para>narrative</para>
+        </listitem>
+
+        <listitem>
+          <para>as_a</para>
+        </listitem>
+
+        <listitem>
+          <para>i_want</para>
+        </listitem>
+
+        <listitem>
+          <para>so_that</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Specifications</title>
+
+      <para>TODO</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>it</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Common</title>
+
+      <para>TODO</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>and</para>
+        </listitem>
+
+        <listitem>
+          <para>before</para>
+        </listitem>
+
+        <listitem>
+          <para>before_each</para>
+        </listitem>
+
+        <listitem>
+          <para>after</para>
+        </listitem>
+
+        <listitem>
+          <para>after_each</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Assertions</title>
+
+      <para></para>
+
+      <section>
+        <title>should</title>
+
+        <para></para>
+
+        <itemizedlist>
+          <listitem>
+            <para>shouldBe</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldEqual</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldBeEqual</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldBeEqualTo</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldNotBe</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldNotEqual</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldNotBeEqual</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldNotBeEqualTo</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldBeA</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldBeAn</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldNotBeA</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldNotBeAn</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldBeGreaterThan</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldBeLessThan</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldHave</para>
+          </listitem>
+
+          <listitem>
+            <para>shouldNotHave</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>ensure</title>
+
+        <para></para>
+
+        <itemizedlist>
+          <listitem>
+            <para>isNull</para>
+          </listitem>
+
+          <listitem>
+            <para>isNotNull</para>
+          </listitem>
+
+          <listitem>
+            <para>isA&lt;class type&gt;</para>
+          </listitem>
+
+          <listitem>
+            <para>isEqualTo(value)</para>
+          </listitem>
+
+          <listitem>
+            <para>isEqualTo&lt;value&gt;</para>
+          </listitem>
+
+          <listitem>
+            <para>isNotEqualTo(value)</para>
+          </listitem>
+
+          <listitem>
+            <para>isNotEqualTo&lt;value&gt;</para>
+          </listitem>
+
+          <listitem>
+            <para>isTrue</para>
+          </listitem>
+
+          <listitem>
+            <para>isFalse</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>common</title>
+
+        <para></para>
+
+        <itemizedlist>
+          <listitem>
+            <para>contains</para>
+          </listitem>
+
+          <listitem>
+            <para>has</para>
+          </listitem>
+
+          <listitem>
+            <para>ensureThrows</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+  </chapter>
+
+  <chapter>
     <title>Appendix</title>
 
     <section>
@@ -72,7 +356,7 @@
           <glossterm>Behavior Driven Development</glossterm>
 
           <glossdef>
-            <para> Agile software development technique that encourages
+            <para>Agile software development technique that encourages
             collaboration between developers, QA and non-technical or business
             participants in a software project. It was originally conceived in
             2003 by Dan North [1] as a response to Test Driven Development,
