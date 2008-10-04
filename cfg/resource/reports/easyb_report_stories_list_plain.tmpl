@@ -14,7 +14,7 @@
 %>
 
 <div id='StoriesListPlain' style='display:none;'>
-  <h2>Stories List Plain</h2>
+  <h2>Stories Text</h2>
   <% def storyCount = results.scenarioCount %>
   <% summaryText = (storyCount == 1) ? "1 scenario" : "${storyCount} scenarios"
      summaryText += results.pendingScenarioCount.toInteger() > 0 ? " (including ${results.pendingScenarioCount} pending)" : " executed"

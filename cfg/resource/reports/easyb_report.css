@@ -255,7 +255,13 @@ img.right {
   background: #F5FFF5;
 }
 
+#stories-list-plain-menu-link {
+  padding-left: 8px;
+}
 
+#specifications-list-plain-menu-link {
+  padding-left: 8px;
+}
 
 
 /* Sidebar */
