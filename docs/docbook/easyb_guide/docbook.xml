@@ -56,106 +56,182 @@
   <chapter>
     <title>Syntax</title>
 
+    <indexterm class="startofrange" id="ix.syntax">
+      <primary>Syntax Specification</primary>
+    </indexterm>
+
     <para>easyb contains a rich language for capturing behaviors as executable
-    documentation. </para>
+    documentation.</para>
 
     <section>
       <title>Stories</title>
 
+      <indexterm class="startofrange" id="ix.syntax.stories">
+        <primary>Syntax Specification</primary>
+
+        <secondary>Stories</secondary>
+      </indexterm>
+
       <para>TODO</para>
 
-      <itemizedlist>
-        <listitem>
-          <formalpara>
-            <title>scenario</title>
+      <variablelist>
+        <formalpara>
+          <title>scenario</title>
 
-            <para>illustrate a specific aspect of behavior of the
-            application</para>
-          </formalpara>
+          <indexterm>
+            <primary>scenario</primary>
+          </indexterm>
 
-          <programlisting>scenario "description here", {
+          <para>illustrate a specific aspepct of behavior of the
+          application<programlisting>scenario "description here", {
   ...
-}</programlisting>
-        </listitem>
+}</programlisting></para>
+        </formalpara>
 
-        <listitem>
-          <formalpara>
-            <title>given</title>
+        <formalpara>
+          <title>given, andGiven</title>
 
-            <para>a context specific to this scenario. Object and Data setup
-            will often happen in a given.</para>
-          </formalpara>
+          <indexterm>
+            <primary>given</primary>
+          </indexterm>
 
-          <programlisting>scenario "scenario description here", {
+          <indexterm>
+            <primary>andGiven</primary>
+
+            <see>given</see>
+          </indexterm>
+
+          <para>a context specific to this scenario. Object and Data setup
+          will often happen in a given.<programlisting>scenario "scenario description here", {
   given "given description here", {
     // given impl here
   }
-
-  ...
-}</programlisting>
-        </listitem>
-
-        <listitem>
-          <formalpara>
-            <title>andGiven</title>
-
-            <para>a context specific to this scenario. Additional object and
-            data setup will often happen in a given.</para>
-          </formalpara>
-
-          <programlisting>scenario "scenario description here", {
-  andGiven "given description here", {
-    // given impl here
+ 
+  andGiven "andGiven description here", {
+    // andGiven impl here
   }
 
   ...
-}</programlisting>
-        </listitem>
+}</programlisting></para>
+        </formalpara>
 
-        <listitem>
-          <formalpara>
-            <title>when</title>
+        <formalpara>
+          <title>when</title>
 
-            <para>TODO</para>
-          </formalpara>
+          <indexterm>
+            <primary>when</primary>
+          </indexterm>
 
-          <programlisting>scenario "scenario description here", {
+          <para>an action to be taken.<programlisting>scenario "scenario description here", {
+  ...
+
   when "when description here", {
     // when impl here
   }
 
   ...
-}</programlisting>
-        </listitem>
+}</programlisting></para>
+        </formalpara>
 
-        <listitem>
-          <para>then</para>
-        </listitem>
+        <formalpara>
+          <title>then, andThen</title>
 
-        <listitem>
-          <para>andThen</para>
-        </listitem>
+          <indexterm>
+            <primary>then</primary>
+          </indexterm>
 
-        <listitem>
-          <para>narrative</para>
-        </listitem>
+          <indexterm>
+            <primary>andThen</primary>
 
-        <listitem>
-          <para>as_a</para>
-        </listitem>
+            <see>then</see>
+          </indexterm>
 
-        <listitem>
-          <para>i_want</para>
-        </listitem>
+          <para>validation of expected outcome.<programlisting>scenario "scenario description here", {
+  ...
 
-        <listitem>
-          <para>so_that</para>
-        </listitem>
-      </itemizedlist>
+  then "then description here", {
+    // then impl here
+  }
+
+  andThen "andThen description here", {
+    // andThen impl here
+  }
+
+  ...
+}</programlisting></para>
+        </formalpara>
+
+        <formalpara>
+          <title>narrative</title>
+
+          <indexterm>
+            <primary>narrative</primary>
+          </indexterm>
+
+          <para>gives a bried description of what is to be delivered. provides
+          a container for other narrative components.<programlisting>narrative "narrative description here", {
+  ...
+}
+
+scenario "scenario description here"  ...</programlisting></para>
+        </formalpara>
+
+        <formalpara>
+          <title>as_a</title>
+
+          <indexterm>
+            <primary>as_a</primary>
+          </indexterm>
+
+          <para>part of a narrative. an aspect that describes the person, or
+          thing, that will benefit from the feature.<programlisting>narrative "narrative description here", {
+  as_a "role description here"
+  ...
+}</programlisting></para>
+        </formalpara>
+
+        <formalpara>
+          <title>i_want</title>
+
+          <indexterm>
+            <primary>i_want</primary>
+          </indexterm>
+
+          <para>part of a narrative. describes something that the system
+          should do or a feature in business terms and not in terms of
+          technology<programlisting>narrative "narrative description here", {
+  ...
+  i_want "feature description here"
+  ...
+}</programlisting></para>
+        </formalpara>
+
+        <formalpara>
+          <title>so_that</title>
+
+          <indexterm>
+            <primary>so_that</primary>
+          </indexterm>
+
+          <para>part of a narrative. describes the business value accrued from
+          this feature.<programlisting>narrative "narrative description here", {
+  ...
+  so_that "benefit description here"
+}</programlisting></para>
+        </formalpara>
+      </variablelist>
+
+      <indexterm class="endofrange" startref="ix.syntax.stories" />
     </section>
 
     <section>
       <title>Specifications</title>
+
+      <indexterm class="startofrange" id="ix.syntax.specifications">
+        <primary>Syntax Specification</primary>
+
+        <secondary>Specifications</secondary>
+      </indexterm>
 
       <para>TODO</para>
 
@@ -164,10 +240,18 @@
           <para>it</para>
         </listitem>
       </itemizedlist>
+
+      <indexterm class="endofrange" startref="ix.syntax.specifications" />
     </section>
 
     <section>
       <title>Common</title>
+
+      <indexterm class="startofrange" id="ix.syntax.common">
+        <primary>Syntax Specification</primary>
+
+        <secondary>Common</secondary>
+      </indexterm>
 
       <para>TODO</para>
 
@@ -192,17 +276,25 @@
           <para>after_each</para>
         </listitem>
       </itemizedlist>
+
+      <indexterm class="endofrange" startref="ix.syntax.common" />
     </section>
 
     <section>
       <title>Assertions</title>
 
-      <para></para>
+      <indexterm class="startofrange" id="ix.syntax.assertions">
+        <primary>Syntax Specification</primary>
+
+        <secondary>Assertions</secondary>
+      </indexterm>
+
+      <para />
 
       <section>
         <title>should</title>
 
-        <para></para>
+        <para />
 
         <itemizedlist>
           <listitem>
@@ -269,12 +361,20 @@
             <para>shouldNotHave</para>
           </listitem>
         </itemizedlist>
+
+        <indexterm class="endofrange" startref="ix.syntax.assertions" />
       </section>
 
       <section>
         <title>ensure</title>
 
-        <para></para>
+        <indexterm class="startofrange" id="ix.syntax.ensure">
+          <primary>Syntax Specification</primary>
+
+          <secondary>ensure</secondary>
+        </indexterm>
+
+        <para />
 
         <itemizedlist>
           <listitem>
@@ -313,12 +413,14 @@
             <para>isFalse</para>
           </listitem>
         </itemizedlist>
+
+        <indexterm class="endofrange" startref="ix.syntax.ensure" />
       </section>
 
       <section>
         <title>common</title>
 
-        <para></para>
+        <para />
 
         <itemizedlist>
           <listitem>
@@ -335,6 +437,8 @@
         </itemizedlist>
       </section>
     </section>
+
+    <indexterm class="endofrange" startref="ix.syntax" />
   </chapter>
 
   <chapter>
@@ -390,4 +494,6 @@
       <para></para>
     </section>
   </chapter>
+
+  <index></index>
 </book>
