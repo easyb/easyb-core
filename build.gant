@@ -37,7 +37,7 @@ target("default":"validate"){
 }
 
 target(release:"compile and archive"){
-  depends("validate")
+  depends("validate-reports")
 
   Ant.mkdir(dir:"${defaultdir}/release")
   Ant.copy(file:"${defaultdir}/easyb-${version}.jar", todir:"${defaultdir}/release")
