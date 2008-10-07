@@ -77,13 +77,13 @@ class StoryBinding extends Binding {
                 }
             } else if (scenarios.size() > 1) {
                 story.ignore(scenarios as List)
-            } else{
+            } else {
                 //no argument but this isn't working
             }
         }
     }
 
-    def getAt(ArrayList list){
+    def getAt(ArrayList list) {
         this.story.ignoreList = list
     }
 

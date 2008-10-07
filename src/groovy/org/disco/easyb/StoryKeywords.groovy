@@ -34,7 +34,7 @@ class StoryKeywords extends BehaviorKeywords {
     }
 
     def after(description, afterClosure) {
-        if (!afterClosure) {
+        if (!afterDone) {
             afterClosure()
             afterDone = true
         }
