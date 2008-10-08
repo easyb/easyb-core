@@ -1,6 +1,5 @@
 package org.disco.easyb.ant
 
-import org.apache.tools.ant.DirectoryScanner
 import org.apache.tools.ant.types.FileSet
 import org.apache.tools.ant.types.Path
 
@@ -44,10 +43,14 @@ public class AbstractStoryTask extends AbstractJavaTask {
     private void addArgumentsAndRun() {
 
         for (iter in filesets) {
-            FileSet fileset = (FileSet) iter
 
-            DirectoryScanner ds = fileset.getDirectoryScanner(getProject())
-            String[] includedFiles = ds.getIncludedFiles()
+            def ds = iter.getDirectoryScanner(getProject())
+            def includedFiles = ds.getIncludedFiles()
+
+            if (includedFiles.length == 0) {
+                log("Nothing was found to process. Are your <include> elements defined correctly?")
+                return
+            }
 
             for (i in 0..<includedFiles.length) {
                 addTarget("\"${ds.getBasedir().toString()}/${includedFiles[i]}\"")
@@ -58,8 +61,7 @@ public class AbstractStoryTask extends AbstractJavaTask {
         commandLine.setClassname(commandLineClass.getName())
 
         for (iter in targetArgumentList) {
-            String className = iter.toString()
-            commandLine.createArgument().setLine(className)
+            commandLine.createArgument().setLine(iter)
         }
 
         if (run() != 0) {
