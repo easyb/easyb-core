@@ -72,7 +72,7 @@
         <secondary>Stories</secondary>
       </indexterm>
 
-      <para>TODO</para>
+      <para>These entries are normally found within a Story file.</para>
 
       <variablelist>
         <formalpara>
@@ -82,10 +82,23 @@
             <primary>scenario</primary>
           </indexterm>
 
-          <para>illustrate a specific aspepct of behavior of the
-          application<programlisting>scenario "description here", {
+          <para>Illustrate a specific aspepct of behavior of the
+          application<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside story file. Multiple may be included in a
+                  single story file.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>scenario "description here", {
   ...
-}</programlisting></para>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
 
         <formalpara>
@@ -101,8 +114,20 @@
             <see>given</see>
           </indexterm>
 
-          <para>a context specific to this scenario. Object and Data setup
-          will often happen in a given.<programlisting>scenario "scenario description here", {
+          <para>Context specific to this scenario. Object and Data setup will
+          often happen in a given.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside scenario. Multiple may appear in each scenario.
+                  Also appears directly in a story file outside of a scenario
+                  (not recommended).</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>scenario "scenario description here", {
   given "given description here", {
     // given impl here
   }
@@ -112,7 +137,9 @@
   }
 
   ...
-}</programlisting></para>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
 
         <formalpara>
@@ -122,7 +149,19 @@
             <primary>when</primary>
           </indexterm>
 
-          <para>an action to be taken.<programlisting>scenario "scenario description here", {
+          <para>An action to be taken.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside scenario. Follows any givens. Multiple may
+                  appear in each scenario. Also appears directly in a story
+                  file outside of a scenario (not recommended).</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>scenario "scenario description here", {
   ...
 
   when "when description here", {
@@ -130,7 +169,9 @@
   }
 
   ...
-}</programlisting></para>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
 
         <formalpara>
@@ -146,7 +187,19 @@
             <see>then</see>
           </indexterm>
 
-          <para>validation of expected outcome.<programlisting>scenario "scenario description here", {
+          <para>Validation of expected outcome.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside scenario. Follows any whens. Multiple may
+                  appear in each scenario. Also appears directly in a story
+                  file outside of a scenario (not recommended).</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>scenario "scenario description here", {
   ...
 
   then "then description here", {
@@ -158,7 +211,9 @@
   }
 
   ...
-}</programlisting></para>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
 
         <formalpara>
@@ -168,12 +223,25 @@
             <primary>narrative</primary>
           </indexterm>
 
-          <para>gives a bried description of what is to be delivered. provides
-          a container for other narrative components.<programlisting>narrative "narrative description here", {
+          <para>Gives a bried description of what is to be delivered. Provides
+          a container for other narrative components.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside a story, preferably at the top. Only one can
+                  appear in each story.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>narrative "narrative description here", {
   ...
 }
 
-scenario "scenario description here"  ...</programlisting></para>
+scenario "scenario description here"  ...</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
 
         <formalpara>
@@ -183,11 +251,23 @@ scenario "scenario description here"  ...</programlisting></para>
             <primary>as_a</primary>
           </indexterm>
 
-          <para>part of a narrative. an aspect that describes the person, or
-          thing, that will benefit from the feature.<programlisting>narrative "narrative description here", {
+          <para>An aspect that describes the person, or thing, that will
+          benefit from the feature.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside narrative, prior to i_want.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>narrative "narrative description here", {
   as_a "role description here"
   ...
-}</programlisting></para>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
 
         <formalpara>
@@ -197,13 +277,24 @@ scenario "scenario description here"  ...</programlisting></para>
             <primary>i_want</primary>
           </indexterm>
 
-          <para>part of a narrative. describes something that the system
-          should do or a feature in business terms and not in terms of
-          technology<programlisting>narrative "narrative description here", {
+          <para>Describes something that the system should do or a feature in
+          business terms and not in terms of technology<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside narrative, following as_a.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>narrative "narrative description here", {
   ...
   i_want "feature description here"
   ...
-}</programlisting></para>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
 
         <formalpara>
@@ -213,11 +304,23 @@ scenario "scenario description here"  ...</programlisting></para>
             <primary>so_that</primary>
           </indexterm>
 
-          <para>part of a narrative. describes the business value accrued from
-          this feature.<programlisting>narrative "narrative description here", {
+          <para>Describes the business value accrued from this
+          feature.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>Inside narrative, following i_want.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>narrative "narrative description here", {
   ...
   so_that "benefit description here"
-}</programlisting></para>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
         </formalpara>
       </variablelist>
 
@@ -233,13 +336,21 @@ scenario "scenario description here"  ...</programlisting></para>
         <secondary>Specifications</secondary>
       </indexterm>
 
-      <para>TODO</para>
+      <para>The entries below would normally be found exclusively in a
+      Specification file.</para>
 
-      <itemizedlist>
-        <listitem>
-          <para>it</para>
-        </listitem>
-      </itemizedlist>
+      <formalpara>
+        <title>it</title>
+
+        <indexterm>
+          <primary>it</primary>
+        </indexterm>
+
+        <para>Captures a specification. Usually described in terms of
+        should.<programlisting>it "should have an it description here", {
+  // it impl here
+}</programlisting></para>
+      </formalpara>
 
       <indexterm class="endofrange" startref="ix.syntax.specifications" />
     </section>
@@ -253,29 +364,108 @@ scenario "scenario description here"  ...</programlisting></para>
         <secondary>Common</secondary>
       </indexterm>
 
-      <para>TODO</para>
+      <para>The following can be placed in both Story and Specification
+      files.</para>
 
-      <itemizedlist>
-        <listitem>
-          <para>and</para>
-        </listitem>
+      <formalpara>
+        <title>and (syntax replacement)</title>
 
-        <listitem>
-          <para>before</para>
-        </listitem>
+        <indexterm>
+          <primary>and (syntax replacement)</primary>
+        </indexterm>
 
-        <listitem>
-          <para>before_each</para>
-        </listitem>
+        <para>Used as replacement syntax for story and specification
+        contstructs. Carries the connotation that it is equivalent to whatever
+        the previous story or specification construct was.<programlisting>...
+given "a given description here", {
+  // given impl here
+}
 
-        <listitem>
-          <para>after</para>
-        </listitem>
+and "equivalent to another given", {
+  // another given impl here
+}
+...</programlisting></para>
+      </formalpara>
 
-        <listitem>
-          <para>after_each</para>
-        </listitem>
-      </itemizedlist>
+      <formalpara>
+        <title>and (assertion chain)</title>
+
+        <indexterm>
+          <primary>and (assertion chain)</primary>
+        </indexterm>
+
+        <para>Used to logically tie together assertion statements.
+        <programlisting>true.shouldBe true
+and
+false.shouldBe false</programlisting></para>
+      </formalpara>
+
+      <formalpara>
+        <title>before</title>
+
+        <indexterm>
+          <primary>before</primary>
+        </indexterm>
+
+        <para>Actions to be taken before any Story or Scenario components are
+        run. Usually used for boilerplate setup common to all scenarios or
+        specifications in that file. Placement should be prior to any
+        scenarios (in a story) or specifications.<programlisting>...
+before "a before description here", {
+  // before impl here
+}
+...</programlisting></para>
+      </formalpara>
+
+      <formalpara>
+        <title>before_each</title>
+
+        <indexterm>
+          <primary>before_each</primary>
+        </indexterm>
+
+        <para>Actions to be taken before every Story or Scenario component is
+        run. Usually used for boilerplate setup common to all scenarios or
+        specifications in that file. Placement should be prior to any
+        scenarios (in a story) or specifications.<programlisting>...
+before_each "a before_each description here", {
+  // before_each impl here
+}
+...</programlisting></para>
+      </formalpara>
+
+      <formalpara>
+        <title>after</title>
+
+        <indexterm>
+          <primary>after</primary>
+        </indexterm>
+
+        <para>Actions to be taken after any Story or Scenario components are
+        run. Usually used for boilerplate setup common to all scenarios or
+        specifications in that file. Placement should be prior to any
+        scenarios (in a story) or specifications.<programlisting>...
+after "an after description here", {
+  // after impl here
+}
+...</programlisting></para>
+      </formalpara>
+
+      <formalpara>
+        <title>after_each</title>
+
+        <indexterm>
+          <primary>after_each</primary>
+        </indexterm>
+
+        <para>Actions to be taken after every Story or Scenario component is
+        run. Placement should be prior to any scenarios (in a story) or
+        specifications.<programlisting>...
+after_each "an after_each description here", {
+  // after_each impl here
+}
+...</programlisting></para>
+      </formalpara>
 
       <indexterm class="endofrange" startref="ix.syntax.common" />
     </section>
