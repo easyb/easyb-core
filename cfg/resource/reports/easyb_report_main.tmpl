@@ -15,15 +15,19 @@
   <script type='text/javascript'>
     function showOnlyContent(contentDiv, linkId) {
       \$('Summaries').hide();
-      \$('StoriesList').hide();
+      \$('summary-menu-link').removeClassName('selected-menu-link');
+    <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size() > 0) { %>
       \$('SpecificationsList').hide();
       \$('SpecificationsListPlain').hide();
-      \$('StoriesListPlain').hide();
-      \$('summary-menu-link').removeClassName('selected-menu-link');
-      \$('stories-list-menu-link').removeClassName('selected-menu-link');
       \$('specifications-list-menu-link').removeClassName('selected-menu-link');
       \$('specifications-list-plain-menu-link').removeClassName('selected-menu-link');
+    <% } %>
+    <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).size() > 0) { %>
+      \$('StoriesList').hide();
+      \$('StoriesListPlain').hide();
+      \$('stories-list-menu-link').removeClassName('selected-menu-link');
       \$('stories-list-plain-menu-link').removeClassName('selected-menu-link');
+    <% } %>
       \$(linkId).addClassName('selected-menu-link');
       \$(contentDiv).show();
     }
@@ -117,10 +121,14 @@
             </tbody>
           </table>
         </div>
-        <% HtmlReportHelper.writeStoriesList(results, reportWriter) %>
-        <% HtmlReportHelper.writeSpecificationsList(results, reportWriter) %>
-        <% HtmlReportHelper.writeSpecificationsListPlain(results, reportWriter) %>
-        <% HtmlReportHelper.writeStoriesListPlain(results, reportWriter) %>
+        <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size() > 0) {
+          HtmlReportHelper.writeSpecificationsList(results, reportWriter)
+          HtmlReportHelper.writeSpecificationsListPlain(results, reportWriter)
+        } %>
+        <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).size() > 0) {
+          HtmlReportHelper.writeStoriesList(results, reportWriter)
+          HtmlReportHelper.writeStoriesListPlain(results, reportWriter)
+        } %>
       </div>
     </div>
 
@@ -137,18 +145,22 @@
           <li>
             <a id='summary-menu-link' class='selected-menu-link' href='#' onclick='showOnlyContent("Summaries", "summary-menu-link")'>Summary</a>
           </li>
+          <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).size() > 0) { %>
           <li>
             <a id='stories-list-menu-link' href='#' onclick='showOnlyContent("StoriesList", "stories-list-menu-link")'>Stories</a>
           </li>
           <li>
             <a id='stories-list-plain-menu-link' href='#' onclick='showOnlyContent("StoriesListPlain", "stories-list-plain-menu-link")'>Stories Text</a>
           </li>
+          <% } %>
+          <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size() > 0) { %>
           <li>
             <a id='specifications-list-menu-link' href='#' onclick='showOnlyContent("SpecificationsList", "specifications-list-menu-link")'>Specifications</a>
           </li>
           <li>
             <a id='specifications-list-plain-menu-link' href='#' onclick='showOnlyContent("SpecificationsListPlain", "specifications-list-plain-menu-link")'>Specifications Text</a>
           </li>
+          <% } %>
         </ul>
       </li>
     </ul>
