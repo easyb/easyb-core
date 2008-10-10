@@ -5,10 +5,14 @@ import groovy.text.SimpleTemplateEngine
 
 class HtmlReportWriter implements ReportWriter {
     private String location
+    private static final String DEFAULT_LOC_NAME = "easyb-report.html";
 
+    public HtmlReportWriter() {
+      this(DEFAULT_LOC_NAME)
+    }
 
     HtmlReportWriter(String location) {
-        this.location = location
+      this.location = (location != null ? location : DEFAULT_LOC_NAME);
     }
 
     public void writeReport(ResultsCollector results) {

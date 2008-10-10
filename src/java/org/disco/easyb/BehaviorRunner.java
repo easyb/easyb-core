@@ -43,7 +43,9 @@ public class BehaviorRunner {
      *             <p/>
      *             You don't need to pass in the file name for the report either-- if no
      *             path is present, then the runner will create a report in the current directory
-     *             with a default filename following this convention: easyb-<type>-report.<format>
+     *             with a default filename following this convention:
+     *                  easyb-<type>-report.<format> (for reports of either story or specification)
+     *                  easyb-report.<format> (for reports that contain both)
      *             <p/>
      *             Multiple specifications can be passed in on the command line
      *             <p/>

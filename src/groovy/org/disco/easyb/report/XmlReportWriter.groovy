@@ -8,9 +8,14 @@ import org.disco.easyb.listener.ResultsCollector
 
 class XmlReportWriter implements ReportWriter {
     private String location
+    private static final String DEFAULT_LOC_NAME = "easyb-report.xml";
+
+    public XmlReportWriter() {
+      this(DEFAULT_LOC_NAME)
+    }
 
     XmlReportWriter(String location) {
-        this.location = location
+      this.location = (location != null ? location : DEFAULT_LOC_NAME);
     }
 
     def buildFailureMessage(result) {

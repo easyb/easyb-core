@@ -6,9 +6,14 @@ import org.disco.easyb.listener.ResultsCollector
 
 public class TxtSpecificationReportWriter implements ReportWriter {
     String location
+    private static final String DEFAULT_LOC_NAME = "easyb-specification-report.txt";
+
+    public TxtSpecificationReportWriter() {
+      this(DEFAULT_LOC_NAME)
+    }
 
     TxtSpecificationReportWriter(String location) {
-        this.location = location
+      this.location = (location != null ? location : DEFAULT_LOC_NAME);
     }
 
     /**
