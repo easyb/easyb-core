@@ -35,7 +35,11 @@ class RichEnsureDelegate {
             }
         } else {
             if (value instanceof String) {
-                if (verified.toString().contains(value.toString())) {
+                if (verified instanceof Collection) {
+                    if (verified.contains(value as String)) {
+                        throw new VerificationException("${verified.toString()} should not contain ${value.toString()}")
+                    }
+                } else if (verified.toString().contains(value.toString())) {
                     throw new VerificationException("${verified.toString()} should not contain ${value.toString()}")
                 }
             } else if (value instanceof Collection) {

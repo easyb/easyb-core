@@ -134,7 +134,11 @@ class BehaviorCategory {
             }
         } else {
             if (value instanceof String) {
-                if (self.toString().contains(value.toString())) {
+                if (self instanceof Collection) {
+                    if (self.contains(value as String)) {
+                        throw new VerificationException("${self.toString()} should not contain ${value.toString()}")
+                    }
+                } else if (self.toString().contains(value.toString())) {
                     throw new VerificationException("${self.toString()} should not contain ${value.toString()}")
                 }
             } else if (value instanceof Collection) {
