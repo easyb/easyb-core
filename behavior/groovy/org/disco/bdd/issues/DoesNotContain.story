@@ -10,3 +10,17 @@ scenario "sub-strings should not match doesNotContain", {
         }
     }
 }
+
+
+scenario "sub-strings should match doesContain", {
+    given "a list of strings, ['a','ab','abc']", {
+        l = ['a', 'ab', 'abc']
+    }
+
+    then "list should contain a simple 'a'", {
+        l.shouldHave('a')
+        ensure(l) {
+            contains('a')
+        }
+    }
+}
