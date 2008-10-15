@@ -40,17 +40,70 @@
       In fact, when you think in terms of behavior (i.e. shoulds) you'll find
       that writing specifications is easier to do first, which is the intent
       of test driven development in the first place.</para>
+
+      <para>What came next was a natural progression from idea to
+      implementation. The idea of TDD had become widely accepted, primarily
+      because of its freely available tooling in the form of JUnit. BDD is
+      following the same path and pulling it to the forefront are a new crop
+      of tools to support it. One of the first was JBehave by Dan North. Dan
+      is regarded as one of the fathers of BDD thru his role in defining it
+      and evangelizing those concepts. JBehave implemented many of the ideas
+      and terms of BDD and did so in code which is the real reference for most
+      developers. </para>
+
+      <para>There was still a significant problem. BDD by its nature is a very
+      Stakeholder centric process and trying to marry up Non-Technical folks
+      with Java syntax is just a recipe for failure or frustration at best.
+      Around the same time, ruby had taken off thanks to Rails and as such
+      DomainSpecificLanguages were becoming a hotbed of discussion among
+      developers. It was only a matter of time before all of the above met at
+      the crossroads. RSpec was first on the scene and provided an early form
+      of BDD that used 'it should' as its primary means of describing
+      behavior. It was a fantastic spark to the community and most assuredly a
+      step in the right direction but it too had its drawbacks. RSpec ran on
+      the Ruby VM and this left the Java world out in the cold. Running RSpec
+      via JRuby was possible but JRuby was a fledgeling project and also came
+      with its own baggage, not the least of which was that Enterprise
+      organizations weren't ready to embrace Ruby or even JRuby.</para>
+
+      <para>Enter groovy and easyb. Groovy runs natively on the JVM with
+      nothing more than a jar file in the classpath. This is key to lowering
+      the barriers of adoption by that Enterprise segment of the population.
+      What Groovy also provides is a dynamic language with all the power and
+      syntatic sugar opportunities for creating a rich DSL. With all the
+      pieces now available, easyb was primed to step in and put them all in
+      place.</para>
     </section>
 
     <section>
       <title>Goals</title>
 
-      <orderedlist>
+      <itemizedlist>
         <listitem>
-          <para>test</para>
+          <para>Easy</para>
         </listitem>
-      </orderedlist>
+
+        <listitem>
+          <para>Natual Language DSL for capturing Behaviors</para>
+        </listitem>
+
+        <listitem>
+          <para>Bridge gap between Stakeholders and Development</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Easyb accomplishes all of these goals in spades as you'll see
+      throughout this document. Goal #1 has always been, and continues to be,
+      that it must be easy. To do so, easyb provides out of the box a slew of
+      great features and the easyb team has bundled along with (and built on
+      top of them) a suite of products and plugins.</para>
     </section>
+  </chapter>
+
+  <chapter>
+    <title>Usage</title>
+
+    <para>Some stuff about running easyb</para>
   </chapter>
 
   <chapter>
@@ -339,18 +392,32 @@ scenario "scenario description here"  ...</programlisting>
       <para>The entries below would normally be found exclusively in a
       Specification file.</para>
 
-      <formalpara>
-        <title>it</title>
+      <variablelist>
+        <formalpara>
+          <title>it</title>
 
-        <indexterm>
-          <primary>it</primary>
-        </indexterm>
+          <indexterm>
+            <primary>it</primary>
+          </indexterm>
 
-        <para>Captures a specification. Usually described in terms of
-        should.<programlisting>it "should have an it description here", {
+          <para>Captures a specification. Usually described in terms of
+          should.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>At the root of a Specification file.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>it "should have an it description here", {
   // it impl here
-}</programlisting></para>
-      </formalpara>
+}</programlisting>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
+      </variablelist>
 
       <indexterm class="endofrange" startref="ix.syntax.specifications" />
     </section>
@@ -367,16 +434,29 @@ scenario "scenario description here"  ...</programlisting>
       <para>The following can be placed in both Story and Specification
       files.</para>
 
-      <formalpara>
-        <title>and (syntax replacement)</title>
+      <variablelist>
+        <formalpara>
+          <title>and (syntax replacement)</title>
 
-        <indexterm>
-          <primary>and (syntax replacement)</primary>
-        </indexterm>
+          <indexterm>
+            <primary>and (syntax replacement)</primary>
+          </indexterm>
 
-        <para>Used as replacement syntax for story and specification
-        contstructs. Carries the connotation that it is equivalent to whatever
-        the previous story or specification construct was.<programlisting>...
+          <para>Used as replacement syntax for story and specification
+          contstructs. Carries the connotation that it is equivalent to
+          whatever the previous story or specification construct
+          was.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>between, or in place of, story and specification
+                  constructs (given, then, etc)</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>...
 given "a given description here", {
   // given impl here
 }
@@ -384,88 +464,159 @@ given "a given description here", {
 and "equivalent to another given", {
   // another given impl here
 }
-...</programlisting></para>
-      </formalpara>
+...</programlisting>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
 
-      <formalpara>
-        <title>and (assertion chain)</title>
+        <formalpara>
+          <title>and (assertion chain)</title>
 
-        <indexterm>
-          <primary>and (assertion chain)</primary>
-        </indexterm>
+          <indexterm>
+            <primary>and (assertion chain)</primary>
+          </indexterm>
 
-        <para>Used to logically tie together assertion statements.
-        <programlisting>true.shouldBe true
+          <para>Used to logically tie together assertion statements.
+          <itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>within a story or specification construct, placed
+                  between assertions to give more natural language
+                  readability</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>true.shouldBe true
 and
-false.shouldBe false</programlisting></para>
-      </formalpara>
+false.shouldBe false</programlisting>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
 
-      <formalpara>
-        <title>before</title>
+        <formalpara>
+          <title>before</title>
 
-        <indexterm>
-          <primary>before</primary>
-        </indexterm>
+          <indexterm>
+            <primary>before</primary>
+          </indexterm>
 
-        <para>Actions to be taken before any Story or Scenario components are
-        run. Usually used for boilerplate setup common to all scenarios or
-        specifications in that file. Placement should be prior to any
-        scenarios (in a story) or specifications.<programlisting>...
+          <para>Actions to be taken before any Story or Scenario components
+          are run. Usually used for boilerplate setup common to all scenarios
+          or specifications in that file. Placement should be prior to any
+          scenarios (in a story) or specifications.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>At the top of a story or specification, prior to any
+                  other easyb components.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>...
 before "a before description here", {
   // before impl here
 }
-...</programlisting></para>
-      </formalpara>
+...</programlisting>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
 
-      <formalpara>
-        <title>before_each</title>
+        <formalpara>
+          <title>before_each</title>
 
-        <indexterm>
-          <primary>before_each</primary>
-        </indexterm>
+          <indexterm>
+            <primary>before_each</primary>
+          </indexterm>
 
-        <para>Actions to be taken before every Story or Scenario component is
-        run. Usually used for boilerplate setup common to all scenarios or
-        specifications in that file. Placement should be prior to any
-        scenarios (in a story) or specifications.<programlisting>...
+          <para>Actions to be taken before every Story or Scenario component
+          is run. Usually used for boilerplate setup common to all scenarios
+          or specifications in that file. Placement should be prior to any
+          scenarios (in a story) or specifications.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>At the top of a story or specification, prior to any
+                  other easyb components.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>...
 before_each "a before_each description here", {
   // before_each impl here
 }
-...</programlisting></para>
-      </formalpara>
+...</programlisting>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
 
-      <formalpara>
-        <title>after</title>
+        <formalpara>
+          <title>after</title>
 
-        <indexterm>
-          <primary>after</primary>
-        </indexterm>
+          <indexterm>
+            <primary>after</primary>
+          </indexterm>
 
-        <para>Actions to be taken after any Story or Scenario components are
-        run. Usually used for boilerplate setup common to all scenarios or
-        specifications in that file. Placement should be prior to any
-        scenarios (in a story) or specifications.<programlisting>...
+          <para>Actions to be taken after any Story or Scenario components are
+          run. Usually used for boilerplate setup common to all scenarios or
+          specifications in that file. Placement should be prior to any
+          scenarios (in a story) or specifications.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>At the top of a story or specification. Follows any
+                  before or before_each, prior to any other easyb
+                  components.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>...
 after "an after description here", {
   // after impl here
 }
-...</programlisting></para>
-      </formalpara>
+...</programlisting>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
 
-      <formalpara>
-        <title>after_each</title>
+        <formalpara>
+          <title>after_each</title>
 
-        <indexterm>
-          <primary>after_each</primary>
-        </indexterm>
+          <indexterm>
+            <primary>after_each</primary>
+          </indexterm>
 
-        <para>Actions to be taken after every Story or Scenario component is
-        run. Placement should be prior to any scenarios (in a story) or
-        specifications.<programlisting>...
+          <para>Actions to be taken after every Story or Scenario component is
+          run. Placement should be prior to any scenarios (in a story) or
+          specifications.<itemizedlist>
+              <listitem>
+                <formalpara>
+                  <title>Appears</title>
+
+                  <para>At the top of a story or specification. Follows any
+                  before or before_each, prior to any other easyb
+                  components.</para>
+                </formalpara>
+              </listitem>
+
+              <listitem>
+                <programlisting>...
 after_each "an after_each description here", {
   // after_each impl here
 }
-...</programlisting></para>
-      </formalpara>
+...</programlisting>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
+      </variablelist>
 
       <indexterm class="endofrange" startref="ix.syntax.common" />
     </section>
@@ -473,90 +624,360 @@ after_each "an after_each description here", {
     <section>
       <title>Assertions</title>
 
-      <indexterm class="startofrange" id="ix.syntax.assertions">
-        <primary>Syntax Specification</primary>
+      <para>The meat of the syntactic sugar easyb provides for making
+      assertions very readable.</para>
 
-        <secondary>Assertions</secondary>
-      </indexterm>
-
-      <para />
+      <indexterm />
 
       <section>
         <title>should</title>
 
-        <para />
+        <para>All of the should assertions work from left to right. The object
+        on the left having the attributes that will be validated by what is on
+        the right.</para>
 
-        <itemizedlist>
-          <listitem>
-            <para>shouldBe</para>
-          </listitem>
+        <indexterm class="startofrange" id="ix.syntax.assertions.should">
+          <primary>Syntax Specification</primary>
 
-          <listitem>
-            <para>shouldEqual</para>
-          </listitem>
+          <secondary>Should Assertions</secondary>
+        </indexterm>
 
-          <listitem>
-            <para>shouldBeEqual</para>
-          </listitem>
+        <formalpara>
+          <title>Appears</title>
 
-          <listitem>
-            <para>shouldBeEqualTo</para>
-          </listitem>
+          <para>Inside any of the story or scenario components, typically as
+          part of an 'it' or a 'then'.</para>
+        </formalpara>
 
-          <listitem>
-            <para>shouldNotBe</para>
-          </listitem>
+        <variablelist>
+          <formalpara>
+            <title>shouldBe</title>
 
-          <listitem>
-            <para>shouldNotEqual</para>
-          </listitem>
+            <indexterm>
+              <primary>shouldBe</primary>
+            </indexterm>
 
-          <listitem>
-            <para>shouldNotBeEqual</para>
-          </listitem>
+            <para>Equality of target checked against value passed
+            in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldBe true
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
 
-          <listitem>
-            <para>shouldNotBeEqualTo</para>
-          </listitem>
+          <formalpara>
+            <title>shouldEqual</title>
 
-          <listitem>
-            <para>shouldBeA</para>
-          </listitem>
+            <indexterm>
+              <primary>shouldEqual</primary>
 
-          <listitem>
-            <para>shouldBeAn</para>
-          </listitem>
+              <seealso>shouldBe</seealso>
+            </indexterm>
 
-          <listitem>
-            <para>shouldNotBeA</para>
-          </listitem>
+            <para>Synonym for shouldBe. Equality of target checked against
+            value passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldEqual true
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
 
-          <listitem>
-            <para>shouldNotBeAn</para>
-          </listitem>
+          <formalpara>
+            <title>shouldBeEqual</title>
 
-          <listitem>
-            <para>shouldBeGreaterThan</para>
-          </listitem>
+            <indexterm>
+              <primary>shouldBeEqual</primary>
 
-          <listitem>
-            <para>shouldBeLessThan</para>
-          </listitem>
+              <seealso>shouldBe</seealso>
+            </indexterm>
 
-          <listitem>
-            <para>shouldHave</para>
-          </listitem>
+            <para>Synonym for shouldBe. Equality of target checked against
+            value passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldBeEqual true
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
 
-          <listitem>
-            <para>shouldNotHave</para>
-          </listitem>
-        </itemizedlist>
+          <formalpara>
+            <title>shouldBeEqualTo</title>
 
-        <indexterm class="endofrange" startref="ix.syntax.assertions" />
+            <indexterm>
+              <primary>shouldBeEqualTo</primary>
+
+              <seealso>shouldBe</seealso>
+            </indexterm>
+
+            <para>Synonym for shouldBe. Equality of target checked against
+            value passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldBeEqualTo true
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldNotBe</title>
+
+            <indexterm>
+              <primary>shouldNotBe</primary>
+            </indexterm>
+
+            <para>Inequality of target checked against value passed
+            in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldNotBe false
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldNotEqual</title>
+
+            <indexterm>
+              <primary>shouldNotEqual</primary>
+
+              <seealso>shouldNotBe</seealso>
+            </indexterm>
+
+            <para>Synonym for shouldNotBe. Inequality of target checked
+            against value passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldNotEqual false
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldNotBeEqual</title>
+
+            <indexterm>
+              <primary>shouldNotBeEqual</primary>
+
+              <seealso>shouldNotBe</seealso>
+            </indexterm>
+
+            <para>Synonym for shouldNotBe. Inequality of target checked
+            against value passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldNotBeEqual false
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldNotBeEqualTo</title>
+
+            <indexterm>
+              <primary>shouldNotBeEqualTo</primary>
+
+              <seealso>shouldNotBe</seealso>
+            </indexterm>
+
+            <para>Synonym for shouldNotBe. Inequality of target object checked
+            against value passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+true.shouldNotBeEqualTo false
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldBeA</title>
+
+            <indexterm>
+              <primary>shouldBeA</primary>
+            </indexterm>
+
+            <para>Verifies the target's type matches that which is passed
+            in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+"StringValue".shouldBeA(String)
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldBeA</title>
+
+            <indexterm>
+              <primary>shouldBeA</primary>
+            </indexterm>
+
+            <para>Verifies the target's type matches that which is passed
+            in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+"StringValue".shouldBeA String
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldBeAn</title>
+
+            <indexterm>
+              <primary>shouldBeAn</primary>
+
+              <seealso>shouldBeA</seealso>
+            </indexterm>
+
+            <para>Synonym for shouldBeA. Verifies the target's type matches
+            that which is passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+1.shouldBeAn Integer
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldNotBeA</title>
+
+            <indexterm>
+              <primary>shouldNotBeA</primary>
+            </indexterm>
+
+            <para>Verifies the target's type does not match that which is
+            passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+1.shouldNotBeA String
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldNotBeAn</title>
+
+            <indexterm>
+              <primary>shouldNotBeAn</primary>
+
+              <seealso>shouldNotBeA</seealso>
+            </indexterm>
+
+            <para>Synonym for shouldNotBeA. Verifies the target's type does
+            not match that which is passed in.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+1.shouldBeAn Integer
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldBeGreaterThan</title>
+
+            <indexterm>
+              <primary>shouldBeGreaterThan</primary>
+            </indexterm>
+
+            <para>Verifies the target is greater than the value passed in
+            using groovy comparison.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+2.shouldBeGreaterThan 1
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldBeLessThan</title>
+
+            <indexterm>
+              <primary>shouldBeLessThan</primary>
+            </indexterm>
+
+            <para>Verifies the target is less than the value passed in using
+            groovy comparison.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+1.shouldBeLessThan 2
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldHave</title>
+
+            <indexterm>
+              <primary>shouldHave</primary>
+            </indexterm>
+
+            <para>Verifies the target contains the value passed in.
+            Collections and Strings are handled in the value positions.
+            Collections, Strings and Object Fields are handled in the target
+            position.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+"test".shouldHave("est")
+
+myMap = [value: "Andy", another: 34, 55: "test"]
+myMap.shouldHave("Andy")
+myMap.shouldHave(55: "test")
+myMap.shouldHave([value: "Andy", 55: "test"])
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>shouldNotHave</title>
+
+            <indexterm>
+              <primary>shouldNotHave</primary>
+            </indexterm>
+
+            <para>Verifies the target contains the value passed in.
+            Collections and Strings are handled in the value positions.
+            Collections, Strings and Object Fields are handled in the target
+            position.<itemizedlist>
+                <listitem>
+                  <programlisting>...
+myMap = [value: "Andy", another: 34, 55: "test"]
+myMap.shouldNotHave("Mervin") // covers a value in a map
+myMap.shouldNotHave([value: "Mervin", 55: "somethingnottest"]) // covers a map in a map where neither value is found
+myMap.shouldNotHave([value: "Andy", 55: "somethingnottest"])  // covers a map in a map where at least one value is not found
+myMap.shouldNotHave(55: "foobar") // covers map where key exists but value doesn't
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+        </variablelist>
+
+        <indexterm class="endofrange" startref="ix.syntax.assertions.should" />
       </section>
 
       <section>
         <title>ensure</title>
+
+        <para>All of the ensure assertions validate the target (specified as
+        the argument to ensure()) matches the assertion in the term or the
+        argument to the right of the term.</para>
 
         <indexterm class="startofrange" id="ix.syntax.ensure">
           <primary>Syntax Specification</primary>
@@ -564,45 +985,183 @@ after_each "an after_each description here", {
           <secondary>ensure</secondary>
         </indexterm>
 
-        <para />
+        <formalpara>
+          <title>Appears</title>
 
-        <itemizedlist>
-          <listitem>
-            <para>isNull</para>
-          </listitem>
+          <para>Ensure normally appears inside an 'it' or 'then. All of the
+          assertion terms listed below will appear inside the block associated
+          with the ensure itself.</para>
+        </formalpara>
 
-          <listitem>
-            <para>isNotNull</para>
-          </listitem>
+        <variablelist>
+          <formalpara>
+            <title>isNull</title>
 
-          <listitem>
-            <para>isA&lt;class type&gt;</para>
-          </listitem>
+            <indexterm>
+              <primary>isNull</primary>
+            </indexterm>
 
-          <listitem>
-            <para>isEqualTo(value)</para>
-          </listitem>
+            <para>Value of target must be null.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure(someNullTargetValue) {
+ isNull
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
 
-          <listitem>
-            <para>isEqualTo&lt;value&gt;</para>
-          </listitem>
+          <formalpara>
+            <title>isNotNull</title>
 
-          <listitem>
-            <para>isNotEqualTo(value)</para>
-          </listitem>
+            <indexterm>
+              <primary>isNotNull</primary>
+            </indexterm>
 
-          <listitem>
-            <para>isNotEqualTo&lt;value&gt;</para>
-          </listitem>
+            <para>Value of target must not be null.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure(someNonNullTargetValue) {
+ isNotNull
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
 
-          <listitem>
-            <para>isTrue</para>
-          </listitem>
+          <formalpara>
+            <title>isA&lt;class type&gt;</title>
 
-          <listitem>
-            <para>isFalse</para>
-          </listitem>
-        </itemizedlist>
+            <indexterm>
+              <primary>isA</primary>
+            </indexterm>
+
+            <para>Value of target must be the same class as the &lt;class
+            type&gt; at the end of the term.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure(aStringTarget) {
+ isAString
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>isEqualTo(value)</title>
+
+            <indexterm>
+              <primary>isEqualTo(value)</primary>
+            </indexterm>
+
+            <para>Value of target must equal the value of the argument to
+            isEqualTo.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure(true) {
+ isEqualTo(true)
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>isEqualTo&lt;value&gt;</title>
+
+            <indexterm>
+              <primary>isEqualTo&lt;value&gt;</primary>
+            </indexterm>
+
+            <para>Value of target must equal the value at the end of the
+            term.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure("Test") {
+ isEqualToTest
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>isNotEqualTo(value)</title>
+
+            <indexterm>
+              <primary>isNotEqualTo(value)</primary>
+            </indexterm>
+
+            <para>Value of target must not equal the value of the argument to
+            isNotEqualTo.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure(false) {
+ isNotEqualTo(true)
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>isNotEqualTo&lt;value&gt;</title>
+
+            <indexterm>
+              <primary>isNotEqualTo&lt;value&gt;</primary>
+            </indexterm>
+
+            <para>Value of target must not equal the value at the end of the
+            term.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure("Foo") {
+ isNotEqualToBar
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>isTrue</title>
+
+            <indexterm>
+              <primary>isTrue</primary>
+            </indexterm>
+
+            <para>Value of target must be true.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure(true) {
+ isTrue
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>isFalse</title>
+
+            <indexterm>
+              <primary>isFalse</primary>
+            </indexterm>
+
+            <para>Value of target must be false.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure(false) {
+ isFalse
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>ensureThrows</title>
+
+            <indexterm>
+              <primary>ensureThrows</primary>
+            </indexterm>
+
+            <para>This is a special variant of the ensure clause. It is used
+            to verify that a block of code must throw an exception of the type
+            specified.<itemizedlist>
+                <listitem>
+                  <programlisting>ensureThrows(RuntimeException.class) {
+  String tst = null
+  tst.toUpperCase()
+}</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+        </variablelist>
 
         <indexterm class="endofrange" startref="ix.syntax.ensure" />
       </section>
@@ -610,21 +1169,103 @@ after_each "an after_each description here", {
       <section>
         <title>common</title>
 
-        <para />
+        <para>The remaining assertions are common to both stories and
+        specifications. They can also be used standalone (inside of an ensure)
+        as well as a magic method (similar to the should syntax).</para>
 
-        <itemizedlist>
-          <listitem>
-            <para>contains</para>
-          </listitem>
+        <indexterm class="startofrange" id="ix.syntax.assertions.common">
+          <primary>Syntax Specification</primary>
 
-          <listitem>
-            <para>has</para>
-          </listitem>
+          <secondary>common assertions</secondary>
+        </indexterm>
 
-          <listitem>
-            <para>ensureThrows</para>
-          </listitem>
-        </itemizedlist>
+        <variablelist>
+          <formalpara>
+            <title>has</title>
+
+            <indexterm>
+              <primary>has</primary>
+            </indexterm>
+
+            <para>Target's contents must consist of (at minimum) the contents
+            of the argument to has.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure("Test") {
+ has("es")
+}</programlisting>
+
+                  <programlisting>...
+ "Test".has("es") // Preferable to use shouldHave instead for readability
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>contains</title>
+
+            <indexterm>
+              <primary>contains</primary>
+            </indexterm>
+
+            <para>Target's contents must consist of (at minimum) the contents
+            of the argument to contains.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure("Test") {
+ contains("es")
+}</programlisting>
+
+                  <programlisting>...
+ "Test".contains("es") // Preferable to use shouldHave instead for readability
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>startsWith</title>
+
+            <indexterm>
+              <primary>startsWith</primary>
+            </indexterm>
+
+            <para>Target's contents must begin with the contents of the
+            argument to startsWith.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure("Test") {
+  startsWith("Te")
+}</programlisting>
+
+                  <programlisting>... // Issue 110. shouldStartWith doesn't exist in the dsl yet
+ "Test".shouldStartWith("Te") // Preferable to use shouldHave instead for readability
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+
+          <formalpara>
+            <title>endsWith</title>
+
+            <indexterm>
+              <primary>endsWith</primary>
+            </indexterm>
+
+            <para>Target's contents must end with the contents of the argument
+            to endsWith.<itemizedlist>
+                <listitem>
+                  <programlisting>ensure("Test") {
+  endsWith("st")
+}</programlisting>
+
+                  <programlisting>... // Issue 111. shouldEndWith doesn't exist in the dsl yet
+ "Test".shouldEndWith("st") // Preferable to use shouldHave instead for readability
+...</programlisting>
+                </listitem>
+              </itemizedlist></para>
+          </formalpara>
+        </variablelist>
+
+        <indexterm class="endofrange" startref="ix.syntax.assertions.common" />
       </section>
     </section>
 
