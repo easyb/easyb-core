@@ -43,7 +43,7 @@ class StoryBinding extends Binding {
             story.given(description, closure)
         }
 
-        and = {description = "", closure = {} ->
+        and = {description = "", closure = story.pendingClosure ->
             story.and(description, closure)
         }
 
