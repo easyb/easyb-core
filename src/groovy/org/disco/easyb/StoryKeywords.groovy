@@ -5,6 +5,7 @@ import org.disco.easyb.delegates.PlugableDelegate
 import org.disco.easyb.listener.ExecutionListener
 import org.disco.easyb.result.Result
 import org.disco.easyb.util.BehaviorStepType
+import java.util.regex.Pattern
 
 class StoryKeywords extends BehaviorKeywords {
     def stepStack = new BehaviorStepStack()
@@ -17,6 +18,7 @@ class StoryKeywords extends BehaviorKeywords {
 
     def ignoreAll = false
     def ignoreList = []
+    def ignoreRegEx
 
     StoryKeywords(ExecutionListener listener) {
         super(listener)
@@ -49,7 +51,8 @@ class StoryKeywords extends BehaviorKeywords {
     }
 
     def scenario(scenarioDescription, scenarioClosure) {
-        if (!ignoreAll && !this.ignoreList.contains(scenarioDescription)) {
+        if (!ignoreAll && !this.ignoreList.contains(scenarioDescription)
+                && !this.ignoreRegEx?.matcher(scenarioDescription)?.matches()) {
             runScenario(scenarioClosure, scenarioDescription)
         } else {
             stepStack.startStep(listener, BehaviorStepType.SCENARIO, scenarioDescription)
@@ -136,6 +139,12 @@ class StoryKeywords extends BehaviorKeywords {
     def ignore(scenarios) {
         if (!this.ignoreAll) {
             this.ignoreList = scenarios
+        }
+    }
+
+    def ignore(Pattern scenarioPattern) {
+        if (!this.ignoreAll) {
+            this.ignoreRegEx = scenarioPattern
         }
     }
 }
