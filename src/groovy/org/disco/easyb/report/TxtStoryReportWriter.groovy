@@ -12,7 +12,7 @@ class TxtStoryReportWriter implements ReportWriter {
         this(DEFAULT_LOC_NAME)
     }
 
-    public TxtStoryReportWriter(String location) {
+    public TxtStoryReportWriter(final String location) {
         this.location = (location != null ? location : DEFAULT_LOC_NAME);
     }
 
@@ -20,17 +20,52 @@ class TxtStoryReportWriter implements ReportWriter {
      * Render a text story report
      */
     void writeReport(ResultsCollector results) {
-        Writer writer = new BufferedWriter(new FileWriter(new File(location)))
+        def writer = new BufferedWriter(new FileWriter(new File(this.location)))
         def count = results.scenarioCount
-        writer.writeLine("${(count > 1) ? "${count} scenarios" : " 1 scenario"}" +
-                "${results.pendingScenarioCount.toInteger() > 0 ? " (including ${results.pendingScenarioCount} pending)" : ""} executed" +
-                "${results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
-                "${results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : ""}")
+
+        if (results.getIgnoredScenarioCount() > 0) {
+            writer.write(this.formatIngorePendingHeader(count, results))
+        } else {
+            writer.write("${(count > 1) ? "${count} scenarios" : " 1 scenario"}" +
+                    "${results.pendingScenarioCount.toInteger() > 0 ? " (including ${results.pendingScenarioCount} pending)" : ""} executed")
+            writer.write("${results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
+                    "${results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : ""}")
+        }
+        writer.writeLine ""
         results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).each {genesisChild ->
             handleElement(writer, genesisChild)
         }
 
         writer.close()
+    }
+
+    private String formatIngorePendingHeader(final count, final results) {
+        def totalran = (count - results.getIgnoredScenarioCount())
+        return "${(count > 1) ? "${totalran} of ${count} scenarios" : " 1 scenario"}" +
+                this.getTotalPendingCountMessage(results) + this.getIgnoredCount(results) + " executed" +  
+                "${results.failedScenarioCount.toInteger() > 0 ? ", but status is failure!" : " successfully"}" +
+                "${results.failedScenarioCount.toInteger() > 0 ? " Total failures: ${results.failedScenarioCount}" : ""}"
+    }
+
+    private String getTotalPendingCountMessage(final results) {
+        def messge = new StringBuffer()
+        if (results.pendingScenarioCount > 0) {
+            messge << (" (including ")
+            messge << (results.pendingScenarioCount == 1 ? "1 pending behavior" : results.pendingScenarioCount + " pending behaviors")
+            if (results.getIgnoredScenarioCount() > 0) {
+                messge << " and " + (results.getIgnoredScenarioCount() == 1 ? " 1 behavior ignored" : results.getIgnoredScenarioCount() + " ignored behaviors")
+            }
+            messge << ")"
+        }
+        return messge
+    }
+
+    private String getIgnoredCount(final results) {
+        if (results.pendingScenarioCount == 0) {
+            return " (" + (results.getIgnoredScenarioCount() == 1 ? "1 behavior was ignored" : results.getIgnoredScenarioCount() + " behaviors were ignored") + ")"
+        } else {
+            return ""
+        }
     }
 
     /**
@@ -102,8 +137,13 @@ class TxtStoryReportWriter implements ReportWriter {
                     }
                 }//end child steps
                 if (element.getChildSteps().size == 0) {
-                    //a scenario w/out child steps is pending
-                    writer.write(" [PENDING]")
+                    //a scenario w/out child steps is pending or ignored
+                    if (element.result?.pending()) {
+                        writer.write(" [PENDING]")
+                    } else {
+                        //it is ignored
+                        writer.write(" [IGNORED]")
+                    }
                 }
                 break
             case BehaviorStepType.GIVEN:
@@ -136,4 +176,5 @@ class TxtStoryReportWriter implements ReportWriter {
         writer.newLine()
 
     }
+
 }

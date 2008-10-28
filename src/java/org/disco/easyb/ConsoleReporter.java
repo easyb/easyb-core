@@ -5,6 +5,14 @@ import org.disco.easyb.domain.Story;
 import org.disco.easyb.listener.ResultsCollector;
 import org.disco.easyb.util.BehaviorStepType;
 
+/**
+ * this class prints data to the console related to running
+ * easyb stories and specifications. This is a user facing class and
+ * thus, a lot of effort goes towards human readable messages that
+ * convey precise information. note, there is a lot of conditional logic
+ * to determine various result altering messages; that is, pending and
+ * ignored behaviors change the behavior of reporting output.
+ */
 public class ConsoleReporter extends ResultsCollector {
     private long startTime;
 
@@ -15,7 +23,7 @@ public class ConsoleReporter extends ResultsCollector {
     }
 
     public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
-        long endTime = System.currentTimeMillis();
+        final long endTime = System.currentTimeMillis();
         printMetrics(behavior, startTime, this.getPreviousStep(), endTime);
     }
 
@@ -65,6 +73,10 @@ public class ConsoleReporter extends ResultsCollector {
         }
     }
 
+    /**
+     * this method formats the total run behaviors -- like with @getScenariosRunMessage,
+     * this method calculates the total by subtracting any ignored scenarios 
+     */
     private String getTotalRanCountMessage() {
         if (getIgnoredScenarioCount() > 0) {
             return getBehaviorCount() + " of " + (getBehaviorCount() + getIgnoredScenarioCount()) + " behaviors ran";
@@ -73,7 +85,12 @@ public class ConsoleReporter extends ResultsCollector {
         }
     }
 
-    private String getScenariosRunMessage(BehaviorStep step) {
+    /**
+     * this method returns a formatted string that contains the total scenarios run.
+     * if there were ignored scenarios, the total number is determined by subtracting
+     * the ignored ones; thus, we don't convey that an ignored scenario was "run" 
+     */
+    private String getScenariosRunMessage(final BehaviorStep step) {
         if (step.getIgnoredScenarioCountRecursively() > 0) {
             return "Scenarios run: (" +
                     +(step.getScenarioCountRecursively() - step.getIgnoredScenarioCountRecursively())
@@ -85,7 +102,8 @@ public class ConsoleReporter extends ResultsCollector {
         }
     }
 
-    private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
+    private void printMetrics(final Behavior behavior, final long startTime,
+                              final BehaviorStep currentStep, final long endTime) {
         if (behavior instanceof Story) {
             System.out.println((currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE ") +
                     this.getScenariosRunMessage(currentStep) +
@@ -106,7 +124,7 @@ public class ConsoleReporter extends ResultsCollector {
         }
     }
 
-    private void handleFailurePrinting(BehaviorStep currentStep) {
+    private void handleFailurePrinting(final BehaviorStep currentStep) {
         for (BehaviorStep step : currentStep.getChildSteps()) {
             if (step.getStepType().equals(BehaviorStepType.SCENARIO) ||
                     step.getStepType().equals(BehaviorStepType.GENESIS) ||
@@ -119,7 +137,7 @@ public class ConsoleReporter extends ResultsCollector {
         }
     }
 
-    private void printFailureMessage(BehaviorStep istep) {
+    private void printFailureMessage(final BehaviorStep istep) {
         if (istep.getResult() != null && istep.getResult().failed()
                 && istep.getResult().cause() != null) {
             System.out.println("\tscenario \"" + istep.getParentStep().getName() + "\"");
