@@ -1,8 +1,8 @@
 package org.disco.easyb
 
-import org.disco.easyb.listener.ExecutionListener
 import org.disco.easyb.delegates.NarrativeDelegate
 import org.disco.easyb.listener.BroadcastListener
+import org.disco.easyb.listener.ExecutionListener
 import org.disco.easyb.listener.ResultsCollector
 import org.disco.easyb.util.BehaviorStepType
 
@@ -28,8 +28,9 @@ class BehaviorKeywords {
     }
 
     ResultsCollector easybResults() {
-        if (listener instanceof ResultsCollector)
+        if (listener instanceof ResultsCollector) {
             return (ResultsCollector) listener
+        }
 
         if (listener instanceof BroadcastListener) {
             BroadcastListener broadcaster = (BroadcastListener) listener

@@ -31,6 +31,10 @@ class BehaviorStep implements Serializable {
         return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, null)
     }
 
+    long getIgnoredScenarioCountRecursively() {
+        return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, Result.IGNORED)
+    }
+
     long getPendingScenarioCountRecursively() {
         return getBehaviorCountRecursively(BehaviorStepType.SCENARIO, Result.PENDING)
     }
@@ -61,7 +65,8 @@ class BehaviorStep implements Serializable {
 
 
     long getBehaviorCountRecursively() {
-        return getSpecificationCountRecursively() + getScenarioCountRecursively()
+        return ((getSpecificationCountRecursively() + getScenarioCountRecursively()) -
+                getIgnoredScenarioCountRecursively())
     }
 
     long getPendingBehaviorCountRecursively() {
@@ -77,11 +82,11 @@ class BehaviorStep implements Serializable {
     }
 
     long getStoryExecutionTimeRecursively() {
-      return getBehaviorExecutionTimeRecursively(BehaviorStepType.STORY)
+        return getBehaviorExecutionTimeRecursively(BehaviorStepType.STORY)
     }
 
     long getSpecificationExecutionTimeRecursively() {
-      return getBehaviorExecutionTimeRecursively(BehaviorStepType.SPECIFICATION)
+        return getBehaviorExecutionTimeRecursively(BehaviorStepType.SPECIFICATION)
     }
 
     long getBehaviorExecutionTimeRecursively(type) {
@@ -92,7 +97,7 @@ class BehaviorStep implements Serializable {
         }
 
         for (childStep in childSteps) {
-          executionTime += childStep.getBehaviorExecutionTimeRecursively(type)
+            executionTime += childStep.getBehaviorExecutionTimeRecursively(type)
         }
         return executionTime
     }
@@ -131,6 +136,25 @@ class BehaviorStep implements Serializable {
             return childStepPending + getStepPendingCount()
         }
     }
+
+
+    long getStepIgnoredCount() {
+        return result != null && result.ignored() ? 1 : 0
+    }
+
+
+    long getChildStepIgnoredResultCount() {
+        if (childSteps.size() == 0) {
+            return getStepIgnoredCount()
+        } else {
+            long childStepIgnored = 0
+            for (childStep in childSteps) {
+                childStepIgnored += childStep.getChildStepIgnoredResultCount()
+            }
+            return childStepIgnored + getStepIgnoredCount()
+        }
+    }
+
 
     long getStepSuccessCount() {
         return result != null && result.succeeded() ? 1 : 0
@@ -198,15 +222,15 @@ class BehaviorStep implements Serializable {
     }
 
     def startExecutionTimer() {
-      executionStartTime = System.currentTimeMillis();
+        executionStartTime = System.currentTimeMillis();
     }
 
     def stopExecutionTimer() {
-      executionFinishTime = System.currentTimeMillis()
+        executionFinishTime = System.currentTimeMillis()
     }
 
     public long getExecutionTotalTimeInMillis() {
-      return executionFinishTime - executionStartTime
+        return executionFinishTime - executionStartTime
     }
 
     public boolean equals(Object other) {

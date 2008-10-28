@@ -11,6 +11,7 @@ public class Result implements Serializable {
     public static final Type SUCCEEDED = new Type("success", ".");
     public static final Type FAILED = new Type("failure", "F");
     public static final Type PENDING = new Type("pending", "P");
+    public static final Type IGNORED = new Type("ignored", "I");
 
     public static class Type implements Serializable {
         private final String description;
@@ -88,6 +89,10 @@ public class Result implements Serializable {
 
     public Throwable cause() {
         return cause;
+    }
+
+    public boolean ignored() {
+        return status.equals(IGNORED);
     }
 
     public boolean succeeded() {

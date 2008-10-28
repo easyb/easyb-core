@@ -52,7 +52,9 @@ class StoryKeywords extends BehaviorKeywords {
         if (!ignoreAll && !this.ignoreList.contains(scenarioDescription)) {
             runScenario(scenarioClosure, scenarioDescription)
         } else {
-            //do nothing for now, just ignore the scenario
+            stepStack.startStep(listener, BehaviorStepType.SCENARIO, scenarioDescription)
+            listener.gotResult new Result(Result.IGNORED)
+            stepStack.stopStep(listener)
         }
     }
 

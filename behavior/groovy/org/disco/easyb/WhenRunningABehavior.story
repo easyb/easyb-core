@@ -41,7 +41,7 @@ scenario "realtime console output", {
 
         consoleOutput = consoleOutputStream.toString()
     }
-
+    
     then "a summary of scenario results should be printed to the console", {
         consoleOutput.contains("Scenarios run: 2, Failures: 1, Pending: 0").shouldBe true
     }
@@ -55,6 +55,6 @@ scenario "realtime console output", {
     }
 
     and "the summary should report aggregate runs and 1 failure", {
-        consoleOutput.contains("2 total behaviors run with 1 failure").shouldBe true
+        consoleOutput.contains("2 total behaviors ran with 1 failure").shouldBe true
     }
 }

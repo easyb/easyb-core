@@ -1,9 +1,9 @@
 package org.disco.easyb.listener;
 
+import org.disco.easyb.BehaviorStep;
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.result.Result;
 import org.disco.easyb.util.BehaviorStepType;
-import org.disco.easyb.BehaviorStep;
 
 public class ResultsCollector implements ExecutionListener {
 
@@ -21,6 +21,10 @@ public class ResultsCollector implements ExecutionListener {
 
     public long getFailedScenarioCount() {
         return genesisStep.getFailedScenarioCountRecursively();
+    }
+
+    public long getIgnoredScenarioCount() {
+        return genesisStep.getIgnoredScenarioCountRecursively();
     }
 
     public long getSuccessBehaviorCount() {
@@ -107,6 +111,8 @@ public class ResultsCollector implements ExecutionListener {
             } else {
                 if (currentStep.getChildStepPendingResultCount() > 0) {
                     gotResult(new Result(Result.PENDING));
+                } else if (currentStep.getChildStepIgnoredResultCount() > 0) {
+                    gotResult(new Result(Result.IGNORED));
                 } else {
                     gotResult(new Result(Result.SUCCEEDED));
                 }

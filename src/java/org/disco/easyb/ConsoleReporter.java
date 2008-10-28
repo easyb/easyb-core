@@ -21,26 +21,84 @@ public class ConsoleReporter extends ResultsCollector {
 
     public void completeTesting() {
         System.out.println("\n" +
-                (getBehaviorCount() > 1 ? getBehaviorCount() + " total behaviors run" : "1 behavior run")
-                + (getPendingBehaviorCount() > 0 ? " (including "
-                + (getPendingBehaviorCount() == 1 ? "1 pending behavior)" : getPendingBehaviorCount() + " pending behaviors)") : "")
-                + (getFailedBehaviorCount() > 0 ? " with "
-                + (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures"));
+                this.getTotalRanCountMessage() +
+                this.getTotalPendingCountMessage() +
+                (getFailedBehaviorCount() > 0 ? " with " +
+                        (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures") +
+                this.getCompletedIgnoredMesage());
+    }
+
+    /**
+     * this method returned a formatted string the total pending count and
+     * some information regarding the ignored count
+     * example strings:
+     * 3 of 9 behaviors ran with no failures (6 behaviors were ignored)
+     * 21 of 27 behaviors ran (including 9 pending behaviors and 6 ignored behaviors) with no failures
+     */
+    private String getTotalPendingCountMessage() {
+        if(getPendingBehaviorCount() > 0){
+            String messge = " (including " +
+                    (getPendingBehaviorCount() == 1 ? "1 pending behavior" : getPendingBehaviorCount() +" pending behaviors");
+            if(getIgnoredScenarioCount() > 0){
+                messge +=
+                    (getIgnoredScenarioCount() > 0 ? ""
+                            + (getIgnoredScenarioCount() == 1 ? " with 1 behavior ignored)" : " and " + getIgnoredScenarioCount()
+                            + " ignored behaviors") : "");
+            }
+            return messge + ")";
+        }else{
+            return "";
+        }
+    }
+
+    /**
+     * this method only returns the ignored count if there are NO pending messages
+     * as the ignored count is included in the pending message to make the
+     * output more human readable
+     */
+    private String getCompletedIgnoredMesage() {
+        if (getPendingBehaviorCount() > 0) {
+            return "";
+        } else {
+            return (getIgnoredScenarioCount() > 0 ? " ("
+                    + (getIgnoredScenarioCount() == 1 ? "1 behavior was ignored)" : getIgnoredScenarioCount() + " behaviors were ignored)") : "");
+        }
+    }
+
+    private String getTotalRanCountMessage() {
+        if (getIgnoredScenarioCount() > 0) {
+            return getBehaviorCount() + " of " + (getBehaviorCount() + getIgnoredScenarioCount()) + " behaviors ran";
+        } else {
+            return (getBehaviorCount() > 1 ? getBehaviorCount() + " total behaviors ran" : "1 behavior ran");
+        }
+    }
+
+    private String getScenariosRunMessage(BehaviorStep step) {
+        if (step.getIgnoredScenarioCountRecursively() > 0) {
+            return "Scenarios run: (" +
+                    +(step.getScenarioCountRecursively() - step.getIgnoredScenarioCountRecursively())
+                    + " of "
+                    + step.getScenarioCountRecursively()
+                    + ")";
+        } else {
+            return "Scenarios run: " + step.getScenarioCountRecursively();
+        }
     }
 
     private void printMetrics(Behavior behavior, long startTime, BehaviorStep currentStep, long endTime) {
         if (behavior instanceof Story) {
             System.out.println((currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE ") +
-                    "Scenarios run: " + currentStep.getScenarioCountRecursively() +
+                    this.getScenariosRunMessage(currentStep) +
                     ", Failures: " + currentStep.getFailedScenarioCountRecursively() +
                     ", Pending: " + currentStep.getPendingScenarioCountRecursively() +
-                    ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+                    (currentStep.getIgnoredScenarioCountRecursively() > 0 ? ", Ignored: " + currentStep.getIgnoredScenarioCountRecursively() : "") +
+                    ", Time elapsed: " + (endTime - startTime) / 1000f + " sec");
         } else {
             System.out.println((currentStep.getFailedSpecificationCountRecursively() == 0 ? "" : "FAILURE ") +
                     "Specifications run: " + currentStep.getSpecificationCountRecursively() +
                     ", Failures: " + currentStep.getFailedSpecificationCountRecursively() +
                     ", Pending: " + currentStep.getPendingSpecificationCountRecursively() +
-                    ", Time Elapsed: " + (endTime - startTime) / 1000f + " sec");
+                    ", Time elapsed: " + (endTime - startTime) / 1000f + " sec");
         }
         if ((currentStep.getFailedSpecificationCountRecursively() > 0) ||
                 (currentStep.getFailedScenarioCountRecursively() > 0)) {
@@ -64,7 +122,7 @@ public class ConsoleReporter extends ResultsCollector {
     private void printFailureMessage(BehaviorStep istep) {
         if (istep.getResult() != null && istep.getResult().failed()
                 && istep.getResult().cause() != null) {
-            System.out.println("\tscenario \"" + istep.getParentStep().getName()+ "\"");
+            System.out.println("\tscenario \"" + istep.getParentStep().getName() + "\"");
             System.out.println("\tstep \"" + istep.getName() + "\" -- " +
                     istep.getResult().cause().getMessage());
 
