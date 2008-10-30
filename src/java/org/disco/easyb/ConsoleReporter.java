@@ -16,13 +16,13 @@ import org.disco.easyb.util.BehaviorStepType;
 public class ConsoleReporter extends ResultsCollector {
     private long startTime;
 
-    public void startBehavior(Behavior behavior) {
+    public void startBehavior(final Behavior behavior) {
         System.out.println("Running " + behavior.getPhrase() + " " + behavior.getTypeDescriptor()
                 + " (" + behavior.getFile().getName() + ")");
         startTime = System.currentTimeMillis();
     }
 
-    public void stopBehavior(BehaviorStep currentStep, Behavior behavior) {
+    public void stopBehavior(final BehaviorStep currentStep, final Behavior behavior) {
         final long endTime = System.currentTimeMillis();
         printMetrics(behavior, startTime, this.getPreviousStep(), endTime);
     }
@@ -144,6 +144,15 @@ public class ConsoleReporter extends ResultsCollector {
             System.out.println("\tstep \"" + istep.getName() + "\" -- " +
                     istep.getResult().cause().getMessage());
 
+             //todo add flag to command line to grab this such as --f
+            //printStackTrace(istep);
+        }
+    }
+    //todo add filter logic from mailing list
+    private void printStackTrace(final BehaviorStep istep) {
+        StackTraceElement[] stacktrace = istep.getResult().cause().getStackTrace();
+        for(int x = 0; x < stacktrace.length; x++){
+            System.out.println(stacktrace[x]);
         }
     }
 }

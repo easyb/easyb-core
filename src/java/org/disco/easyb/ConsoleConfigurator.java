@@ -2,6 +2,7 @@ package org.disco.easyb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -22,9 +23,10 @@ public class ConsoleConfigurator {
     private static final String TXT_STORY = "txtstory";
     private static final String XML_EASYB = "xml";
     private static final String HTML_EASYB = "html";
-
-    public Configuration configure(String[] args) {
-        Options options = getOptionsForMain();
+    private static final String EXCEPTION_STACK = "e";
+    
+    public Configuration configure(final String[] args) {
+        final Options options = getOptionsForMain();
 
         try {
             CommandLine commandLine = getCommandLineForMain(args, options);
@@ -48,18 +50,19 @@ public class ConsoleConfigurator {
      * @throws org.apache.commons.cli.ParseException
      *          if there are any problems encountered while parsing the command line tokens
      */
-    private static CommandLine getCommandLineForMain(String[] args, Options options) throws ParseException {
-        CommandLineParser commandLineParser = new GnuParser();
+    private static CommandLine getCommandLineForMain(final String[] args, final Options options) throws ParseException {
+        final CommandLineParser commandLineParser = new GnuParser();
         return commandLineParser.parse(options, args);
     }
 
-    private static void validateArguments(CommandLine commandLine) throws IllegalArgumentException {
+    private static void validateArguments(final CommandLine commandLine) throws IllegalArgumentException {
         if (commandLine.getArgs().length == 0) {
-            throw new IllegalArgumentException("Required arguments missing.");
+            throw new IllegalArgumentException("Required arguments missing. At a minimum, " +
+                    "you must provide a path to a behavior for easyb to run.");
         }
     }
 
-    private static List<ReportWriter> getConfiguredReports(CommandLine line) {
+    private static List<ReportWriter> getConfiguredReports(final CommandLine line) {
         List<ReportWriter> configuredReports = new ArrayList<ReportWriter>();
         if (line.hasOption(TXT_STORY)) {
             configuredReports.add(new TxtStoryReportWriter(line.getOptionValue(TXT_STORY)));
@@ -76,13 +79,13 @@ public class ConsoleConfigurator {
         if (line.hasOption(HTML_EASYB)) {
             configuredReports.add(new HtmlReportWriter(line.getOptionValue(HTML_EASYB)));
         }
-        return configuredReports;
+        return Collections.unmodifiableList(configuredReports);
     }
 
     /**
      * @param options options that are available to this specification runner
      */
-    private static void handleHelpForMain(Options options) {
+    private static void handleHelpForMain(final Options options) {
         new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.story", options);
     }
 
@@ -91,24 +94,29 @@ public class ConsoleConfigurator {
      */
     @SuppressWarnings("static-access")
     private static Options getOptionsForMain() {
-        Options options = new Options();
+        final Options options = new Options();
 
         //noinspection AccessStaticViaInstance
-        Option htmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
+        final Option htmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create an easyb report in html format").create(HTML_EASYB);
         options.addOption(htmleasybreport);
         //noinspection AccessStaticViaInstance
-        Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
+        final Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create an easyb report in xml format").create(XML_EASYB);
         options.addOption(xmleasybreport);
         //noinspection AccessStaticViaInstance
-        Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
+        final Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create a story report").create(TXT_STORY);
         options.addOption(storyreport);
         //noinspection AccessStaticViaInstance
-        Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
+        final Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
             .withDescription("create a behavior report").create(TXT_SPECIFICATION);
         options.addOption(behaviorreport);
+
+
+        final Option stacktrace = new Option("e", "prints stacktrace");
+        stacktrace.setRequired(false);
+        options.addOption(stacktrace);
 
         return options;
     }

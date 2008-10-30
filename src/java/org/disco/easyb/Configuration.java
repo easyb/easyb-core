@@ -9,7 +9,7 @@ public class Configuration {
     public final CommandLine commandLine;
     public final List<ReportWriter> configuredReports;
 
-    public Configuration(CommandLine commandLine, List<ReportWriter> configuredReports) {
+    public Configuration(final CommandLine commandLine, final List<ReportWriter> configuredReports) {
         this.commandLine = commandLine;
         this.configuredReports = configuredReports;
     }
