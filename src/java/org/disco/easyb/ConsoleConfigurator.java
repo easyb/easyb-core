@@ -31,7 +31,8 @@ public class ConsoleConfigurator {
         try {
             CommandLine commandLine = getCommandLineForMain(args, options);
             validateArguments(commandLine);
-            return new Configuration(commandLine, getConfiguredReports(commandLine));
+            return new Configuration(commandLine.getArgs(),
+                    getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK));
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
             handleHelpForMain(options);
@@ -62,6 +63,11 @@ public class ConsoleConfigurator {
         }
     }
 
+    /**
+     *
+     * @param line
+     * @return immutable list of ReportWriter objects
+     */
     private static List<ReportWriter> getConfiguredReports(final CommandLine line) {
         List<ReportWriter> configuredReports = new ArrayList<ReportWriter>();
         if (line.hasOption(TXT_STORY)) {

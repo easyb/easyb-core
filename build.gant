@@ -208,10 +208,14 @@ def runAntTask(includes, reports, failureMessage = null, failureprop = null) {
     }
 }
 
-target("run-main":"runs easyb BehaviorRunner class"){
+target("run-main": "runs easyb BehaviorRunner class") {
     depends(jar)
-    java(classname:"org.disco.easyb.BehaviorRunner"){
-       classpath() {
+    java(classname: "org.disco.easyb.BehaviorRunner") {
+        if (Ant.project.properties."behavior" != null) {
+            arg(value: Ant.project.properties."behavior")
+        }
+        //arg(value: "-e")
+        classpath() {
             fileset(dir: libdir, includes: jarincludes)
             pathelement(location: "${defaultdir}/easyb-${version}.jar")
         }

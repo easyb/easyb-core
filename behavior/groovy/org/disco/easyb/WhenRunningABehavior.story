@@ -1,6 +1,7 @@
 import org.disco.easyb.BehaviorRunner
 import static org.disco.easyb.BehaviorRunner.getBehaviors
 import org.disco.easyb.ConsoleReporter
+import org.disco.easyb.Configuration
 import org.disco.easyb.exception.VerificationException
 
 scenario "realtime console output", {
@@ -32,7 +33,9 @@ scenario "realtime console output", {
         originalOut = System.out
         try {
             System.setOut(new PrintStream(consoleOutputStream))
-            BehaviorRunner runner = new BehaviorRunner([], new ConsoleReporter())
+            consolerpt = new ConsoleReporter()
+            consolerpt.configuration = new Configuration(null, null)
+            BehaviorRunner runner = new BehaviorRunner([], consolerpt)
             runner.runBehavior(getBehaviors(specFile.absolutePath))
         } catch (VerificationException expected) {
         } finally {

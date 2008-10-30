@@ -1,18 +1,19 @@
 package org.disco.easyb;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.BehaviorFactory;
 import org.disco.easyb.domain.GroovyShellConfiguration;
+import org.disco.easyb.exception.VerificationException;
 import org.disco.easyb.listener.BroadcastListener;
 import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.listener.FailureDetector;
 import org.disco.easyb.listener.ResultsCollector;
 import org.disco.easyb.report.ReportWriter;
-import org.disco.easyb.exception.VerificationException;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BehaviorRunner {
     private List<ReportWriter> reports;
@@ -20,17 +21,17 @@ public class BehaviorRunner {
     private ResultsCollector resultsCollector = new ResultsCollector();
     private FailureDetector failureDetector = new FailureDetector();
 
-    public BehaviorRunner(ExecutionListener... listeners) {
+    public BehaviorRunner(final ExecutionListener... listeners) {
         this(null, listeners);
     }
 
-    public BehaviorRunner(List<ReportWriter> reports, ExecutionListener... listeners) {
+    public BehaviorRunner(final List<ReportWriter> reports, final ExecutionListener... listeners) {
         this.reports = reports;
 
         broadcastListener.registerListener(resultsCollector);
         broadcastListener.registerListener(failureDetector);
 
-        for (ExecutionListener listener : listeners) {
+        for (final ExecutionListener listener : listeners) {
             broadcastListener.registerListener(listener);
         }
     }
@@ -44,19 +45,23 @@ public class BehaviorRunner {
      *             You don't need to pass in the file name for the report either-- if no
      *             path is present, then the runner will create a report in the current directory
      *             with a default filename following this convention:
-     *                  easyb-<type>-report.<format> (for reports of either story or specification)
-     *                  easyb-report.<format> (for reports that contain both)
+     *             easyb-<type>-report.<format> (for reports of either story or specification)
+     *             easyb-report.<format> (for reports that contain both)
      *             <p/>
      *             Multiple specifications can be passed in on the command line
      *             <p/>
      *             java BehaviorRunner my/path/to/spec/MyStory.groovy my/path/to/spec/AnotherStory.groovy
      */
-    public static void main(String[] args) {
-        Configuration configuration = new ConsoleConfigurator().configure(args);
+    public static void main(final String[] args) {
+        final Configuration configuration = new ConsoleConfigurator().configure(args);
+        final ConsoleReporter consoleRpt = new ConsoleReporter();
+        consoleRpt.setConfiguration(configuration);
+        
         if (configuration != null) {
-            BehaviorRunner runner = new BehaviorRunner(configuration.configuredReports, new ConsoleReporter());
+            BehaviorRunner runner = new BehaviorRunner(configuration.getConfiguredReports(),
+                    consoleRpt);
             try {
-                runner.runBehavior(getBehaviors(configuration.commandLine.getArgs()));
+                runner.runBehavior(getBehaviors(configuration.getFilePaths()));
             }
             catch (VerificationException e) {
                 System.exit(-6);
@@ -74,13 +79,13 @@ public class BehaviorRunner {
      * @throws Exception if unable to write report file
      */
     public void runBehavior(List<Behavior> behaviors) throws Exception {
-        for (Behavior behavior : behaviors) {
+        for (final Behavior behavior : behaviors) {
             behavior.execute(broadcastListener);
         }
 
         broadcastListener.completeTesting();
 
-        for (ReportWriter report : reports) {
+        for (final ReportWriter report : reports) {
             report.writeReport(resultsCollector);
         }
 
@@ -89,9 +94,10 @@ public class BehaviorRunner {
         }
     }
 
-    public static List<Behavior> getBehaviors(GroovyShellConfiguration groovyShellConfiguration, String[] paths) {
+    public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
+                                              final String[] paths) {
         List<Behavior> behaviors = new ArrayList<Behavior>();
-        for (String path : paths) {
+        for (final String path : paths) {
             try {
                 behaviors.add(BehaviorFactory.createBehavior(groovyShellConfiguration, new File(path)));
             } catch (IllegalArgumentException e) {
@@ -99,13 +105,14 @@ public class BehaviorRunner {
                 System.exit(-1);
             }
         }
-        return behaviors;
+        return Collections.unmodifiableList(behaviors);
     }
+
     /**
      * @param paths locations of the specifications to be loaded
      * @return collection of files where the only element is the file of the spec to be run
      */
-    public static List<Behavior> getBehaviors(String[] paths) {
+    public static List<Behavior> getBehaviors(final String[] paths) {
         return getBehaviors(BehaviorFactory.DEFAULT_GROOVY_SHELL_CONFIG, paths);
     }
 }
