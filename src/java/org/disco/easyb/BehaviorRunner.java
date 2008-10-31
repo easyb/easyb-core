@@ -56,20 +56,16 @@ public class BehaviorRunner {
         final Configuration configuration = new ConsoleConfigurator().configure(args);
         final ConsoleReporter consoleRpt = new ConsoleReporter();
         consoleRpt.setConfiguration(configuration);
-        
+
         if (configuration != null) {
-            BehaviorRunner runner = new BehaviorRunner(configuration.getConfiguredReports(),
+            final BehaviorRunner runner = new BehaviorRunner(configuration.getConfiguredReports(),
                     consoleRpt);
             try {
                 runner.runBehavior(getBehaviors(configuration.getFilePaths()));
-            }
-            catch (VerificationException e) {
-                System.exit(-6);
-            }
-            catch (Exception e) {
+            } catch (Throwable exception) {
                 System.err.println("There was an error running your easyb story or specification");
-                e.printStackTrace(System.err);
-                System.exit(-6);
+                exception.printStackTrace(System.err);
+                System.exit(-1);
             }
         }
     }
@@ -98,12 +94,7 @@ public class BehaviorRunner {
                                               final String[] paths) {
         List<Behavior> behaviors = new ArrayList<Behavior>();
         for (final String path : paths) {
-            try {
-                behaviors.add(BehaviorFactory.createBehavior(groovyShellConfiguration, new File(path)));
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                System.exit(-1);
-            }
+            behaviors.add(BehaviorFactory.createBehavior(groovyShellConfiguration, new File(path)));
         }
         return Collections.unmodifiableList(behaviors);
     }
