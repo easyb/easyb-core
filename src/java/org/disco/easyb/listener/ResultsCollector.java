@@ -89,7 +89,7 @@ public class ResultsCollector implements ExecutionListener {
     public void stopBehavior(BehaviorStep step, Behavior behavior) {
     }
 
-    public void startStep(BehaviorStep step) {
+    public void startStep(final BehaviorStep step) {
         BehaviorStep clone = new BehaviorStep(step.getStepType(), step.getName());
         clone.startExecutionTimer();
         clone.setParentStep(currentStep);
@@ -97,7 +97,7 @@ public class ResultsCollector implements ExecutionListener {
         currentStep = clone;
     }
 
-    public void describeStep(String description) {
+    public void describeStep(final String description) {
         currentStep.setDescription(description);
     }
 
