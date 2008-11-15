@@ -7,7 +7,7 @@ scenario "text reports of single scenario stories with no failures", {
     }
 
     then "it should remain valid according to confirmed report syntax", {
-        filetext.shouldEqual new File("./behavior/conf/1Story1ScenarioControl.txt").getText()
+        filetext.readLines().shouldEqual new File("./behavior/conf/1Story1ScenarioControl.txt").getText().readLines()
     }
 
 }
@@ -19,7 +19,7 @@ scenario "text reports of single scenario stories with failure", {
     }
 
     then "it should remain valid according to confirmed report syntax", {
-        filetext.shouldEqual new File("./behavior/conf/1Story1ScenarioFailureControl.txt").getText()
+        filetext.readLines().shouldEqual new File("./behavior/conf/1Story1ScenarioFailureControl.txt").getText().readLines()
     }
 
 }
