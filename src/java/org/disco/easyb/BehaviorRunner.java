@@ -84,10 +84,6 @@ public class BehaviorRunner {
         for (final ReportWriter report : reports) {
             report.writeReport(resultsCollector);
         }
-
-        if (failureDetector.failuresDetected()) {
-            throw new VerificationException("There were specification failures");
-        }
     }
 
     public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
