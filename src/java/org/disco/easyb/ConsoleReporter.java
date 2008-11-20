@@ -16,12 +16,6 @@ import org.disco.easyb.util.BehaviorStepType;
 public class ConsoleReporter extends ResultsCollector {
     private long startTime;
 
-    private Configuration configuration;
-
-    public void setConfiguration(final Configuration configuration) {
-        this.configuration = configuration;
-    }
-
     public void startBehavior(final Behavior behavior) {
         System.out.println("Running " + behavior.getPhrase() + " " + behavior.getTypeDescriptor()
                 + " (" + behavior.getFile().getName() + ")");
@@ -149,18 +143,6 @@ public class ConsoleReporter extends ResultsCollector {
             System.out.println("\tscenario \"" + istep.getParentStep().getName() + "\"");
             System.out.println("\tstep \"" + istep.getName() + "\" -- " +
                     istep.getResult().cause().getMessage());
-
-             if(configuration.isStackTraceOn()){
-                printStackTrace(istep);
-             }
-        }
-    }
-    //todo add filter logic from mailing list
-    private void printStackTrace(final BehaviorStep istep) {
-        StackTraceElement[] stacktrace = istep.getResult().cause().getStackTrace();
-        System.out.println("\t Stack trace is: ");
-        for(int x = 0; x < stacktrace.length; x++){
-            System.out.println("\t\t" + stacktrace[x]);
         }
     }
 }

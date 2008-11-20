@@ -8,6 +8,7 @@ public class Configuration {
     private final String[] filePaths;
     private final List<ReportWriter> configuredReports;
     private boolean stackTraceOn = false;
+    private boolean filteredStackTraceOn = false;
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports) {
         this.filePaths = filePaths;
@@ -15,9 +16,16 @@ public class Configuration {
     }
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
-                         boolean stackTraceOn) {
+                         final boolean stackTraceOn) {
         this(filePaths, configuredReports);
         this.stackTraceOn = stackTraceOn;
+    }
+    //yeesh this is odd, think of a better way...
+    public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
+                         final boolean stackTraceOn, final boolean filteredStackTraceOn) {
+        this(filePaths, configuredReports);
+        this.stackTraceOn = stackTraceOn;
+        this.filteredStackTraceOn = filteredStackTraceOn;
     }
 
     public String[] getFilePaths() {
@@ -28,7 +36,18 @@ public class Configuration {
         return this.configuredReports;
     }
 
-    public boolean isStackTraceOn() {
-        return this.stackTraceOn;
+
+    public ConsoleReporter getConsoleReporter() {
+        if(this.stackTraceOn){
+            if(this.filteredStackTraceOn){
+                return new FilteredStackTraceConsoleReporter();
+            }else{
+                return new StackTraceConsoleReporter();
+            }
+        }else if(this.filteredStackTraceOn){
+                return new FilteredStackTraceConsoleReporter();
+        }else{
+            return new ConsoleReporter();
+        }
     }
 }

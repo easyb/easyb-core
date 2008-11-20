@@ -1,6 +1,6 @@
 
 
-ignore all
+//ignore all
 
 scenario "this generates an exception", {
     given "a null object", {

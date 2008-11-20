@@ -24,7 +24,8 @@ public class ConsoleConfigurator {
     private static final String XML_EASYB = "xml";
     private static final String HTML_EASYB = "html";
     private static final String EXCEPTION_STACK = "e";
-    
+    private static final String FILTER_EXCEPTION_STACK = "ef";
+
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
 
@@ -32,7 +33,8 @@ public class ConsoleConfigurator {
             CommandLine commandLine = getCommandLineForMain(args, options);
             validateArguments(commandLine);
             return new Configuration(commandLine.getArgs(),
-                    getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK));
+                    getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
+                    commandLine.hasOption(FILTER_EXCEPTION_STACK));
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
             handleHelpForMain(options);
@@ -120,9 +122,13 @@ public class ConsoleConfigurator {
         options.addOption(behaviorreport);
 
 
-        final Option stacktrace = new Option("e", "prints stacktrace");
+        final Option stacktrace = new Option(EXCEPTION_STACK, "prints stacktrace");
         stacktrace.setRequired(false);
         options.addOption(stacktrace);
+
+        final Option filteredstacktrace = new Option(FILTER_EXCEPTION_STACK, "prints stacktrace");
+        stacktrace.setRequired(false);
+        options.addOption(filteredstacktrace);
 
         return options;
     }

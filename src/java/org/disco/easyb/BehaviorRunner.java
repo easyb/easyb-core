@@ -54,8 +54,8 @@ public class BehaviorRunner {
      */
     public static void main(final String[] args) {
         final Configuration configuration = new ConsoleConfigurator().configure(args);
-        final ConsoleReporter consoleRpt = new ConsoleReporter();
-        consoleRpt.setConfiguration(configuration);
+        final ConsoleReporter consoleRpt = configuration.getConsoleReporter();
+        
 
         if (configuration != null) {
             final BehaviorRunner runner = new BehaviorRunner(configuration.getConfiguredReports(),

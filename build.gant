@@ -152,6 +152,7 @@ target("ant-task": "runs the easyb ant task") {
                 exclude(name: "**/FailureReport.story")
                 exclude(name: "**/PassingPendingFailing.story")
                 exclude(name: "**/PassingPendingFailing.specification")
+                exclude(name: "**//ExceptionalOccurrence.story")
             }
         }
     }
@@ -214,7 +215,7 @@ target("run-main": "runs easyb BehaviorRunner class") {
         if (Ant.project.properties."behavior" != null) {
             arg(value: Ant.project.properties."behavior")
         }
-        //arg(value: "-e")
+        //arg(value: "-ef")
         classpath() {
             fileset(dir: libdir, includes: jarincludes)
             pathelement(location: "${defaultdir}/easyb-${version}.jar")

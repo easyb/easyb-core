@@ -63,7 +63,7 @@ public class AbstractStoryTask extends AbstractJavaTask {
         for (iter in targetArgumentList) {
             commandLine.createArgument().setLine(iter)
         }
-
+        //this doesn't work now.
         if (run() != 0) {
             log("easyb execution FAILED")
             if (getFailureProperty() != null) {
