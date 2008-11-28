@@ -126,28 +126,339 @@
     that make up a requirement, or in BDD terms, a scenario. The scenario is
     captured in this form:</para>
 
-    <simplelist>
-      <member>given an initial context</member>
-
-      <member>when an event occurs</member>
-
-      <member>then ensure the outcome</member>
-    </simplelist>
+    <programlisting>given an initial context
+when an event occurs
+then ensure the outcome</programlisting>
 
     <para>Writing scenarios in this fashion removes the ambiguity and allows
-    both sides to focus on properly capturing and implementing the
-    requirements knowing they are on the same page. </para>
+    both sides to focus on properly capturing, and implementing, the
+    requirements, knowing they are on the same page.</para>
 
     <para>Lets look at an example requirement and how it fits into the BDD
-    model. The ubiquitous Bank Account example should do just fine. </para>
+    model. The ubiquitous Bank Account example should do just fine.</para>
 
-    <simplelist>
-      <member>given an account with 100 dollars</member>
+    <programlisting>given "an account with 100 dollars"
+when "account holder withdrawls 20 dollars"
+then "account should have 80 dollars left"</programlisting>
 
-      <member>when account holder withdrawls 20 dollars</member>
+    <para>This is clearly capturing the requirement, and not a single line of
+    code was written. What was just defined was a scenario consisting of the
+    context, events and expected outcomes. Since we now have a complete
+    scenario, we'll go ahead and explicitly state that as well.</para>
 
-      <member>then account should have 80 dollars left</member>
-    </simplelist>
+    <programlisting>scenario "money is withdrawn from an account containing sufficient funds"
+  given "an account with 100 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account should have 80 dollars left"</programlisting>
+
+    <para>Multiple scenarios that are members of a logical theme can be
+    grouped together in a story.</para>
+
+    <programlisting>AccountWithdrawlStory
+
+scenario "money is withdrawn from an account containing sufficient funds"
+  given "an account with 100 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account should have 80 dollars left"
+
+scenario "money is withdrawn from an account with insufficient funds"
+  given "an account with 10 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account holder should be notified about the insufficient funds"
+  and "then account should still have 10 dollars"</programlisting>
+
+    <para>Additionally, further clarity around exactly what viewpoint this is
+    being written from can be added via a narrative.</para>
+
+    <programlisting>AccountWithdrawlStory
+
+narrative "scenarios written from the viewpoint of bank"
+  as a "bank"
+  i want "to verify that withdrawls work on accounts with sufficient and insufficient funds"
+  so that "i do not lose money or confuse the customers" 
+  
+
+scenario "money is withdrawn from an account containing sufficient funds"
+  given "an account with 100 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account should have 80 dollars left"
+
+scenario "money is withdrawn from an account with insufficient funds"
+  given "an account with 10 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account holder should be notified about the insufficient funds"
+  and "then account should still have 10 dollars"</programlisting>
+
+    <para>What we have accomplished here is to establish a conversation
+    between stakeholder and developer in common terms. Effectively we are
+    capturing the behavior of a system and from that we can derive our
+    specific development tasks.</para>
+  </chapter>
+
+  <chapter>
+    <title>BDD the easyb way</title>
+
+    <para>"Ok, great. Looks like just another way for the business to bury me
+    in more requirements documents.", you say. What if we can actually make
+    that documentation executable. Thats right, take it almost verbatim and
+    run it. Easyb allows exactly that. First we'll focus on just one of the
+    bank account scenarios and sprinkle in some very minor syntax
+    additions.</para>
+
+    <programlisting>scenario "money is withdrawn from an account containing sufficient funds", {
+  given "an account with 100 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account should have 80 dollars left"
+}</programlisting>
+
+    <para>That should do it. A comma and two braces. That wasn't too painful
+    was it? Now lets run it. Save that text into a file named
+    AccountWithdrawl.story and then tell easyb where to find it.</para>
+
+    <programlisting width="">java -cp easyb-0.9.3.jar:commons-cli-1.1.jar:groovy-1.5.4.jar \
+&gt;  org.disco.easyb.BehaviorRunner \
+&gt;  ./behavior/groovy/org/disco/bdd/story/account/AccountWithdrawl.story</programlisting>
+
+    <para>It worked and we even get some feedback to boot. It tells us that we
+    have run the Account Withdrawl story which contains one scenario, none of
+    which failed and one is pending. Pending? Interesting. Out of the box if
+    you don't provide any actual code to verify objects and behaviors the
+    scenario is marked as pending. This is an undeniably useful way to bridge
+    the gap between a scenario the Stakeholder hands you and one that you've
+    since had time and domain understanding to write the code to verify the
+    behavior.</para>
+
+    <programlisting>Running account withdrawl story (AccountWithdrawl.story)
+Scenarios run: 1, Failures: 0, Pending: 1, Time Elapsed: 0.453 sec
+
+1 behavior run (including 1 pending behavior) with no failures</programlisting>
+
+    <para>We shouldn't forget about the other scenario given to us, so we'll
+    add it to the same story now.</para>
+
+    <programlisting>scenario "money is withdrawn from an account containing sufficient funds", {
+  given "an account with 100 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account should have 80 dollars left"
+}
+
+scenario "money is withdrawn from an account with insufficient funds", {
+  given "an account with 10 dollars"
+  when "account holder withdrawls 20 dollars"
+  then "account holder should be notified about the insufficient funds"
+  and "then account should still have 10 dollars"
+}</programlisting>
+
+    <para>Run it again and we see the same story now has two behaviors, no
+    failures and 2 pending.</para>
+
+    <programlisting>Running account withdrawl story (AccountWithdrawl.story)
+Scenarios run: 2, Failures: 0, Pending: 2, Time Elapsed: 0.495 sec
+
+2 total behaviors run (including 2 pending behaviors) with no failures</programlisting>
+
+    <para>Enough hocus pocus, on to actually writing some code. We are given a
+    disambiguated set of requirements and it is now far easier for Developers
+    to think in terms of 'should' instead of 'test'. Its just more natural as
+    a human (which developers have sometimes been accused of being) to think
+    in terms of 'it should do xyz'. Again we'll focus on a single scenario, so
+    let's start with the sufficient funds behavior.</para>
+
+    <programlisting>scenario "money is withdrawn from an account containing sufficient funds", {
+  given "an account with 100 dollars", {
+    account = new Account(100);
+  }
+
+  when "account holder withdrawls 20 dollars", {
+    account.withdrawl 20
+  }
+
+  then "account should have 80 dollars left", {
+    account.balance.shouldBe 80
+  }
+}
+
+...</programlisting>
+
+    <para>Still human readable, yet fully functional validation of behavior.
+    What are we waiting for, run it!</para>
+
+    <programlisting>Running account withdrawl story (AccountWithdrawl.story)
+There was an error running your easyb story or specification
+org.codehaus.groovy.control.MultipleCompilationErrorsException: startup failed, Script1.groovy: 25: unable to resolve class Account 
+ @ line 25, column 15.
+1 error
+
+        at org.codehaus.groovy.control.ErrorCollector.failIfErrors(ErrorCollector.java:296)
+        at org.codehaus.groovy.control.CompilationUnit.applyToSourceUnits(CompilationUnit.java:787)
+        at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:438)
+        at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:277)
+        at groovy.lang.GroovyShell.parseClass(GroovyShell.java:572)
+        at groovy.lang.GroovyShell.parse(GroovyShell.java:584)
+        at groovy.lang.GroovyShell.parse(GroovyShell.java:564)
+        at groovy.lang.GroovyShell.evaluate(GroovyShell.java:542)
+        at groovy.lang.GroovyShell.evaluate(GroovyShell.java:518)
+        at org.disco.easyb.domain.Story.execute(Story.java:34)
+        at org.disco.easyb.BehaviorRunner.runBehavior(BehaviorRunner.java:78)
+        at org.disco.easyb.BehaviorRunner.main(BehaviorRunner.java:59)</programlisting>
+
+    <para>Uh-oh. We forgot to add the Account class itself. Create an Account
+    class with a balance member variable and a withdrawl method. It can be in
+    pure Java, or groovy, we'll stick with Java for now.</para>
+
+    <programlisting>package org.disco.bdd.account;
+
+public class Account {
+    private int balance;
+
+    public Account(int initialBalance) {
+        balance = initialBalance;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void withdrawl(int withdrawlAmount) {
+        balance = balance - withdrawlAmount;
+    }
+}</programlisting>
+
+    <para>Import that into the story.</para>
+
+    <programlisting>import org.disco.bdd.account.Account
+
+scenario "money is withdrawn from an account containing sufficient funds", {
+  given "an account with 100 dollars", {
+    account = new Account(100);
+  }
+
+  when "account holder withdrawls 20 dollars", {
+    account.withdrawl 20
+  }
+
+  then "account should have 80 dollars left", {
+    account.balance.shouldBe 80
+  }
+}
+
+...</programlisting>
+
+    <para>Add the location of the Account.class to the classpath and kick it
+    off again.</para>
+
+    <programlisting>java -cp easyb-0.9.3.jar:commons-cli-1.1.jar:groovy-1.5.4.jar:target/behavior-classes \
+&gt; org.disco.easyb.BehaviorRunner \ 
+&gt; ./behavior/groovy/org/disco/bdd/story/account/AccountWithdrawl.story
+ 
+Running account withdrawl story (AccountWithdrawl.story)
+Scenarios run: 2, Failures: 0, Pending: 1, Time Elapsed: 0.538 sec
+
+2 total behaviors run (including 1 pending behavior) with no failures</programlisting>
+
+    <para>Only one behavior is pending now. Lets review what we did in the
+    snippet above. We created an instance of an account, with a balance of 100
+    dollars, because that is what the 'given' told us we should do. Twenty
+    dollars was then withdrawn because that is what the 'when' told us we
+    should be doing. It may look a little different than standard Java but
+    that is just normal groovy syntax. Finally, we verified that 80 dollars
+    still exists in the account because, yes you got it, the 'then' told us
+    that is what was expected. Here is where you encounter some of the
+    syntatic sugar of easyb. The assertion is done in a very readable fashion
+    via the 'should' enhancements available on objects. More focus is given to
+    the 'ensure' and 'should' syntax in the Syntax chapter.</para>
+
+    <para>So far we have successful as well as pending scenarios. If we were
+    all perfect we could stop right there. We're human so we know better,
+    thats why we'll now see what happens when we expect a particular outcome
+    but end up with something different.</para>
+
+    <para>Finishing the second scenario and running it will give us exactly
+    that opportunity.</para>
+
+    <programlisting>...
+
+scenario "money is withdrawn from an account with insufficient funds", {
+  given "an account with 10 dollars", {
+   account = new Account(10);
+  }
+  when "account holder withdrawls 20 dollars", {
+    account.withdrawl 20
+  }
+  then "account holder should be notified about the insufficient funds", {
+    // will cover in the next step
+  }
+  and "then account should still have 10 dollars", {
+    account.balance.shouldBe 10
+  }
+}
+
+
+...</programlisting>
+
+    <programlisting>java -cp easyb-0.9.3.jar:commons-cli-1.1.jar:groovy-1.5.4.jar:target/behavior-classes \
+&gt; org.disco.easyb.BehaviorRunner \ 
+&gt; ./behavior/groovy/org/disco/bdd/story/account/AccountWithdrawl.story
+ 
+Running account withdrawl story (AccountWithdrawl.story)
+FAILURE Scenarios run: 2, Failures: 1, Pending: 0, Time Elapsed: 0.656 sec
+        scenario "money is withdrawn from an account with insufficient funds"
+        step "then account should still have 10 dollars" -- expected 10 but was -10
+
+2 total behaviors run with 1 failure</programlisting>
+
+    <para>According to our requirements it appears that our Account class
+    needs a little better logic.</para>
+
+    <para>Shown below is just the change necessary to the Account class. A
+    minimal amount of logic to validate that we cannot overdraw the
+    account.</para>
+
+    <programlisting>...
+
+    public void withdrawl(int withdrawlAmount) {
+        if(balance - withdrawlAmount &lt; 0) {
+            throw new RuntimeException("This should really be a checked exception, but keeping the list of classes small for the tutorial");
+        } else {
+            balance = balance - withdrawlAmount;            
+        }
+    }
+
+...
+</programlisting>
+
+    <para>A small change to the story itself is in order as well. This is so
+    we can ensure that an exception is thrown when we try to withdrawl more
+    than allowed.</para>
+
+    <programlisting>...
+
+  then "account holder should be notified about the insufficient funds", {
+    ensureThrows(RuntimeException){
+      withdrawl()
+     }
+  }
+
+
+...
+</programlisting>
+
+    <para>Run it and we find that all is indeed good again. What we did was to
+    create a closure to hold the execution of the withdrawl and then call it
+    within the scope of an ensureThrows. That allows easyb to validate that
+    the specified exception was indeed thrown. Since the logic was changed to
+    prevent an overdraw you'll notice that the other condition (of the account
+    balance still being 10 dollars) was satisfied.</para>
+
+    <programlisting>java -cp easyb-0.9.3.jar:commons-cli-1.1.jar:groovy-1.5.4.jar:target/behavior-classes \
+&gt; org.disco.easyb.BehaviorRunner \ 
+&gt; ./behavior/groovy/org/disco/bdd/story/account/AccountWithdrawl.story
+
+Running account withdrawl story (AccountWithdrawl.story)
+Scenarios run: 2, Failures: 0, Pending: 0, Time Elapsed: 0.596 sec
+
+2 total behaviors run with no failures
+</programlisting>
   </chapter>
 
   <chapter>
