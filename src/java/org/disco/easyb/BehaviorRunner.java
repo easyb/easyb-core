@@ -3,7 +3,6 @@ package org.disco.easyb;
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.domain.BehaviorFactory;
 import org.disco.easyb.domain.GroovyShellConfiguration;
-import org.disco.easyb.exception.VerificationException;
 import org.disco.easyb.listener.BroadcastListener;
 import org.disco.easyb.listener.ExecutionListener;
 import org.disco.easyb.listener.FailureDetector;
@@ -55,13 +54,18 @@ public class BehaviorRunner {
     public static void main(final String[] args) {
         final Configuration configuration = new ConsoleConfigurator().configure(args);
         final ConsoleReporter consoleRpt = configuration.getConsoleReporter();
-        
+
 
         if (configuration != null) {
             final BehaviorRunner runner = new BehaviorRunner(configuration.getConfiguredReports(),
                     consoleRpt);
             try {
-                runner.runBehavior(getBehaviors(configuration.getFilePaths()));
+                boolean success = runner.runBehavior(getBehaviors(configuration.getFilePaths()));
+                //the Ant task assumes a return code from the easyb process to
+                //determine error or not
+                if (!success) {
+                    System.exit(-1);
+                }
             } catch (Throwable exception) {
                 System.err.println("There was an error running your easyb story or specification");
                 exception.printStackTrace(System.err);
@@ -74,7 +78,9 @@ public class BehaviorRunner {
      * @param behaviors collection of files that contain the specifications
      * @throws Exception if unable to write report file
      */
-    public void runBehavior(List<Behavior> behaviors) throws Exception {
+    public boolean runBehavior(List<Behavior> behaviors) throws Exception {
+        boolean wasSuccessful = true;
+
         for (final Behavior behavior : behaviors) {
             behavior.execute(broadcastListener);
         }
@@ -84,6 +90,12 @@ public class BehaviorRunner {
         for (final ReportWriter report : reports) {
             report.writeReport(resultsCollector);
         }
+
+        if (failureDetector.failuresDetected()) {
+            wasSuccessful = false;
+        }
+        return wasSuccessful;
+
     }
 
     public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
