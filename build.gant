@@ -211,7 +211,7 @@ def runAntTask(includes, reports, failureMessage = null, failureprop = null) {
 
 target("run-main": "runs easyb BehaviorRunner class") {
     depends(jar)
-    java(classname: "org.disco.easyb.BehaviorRunner") {
+    java(classname: "org.disco.easyb.BehaviorRunner", fork:true) {
         if (Ant.project.properties."behavior" != null) {
             arg(value: Ant.project.properties."behavior")
         }

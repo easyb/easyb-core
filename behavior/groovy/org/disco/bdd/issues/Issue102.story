@@ -1,3 +1,5 @@
+import org.disco.easyb.exception.VerificationException
+
 scenario "ensureThrows should be less noisy", {
     given "some error condition", {
         var = {
@@ -11,3 +13,20 @@ scenario "ensureThrows should be less noisy", {
     }
 }
 
+scenario "ensure strict exception handling", {
+    given "something useless", {
+        blah = "blah"
+    }
+    then "the ensureThrows clause should be strict", {
+
+        ensureStrictThrows(VerificationException){
+
+            ensureStrictThrows(RuntimeException.class) {
+                throw new IllegalArgumentException("Test")
+            }
+
+        }
+
+        
+    }
+}

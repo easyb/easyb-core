@@ -29,7 +29,26 @@ public class EnsuringDelegate {
         }
         throw new VerificationException("expected exception of type " + clzz + " was not thrown");
     }
-
+    /**
+     * @param clzz    the class of the exception type expected
+     * @param closure closure containing code to be run that should throw an
+     *                exception
+     */
+    public void ensureStrictThrows(final Class<?> clzz, final Closure closure) throws Exception {
+        try {
+            closure.call();
+        } catch (Throwable e) {
+            if (clzz != e.getClass() && (e.getCause() != null)
+                && !(e.getCause().getClass() == clzz)) {
+                throw new VerificationException(
+                    e.getClass().getName() + " was caught. The cause was "
+                            + e.getCause().getClass() + " not " + clzz.getName()
+                            + " as specified.");
+            }
+            return;
+        }
+        throw new VerificationException("expected exception of type " + clzz + " was not thrown");
+    }
     /**
      * @param expression to be evaluated and should resolve to a boolean result
      */
