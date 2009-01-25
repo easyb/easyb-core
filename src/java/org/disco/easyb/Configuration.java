@@ -9,6 +9,7 @@ public class Configuration {
     private final List<ReportWriter> configuredReports;
     private boolean stackTraceOn = false;
     private boolean filteredStackTraceOn = false;
+    private String extendedStoryClass;
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports) {
         this.filePaths = filePaths;
@@ -20,12 +21,27 @@ public class Configuration {
         this(filePaths, configuredReports);
         this.stackTraceOn = stackTraceOn;
     }
+
     //yeesh this is odd, think of a better way...
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                          final boolean stackTraceOn, final boolean filteredStackTraceOn) {
         this(filePaths, configuredReports);
         this.stackTraceOn = stackTraceOn;
         this.filteredStackTraceOn = filteredStackTraceOn;
+    }
+
+    //refactor me!
+    public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
+                         final boolean stackTraceOn, final boolean filteredStackTraceOn,
+                         final String extendedStoryClassName) {
+        this(filePaths, configuredReports);
+        this.stackTraceOn = stackTraceOn;
+        this.filteredStackTraceOn = filteredStackTraceOn;
+        this.extendedStoryClass = extendedStoryClassName;
+    }
+
+    public String getExtendedStoryClass() {
+        return extendedStoryClass;
     }
 
     public String[] getFilePaths() {
@@ -36,17 +52,16 @@ public class Configuration {
         return this.configuredReports;
     }
 
-
     public ConsoleReporter getConsoleReporter() {
-        if(this.stackTraceOn){
-            if(this.filteredStackTraceOn){
+        if (this.stackTraceOn) {
+            if (this.filteredStackTraceOn) {
                 return new FilteredStackTraceConsoleReporter();
-            }else{
+            } else {
                 return new StackTraceConsoleReporter();
             }
-        }else if(this.filteredStackTraceOn){
-                return new FilteredStackTraceConsoleReporter();
-        }else{
+        } else if (this.filteredStackTraceOn) {
+            return new FilteredStackTraceConsoleReporter();
+        } else {
             return new ConsoleReporter();
         }
     }

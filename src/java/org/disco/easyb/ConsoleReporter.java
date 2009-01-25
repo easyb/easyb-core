@@ -44,17 +44,17 @@ public class ConsoleReporter extends ResultsCollector {
      * 21 of 27 behaviors ran (including 9 pending behaviors and 6 ignored behaviors) with no failures
      */
     private String getTotalPendingCountMessage() {
-        if(getPendingBehaviorCount() > 0){
+        if (getPendingBehaviorCount() > 0) {
             String messge = " (including " +
-                    (getPendingBehaviorCount() == 1 ? "1 pending behavior" : getPendingBehaviorCount() +" pending behaviors");
-            if(getIgnoredScenarioCount() > 0){
+                    (getPendingBehaviorCount() == 1 ? "1 pending behavior" : getPendingBehaviorCount() + " pending behaviors");
+            if (getIgnoredScenarioCount() > 0) {
                 messge +=
-                    (getIgnoredScenarioCount() > 0 ? ""
-                            + (getIgnoredScenarioCount() == 1 ? " with 1 behavior ignored)" : " and " + getIgnoredScenarioCount()
-                            + " ignored behaviors") : "");
+                        (getIgnoredScenarioCount() > 0 ? ""
+                                + (getIgnoredScenarioCount() == 1 ? " with 1 behavior ignored)" : " and " + getIgnoredScenarioCount()
+                                + " ignored behaviors") : "");
             }
             return messge + ")";
-        }else{
+        } else {
             return "";
         }
     }
@@ -75,7 +75,7 @@ public class ConsoleReporter extends ResultsCollector {
 
     /**
      * this method formats the total run behaviors -- like with @getScenariosRunMessage,
-     * this method calculates the total by subtracting any ignored scenarios 
+     * this method calculates the total by subtracting any ignored scenarios
      */
     private String getTotalRanCountMessage() {
         if (getIgnoredScenarioCount() > 0) {
@@ -88,7 +88,7 @@ public class ConsoleReporter extends ResultsCollector {
     /**
      * this method returns a formatted string that contains the total scenarios run.
      * if there were ignored scenarios, the total number is determined by subtracting
-     * the ignored ones; thus, we don't convey that an ignored scenario was "run" 
+     * the ignored ones; thus, we don't convey that an ignored scenario was "run"
      */
     private String getScenariosRunMessage(final BehaviorStep step) {
         if (step.getIgnoredScenarioCountRecursively() > 0) {

@@ -20,15 +20,16 @@ public class EnsuringDelegate {
             closure.call();
         } catch (Throwable e) {
             if (!clzz.isAssignableFrom(e.getClass()) && (e.getCause() != null)
-                && !(e.getCause().getClass() == clzz)) {
+                    && !(e.getCause().getClass() == clzz)) {
                 throw new VerificationException(
-                    "exception caught (" + e.getClass().getName() + ") is not of type " + clzz +
-                        " or the cause isn't " + clzz);
+                        "exception caught (" + e.getClass().getName() + ") is not of type " + clzz +
+                                " or the cause isn't " + clzz);
             }
             return;
         }
         throw new VerificationException("expected exception of type " + clzz + " was not thrown");
     }
+
     /**
      * @param clzz    the class of the exception type expected
      * @param closure closure containing code to be run that should throw an
@@ -39,16 +40,17 @@ public class EnsuringDelegate {
             closure.call();
         } catch (Throwable e) {
             if (clzz != e.getClass() && (e.getCause() != null)
-                && !(e.getCause().getClass() == clzz)) {
+                    && !(e.getCause().getClass() == clzz)) {
                 throw new VerificationException(
-                    e.getClass().getName() + " was caught. The cause was "
-                            + e.getCause().getClass() + " not " + clzz.getName()
-                            + " as specified.");
+                        e.getClass().getName() + " was caught. The cause was "
+                                + e.getCause().getClass() + " not " + clzz.getName()
+                                + " as specified.");
             }
             return;
         }
         throw new VerificationException("expected exception of type " + clzz + " was not thrown");
     }
+
     /**
      * @param expression to be evaluated and should resolve to a boolean result
      */
@@ -59,13 +61,12 @@ public class EnsuringDelegate {
     }
 
     /**
-     *
      * @param value
      * @param closure
      * @throws Exception
      */
     public void ensure(final Object value, final Closure closure)
-        throws Exception {
+            throws Exception {
         RichlyEnsurable delegate = this.getDelegate(value);
         closure.setDelegate(delegate);
         closure.call();
@@ -81,7 +82,6 @@ public class EnsuringDelegate {
     }
 
     /**
-     *
      * @param message
      */
     public void fail(String message) {
@@ -89,7 +89,6 @@ public class EnsuringDelegate {
     }
 
     /**
-     *
      * @param message
      * @param e
      */
@@ -98,7 +97,6 @@ public class EnsuringDelegate {
     }
 
     /**
-     *
      * @param message
      * @param expected
      * @param actual

@@ -1,7 +1,7 @@
 package org.disco.easyb.domain;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GroovyShellConfiguration {
     private ClassLoader classLoader;

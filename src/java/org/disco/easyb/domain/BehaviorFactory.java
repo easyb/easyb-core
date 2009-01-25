@@ -1,8 +1,12 @@
 package org.disco.easyb.domain;
 
+import org.disco.easyb.Configuration;
+import org.disco.easyb.domain.ext.ExtendedStory;
+import org.disco.easyb.ext.StoryLifeCyleAdaptor;
 import org.disco.easyb.util.CamelCaseConverter;
 
 import java.io.File;
+import static java.lang.Class.forName;
 import static java.util.Arrays.asList;
 import java.util.List;
 
@@ -16,11 +20,38 @@ public class BehaviorFactory {
     private BehaviorFactory() {
     }
 
+    /**
+     *
+     */
     public static Behavior createBehavior(final GroovyShellConfiguration gShellConfig,
                                           final File behaviorFile) {
+        return createBehavior(gShellConfig, behaviorFile, null);
+    }
+
+    /**
+     *
+     */
+    public static Behavior createBehavior(final GroovyShellConfiguration gShellConfig,
+                                          final File behaviorFile, Configuration configuration) {
+
         for (final String pattern : STORY_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
-                return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+
+                if (configuration != null && configuration.getExtendedStoryClass() != null &&
+                        !configuration.getExtendedStoryClass().equals("")) {
+
+                    try {
+                        StoryLifeCyleAdaptor adaptor = getAdaptor(configuration.getExtendedStoryClass());
+                        return new ExtendedStory(gShellConfig, createPhrase(behaviorFile, pattern),
+                                behaviorFile, adaptor);
+                    } catch (Throwable thr) {
+                        System.err.println("Error loading custom story class, loading default! "
+                                + thr.getMessage());
+                        return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+                    }
+                } else {
+                    return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+                }
             }
         }
         for (final String pattern : SPECIFICATION_PATTERNS) {
@@ -32,6 +63,20 @@ public class BehaviorFactory {
         throw new IllegalArgumentException(verifyFileError(behaviorFile));
     }
 
+    /**
+     * @param clzz
+     * @return StoryLifeCyleAdaptor class
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    private static StoryLifeCyleAdaptor getAdaptor(String clzz) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        return (StoryLifeCyleAdaptor) forName(clzz).newInstance();
+    }
+
+    /**
+     *
+     */
     public static Behavior createBehavior(final File behaviorFile) {
         return createBehavior(DEFAULT_GROOVY_SHELL_CONFIG, behaviorFile);
     }
@@ -70,10 +115,16 @@ public class BehaviorFactory {
         return errorMessage.toString();
     }
 
+    /**
+     *
+     */
     private static String createPhrase(final File behaviorFile, final String pattern) {
         return new CamelCaseConverter(stripPattern(behaviorFile.getName(), pattern)).toPhrase();
     }
 
+    /**
+     *
+     */
     private static String stripPattern(final String string, final String pattern) {
         return (string.split(pattern)[0]);
     }

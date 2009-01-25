@@ -1,22 +1,11 @@
 package org.disco.easyb;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
+import org.apache.commons.cli.*;
+import org.disco.easyb.report.*;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.disco.easyb.report.ReportWriter;
-import org.disco.easyb.report.TxtSpecificationReportWriter;
-import org.disco.easyb.report.TxtStoryReportWriter;
-import org.disco.easyb.report.XmlReportWriter;
-import org.disco.easyb.report.HtmlReportWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ConsoleConfigurator {
     private static final String TXT_SPECIFICATION = "txtspecification";
@@ -26,15 +15,21 @@ public class ConsoleConfigurator {
     private static final String EXCEPTION_STACK = "e";
     private static final String FILTER_EXCEPTION_STACK = "ef";
 
+    private static final String EXTENDED_STORY_CLASS = "extstory";
+
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
 
         try {
             CommandLine commandLine = getCommandLineForMain(args, options);
             validateArguments(commandLine);
+
+            String extendedStoryClzz = getExtendedStoryClass(commandLine);
+
             return new Configuration(commandLine.getArgs(),
                     getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
-                    commandLine.hasOption(FILTER_EXCEPTION_STACK));
+                    commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz);
+
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
             handleHelpForMain(options);
@@ -44,6 +39,14 @@ public class ConsoleConfigurator {
         }
 
         return null;
+    }
+
+    private String getExtendedStoryClass(CommandLine commandLine) {
+        String extendedStoryClzz = null;
+        if (commandLine.hasOption(EXTENDED_STORY_CLASS)) {
+            extendedStoryClzz = commandLine.getOptionValue(EXTENDED_STORY_CLASS);
+        }
+        return extendedStoryClzz;
     }
 
     /**
@@ -66,7 +69,6 @@ public class ConsoleConfigurator {
     }
 
     /**
-     *
      * @param line
      * @return immutable list of ReportWriter objects
      */
@@ -106,19 +108,19 @@ public class ConsoleConfigurator {
 
         //noinspection AccessStaticViaInstance
         final Option htmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create an easyb report in html format").create(HTML_EASYB);
+                .withDescription("create an easyb report in html format").create(HTML_EASYB);
         options.addOption(htmleasybreport);
         //noinspection AccessStaticViaInstance
         final Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create an easyb report in xml format").create(XML_EASYB);
+                .withDescription("create an easyb report in xml format").create(XML_EASYB);
         options.addOption(xmleasybreport);
         //noinspection AccessStaticViaInstance
         final Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create a story report").create(TXT_STORY);
+                .withDescription("create a story report").create(TXT_STORY);
         options.addOption(storyreport);
         //noinspection AccessStaticViaInstance
         final Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
-            .withDescription("create a behavior report").create(TXT_SPECIFICATION);
+                .withDescription("create a behavior report").create(TXT_SPECIFICATION);
         options.addOption(behaviorreport);
 
 
@@ -129,6 +131,12 @@ public class ConsoleConfigurator {
         final Option filteredstacktrace = new Option(FILTER_EXCEPTION_STACK, "prints stacktrace");
         stacktrace.setRequired(false);
         options.addOption(filteredstacktrace);
+
+
+        //noinspection AccessStaticViaInstance
+        final Option extendedStoryClass = OptionBuilder.withArgName("class").hasOptionalArg()
+                .withDescription("use an extended story class").create(EXTENDED_STORY_CLASS);
+        options.addOption(extendedStoryClass);
 
         return options;
     }

@@ -1,11 +1,11 @@
 package org.disco.easyb.listener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.disco.easyb.BehaviorStep;
 import org.disco.easyb.domain.Behavior;
 import org.disco.easyb.result.Result;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BroadcastListener implements ExecutionListener {
     public List<ExecutionListener> listeners = new ArrayList<ExecutionListener>();

@@ -60,7 +60,7 @@ public class BehaviorRunner {
             final BehaviorRunner runner = new BehaviorRunner(configuration.getConfiguredReports(),
                     consoleRpt);
             try {
-                boolean success = runner.runBehavior(getBehaviors(configuration.getFilePaths()));
+                boolean success = runner.runBehavior(getBehaviors(configuration.getFilePaths(), configuration));
                 //the Ant task assumes a return code from the easyb process to
                 //determine error or not
                 if (!success) {
@@ -99,12 +99,17 @@ public class BehaviorRunner {
     }
 
     public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
-                                              final String[] paths) {
+                                              final String[] paths, Configuration config) {
         List<Behavior> behaviors = new ArrayList<Behavior>();
         for (final String path : paths) {
-            behaviors.add(BehaviorFactory.createBehavior(groovyShellConfiguration, new File(path)));
+            behaviors.add(BehaviorFactory.createBehavior(groovyShellConfiguration, new File(path), config));
         }
         return Collections.unmodifiableList(behaviors);
+    }
+
+    public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
+                                              final String[] paths) {
+        return getBehaviors(groovyShellConfiguration, paths, null);
     }
 
     /**
@@ -113,5 +118,13 @@ public class BehaviorRunner {
      */
     public static List<Behavior> getBehaviors(final String[] paths) {
         return getBehaviors(BehaviorFactory.DEFAULT_GROOVY_SHELL_CONFIG, paths);
+    }
+
+    /**
+     * @param paths locations of the specifications to be loaded
+     * @return collection of files where the only element is the file of the spec to be run
+     */
+    public static List<Behavior> getBehaviors(final String[] paths, Configuration config) {
+        return getBehaviors(BehaviorFactory.DEFAULT_GROOVY_SHELL_CONFIG, paths, config);
     }
 }
