@@ -152,7 +152,8 @@ target("ant-task": "runs the easyb ant task") {
         exclude(name: "**/FailureReport.story")
         exclude(name: "**/PassingPendingFailing.story")
         exclude(name: "**/PassingPendingFailing.specification")
-        exclude(name: "**//ExceptionalOccurrence.story")
+        exclude(name: "**/ExceptionalOccurrence.story")
+        exclude(name: "**/StoryLifeCycle.story")
       }
     }
   }
@@ -216,11 +217,14 @@ target("run-main": "runs easyb BehaviorRunner class") {
       arg(value: Ant.project.properties."behavior")
     }
     if (Ant.project.properties."extstory" != null) {
-      arg(line: "-extstory org.disco.easyb.ext.ScenarioLifeCycle")
+//      arg(line: "-extstory org.disco.easyb.ext.ScenarioLifeCycle")
+
+      arg(line: "-extstory org.disco.bdd.prototype.PrototypeLifeCycleAdapter")
     }
     //arg(value: "-ef")
     classpath() {
       fileset(dir: libdir, includes: jarincludes)
+      pathelement(location: behaviorclassdir)
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
     }
   }

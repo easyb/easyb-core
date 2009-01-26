@@ -30,13 +30,10 @@ public class Configuration {
         this.filteredStackTraceOn = filteredStackTraceOn;
     }
 
-    //refactor me!
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                          final boolean stackTraceOn, final boolean filteredStackTraceOn,
                          final String extendedStoryClassName) {
-        this(filePaths, configuredReports);
-        this.stackTraceOn = stackTraceOn;
-        this.filteredStackTraceOn = filteredStackTraceOn;
+        this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn);
         this.extendedStoryClass = extendedStoryClassName;
     }
 
