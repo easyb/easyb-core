@@ -37,23 +37,7 @@ public class BehaviorFactory {
 
         for (final String pattern : STORY_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
-
-//                if (configuration != null && configuration.getExtendedStoryClass() != null &&
-//                        !configuration.getExtendedStoryClass().equals("")) {
-                LifeCycleAnalysis analysis = new LifeCycleAnalysis(behaviorFile);
-                if (analysis.isUsingLifeCycle()) {
-                    try {
-                        StoryLifeCyleAdaptor adaptor = (StoryLifeCyleAdaptor)analysis.getLifeCycleClass();//getAdaptor(configuration.getExtendedStoryClass());
-                        return new ExtendedStory(gShellConfig, createPhrase(behaviorFile, pattern),
-                                behaviorFile, adaptor);
-                    } catch (Throwable thr) {
-                        System.err.println("Error loading custom story class, loading default! "
-                                + thr.getMessage());
-                        return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
-                    }
-                } else {
-                    return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
-                }
+                return StoryFactory.manufactureStory(gShellConfig, pattern, behaviorFile);
             }
         }
         for (final String pattern : SPECIFICATION_PATTERNS) {
@@ -129,5 +113,31 @@ public class BehaviorFactory {
      */
     private static String stripPattern(final String string, final String pattern) {
         return (string.split(pattern)[0]);
+    }
+
+    /**
+     *
+     */
+    private static class StoryFactory {
+        /**
+         * 
+         * 
+         */
+        public static Story manufactureStory(GroovyShellConfiguration gShellConfig, String phrase, File file) {
+            LifeCycleAnalysis analysis = new LifeCycleAnalysis(file);
+            if (analysis.isUsingLifeCycle()) {
+                try {
+                    StoryLifeCyleAdaptor adaptor = (StoryLifeCyleAdaptor) analysis.getLifeCycleClass(); 
+                    return new ExtendedStory(gShellConfig, createPhrase(file, phrase),
+                            file, adaptor);
+                } catch (Throwable thr) {
+                    System.err.println("Error loading custom story class, loading default! "
+                            + thr.getMessage());
+                    return new Story(gShellConfig, createPhrase(file, phrase), file);
+                }
+            } else {
+                return new Story(gShellConfig, createPhrase(file, phrase), file);
+            }
+        }
     }
 }
