@@ -2,6 +2,7 @@ package org.disco.easyb.domain;
 
 import org.disco.easyb.Configuration;
 import org.disco.easyb.domain.ext.ExtendedStory;
+import org.disco.easyb.ext.LifeCycleAnalysis;
 import org.disco.easyb.ext.StoryLifeCyleAdaptor;
 import org.disco.easyb.util.CamelCaseConverter;
 
@@ -37,11 +38,12 @@ public class BehaviorFactory {
         for (final String pattern : STORY_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
 
-                if (configuration != null && configuration.getExtendedStoryClass() != null &&
-                        !configuration.getExtendedStoryClass().equals("")) {
-
+//                if (configuration != null && configuration.getExtendedStoryClass() != null &&
+//                        !configuration.getExtendedStoryClass().equals("")) {
+                LifeCycleAnalysis analysis = new LifeCycleAnalysis(behaviorFile);
+                if (analysis.isUsingLifeCycle()) {
                     try {
-                        StoryLifeCyleAdaptor adaptor = getAdaptor(configuration.getExtendedStoryClass());
+                        StoryLifeCyleAdaptor adaptor = (StoryLifeCyleAdaptor)analysis.getLifeCycleClass();//getAdaptor(configuration.getExtendedStoryClass());
                         return new ExtendedStory(gShellConfig, createPhrase(behaviorFile, pattern),
                                 behaviorFile, adaptor);
                     } catch (Throwable thr) {

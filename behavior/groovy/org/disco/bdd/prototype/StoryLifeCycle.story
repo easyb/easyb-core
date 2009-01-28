@@ -1,3 +1,5 @@
+using org.disco.bdd.prototype.PrototypeLifeCycleAdapter
+
 
 scenario "some simple scenario", {
   given "a small coll of numbers", {

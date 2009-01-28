@@ -14,6 +14,11 @@ class StoryLifeCycleBinding {
       binding.story.scenario(description, closure)
       adaptor.afterScenario(binding)
     }
+
+    binding.using = { classname ->
+      //nop
+    }
+
     return binding
   }
 
