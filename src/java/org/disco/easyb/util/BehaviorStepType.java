@@ -11,6 +11,7 @@ public enum BehaviorStepType {
     THEN("then"),
     AND("and"),
     BEFORE("before"),
+    AFTER("after"),
     IT("it"),
     DESCRIPTION("description"),
     NARRATIVE("narrative"),
