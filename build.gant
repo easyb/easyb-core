@@ -16,7 +16,7 @@ sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 tarfilename = "${defaultdir}/dist/${artifactid}-${version}.tar"
 
 
-Ant.property(file: 'local.build.properties')
+ant.property(file: 'local.build.properties')
 
 /**
  * The version number used by all targets is command line overridden if needed- for example
@@ -25,8 +25,8 @@ Ant.property(file: 'local.build.properties')
  * of version from above.
  */
 def detectOrDefaultVersion(version) {
-  if (Ant.project.properties."version" != null) {
-    return Ant.project.properties."version"
+  if (ant.project.properties."version" != null) {
+    return ant.project.properties."version"
   } else {
     return version
   }
@@ -39,9 +39,9 @@ target("default": "validate") {
 target(release: "compile and archive") {
   depends("validate-reports")
 
-  Ant.mkdir(dir: "${defaultdir}/release")
-  Ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
-  Ant.copy(todir: "${defaultdir}/release") {
+  ant.mkdir(dir: "${defaultdir}/release")
+  ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
+  ant.copy(todir: "${defaultdir}/release") {
     fileset(dir: "./target/lib/") {
       exclude(name: "**/ant-*.jar")
     }
@@ -51,14 +51,14 @@ target(release: "compile and archive") {
 target(jar: "create an archive of the project's classfiles") {
   depends("compile-all")
 
-  Ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: classdir)
-  Ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: cfgdir, update: true)
+  ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: classdir)
+  ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: cfgdir, update: true)
 }
 
 
 target("bundle-docs": "creates a war file containing static html docs") {
   depends(doc)
-  Ant.war(destfile: "${defaultdir}/docs/ROOT.war", needxmlfile: false) {
+  ant.war(destfile: "${defaultdir}/docs/ROOT.war", needxmlfile: false) {
     fileset(dir: websiteoutputdir) {
       include(name: "**/*.*")
     }
@@ -68,25 +68,25 @@ target("bundle-docs": "creates a war file containing static html docs") {
 target("publish-easyb": "uploads easyb distribution to googlecode") {
   depends(dist)
 
-  Ant.fail(unless: "googleuser", message: "Property googleuser not set. Please pass in with -D or set in local.build.properties")
-  Ant.fail(unless: "googlepass", message: "Property googlepass not set. Please pass in with -D or set in local.build.properties")
+  ant.fail(unless: "googleuser", message: "Property googleuser not set. Please pass in with -D or set in local.build.properties")
+  ant.fail(unless: "googlepass", message: "Property googlepass not set. Please pass in with -D or set in local.build.properties")
 
 
-  Ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
+  ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
     classpath() {
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
     }
   }
 
-  Ant.taskdef(name: "googlecodeupload",
+  ant.taskdef(name: "googlecodeupload",
           classname: "net.bluecow.googlecode.ant.GoogleCodeUploadTask") {
     classpath() {
       pathelement(location: "${libdir}/ant-googlecode-0.0.0test.jar")
     }
   }
 
-  Ant.googlecodeupload(username: "${Ant.project.properties.'googleuser'}",
-          password: "${Ant.project.properties.'googlepass'}",
+  ant.googlecodeupload(username: "${ant.project.properties.'googleuser'}",
+          password: "${ant.project.properties.'googlepass'}",
           projectname: "easyb",
           filename: "${tarfilename}.gz",
           targetfilename: "${tarfilename}.gz",
@@ -117,13 +117,13 @@ target("validate": "runs behaviors") {
 target("ant-task": "runs the easyb ant task") {
   depends(jar)
 
-  Ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
+  ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
     classpath() {
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
     }
   }
 
-  Ant.easyb(failureProperty: "easyb.failed") {
+  ant.easyb(failureProperty: "easyb.failed") {
 
     classpath() {
       fileset(dir: libdir, includes: jarincludes)
@@ -139,8 +139,8 @@ target("ant-task": "runs the easyb ant task") {
 
     behaviors(dir: gbehaviordir) {
 
-      if (Ant.project.properties."behavior" != null) {
-        include(name: "**/${Ant.project.properties.'behavior'}.*")
+      if (ant.project.properties."behavior" != null) {
+        include(name: "**/${ant.project.properties.'behavior'}.*")
       } else {
 
         include(name: "**/*Story.groovy")
@@ -158,7 +158,7 @@ target("ant-task": "runs the easyb ant task") {
     }
   }
 
-  Ant.fail(if: "easyb.failed", message: "Execution halted as specifications failed")
+  ant.fail(if: "easyb.failed", message: "Execution halted as specifications failed")
 }
 
 
@@ -167,10 +167,10 @@ target("validate-reports": "runs the easyb and validates reports") {
   runAntTask(["**/AndChainedFeature.story"],
           [["${reportsoutputdir}/valid-report.txt", "txtstory"]])
 
-  Ant.echo("***********Ignore FAILURE text that follows-- it is on purpose************")
+  ant.echo("***********Ignore FAILURE text that follows-- it is on purpose************")
   runAntTask(["**/FailureReport.story"],
           [["${reportsoutputdir}/valid-report-failure.txt", "txtstory"]])
-  Ant.echo("***********End failure text-- build should continue on as usual***********")
+  ant.echo("***********End failure text-- build should continue on as usual***********")
 
   runAntTask(["**/TextStoryReportingValidation.story"],
           [["${reportsoutputdir}/valid-reporting.txt", "txtstory"]],
@@ -183,13 +183,13 @@ target("validate-reports": "runs the easyb and validates reports") {
  */
 def runAntTask(includes, reports, failureMessage = null, failureprop = null) {
 
-  Ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
+  ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
     classpath() {
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
     }
   }
 
-  Ant.easyb(failureProperty: failureprop) {
+  ant.easyb(failureProperty: failureprop) {
     classpath() {
       fileset(dir: libdir, includes: jarincludes)
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
@@ -206,17 +206,17 @@ def runAntTask(includes, reports, failureMessage = null, failureprop = null) {
     }
   }
   if (failureMessage != null) {
-    Ant.fail(if: failureprop, message: failureMessage)
+    ant.fail(if: failureprop, message: failureMessage)
   }
 }
 
 target("run-main": "runs easyb BehaviorRunner class") {
   depends(jar)
   java(classname: "org.disco.easyb.BehaviorRunner", fork: true) {
-    if (Ant.project.properties."behavior" != null) {
-      arg(value: Ant.project.properties."behavior")
+    if (ant.project.properties."behavior" != null) {
+      arg(value: ant.project.properties."behavior")
     }
-    if (Ant.project.properties."extstory" != null) {
+    if (ant.project.properties."extstory" != null) {
 //      arg(line: "-extstory org.disco.easyb.ext.ScenarioLifeCycle")
 
       arg(line: "-extstory org.disco.bdd.prototype.PrototypeLifeCycleAdapter")

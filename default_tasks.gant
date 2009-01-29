@@ -26,25 +26,25 @@ docsoutputdir = "${defaultdir}/docs"
 websiteoutputdir = "${docsoutputdir}/website"
 
 target(clean: "cleans target dir") {
-    Ant.delete(dir: defaultdir)
+    ant.delete(dir: defaultdir)
 }
 
-Ant.path(id: "build.classpath") {
+ant.path(id: "build.classpath") {
     fileset(dir: libdir, includes: jarincludes)
 }
 
 target(dist: "create a distribution from the release") {
     depends(release)
     depends(doc)
-    Ant.mkdir(dir: "${defaultdir}/dist")
-    Ant.tar(tarfile: tarfilename, basedir: "${defaultdir}/release")
-    Ant.gzip(zipfile: "${tarfilename}.gz", src: tarfilename)
-    Ant.delete(file: tarfilename)
+    ant.mkdir(dir: "${defaultdir}/dist")
+    ant.tar(tarfile: tarfilename, basedir: "${defaultdir}/release")
+    ant.gzip(zipfile: "${tarfilename}.gz", src: tarfilename)
+    ant.delete(file: tarfilename)
 }
 
 target(configuregroovy: "configures environment to compile w/Groovy") {
     depends(init)
-    Ant.taskdef(name: "groovyc",
+    ant.taskdef(name: "groovyc",
             classname: "org.codehaus.groovy.ant.Groovyc", classpathref: "build.classpath") {
     }
 }
@@ -52,7 +52,7 @@ target(configuregroovy: "configures environment to compile w/Groovy") {
 target(doc: "create documenation from docbook") {
   depends("init-doc")
 
-  Ant.tstamp {
+  ant.tstamp {
     format(property: "build.date", pattern: "MM/dd/yyyy")
     format(property: "build.year", pattern: "yyyy")
   }
@@ -63,18 +63,18 @@ target(doc: "create documenation from docbook") {
       docbooksourcexmlfile = new File(docbooksourcedirectory, 'docbook.xml')
       if(docbooksourcexmlfile.exists()) {
 
-        Ant.echo("Creating docbook [${docbooksourcedirectory.name}]")
+        ant.echo("Creating docbook [${docbooksourcedirectory.name}]")
 
         docbookdestdir = "${docsoutputdir}/${docbooksourcedirectory.name}"
-        Ant.mkdir(dir: docbookdestdir)
+        ant.mkdir(dir: docbookdestdir)
 
-        Ant.copy(todir: docbookdestdir) {
+        ant.copy(todir: docbookdestdir) {
           filterset {
             filter(token: "docbook.base", value: new File(docbooksupportdir).canonicalPath)
             filter(token: "docbook.project.name", value: artifactid)
             filter(token: "docbook.project.version", value: version)
-            filter(token: "build.date", value: "${Ant.project.properties.'build.date'}")
-            filter(token: "build.year", value: "${Ant.project.properties.'build.year'}")
+            filter(token: "build.date", value: "${ant.project.properties.'build.date'}")
+            filter(token: "build.year", value: "${ant.project.properties.'build.year'}")
           }
           filterset(begintoken: "%{", endtoken: "}") {
             filter(token: "at", value: "@")
@@ -84,7 +84,7 @@ target(doc: "create documenation from docbook") {
           }
         }
 
-        Ant.copy(toDir: docbookdestdir) {
+        ant.copy(toDir: docbookdestdir) {
           fileset(dir: docbooksourcedirectory) {
             include(name: "**/*")
             exclude(name: "**/*.xml")
@@ -92,8 +92,8 @@ target(doc: "create documenation from docbook") {
           }
         }
 
-        Ant.mkdir(dir: "${docbookdestdir}/images")
-        Ant.copy(todir: "${docbookdestdir}/images") {
+        ant.mkdir(dir: "${docbookdestdir}/images")
+        ant.copy(todir: "${docbookdestdir}/images") {
           fileset(dir: "${docbooksupportdir}/xsl/images") {
             include(name: "**/*")
           }
@@ -110,33 +110,33 @@ target(doc: "create documenation from docbook") {
 
 
         // create the xsl/fo temporary file.
-        Ant.java(classname: "com.icl.saxon.StyleSheet", fork:"true", dir:".", maxmemory:"256m") {
+        ant.java(classname: "com.icl.saxon.StyleSheet", fork:"true", dir:".", maxmemory:"256m") {
           classpath(refid: "docbook.lib.classpath")
           arg(value: "-o")
           arg(value: "${docbookdestdir}/docbook_fop.tmp")
           arg(value: "${docbookdestdir}/docbook.xml")
           arg(value: "${new File(docbooksupportdir).canonicalPath}/easyb_fopdf.xsl")
           arg(value: "project.version=${version}")
-          arg(value: "build.year=${Ant.project.properties.'build.year'}")
-          arg(value: "build.date=${Ant.project.properties.'build.date'}")
+          arg(value: "build.year=${ant.project.properties.'build.year'}")
+          arg(value: "build.date=${ant.project.properties.'build.date'}")
         }
 
-        Ant.java(classname: "org.apache.fop.apps.Fop", fork:"true", dir:".") {
+        ant.java(classname: "org.apache.fop.apps.Fop", fork:"true", dir:".") {
           classpath(refid: "docbook.lib.classpath")
           arg(value: "${docbookdestdir}/docbook_fop.tmp")
           arg(value: "${docbookdestdir}/${docbooksourcedirectory.name}-${version}.pdf")
         }
 
 
-        Ant.java(classname: "com.icl.saxon.StyleSheet", fork: "true", dir: ".", maxmemory: "256m") {
+        ant.java(classname: "com.icl.saxon.StyleSheet", fork: "true", dir: ".", maxmemory: "256m") {
           classpath(refid: "docbook.lib.classpath")
           arg(value: "-o")
           arg(value: "${docbookdestdir}/docbook.html")
           arg(value: "${docbookdestdir}/docbook.xml")
           arg(value: "${new File(docbooksupportdir).canonicalPath}/easyb_xhtml.xsl")
           arg(value: "project.version=${version}")
-          arg(value: "build.year=${Ant.project.properties.'build.year'}")
-          arg(value: "build.date=${Ant.project.properties.'build.date'}")
+          arg(value: "build.year=${ant.project.properties.'build.year'}")
+          arg(value: "build.date=${ant.project.properties.'build.date'}")
         }
 
         [new File("${docbookdestdir}/docbook_fop.tmp"), new File("${docbookdestdir}/docbook.xml")].each{ it.delete() }
@@ -151,16 +151,16 @@ target("init-doc": "initialize the doc environment") {
   docbooksourcedir = "docs/docbook"
   docbooksupportdir = "cfg/resource/thirdparty/docbook"
 
-  Ant.mkdir(dir: docsoutputdir)
-  Ant.mkdir(dir: websiteoutputdir)
+  ant.mkdir(dir: docsoutputdir)
+  ant.mkdir(dir: websiteoutputdir)
 
-  Ant.path(id: "docbook.lib.classpath") {
+  ant.path(id: "docbook.lib.classpath") {
     fileset(dir: "repository/docbook-dependencies") {
       include(name: "**/*.jar")
     }
   }
 
-  Ant.copy(todir: websiteoutputdir){
+  ant.copy(todir: websiteoutputdir){
     fileset(dir:"./docs/website/"){
       include(name:"**/*.*")
     }
@@ -169,21 +169,21 @@ target("init-doc": "initialize the doc environment") {
 }
 
 target(getdeps: "retrieves dependencies") {
-    Ivy.settings(file: "./ivyconfig.xml", id: "ivy.instance")
-    Ivy.retrieve(pattern: "./target/lib/[artifact]-[revision].[ext]")
+    ivy.settings(file: "./ivyconfig.xml", id: "ivy.instance")
+    ivy.retrieve(pattern: "./target/lib/[artifact]-[revision].[ext]")
 }
 
 target(init: "init dirs") {
-    Ant.mkdir(dir: classdir)
-    Ant.mkdir(dir: libdir)
-    Ant.mkdir(dir: behaviorclassdir)
-    Ant.mkdir(dir: defaultdir)
-    Ant.mkdir(dir: reportsoutputdir)
+    ant.mkdir(dir: classdir)
+    ant.mkdir(dir: libdir)
+    ant.mkdir(dir: behaviorclassdir)
+    ant.mkdir(dir: defaultdir)
+    ant.mkdir(dir: reportsoutputdir)
     getdeps()
 }
 
 genericgroovyc = {sourcedirs, destination ->
-    Ant.groovyc(destdir: destination) {
+    ant.groovyc(destdir: destination) {
         javac(source: "1.5", target: "1.5", debug: "on")
         src() {
             sourcedirs.each() {
@@ -202,7 +202,7 @@ genericgroovyc = {sourcedirs, destination ->
 target("jar-sources": "creates a sources jar") {
     depends("init")
 
-    Ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-sources.jar") {
+    ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-sources.jar") {
         sourcedirs.each {
             fileset(dir: it)
         }
@@ -213,14 +213,14 @@ target("jar-javadocs": "creates a javadocs jar") {
     taskdef(name: 'groovydoc', classname: 'org.codehaus.groovy.ant.Groovydoc')
 
     // Groovydoc doesn't seem to support multiple sources at this time so combine them on disk first
-    Ant.copy(toDir: "${defaultdir}/javadoc-sources") {
+    ant.copy(toDir: "${defaultdir}/javadoc-sources") {
         sourcedirs.each {
             fileset(dir: it)
         }
     }
 
-    Ant.groovydoc(destdir: "${defaultdir}/javadoc", sourcepath: "${defaultdir}/javadoc-sources", windowtitle: "${artifactid}")
-    Ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-javadoc.jar") {
+    ant.groovydoc(destdir: "${defaultdir}/javadoc", sourcepath: "${defaultdir}/javadoc-sources", windowtitle: "${artifactid}")
+    ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-javadoc.jar") {
         fileset(dir: "${defaultdir}/javadoc")
     }
 }
@@ -237,13 +237,13 @@ target("maven-install": "install into the default local maven repository") {
         line.replace("VERSION", version.toString())
     }
 
-    Ant.path(id: "maven.artifacts") {
+    ant.path(id: "maven.artifacts") {
         fileset(dir: "${defaultdir}") {
             include(name: "${artifactid}-${version}*.jar")
             include(name: "${artifactid}-${version}*.pom")
         }
     }
-    Ant.copy(toDir: "${mavenrepo}/org/easyb/${artifactid}/${version}/") {
+    ant.copy(toDir: "${mavenrepo}/org/easyb/${artifactid}/${version}/") {
         path(refid: "maven.artifacts")
     }
 }
@@ -251,7 +251,7 @@ target("maven-install": "install into the default local maven repository") {
 target("maven-bundle": "creates an upload bundle for the central maven repository") {
     depends("maven-install")
 
-    Ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-bundle.jar") {
+    ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-bundle.jar") {
         path(refid: "maven.artifacts")
     }
 }
