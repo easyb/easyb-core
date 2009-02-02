@@ -1,4 +1,4 @@
- 1 scenario executed successfully
+1 scenario executed successfully.
 
   Story: and chained feature
 

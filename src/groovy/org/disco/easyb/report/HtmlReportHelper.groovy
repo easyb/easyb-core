@@ -55,28 +55,7 @@ class HtmlReportHelper {
   }
 
   static String formatSpecificationPlainElement(element) {
-    String formattedElement
-    switch (element.stepType) {
-      case BehaviorStepType.SPECIFICATION:
-        formattedElement = "<br/>${'&nbsp;'.multiply(2)}Specification: ${element.name}"
-        break
-      case BehaviorStepType.DESCRIPTION:
-        formattedElement = "${'&nbsp;'.multiply(3)}${element.description}<br/>"
-        break
-      case BehaviorStepType.BEFORE:
-        formattedElement = "${'&nbsp;'.multiply(4)}before ${element.name}"
-        break
-      case BehaviorStepType.IT:
-        formattedElement = "${'&nbsp;'.multiply(4)}it ${element.name}"
-        break
-      case BehaviorStepType.AND:
-        formattedElement = "${'&nbsp;'.multiply(4)}and"
-        break
-      default:
-        formattedElement = ""
-        //no op to avoid having alerts in story text
-        break
-    }
+    String formattedElement = element.format('<br/>', '&nbsp;', BehaviorStepType.SPECIFICATION);
 
     if (element.result?.failed()) {
       formattedElement += "${'&nbsp;'.multiply(1)}<span style='color:#FF8080;'>[FAILURE: ${element.result?.cause()?.getMessage()}]</span>"
@@ -89,52 +68,14 @@ class HtmlReportHelper {
 
   // TODO need to escape the .name .descriptions, etc.. in case they have special chars?
   static String formatStoryPlainElement(element) {
-    String formattedElement
-    switch (element.stepType) {
-      case BehaviorStepType.STORY:
-        formattedElement = "<br/>${'&nbsp;'.multiply(2)}Story: ${element.name}"
-        break
-      case BehaviorStepType.DESCRIPTION:
-        formattedElement = "${'&nbsp;'.multiply(3)}Description: ${element.description}"
-        break
-      case BehaviorStepType.NARRATIVE:
-        formattedElement = "${'&nbsp;'.multiply(3)}Narrative: ${element.description}"
-        break
-      case BehaviorStepType.NARRATIVE_ROLE:
-        formattedElement = "${'&nbsp;'.multiply(6)}As a ${element.name}"
-        break
-      case BehaviorStepType.NARRATIVE_FEATURE:
-        formattedElement = "${'&nbsp;'.multiply(6)}I want ${element.name}"
-        break
-      case BehaviorStepType.NARRATIVE_BENEFIT:
-        formattedElement = "${'&nbsp;'.multiply(6)}So that ${element.name}"
-        break
-      case BehaviorStepType.SCENARIO:
-        formattedElement = "<br/>${'&nbsp;'.multiply(4)}scenario ${element.name}"
-        break
-      case BehaviorStepType.GIVEN:
-        formattedElement = "${'&nbsp;'.multiply(6)}given ${element.name}"
-        break
-      case BehaviorStepType.WHEN:
-        formattedElement = "${'&nbsp;'.multiply(6)}when ${element.name}"
-        break
-      case BehaviorStepType.THEN:
-        formattedElement = "${'&nbsp;'.multiply(6)}then ${element.name}"
-        break
-      case BehaviorStepType.AND:
-        formattedElement = "${'&nbsp;'.multiply(6)}and"
-        break
-      default:
-        formattedElement = ""
-        //no op to avoid having alerts in story text
-        break
-    }
-
+    String formattedElement = element.format('<br/>', '&nbsp;', BehaviorStepType.STORY);
+    
     if (element.result?.failed() && !BehaviorStepType.SCENARIO.equals(element.stepType)) {
       formattedElement += "${'&nbsp;'.multiply(1)}<span style='color:#FF8080;'>[FAILURE: ${element.result?.cause()?.getMessage()}]</span>"
     }
 
-    if (element.result?.pending() && !BehaviorStepType.SCENARIO.equals(element.stepType)) {
+    if (element.result?.pending() && (!BehaviorStepType.SCENARIO.equals(element.stepType)
+        || element.getChildSteps().isEmpty())) {
       formattedElement += "${'&nbsp;'.multiply(1)}<span style='color:#BABFEE;'>[PENDING]</span>"
     }
 
@@ -164,6 +105,38 @@ class HtmlReportHelper {
 
   static writeStoriesListPlain(ResultsCollector results, BufferedWriter reportWriter) {
     writeListDetails(results, reportWriter, "easyb_report_stories_list_plain.tmpl")
+  }
+  
+  static String formatHtmlReportElement(results, behaviourStepType) {
+    def html = ''
+    results.genesisStep.getChildrenOfType(behaviourStepType).each { child -> 
+      html += handleHtmlElement(child, behaviourStepType)
+    }
+    return html
+  } 
+
+  static String handleHtmlElement(element, behaviourStepType) {
+    if (behaviourStepType.equals(BehaviorStepType.STORY)) {
+      return handleHtmlStoryElement(element)
+    } else if (behaviourStepType.equals(BehaviorStepType.SPECIFICATION)) {
+      return handleHtmlSpecificationElement(element)
+    }
+  }
+
+  static String handleHtmlStoryElement(element) {
+    def plainElement = "<br/>${formatStoryPlainElement(element)}"
+    element.getChildSteps().each {
+      plainElement += handleHtmlStoryElement(it)
+    }
+    return plainElement
+  }
+
+  static String handleHtmlSpecificationElement(element) {
+    def plainElement = "<br/>${formatSpecificationPlainElement(element)}"
+    element.getChildSteps().each {
+      plainElement += handleHtmlSpecificationElement(it)
+    }
+    return plainElement
   }
 
 

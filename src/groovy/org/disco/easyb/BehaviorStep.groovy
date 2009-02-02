@@ -248,4 +248,46 @@ class BehaviorStep implements Serializable {
     public String toString() {
         "BehaviorStep Type: ${stepType.toString()}"
     }
+    
+    /**
+    * Writes the step as a formated text string.
+    * @param lineSeparator, breaks the report lines
+    * @param spaceSeparator, formats the behavior step padding
+    * @param genesisType, BehaviorStepType.SPECIFICATION or BehaviorStepType.STORY
+    *
+    */
+    public String format(String lineSeparator, String spaceSeparator, BehaviorStepType genesisType) {
+        String formattedElement
+        int softTabs = stepType.getSoftTabs(genesisType)
+        String typeFormat = stepType.format(genesisType)
+        String spaces = spaceSeparator.multiply(softTabs)
+        switch (stepType) {
+            case BehaviorStepType.STORY:
+            case BehaviorStepType.SCENARIO:
+            case BehaviorStepType.SPECIFICATION:
+                formattedElement = "${lineSeparator}${spaces}${typeFormat} ${name}"
+                break
+            case BehaviorStepType.DESCRIPTION:
+                formattedElement = "${spaces}${description}${genesisType.equals(BehaviorStepType.STORY)?"":lineSeparator}"
+                break
+            case BehaviorStepType.NARRATIVE:
+                formattedElement = "${spaces}${description}"
+                break
+            case BehaviorStepType.NARRATIVE_ROLE:
+            case BehaviorStepType.NARRATIVE_FEATURE:
+            case BehaviorStepType.NARRATIVE_BENEFIT:
+            case BehaviorStepType.BEFORE:
+            case BehaviorStepType.AFTER:
+            case BehaviorStepType.IT:
+            case BehaviorStepType.WHEN:
+            case BehaviorStepType.GIVEN:
+            case BehaviorStepType.THEN:
+                formattedElement = "${spaces}${typeFormat} ${name}"
+                break
+            case BehaviorStepType.AND:
+                formattedElement = "${spaces}${typeFormat}"
+                break
+        }
+        return formattedElement;
+    }
 }

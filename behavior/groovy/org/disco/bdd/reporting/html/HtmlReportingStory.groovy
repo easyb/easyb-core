@@ -119,11 +119,23 @@ scenario "a passing, failing and pending specification", {
     specificationRow.td[3].text().shouldBe '1'
     specificationRow.td[3].@class.shouldBe 'stepResultPending'
   }
+  
+  and
+  then "should have a before fixture", {
+    specificationsRow = specificationsListDiv.table.tbody.tr[1]
+    passingSpecificationRow = specificationsRow.td.table.tbody.tr[0]
+    passingSpecificationRow.td[0].text().shouldBe 'before set up'
+  }
+  
+  and
+  then "should have an after fixture", {
+    passingSpecificationRow = specificationsRow.td.table.tbody.tr[1]
+    passingSpecificationRow.td[0].text().shouldBe 'after tear down'
+  }
 
   and
   then "should have a specification named 'it should be passing'", {
-    specificationsRow = specificationsListDiv.table.tbody.tr[1]
-    passingSpecificationRow = specificationsRow.td.table.tbody.tr[0]
+    passingSpecificationRow = specificationsRow.td.table.tbody.tr[2]
     passingSpecificationRow.td[0].text().shouldBe 'it should be passing'
     passingSpecificationRow.td[1].text().shouldBe 'success'
     passingSpecificationRow.td[1].@class.shouldBe 'stepResultSuccess'
@@ -131,7 +143,7 @@ scenario "a passing, failing and pending specification", {
 
   and
   then "should have a specification named 'it should be pending'", {
-    pendingSpecificationRow = specificationsRow.td.table.tbody.tr[1]
+    pendingSpecificationRow = specificationsRow.td.table.tbody.tr[3]
     pendingSpecificationRow.td[0].text().shouldBe 'it should be pending'
     pendingSpecificationRow.td[1].text().shouldBe 'pending'
     pendingSpecificationRow.td[1].@class.shouldBe 'stepResultPending'
@@ -139,12 +151,12 @@ scenario "a passing, failing and pending specification", {
 
   and
   then "should have a specification named 'it should be failing'", {
-    failingSpecificationRow = specificationsRow.td.table.tbody.tr[2]
+    failingSpecificationRow = specificationsRow.td.table.tbody.tr[4]
     failingSpecificationRow.td[0].text().shouldBe 'it should be failing'
     failingSpecificationRow.td[1].text().shouldBe 'failure'
     failingSpecificationRow.td[1].@class.shouldBe 'stepResultFailed'
 
-    failingSpecificationComponentDetailsRow = specificationsRow.td.table.tbody.tr[3]
+    failingSpecificationComponentDetailsRow = specificationsRow.td.table.tbody.tr[5]
     failingSpecificationComponentDetailsRow.td.strong.text().shouldBe "expected false but was true"
   }
 
@@ -152,7 +164,7 @@ scenario "a passing, failing and pending specification", {
   then "should have a plain specification with name of passing pending failing", {
     specificationsListPlainDiv = findSpecificationsListPlainDiv()
 
-    specificationsListPlainDiv.div[0].text().shouldBe "3 specifications (including 1 pending) executed, but status is failure. Total failures: 1"
+    specificationsListPlainDiv.div[0].text().shouldBe "3 specifications (including 1 pending) executed, but status is failure! Total failures: 1"
     specificationsListPlainDiv.div[1].text().contains "&nbsp;&nbsp;Specification: passing pending failing"
   }
 
@@ -303,7 +315,7 @@ scenario "a passing, failing and pending scenario", {
   then "should have a plain story with name of passing pending failing", {
     storiesListPlainDiv = findStoriesListPlainDiv()
 
-    storiesListPlainDiv.div[0].text().shouldBe "3 scenarios (including 1 pending), but status is failure! Total failures: 1"
+    storiesListPlainDiv.div[0].text().shouldBe "3 scenarios (including 1 pending) executed, but status is failure! Total failures: 1"
     storiesListPlainDiv.div[1].text().contains "&nbsp;&nbsp;Story: passing pending failing "
   }
 

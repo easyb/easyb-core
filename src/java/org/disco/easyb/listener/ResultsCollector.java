@@ -123,4 +123,18 @@ public class ResultsCollector implements ExecutionListener {
         previousStep = currentStep;
         currentStep = currentStep.getParentStep();
     }
+    
+    public String getSpecificationResultsAsText() {
+        return (getSpecificationCount() == 1 ? "1 specification" : getSpecificationCount() + " specifications") +
+            (getPendingSpecificationCount() > 0 ? " (including "+ getPendingSpecificationCount() +" pending)" : "") + " executed" +
+            (getFailedSpecificationCount() > 0 ? ", but status is failure! Total failures: " + getFailedSpecificationCount() : " successfully.");
+    }
+    
+    public String getScenarioResultsAsText() {
+        long scenariosExecuted = getScenarioCount() - getIgnoredScenarioCount();
+        return (scenariosExecuted == 1 ? "1 scenario" : scenariosExecuted +
+            (getIgnoredScenarioCount() > 0 ? " of " + getScenarioCount() : "") + " scenarios") +
+            (getPendingScenarioCount() > 0 ? " (including " + getPendingScenarioCount() + " pending)" : "") + " executed" +
+            (getFailedScenarioCount() > 0 ? ", but status is failure! Total failures: " + getFailedScenarioCount() : " successfully.");
+    }
 }

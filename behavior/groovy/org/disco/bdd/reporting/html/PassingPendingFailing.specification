@@ -1,9 +1,17 @@
+before "set up", {
+  var = true
+}
+
+after "tear down", {
+  var = false
+}
+
 it "should be passing", {
-  true.shouldBe true
+  var.shouldBe true
 }
 
 it "should be pending"
 
 it "should be failing", {
-  true.shouldBe false
+  var.shouldBe false
 }

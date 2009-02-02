@@ -1,33 +1,11 @@
 <%
   import org.disco.easyb.util.BehaviorStepType
   import org.disco.easyb.report.HtmlReportHelper
-
-
-  def handleSpecificationPlainElement(element) {
-%>
-      <%= "<br/>${HtmlReportHelper.formatSpecificationPlainElement(element)}" %>
-<%      element.getChildSteps().each {
-          handleSpecificationPlainElement(it)
-      }
-  }
-
 %>
 
 <div id='SpecificationsListPlain' style='display:none;'>
   <h2>Specifications Text</h2>
-
-    <% def specificationCount = results.specificationCount %>
-    <% summaryText = (specificationCount == 1) ? "1 specification" : "${specificationCount} specifications"
-       summaryText += " (including ${results.pendingSpecificationCount} pending) executed"
-       summaryText += results.failedSpecificationCount.toInteger() > 0 ? ", but status is failure." : " successfully."
-       summaryText += results.failedSpecificationCount.toInteger() > 0 ? " Total failures: ${results.failedSpecificationCount}" : ""
-    %>
-  <div>${summaryText}</div>
-  <div>
-    <%
-    results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).each {genesisChild ->
-      handleSpecificationPlainElement(genesisChild)
-    }
-    %>
-  </div>
+  
+  <div>${results.getSpecificationResultsAsText()}</div>
+  <div><%= HtmlReportHelper.formatHtmlReportElement(results, BehaviorStepType.SPECIFICATION)%></div>
 </div>
