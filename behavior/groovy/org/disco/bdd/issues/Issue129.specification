@@ -1,0 +1,44 @@
+import org.disco.easyb.exception.VerificationException
+import org.disco.easyb.SpecificationBinding
+import org.disco.easyb.listener.ExecutionListener
+import org.disco.easyb.listener.ResultsCollector
+
+before "obtain a reference to the binding object", {
+    ExecutionListener behaviorListener = new ResultsCollector()
+    itbehave = SpecificationBinding.getBinding(behaviorListener).it
+}
+
+it "ArrayList should be a List", {
+  list = new ArrayList()
+  list.shouldBeA List
+  
+  itbehave("ensure list is a list") {
+    ensure(list) {
+      isA List
+    }
+
+    ensureFails {
+      ensure(list) {
+        isNotA List
+      }
+    }
+  }
+}
+
+it "shouldn't be a Number", {
+  ensureFails {
+    list.shouldBeA Number
+  }
+  
+  itbehave("ensure list is not a number") {
+    ensure(list) {
+      isNotANumber
+    }
+  
+    ensureFails {
+      ensure(list) {
+        isANumber
+      }
+    }
+  }
+}

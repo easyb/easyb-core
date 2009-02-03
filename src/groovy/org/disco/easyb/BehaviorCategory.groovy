@@ -142,13 +142,13 @@ class BehaviorCategory {
   }
 
   private static void isA(Object self, type, String msg) {
-    if (!type.equals(self.getClass())) {
+    if (!type.equals(self.getClass()) && !type.isInstance(self)) {
       throwValidationException("expected ${type} but was ${self.getClass()}", msg)
     }
   }
 
   private static void isNotA(Object self, type, String msg) {
-    if (type.equals(self.getClass())) {
+    if (type.equals(self.getClass()) || type.isInstance(self)) {
       throwValidationException("expected ${type} but was ${self.getClass()}", msg)
     }
   }

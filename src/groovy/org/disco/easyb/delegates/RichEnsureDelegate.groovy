@@ -179,7 +179,7 @@ class RichEnsureDelegate {
      */
     def void isA(Object type) {
         String val = this.getUnqualifiedClassName()
-        if (!type.toString().equals(val)) {
+        if (!type.toString().equals(val) && !type.isInstance(this)) {
             throw new VerificationException("expected ${type} but was ${val}")
         }
     }
@@ -189,7 +189,7 @@ class RichEnsureDelegate {
      */
     def void isNotA(Object type) {
         String val = this.getUnqualifiedClassName()
-        if (type.toString().equals(val)) {
+        if (type.toString().equals(val) || type.isInstance(this)) {
             throw new VerificationException("expected not to be ${type} but was")
         }
     }

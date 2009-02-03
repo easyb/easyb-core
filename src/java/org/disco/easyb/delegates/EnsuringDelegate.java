@@ -71,6 +71,13 @@ public class EnsuringDelegate {
         closure.setDelegate(delegate);
         closure.call();
     }
+    
+    /**
+     * @param closure closure containing code to be run that should throw a VerificationException
+     */
+    public void ensureFails(Closure closure) throws Exception {
+        ensureThrows(VerificationException.class, closure);
+    }
 
     /**
      * @return FlexibleDelegate instance
