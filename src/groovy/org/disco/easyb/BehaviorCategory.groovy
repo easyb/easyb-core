@@ -1,6 +1,7 @@
 package org.disco.easyb
 
 import org.codehaus.groovy.runtime.NullObject
+import org.disco.easyb.delegates.RichEnsureDelegate
 import org.disco.easyb.exception.VerificationException
 
 class BehaviorCategory {
@@ -199,6 +200,18 @@ class BehaviorCategory {
 
   static void shouldNotHave(Object self, value) {
     shouldNotHave(self, value, null)
+  }
+  
+  static void shouldStartWith(Object self, value) {
+    def delegate = new RichEnsureDelegate()
+    delegate.verified = self
+    delegate.startsWith(value)
+  }
+      
+  static void shouldEndWith(Object self, value) {
+    def delegate = new RichEnsureDelegate()
+    delegate.verified = self
+    delegate.endsWith(value)
   }
 
   private static void hasNot(Object self, value) {
