@@ -32,12 +32,12 @@ def detectOrDefaultVersion(version) {
   }
 }
 
-target("default": "validate") {
-  depends("validate")
+target("default": "validate-behaviors") {
+  depends("validate-behaviors")
 }
 
 target(release: "compile and archive") {
-  depends("validate-reports")
+  depends("validate")
 
   ant.mkdir(dir: "${defaultdir}/release")
   ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
@@ -110,11 +110,12 @@ target("compile-behaviors": "compile Groovy & Java classes in easyb behavior") {
   genericgroovyc([behaviordir, gbehaviordir], behaviorclassdir)
 }
 
-target("validate": "runs behaviors") {
-  depends("ant-task")
+target("validate": "runs and validates both, behaviors and reports") {
+  depends("validate-behaviors")
+  depends("validate-reports")
 }
 
-target("ant-task": "runs the easyb ant task") {
+target("validate-behaviors": "runs and validates the easyb behaviors") {
   depends(jar)
 
   ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
@@ -154,7 +155,6 @@ target("ant-task": "runs the easyb ant task") {
         exclude(name: "**/PassingPendingFailing.specification")
         exclude(name: "**/ExceptionalOccurrence.story")
         exclude(name: "**/StoryLifeCycle.story")
-//        exclude(name: "**/OneTimeFixtures.story")
       }
     }
   }
@@ -163,8 +163,7 @@ target("ant-task": "runs the easyb ant task") {
 }
 
 
-target("validate-reports": "runs the easyb and validates reports") {
-  depends("ant-task")
+target("validate-reports": "runs and validates the easyb reports") {
   runAntTask(["**/AndChainedFeature.story"],
           [["${reportsoutputdir}/valid-report.txt", "txtstory"]])
 
