@@ -1,11 +1,13 @@
 package org.disco.easyb.delegates;
 
+import org.disco.easyb.plugin.EasybPlugin;
+
 /**
  * this is essentially a marker interface
  *
  * @author aglover
  */
-public interface RichlyEnsurable extends Plugable {
+public interface RichlyEnsurable extends EasybPlugin {
     /**
      * ideally, flexible delegates can do interesting things to
      * the object passed in....

@@ -1,14 +1,14 @@
-package org.disco.bdd.prototype
+package org.disco.easyb.plugin
 
 import org.disco.easyb.plugin.EasybPlugin
 
-class PrototypeLifeCycleAdapter implements EasybPlugin {
+public class NullPlugin implements EasybPlugin {
     public String getName() {
-        return "prototype";
+        return "nothing";
     }
 
     public void beforeScenario(Binding binding) {
-        binding._foo_ = "test"
+
     }
 
     public void afterScenario(Binding binding) {

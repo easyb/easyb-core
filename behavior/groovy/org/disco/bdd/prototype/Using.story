@@ -36,7 +36,7 @@ scenario "the keyword using should be able to be found in large text", {
   }
 
   then "a regular expression should be able to find it", {
-    clzz.shouldBe "org.disco.bdd.prototype.PrototypeLifeCycleAdapter"
+    clzz.shouldBe "'prototype'"
   }
 
 }

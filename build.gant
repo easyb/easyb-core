@@ -108,6 +108,9 @@ target("compile-behaviors": "compile Groovy & Java classes in easyb behavior") {
   depends(configuregroovy)
   depends("compile-core")
   genericgroovyc([behaviordir, gbehaviordir], behaviorclassdir)
+  copy(todir: behaviorclassdir) {
+    fileset(dir: resourcebehaviordir)
+  }
 }
 
 target("validate": "runs and validates both, behaviors and reports") {

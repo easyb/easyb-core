@@ -1,6 +1,7 @@
 package org.disco.easyb.delegates
 
 import javax.imageio.spi.ServiceRegistry
+import org.disco.easyb.plugin.EasybPlugin
 
 class PlugableDelegate {
     /**
@@ -10,7 +11,7 @@ class PlugableDelegate {
      * others like Selenium.
      */
     def invokeMethod(String method, Object args) {
-        Iterator providers = ServiceRegistry.lookupProviders(Plugable.class, ClassLoader.getSystemClassLoader())
+        Iterator providers = ServiceRegistry.lookupProviders(EasybPlugin.class, ClassLoader.getSystemClassLoader())
         def found = false
         while (providers.hasNext() && !found) {
             Object provider = providers.next()

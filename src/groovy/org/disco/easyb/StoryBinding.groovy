@@ -1,12 +1,20 @@
 package org.disco.easyb
 
 import org.disco.easyb.listener.ExecutionListener
+import org.disco.easyb.plugin.EasybPlugin
+import org.disco.easyb.plugin.NullPlugin
+import org.disco.easyb.plugin.PluginLocator
 
 class StoryBinding extends Binding {
     StoryKeywords story
+    EasybPlugin activePlugin = new NullPlugin()
 
     def StoryBinding(ExecutionListener listener) {
         this.story = new StoryKeywords(listener)
+
+        using = {pluginName ->
+            activePlugin = new PluginLocator().findPluginWithName(pluginName)
+        }
 
         before = {description = "", closure = {} ->
             story.before(description, closure)
@@ -28,7 +36,9 @@ class StoryBinding extends Binding {
         }
 
         scenario = {description, closure = story.pendingClosure ->
+            activePlugin.beforeScenario(this)
             story.scenario(description, closure)
+            activePlugin.afterScenario(this)
         }
 
         then = {spec, closure = story.pendingClosure ->
