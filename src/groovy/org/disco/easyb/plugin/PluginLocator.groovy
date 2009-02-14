@@ -1,9 +1,8 @@
 package org.disco.easyb.plugin
 
 import sun.misc.Service;
-import org.disco.easyb.plugin.EasybPlugin
 
-public class PluginLocator {
+class PluginLocator {
     EasybPlugin findPluginWithName(String pluginName) {
         for (EasybPlugin each: Service.providers(EasybPlugin)) {
             println each.name
