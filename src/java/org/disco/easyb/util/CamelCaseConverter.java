@@ -43,25 +43,35 @@ public class CamelCaseConverter {
     }
 
     public String toPhrase() {
-        StringBuffer buf = new StringBuffer();
-        while (pos < chars.length) {
-            int numUppercase = countUppercase();
-            switch (numUppercase) {
-                case 0:
-                    processRegularChar(buf);
-                    break;
-                case 1:
-                    processSingleUppercaseChar(buf);
-                    break;
-                case 2:
-                    processTwoUppercaseChars(buf);
-                    break;
-                default:
-                    processUppercaseWord(buf, numUppercase);
-                    break;
+        if (!this.isAllUpperCase()) {
+            StringBuffer buf = new StringBuffer();
+            while (pos < chars.length) {
+                int numUppercase = countUppercase();
+                switch (numUppercase) {
+                    case 0:
+                        processRegularChar(buf);
+                        break;
+                    case 1:
+                        processSingleUppercaseChar(buf);
+                        break;
+                    case 2:
+                        processTwoUppercaseChars(buf);
+                        break;
+                    default:
+                        processUppercaseWord(buf, numUppercase);
+                        break;
+                }
             }
+            return buf.toString();
+        } else {
+            return new String(this.chars);
         }
-        return buf.toString();
+
+    }
+
+    private boolean isAllUpperCase() {
+        String word = new String(this.chars);
+        return (word.toUpperCase().equals(word));
     }
 
     private int countUppercase() {
