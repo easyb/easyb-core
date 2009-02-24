@@ -1,5 +1,8 @@
 package org.disco.easyb.delegates;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import groovy.lang.Closure;
 import org.disco.easyb.exception.VerificationException;
 
@@ -16,18 +19,35 @@ public class EnsuringDelegate {
      *                exception
      */
     public void ensureThrows(final Class<?> clzz, final Closure closure) throws Exception {
+        List<Class<?>> clzzList = new ArrayList<Class<?>>() {{ add(clzz); }};
+        ensureThrows(clzzList, closure);
+    }
+    
+    /**
+     * @param clzzList    a list of classes of the possible exception types
+     * @param closure closure containing code to be run that should throw an
+     *                exception
+     */ 
+    public void ensureThrows(final List<Class<?>> clzzList, final Closure closure) throws Exception {
         try {
             closure.call();
         } catch (Throwable e) {
-            if (!clzz.isAssignableFrom(e.getClass()) && (e.getCause() != null)
-                    && !(e.getCause().getClass() == clzz)) {
+            boolean caught = false;
+            for (Class<?> clzz : clzzList) {
+                if (clzz.isAssignableFrom(e.getClass()) || (e.getCause() != null
+                    && e.getCause().getClass() == clzz)) {
+                    caught = true;
+                    break;
+                }
+            }
+            if (!caught) {
                 throw new VerificationException(
-                        "exception caught (" + e.getClass().getName() + ") is not of type " + clzz +
-                                " or the cause isn't " + clzz);
+                        "exception caught (" + e.getClass().getName() + ") is not of type " + clzzList +
+                                " or the cause isn't " + clzzList);
             }
             return;
         }
-        throw new VerificationException("expected exception of type " + clzz + " was not thrown");
+        throw new VerificationException("expected exception of type " + clzzList + " was not thrown");
     }
 
     /**
@@ -36,19 +56,36 @@ public class EnsuringDelegate {
      *                exception
      */
     public void ensureStrictThrows(final Class<?> clzz, final Closure closure) throws Exception {
+        List<Class<?>> clzzList = new ArrayList<Class<?>>() {{ add(clzz); }};
+        ensureStrictThrows(clzzList, closure);
+    }
+    
+    /**
+     * @param clzz    a list of classes of the possible exception types
+     * @param closure closure containing code to be run that should throw an
+     *                exception
+     */
+    public void ensureStrictThrows(final List<Class<?>> clzzList, final Closure closure) throws Exception {
         try {
             closure.call();
         } catch (Throwable e) {
-            if (clzz != e.getClass() && (e.getCause() != null)
-                    && !(e.getCause().getClass() == clzz)) {
+            boolean caught = false;
+            for (Class<?> clzz : clzzList) {
+                if (clzz == e.getClass() || (e.getCause() != null
+                    && e.getCause().getClass() == clzz)) {
+                    caught = true;
+                    break;
+                }
+            }
+            if (!caught) {
                 throw new VerificationException(
                         e.getClass().getName() + " was caught. The cause was "
-                                + e.getCause().getClass() + " not " + clzz.getName()
+                                + e.getCause().getClass() + " not " + clzzList
                                 + " as specified.");
             }
             return;
         }
-        throw new VerificationException("expected exception of type " + clzz + " was not thrown");
+        throw new VerificationException("expected exception of type " + clzzList + " was not thrown");
     }
 
     /**

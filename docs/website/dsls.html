@@ -310,11 +310,23 @@ def person = new Person("Jill", 11)
 }
 </code></pre>
 
-<p>You can also check that an exception is thrown using the <code>ensureThrows</code> variant of the <code>ensure</code> closure:</p>
+<p>You can also check that an exception or a list of exceptions are thrown using the <code>ensureThrows</code> variant of the <code>ensure</code> closure:</p>
 <pre><code>
 ensureThrows(RuntimeException) {
 	throw new RuntimeException("Test")
+}
+
+ensureThrows([IllegalArgumentException, NullPointerException]) {
+  throw new NullPointerException("null")
 }	
+</code></pre>
+
+<p>You can also ensure that something is failing using the <code>ensureFails</code> closure:</p>
+
+<pre><code>
+ensureFails {
+  1.shouldBe 2
+}
 </code></pre>
 
 			</div>
