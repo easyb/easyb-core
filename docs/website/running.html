@@ -90,17 +90,40 @@ on the command line.</p>
 
 <h3>XML reporting via the command line</h3>
 
-<p>If you'd rather produce an XML report, just pass in the <code>-xmleasyb</code> flag and provide a path where the xml
+<p>If you'd rather produce an XML report, just pass in the <code>-xml</code> flag and provide a path where the xml
   report should be written. For instance, using the same example from earlier, if you'd rather have an XML report,
   simply type:</p>
 
 
 <pre><code>
   c:>java org.disco.easyb.BehaviorRunner my/path/to/MyStory.groovy \
-  -xmleasyb my/path/report.xml
+  -xml my/path/report.xml
 </code></pre>
 
 <p>Note, the line break in the above example is for formatting purposes only.</p>
+
+<h3>Colored command line output</h3>
+  
+<p>You can also show the executed stories by the command line, just pass in the <code>-prettyprint</code> flag as follows:</p>
+
+<pre><code>
+  $ java org.disco.easyb.BehaviorRunner my/path/to/MyTestStory.groovy -prettyprint
+</code></pre>
+
+<p>Produces the output:</p>
+
+<pre><code>
+  1 scenario executed, but status is failure! Total failures: 1
+    Story: myTest
+
+      scenario show colored output
+        given a string
+        <span style="color:green">then it should be null</span>
+        given a number
+        <span style="color:red">then it shouldn't be 0 [FAILURE: expected values to differ but both were 0]</span>
+        given an array
+        <span style="color:cyan">then it should be pending [PENDING]</span>
+</code></pre>
 
 <a name='ant'>
 <h2>Ant</h2>

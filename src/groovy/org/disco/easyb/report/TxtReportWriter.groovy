@@ -42,14 +42,18 @@ public abstract class TxtReportWriter implements ReportWriter {
   }
   
   def writeFailuresAndPending(writer, element) {
+    def failed = getFailedAndPendingBehaviorsText(element)
+    if (failed != null) {
+      writer.write(failed)
+    }
+    writer.newLine()
+  }
+  
+  def getFailedAndPendingBehaviorsText(element) {
     if (element.result?.pending()) {
-        writer.write(" [PENDING]")
+        return " [PENDING]"
     } else if (element.result == Result.FAILED) {
-        writer.newLine()
-        writer.newLine()
-        writer.write("	Failure -> ${element.name} ${element.description}")
-        writer.newLine()
-        writer.write("${element.failuremessage}")
+        return "\n\n	Failure -> ${element.name} ${element.description}\n${element.failuremessage}"
     } else {
       switch(element.stepType) {
         case BehaviorStepType.GIVEN:
@@ -57,23 +61,16 @@ public abstract class TxtReportWriter implements ReportWriter {
         case BehaviorStepType.THEN:
         case BehaviorStepType.AND:
           if (element.result?.failed()) {
-              writer.write(" [FAILURE: ${element.result?.cause()?.getMessage()}]")
+              return " [FAILURE: ${element.result?.cause()?.getMessage()}]"
           }
           break;
         case BehaviorStepType.SCENARIO:
           if (element.getChildSteps().size == 0) {
               //a scenario w/out child steps is pending or ignored
-              if (element.result?.pending()) {
-                  writer.write(" [PENDING]")
-              } else {
-                  //it is ignored
-                  writer.write(" [IGNORED]")
-              }
+              return element.result?.pending() ? " [PENDING]" : " [IGNORED]"
           }
           break
       }
     }
-    
-    writer.newLine()
   }
 }

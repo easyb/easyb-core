@@ -16,6 +16,7 @@ public class ConsoleConfigurator {
     private static final String FILTER_EXCEPTION_STACK = "ef";
 
     private static final String EXTENDED_STORY_CLASS = "extstory";
+    private static final String PRETTY_PRINT = "prettyprint";
 
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
@@ -89,6 +90,9 @@ public class ConsoleConfigurator {
         if (line.hasOption(HTML_EASYB)) {
             configuredReports.add(new HtmlReportWriter(line.getOptionValue(HTML_EASYB)));
         }
+        if (line.hasOption(PRETTY_PRINT)) {
+            configuredReports.add(new PrettyPrintReportWriter());
+        }
         return Collections.unmodifiableList(configuredReports);
     }
 
@@ -137,6 +141,9 @@ public class ConsoleConfigurator {
         final Option extendedStoryClass = OptionBuilder.withArgName("class").hasOptionalArg()
                 .withDescription("use an extended story class").create(EXTENDED_STORY_CLASS);
         options.addOption(extendedStoryClass);
+        
+        final Option prettyPrint = new Option(PRETTY_PRINT, "prints colored behaviors");
+        options.addOption(prettyPrint); 
 
         return options;
     }
