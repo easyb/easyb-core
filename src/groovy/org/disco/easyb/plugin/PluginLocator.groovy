@@ -5,7 +5,7 @@ import sun.misc.Service;
 class PluginLocator {
     EasybPlugin findPluginWithName(String pluginName) {
         for (EasybPlugin each: Service.providers(EasybPlugin)) {
-            println each.name
+//            println each.name
             if (each.name.equals(pluginName)) {
                 return each
             }

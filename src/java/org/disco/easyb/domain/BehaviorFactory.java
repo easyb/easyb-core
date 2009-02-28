@@ -124,20 +124,20 @@ public class BehaviorFactory {
          * 
          */
         public static Story manufactureStory(GroovyShellConfiguration gShellConfig, String phrase, File file) {
-            LifeCycleAnalysis analysis = new LifeCycleAnalysis(file);
-            if (analysis.isUsingLifeCycle()) {
-                try {
-                    StoryLifeCyleAdaptor adaptor = (StoryLifeCyleAdaptor) analysis.getLifeCycleClass(); 
-                    return new ExtendedStory(gShellConfig, createPhrase(file, phrase),
-                            file, adaptor);
-                } catch (Throwable thr) {
-                    System.err.println("Error loading custom story class, loading default! "
-                            + thr.getMessage());
+//            LifeCycleAnalysis analysis = new LifeCycleAnalysis(file);
+//            if (analysis.isUsingLifeCycle()) {
+//                try {
+//                    StoryLifeCyleAdaptor adaptor = (StoryLifeCyleAdaptor) analysis.getLifeCycleClass();
+//                    return new ExtendedStory(gShellConfig, createPhrase(file, phrase),
+//                            file, adaptor);
+//                } catch (Throwable thr) {
+//                    System.err.println("Error loading custom story class, loading default! "
+//                            + thr.getMessage());
                     return new Story(gShellConfig, createPhrase(file, phrase), file);
-                }
-            } else {
-                return new Story(gShellConfig, createPhrase(file, phrase), file);
-            }
+//                }
+//            } else {
+//                return new Story(gShellConfig, createPhrase(file, phrase), file);
+//            }
         }
     }
 }
