@@ -1,0 +1,14 @@
+import org.easyb.BehaviorStep
+import org.easyb.listener.ResultsCollector
+import org.easyb.util.BehaviorStepType
+
+it "should not modify the supplied behavior step", {
+    try {
+        def step = new BehaviorStep(BehaviorStepType.SCENARIO, "Test step")
+        def collector = new ResultsCollector()
+        collector.startStep step
+        step.getParentStep().shouldBe null
+    } catch (Exception e) {
+        e.printStackTrace()
+    }
+}
