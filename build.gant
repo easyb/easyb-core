@@ -7,7 +7,7 @@ includeTargets << new File("default_tasks.gant")
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.9.4")
+version = detectOrDefaultVersion("0.9.5")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**
@@ -72,7 +72,7 @@ target("publish-easyb": "uploads easyb distribution to googlecode") {
   ant.fail(unless: "googlepass", message: "Property googlepass not set. Please pass in with -D or set in local.build.properties")
 
 
-  ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
     classpath() {
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
     }
@@ -121,7 +121,7 @@ target("validate": "runs and validates both, behaviors and reports") {
 target("validate-behaviors": "runs and validates the easyb behaviors") {
   depends(jar)
 
-  ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
     classpath() {
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
     }
@@ -186,7 +186,7 @@ target("validate-reports": "runs and validates the easyb reports") {
  */
 def runAntTask(includes, reports, failureMessage = null, failureprop = null) {
 
-  ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask") {
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
     classpath() {
       pathelement(location: "${defaultdir}/easyb-${version}.jar")
     }
@@ -215,14 +215,14 @@ def runAntTask(includes, reports, failureMessage = null, failureprop = null) {
 
 target("run-main": "runs easyb BehaviorRunner class") {
   depends(jar)
-  java(classname: "org.disco.easyb.BehaviorRunner", fork: true) {
+  java(classname: "org.easyb.BehaviorRunner", fork: true) {
     if (ant.project.properties."behavior" != null) {
       arg(value: ant.project.properties."behavior")
     }
     if (ant.project.properties."extstory" != null) {
 //      arg(line: "-extstory org.disco.easyb.ext.ScenarioLifeCycle")
 
-      arg(line: "-extstory org.disco.bdd.prototype.PrototypeLifeCycleAdapter")
+      arg(line: "-extstory org.easyb.bdd.prototype.PrototypeLifeCycleAdapter")
     }
     //arg(value: "-ef")
     classpath() {
