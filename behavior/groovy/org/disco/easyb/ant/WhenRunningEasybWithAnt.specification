@@ -1,3 +1,0 @@
-it "should run without error", {
-    // This is verified in the build for easyb itself
-}
