@@ -1,0 +1,28 @@
+import org.easyb.BehaviorKeywords
+import org.easyb.listener.ResultsCollector
+import org.easyb.listener.BroadcastListener
+
+ResultsCollector collector = new ResultsCollector()
+
+it "should return configured results collects", {
+    BehaviorKeywords behavior = new BehaviorKeywords(collector)
+
+    behavior.easybResults().shouldBe collector
+}
+
+it "should return results collects from configured broadcast listener", {
+    BroadcastListener broadcastListener = new BroadcastListener()
+    broadcastListener.registerListener collector
+    BehaviorKeywords behavior = new BehaviorKeywords(broadcastListener)
+
+    behavior.easybResults().shouldBe collector
+}
+
+it "should throw an exception is no results collects could be found", {
+    BroadcastListener broadcastListener = new BroadcastListener()
+    BehaviorKeywords behavior = new BehaviorKeywords(broadcastListener)
+
+    ensureThrows(IllegalStateException.class) {
+        behavior.easybResults()
+    }
+}

@@ -1,0 +1,13 @@
+import org.easyb.util.CamelCaseConverter
+
+
+
+it "should return the whole word instead of trying to parse it", {
+    cCase = new CamelCaseConverter("IRR")
+    cCase.toPhrase().shouldEqual "IRR"
+}
+
+it "should return a properly parsed word", {
+    iCase = new CamelCaseConverter("IRRIssue")
+    iCase.toPhrase().shouldEqual "IRR issue"
+}
