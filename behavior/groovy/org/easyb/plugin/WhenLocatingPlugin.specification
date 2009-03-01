@@ -1,0 +1,14 @@
+import org.easyb.plugin.EasybPlugin
+import org.easyb.plugin.PluginLocator
+
+PluginLocator locator = new PluginLocator()
+
+it 'should find service by name', {
+    locator.findPluginWithName('prototype').name.shouldBe 'prototype'
+}
+
+it 'should throw exception if service not found', {
+    ensureThrows(RuntimeException) {
+        locator.findPluginWithName('unknown')
+    }
+}
