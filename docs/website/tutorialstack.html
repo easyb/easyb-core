@@ -91,7 +91,7 @@ and "then the stack should still be empty", {
 <pre><code>
 1) Specification the stack should still be empty:
  groovy.lang.MissingMethodException: No signature of method: \
- org.disco.easyb.bdd.stack.Stack.isEmpty() is applicable for \
+ org.easyb.bdd.stack.Stack.isEmpty() is applicable for \
    argument types: () values: {}
   at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:572)
   at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:450)
@@ -188,8 +188,8 @@ and "then the stack should be empty", {
 <pre><code>
 ....There was an error running the script
 java.lang.RuntimeException
- at org.disco.easyb.bdd.stack.Stack.push(Stack.java:10)
- at gjdk.org.disco.bdd.story.stack.Stack_GroovyReflector.invoke(Unknown Source)
+ at org.easyb.bdd.stack.Stack.push(Stack.java:10)
+ at gjdk.org.bdd.story.stack.Stack_GroovyReflector.invoke(Unknown Source)
 </code></pre>
 
 <p>Time to code a real <code>pop</code> method! Oh yeah, and a <code>push</code> one as well.</p>
@@ -336,7 +336,7 @@ and "then the stack should be empty", {
 <pre><code>
 .........There was an error running the script
 groovy.lang.MissingMethodException: No signature of method: 
- org.disco.easyb.bdd.stack.Stack.peek() is applicable for 
+ org.easyb.bdd.stack.Stack.peek() is applicable for 
   argument types: () values: {}
  at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:572)
 </code></pre>
@@ -408,6 +408,7 @@ public E peek() {
 			<li>
 				<h2>Resources</h2>
 				<ul>
+					<li><a href="http://www.ibm.com/developerworks/edu/j-dw-java-easyb-i.html">Drive development with easyb</a></li>s
 					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
 					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
 					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
