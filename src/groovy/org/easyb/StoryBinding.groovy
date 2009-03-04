@@ -91,6 +91,14 @@ class StoryBinding extends Binding {
                 //no argument but this isn't working
             }
         }
+        
+        shared_behavior = {description, closure = {} ->
+            story.sharedBehavior(description, closure)
+        }
+        
+        it_behaves_as = {description ->
+            story.itBehavesAs(description)
+        }
     }
 
     def getAt(ArrayList list) {

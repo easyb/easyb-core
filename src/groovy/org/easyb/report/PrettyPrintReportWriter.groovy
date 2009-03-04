@@ -2,6 +2,7 @@ package org.easyb.report
 
 import org.easyb.util.BehaviorStepType
 import org.easyb.listener.ResultsCollector
+import org.easyb.result.Result
 
 public class PrettyPrintReportWriter extends TxtReportWriter {
 
@@ -13,7 +14,7 @@ public class PrettyPrintReportWriter extends TxtReportWriter {
     public PrettyPrintReportWriter() {}
 
     protected BehaviorStepType getGenesisType() {
-        return null;
+        return null
     }
 
     protected Writer getWriter() {
@@ -88,9 +89,7 @@ public class PrettyPrintReportWriter extends TxtReportWriter {
             colour = RED
         } else if (results.getPendingSpecificationCount() > 0) {
             colour = CYAN
-        } else if (results.getIgnoredSpecificationCount() > 0) {
-            colour = YELLOW
-        } else if (results.getSpecificationCount() - results.getIgnoredSpecificationCount() > 0) {
+        } else if (results.getSpecificationCount() > 0) {
             colour = GREEN
         }
         return colour

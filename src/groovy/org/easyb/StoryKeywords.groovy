@@ -19,9 +19,22 @@ class StoryKeywords extends BehaviorKeywords {
     def ignoreAll = false
     def ignoreList = []
     def ignoreRegEx
+    
+    def sharedBeaviors = [:]
 
     StoryKeywords(ExecutionListener listener) {
         super(listener)
+    }
+    
+    def sharedBehavior(description, closure) {
+        sharedBeaviors.put(description, closure)
+    }
+    
+    def itBehavesAs(description) {
+        if (sharedBeaviors.containsKey(description)) {
+            def closure = sharedBeaviors.get(description)
+            closure()
+        }
     }
 
     def pendingClosure = {
