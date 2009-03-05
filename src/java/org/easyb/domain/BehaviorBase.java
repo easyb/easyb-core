@@ -9,7 +9,7 @@ import java.util.Map;
 public abstract class BehaviorBase implements Behavior, Serializable {
     private String phrase;
     private File file;
-    private GroovyShellConfiguration gShellConfig;
+    private transient GroovyShellConfiguration gShellConfig;
 
     protected BehaviorBase(GroovyShellConfiguration gShellConfig, String phrase, File file) {
         this.gShellConfig = gShellConfig;
