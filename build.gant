@@ -154,7 +154,7 @@ target("validate-behaviors": "runs and validates the easyb behaviors") {
 
         exclude(name: "**/TextStoryReportingValidation.story")
         exclude(name: "**/FailureReport.story")
-        exclude(name: "**/PassingPendingFailing.story")
+        exclude(name: "**/PassingPendingFailingStory.story")
         exclude(name: "**/PassingPendingFailing.specification")
         exclude(name: "**/ExceptionalOccurrence.story")
         exclude(name: "**/HtmlReportingStory.groovy")

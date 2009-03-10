@@ -180,7 +180,7 @@ scenario "a passing, failing and pending specification", {
 
 scenario "a passing, failing and pending scenario", {
     given "a story file with a passing, failing and pending scenario is loaded", {
-        storyBehavior = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/easyb/bdd/reporting/html/PassingPendingFailing.story'))
+        storyBehavior = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/easyb/bdd/reporting/html/PassingPendingFailingStory.story'))
     }
 
     when "the story is executed", {
@@ -189,7 +189,7 @@ scenario "a passing, failing and pending scenario", {
 
     and
     when "the html reports are written", {
-        htmlReportLocation = "./target/reports/PassingPendingFailing-story-report.html"
+        htmlReportLocation = "./target/reports/PassingPendingFailingStory-story-report.html"
         new HtmlReportWriter(htmlReportLocation).writeReport(resultsCollector)
     }
 
