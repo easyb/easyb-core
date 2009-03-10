@@ -1,13 +1,12 @@
 package org.easyb
 
-import org.easyb.plugin.EasybPlugin
-import org.easyb.plugin.NullPlugin
 import org.easyb.listener.ExecutionListener
 import org.easyb.plugin.PluginLocator
+import org.easyb.plugin.NullPlugin
 
 class StoryBinding extends Binding {
     StoryKeywords story
-    EasybPlugin activePlugin = new NullPlugin()
+    def activePlugin = new NullPlugin()
 
     def StoryBinding(ExecutionListener listener) {
         this.story = new StoryKeywords(listener)

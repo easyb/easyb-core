@@ -222,7 +222,7 @@ target("run-main": "runs easyb BehaviorRunner class") {
     if (ant.project.properties."extstory" != null) {
 //      arg(line: "-extstory org.disco.easyb.ext.ScenarioLifeCycle")
 
-      arg(line: "-extstory org.easyb.bdd.prototype.PrototypeLifeCycleAdapter")
+      arg(line: "-extstory org.disco.bdd.prototype.PrototypePlugin")
     }
     //arg(value: "-ef")
     classpath() {

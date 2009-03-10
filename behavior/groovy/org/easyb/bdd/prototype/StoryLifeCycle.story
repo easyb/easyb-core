@@ -1,4 +1,4 @@
-using org.easyb.bdd.prototype.PrototypeLifeCycleAdapter
+using 'prototype'
 
 
 scenario "some simple scenario", {

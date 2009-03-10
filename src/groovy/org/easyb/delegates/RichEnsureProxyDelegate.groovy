@@ -104,16 +104,4 @@ class RichEnsureProxyDelegate implements RichlyEnsurable {
             this.invokeMethod(property, null)
         }
     }
-
-    public String getName() {
-        return "richensure";
-    }
-
-    public void beforeScenario(Binding binding) {
-
-    }
-
-    public void afterScenario(Binding binding) {
-
-    }
 }
