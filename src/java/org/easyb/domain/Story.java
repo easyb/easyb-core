@@ -3,6 +3,8 @@ package org.easyb.domain;
 import groovy.lang.GroovyShell;
 import org.easyb.BehaviorStep;
 import org.easyb.StoryBinding;
+import org.easyb.plugin.EasybPlugin;
+import org.easyb.plugin.PluginFactory;
 import org.easyb.util.BehaviorStepType;
 import org.easyb.listener.ExecutionListener;
 
@@ -23,10 +25,17 @@ public class Story extends BehaviorBase {
         listener.startBehavior(this);
         listener.startStep(currentStep);
 
-        GroovyShell g = new GroovyShell(getClassLoader(), StoryBinding.getBinding(listener));
+        String story = readStory(getFile());
+        EasybPlugin activePlugin = new PluginFactory().pluginForStory(story);
+
+        StoryBinding binding = StoryBinding.getBinding(listener, activePlugin);
+        GroovyShell g = new GroovyShell(getClassLoader(), binding);
         bindShellVariables(g);
 
-        g.evaluate(readStory(getFile()));
+        activePlugin.beforeStory(binding);
+        g.evaluate(story);
+        activePlugin.afterStory(binding);
+
         listener.stopStep();
         listener.stopBehavior(currentStep, this);
 

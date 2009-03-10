@@ -1,15 +1,18 @@
 package org.easyb
 
+import org.easyb.StoryKeywords
 import org.easyb.listener.ExecutionListener
+import org.easyb.plugin.EasybPlugin
 import org.easyb.plugin.PluginLocator
 import org.easyb.plugin.NullPlugin
 
 class StoryBinding extends Binding {
     StoryKeywords story
-    def activePlugin = new NullPlugin()
+    EasybPlugin activePlugin
 
-    def StoryBinding(ExecutionListener listener) {
+    def StoryBinding(ExecutionListener listener, EasybPlugin activePlugin) {
         this.story = new StoryKeywords(listener)
+        this.activePlugin = activePlugin
 
         using = {pluginName ->
             activePlugin = new PluginLocator().findPluginWithName(pluginName)
@@ -109,7 +112,7 @@ class StoryBinding extends Binding {
      * has definitions for methods such as "when" and "given", which are used
      * in the context of stories.
      */
-    static Binding getBinding(listener) {
-        return new StoryBinding(listener)
+    static StoryBinding getBinding(listener, activePlugin = new NullPlugin()) {
+        return new StoryBinding(listener, activePlugin)
     }
 }
