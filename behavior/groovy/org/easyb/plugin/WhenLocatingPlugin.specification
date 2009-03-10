@@ -1,3 +1,4 @@
+import org.easyb.plugin.EasybPlugin
 import org.easyb.plugin.PluginLocator
 
 PluginLocator locator = new PluginLocator()
@@ -7,7 +8,7 @@ it 'should find service by name', {
     // this approach shouldn't be used when you want to load a given plugin to use in a story
     //
     // for that use the 'using' keyword  @See -> StoryLifeCycle.story
-    locator.findPluginWithName('prototype').name.shouldBe 'prototype'
+    locator.findPluginWithName('test').name.shouldBe 'test'
 }
 
 it 'should throw exception if service not found', {
