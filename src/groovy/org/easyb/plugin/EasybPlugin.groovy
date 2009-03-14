@@ -16,4 +16,6 @@ interface EasybPlugin {
 
     def beforeStory(Binding binding)
     def afterStory(Binding binding)
+
+    void setClassLoader(ClassLoader classLoader)
 }

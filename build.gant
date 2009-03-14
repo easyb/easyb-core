@@ -219,9 +219,6 @@ target("run-main": "runs easyb BehaviorRunner class") {
     if (ant.project.properties."behavior" != null) {
       arg(value: ant.project.properties."behavior")
     }
-    if (ant.project.properties."extstory" != null) {
-      arg(line: "-extstory org.easyb.bdd.prototype.PrototypePlugin")
-    }
     //arg(value: "-ef")
     classpath() {
       fileset(dir: libdir, includes: jarincludes)

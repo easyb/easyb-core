@@ -44,15 +44,21 @@ class StoryBinding extends Binding {
         }
 
         then = {spec, closure = story.pendingClosure ->
+            activePlugin.beforeThen(this)
             story.then(spec, closure)
+            activePlugin.afterThen(this)
         }
 
         when = {description, closure = {} ->
+            activePlugin.beforeWhen(this)
             story.when(description, closure)
+            activePlugin.afterWhen(this)
         }
 
         given = {description, closure = {} ->
+            activePlugin.beforeGiven(this)
             story.given(description, closure)
+            activePlugin.afterGiven(this)
         }
 
         and = {description = "", closure = story.pendingClosure ->

@@ -1,4 +1,3 @@
-import org.easyb.plugin.EasybPlugin
 import org.easyb.plugin.PluginLocator
 
 PluginLocator locator = new PluginLocator()

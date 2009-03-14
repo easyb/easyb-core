@@ -1,6 +1,9 @@
 package org.easyb.plugin
 
 abstract class BasePlugin implements EasybPlugin {
+
+    ClassLoader classLoader
+
     abstract String getName()
     def beforeScenario(Binding binding) {}
     def afterScenario(Binding binding) {}
@@ -16,6 +19,10 @@ abstract class BasePlugin implements EasybPlugin {
 
     def beforeStory(Binding binding) {}
     def afterStory(Binding binding) {}
+
+    void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader
+    }
 }
 
 class NullPlugin extends BasePlugin {
