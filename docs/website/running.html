@@ -90,6 +90,18 @@ on the command line.</p>
 <p>Note, the line break in the above example is for formatting purposes only.</p>
 
 
+<h3>HTML reporting via the command line</h3>
+
+<p>To produce an HTML report, which lists the status and summaries of all stories and specifications executed during an easyb run, type:</p>
+
+
+<pre><code>
+  c:>java org.easyb.BehaviorRunner my/path/to/MyStory.groovy \
+  -html my/path/report.html
+</code></pre>
+
+<p>The path to and name of the report is optional as easyb will attempt to create a default one if neither is provided.</p>
+	
 <h3>XML reporting via the command line</h3>
 
 <p>If you'd rather produce an XML report, just pass in the <code>-xml</code> flag and provide a path where the xml
@@ -126,6 +138,17 @@ on the command line.</p>
         given an array
         <span style="color:cyan">then it should be pending [PENDING]</span>
 </code></pre>
+
+<h3>Additional command line arguments</h3>
+
+<p>easyb offers the ability to see exception stack traces via two flags.</p>
+	
+	<ul><li>For viewing exception traces, easyb offers two options:
+		<ul>
+      <li><code>-e</code> for a full exception stack trace</li>
+      <li><code>-ef</code> for exception stack trace filtering — that is, a lot of the noise associated with a Groovy exception stack is filtered out</li>
+</ul>
+	</li></ul>
 
 <a name='ant'>
 <h2>Ant</h2>
@@ -165,6 +188,8 @@ on the command line.</p>
      &lt;/behaviors&gt;
     &lt;/easyb&gt;
 </code></pre>
+
+<p>Please note, report's have numerous formats, including <code>html</code>, <code>xml</code>, <code>txtstory</code>, and <code>txtspecification</code>.</p>
 
 <p>Produces output:</p>
 
@@ -301,6 +326,13 @@ file but if you simply navigate to the top of the repository you will get a perm
 				<li><a href="./howtos.html">Stories</a></li>
 				<li><a href="./howtobb.html">Specifications</a></li>
 				<li><a href="./download.html">Download</a></li>
+			</ul>
+		</li>
+		<li>
+			<h2>Examples</h2>
+			<ul>
+				<li><a href="./storyexmpls.html">Story examples</a></li>
+				<li><a href="./specexmpls.html">Specification examples</a></li>
 			</ul>
 		</li>
 		<li>

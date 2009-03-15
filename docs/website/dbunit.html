@@ -120,15 +120,12 @@ Using easyb’s story format, you can sketch out the body of the story as follow
 
 <pre><code>
 given "a database is up and running", {}
-and
-given "the database has an initialized data model", {}
-and
-given "the database_model method is invoked with a dataset", {}
+and "the database has an initialized data model", {}
+and "the database_model method is invoked with a dataset", {}
 when "a select statement is issued for a value that could
 only be present if the database_model call worked", {}
 then "the word bellicose should be returned", {}
-and
-then "shut down the database", {}
+and "shut down the database", {}
 </code></pre>
 
 <p>Making the story executable entails adding some logic– in the course of doing so, the story demonstrates how to use the database plug-in (minus the first and last steps, right?)!
@@ -259,9 +256,7 @@ Lastly, stopping the database is as easy as sending a shutdown command (via SQL)
 </p>
 
 <pre><code>
-and 
-
-then "shut down the database", {
+and "shut down the database", {
  sql.execute("SHUTDOWN")
 }
 </code></pre>
@@ -298,6 +293,13 @@ then "shut down the database", {
 					<li><a href="./howtos.html">Stories</a></li>
 					<li><a href="./howtobb.html">Specifications</a></li>
 					<li><a href="./download.html">Download</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Examples</h2>
+				<ul>
+					<li><a href="./storyexmpls.html">Story examples</a></li>
+					<li><a href="./specexmpls.html">Specification examples</a></li>
 				</ul>
 			</li>
 			<li>

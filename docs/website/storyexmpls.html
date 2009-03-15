@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>easyb makes it easy, man</title>
+<meta name="keywords" content="BDD, behavior driven development, java, java bdd, groovy, groovy bdd, 
+groovy behavior driven development, java behavior driven development, ruby, rspec, easyb, easy bdd" />
+<meta name="description" content="easyb is story verification framework built in the spirit of behavior driven development." />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3500051-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+<body>
+<!-- start header -->
+<div id="header">
+	<h1><a href="http://www.easyb.org"><span>easyb</span></a></h1>
+	<h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+
+
+
+<!-- start page -->
+<div id="page">
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h2 class="title">Example stories with easyb</h2>
+		
+			<div class="entry">
+			
+	
+	<p>Stories are an easy way to capture requirements in a natural language that mirrors normal conversations.</p>
+				
+				<h3>Examples</h3>
+
+<p>easyb can easily work with other Java (or Groovy or anything else that runs on the JVM!) based frameworks. For example, below is an example of using easyb with Selenium.</p>
+
+<pre><code>  
+before "start selenium", {
+ given "selenium is up and running", {
+  selenium = new DefaultSelenium("localhost",
+    4444, "*firefox", "http://acme.racing.net/greport")
+  selenium.start()
+ }
+}
+
+scenario "a valid person has been entered", {
+
+ when "filling out the person form with a first and last name", {
+  selenium.open("http://acme.racing.net/greport/personracereport.html")
+  selenium.type("fname", "Britney")
+  selenium.type("lname", "Smith")
+ }
+
+ and "the submit link has been clicked", {
+  selenium.click("submit")
+ }
+
+ then "the report should have a list of races for that person", {
+  selenium.waitForPageToLoad("5000")
+  values = ["Mclean 1/2 Marathon", "Reston 5K", "Herndon 10K", "Leesburg 10K"]
+  for(i in 0..&lt;values.size()){
+    selenium.getText("//table//tr[${(i+3)}]/td").shouldBeEqualTo values[i]
+  }
+ }
+}
+
+after "stop selenium" , {
+ then "selenium should be shutdown", {
+  selenium.stop()
+ }
+}
+</code></pre>	
+
+
+<p>easyb supports the notion of narratives, which attempt to set the stage of a story. For example, below is an example of using a narrative for a story describing money.</p>
+
+<pre><code>
+package org.easyb.bdd.money
+
+description "This story is about currency management"
+
+narrative "this string is required for now", {
+ as a "person who uses money"
+ i want "to be able to add them together"
+ so that "that I can become rich"
+}
+
+scenario "two moneys of the same currency are added", {
+
+ given "one money object is added to another", {
+  total = new Money(12, "CHF").add(new Money(14, "CHF"))
+ }
+
+ then "the total amount should be the sum of the two", {
+  total.amount().shouldBe 26
+ }
+}
+</code></pre>
+
+<p>easyb's <code>should</code> syntax is quite flexible as it takes an expression. Accordingly, the example below shows an expression that validates the value of <code>value</code>.</p>
+
+<pre><code>
+scenario "easyb can and should support expressions", {
+
+ given "a value of 3", {
+  value = 3
+ }
+
+ then "an expression should evaluate to true", {
+  (value >=0 &amp;&amp; value &lt;=6).shouldBe true
+ }
+}
+</code></pre>
+
+<p>Stories can be considered "pending" -- thus, they are not implemented. Creating a pending state is easy -- just leave the closure body unimplemented as demonstrated below.</p>
+
+<pre><code>
+scenario "Non-Gold level customer with $100 or more" , {
+ given "a non-Gold level customer"
+ when "they have $100 or more in their shopping cart"
+ then "they should receive a $10 discount"
+ and "they should be emailed a coupon"
+}
+
+scenario "another Non-Gold level customer with $100 or more" , {
+ given "another non-Gold level customer"
+ when "they have another $100 or more in their shopping cart"
+ then "they should receive another $10 discount"
+ and "they should be emailed another coupon"
+}
+</code></pre>
+
+<p>easyb can easily verify that specific exceptions were generated as a result of behavior. Just use the <code>ensureThrows</code> clause, shown below.</p>
+
+<pre><code>
+import org.easyb.exception.VerificationException
+
+scenario "ensureThrows should be less noisy", {
+ given "some error condition", {
+  var = {
+   throw new NullPointerException("ha!")
+  }
+ }
+ then "the ensureThrows clause should accept a String value rather than a class", {
+  ensureThrows(NullPointerException) {
+   var.call()
+  }
+ }
+}
+
+scenario "ensure strict exception handling", {
+ given "something useless", {
+  blah = "blah"
+ }
+ then "the ensureThrows clause should be strict", {
+  ensureStrictThrows(VerificationException) {
+   ensureStrictThrows(RuntimeException.class) {
+     throw new IllegalArgumentException("Test")
+   } 
+  }
+ }
+}
+</code></pre>
+
+			</div>
+		</div>
+		
+	</div>
+	<!-- end content -->
+	
+	
+	
+	
+	
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<li>
+				<h2>Overview</h2>
+				<ul>
+					<li><a href="./index.html">Home</a></li>
+					<li><a href="./howtos.html">Stories</a></li>
+					<li><a href="./howtobb.html">Specifications</a></li>
+					<li><a href="./download.html">Download</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Examples</h2>
+				<ul>
+					<li><a href="./storyexmpls.html">Story examples</a></li>
+					<li><a href="./specexmpls.html">Specification examples</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Details</h2>
+				<ul>
+					<li><a href="./running.html">Running easyb</a></li>
+					<li><a href="./tutorialstack.html">An in-depth tutorial</a></li>
+					<li><a href="./dsls.html">easyb syntax specification</a></li>
+					<li><a href="./lic.html">License</a></li>
+					<li><a href="./source.html">Source code</a></li>
+					<li><a href="./contact.html">Contact</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Plug-ins</h2>
+				<ul>
+					<li><a href="./dbunit.html">DbUnit plug-in</a></li>
+				</ul>
+			</li>
+			<li>
+				<h2>Resources</h2>
+				<ul>
+					<li><a href="http://www.ibm.com/developerworks/edu/j-dw-java-easyb-i.html">Drive development with easyb</a></li>
+					<li><a href="http://dannorth.net/introducing-bdd/">Introducing BDD</a> (DanNorth.net)</li>
+					<li><a href="http://rspec.rubyforge.org/">RSpec</a></li>
+					<li><a href="http://groovy.codehaus.org/">Groovy</a></li>
+					<li><a href="http://code.google.com/p/easyb/w/list">easyb wiki</a></li>
+					<li><a href="./articles.html">Additional resources</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end sidebar -->
+</div>
+<!-- end page -->
+<div id="footer">
+
+</div>
+</body>
+</html>

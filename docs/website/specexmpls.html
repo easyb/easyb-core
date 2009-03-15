@@ -35,19 +35,84 @@ pageTracker._trackPageview();
 	<!-- start content -->
 	<div id="content">
 		<div class="post">
-			<h2 class="title">Contacting easyb</h2>
+			<h2 class="title">Example specifications with easyb</h2>
 		
 			<div class="entry">
+			
+	
+	<p>Specifications are an easy way to capture behavior in a more natural way-- they almost read like plain English.</p>
+				
+				<h3>Examples</h3>
 
-        <p>If you have questions or are having so much fun with easyb that you'd like to tell someone about it, you can find us lurking around these sites.</p>
+    <p>Below is an example of using a specification to verify a <code>Queue</code>.</p>
 
-        <ul>
-          <li><a href="http://www.easyb.org">easyb.org</a> - official website. You are here right now. </li>
-          <li><a href="http://code.google.com/p/easyb">code.google.com/p/easyb</a> - easyb project page at google code</li>
-          <li><a href="http://groups.google.com/group/easyb-users">groups.google.com/group/easyb-users</a> - easyb users mailing list</li>
-		<li><a href="http://twitter.com/easybdd">easyb on twitter</a></li>
-        </ul>
+<pre><code>
+package org.easyb.bdd.specification.queue
 
+import org.easyb.bdd.Queue
+
+description "This is how a Queue must work"
+
+before "initialize the queue for each spec", {
+ queue = new Queue()
+}
+
+it "should dequeue item just enqueued", {
+ queue.enqueue(2)
+ queue.dequeue().shouldBe(2)
+}
+
+it "should throw an exception when null is enqueued", {
+ ensureThrows(RuntimeException.class) {
+  queue.enqueue(null)
+ }
+}
+
+it "should dequeue items in same order enqueued", {
+ [1..5].each {val ->
+  queue.enqueue(val)
+ }
+ [1..5].each {val ->
+  queue.dequeue().shouldBe(val)
+ }
+}	
+</code></pre>
+
+
+
+<p>Below is an example of validating the <code>ZipCodeValidator</code> object using the specification format rather than a story format (which was done on easyb's <a href="http://www.easyb.org">homepage</a>).</p>
+<pre><code>
+package org.easyb.bdd.specification.zip
+
+import org.easyb.bdd.zip.ZipCodeValidator
+
+before "initialize zipcodevalidator instance", {
+ zipvalidate = new ZipCodeValidator();
+}
+
+it "should deny invalid zip codes", {
+ ["221o1", "2210", "22010-121o"].each {zip ->
+  zipvalidate.validate(zip).is false
+ }
+}
+
+it "should accept valid zip codes", {
+ ["22101", "22100", "22010-1210"].each {zip ->
+  zipvalidate.validate(zip).shouldBe true
+ }
+}
+</code></pre>	
+
+
+<p>A specification may also be tagged as "pending" -- thus providing an indication of status. A pending specification is one which doesn't have an implementing closure for behavior like so:
+	
+<pre><code>
+package org.easyb.bdd.specification
+
+it "should show up as a pending specification"
+</code></pre>	
+
+<p>For more specification examples, check out <a href="http://easyb.org/source.html">easyb's source</a> -- easyb uses easyb to validate itself! </p>
 			</div>
 		</div>
 		
@@ -113,7 +178,7 @@ pageTracker._trackPageview();
 </div>
 <!-- end page -->
 <div id="footer">
-	
+
 </div>
 </body>
 </html>
