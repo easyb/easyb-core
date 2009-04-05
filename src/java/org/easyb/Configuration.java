@@ -1,6 +1,7 @@
 package org.easyb;
 
 import java.util.List;
+import java.util.Collections;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -15,6 +16,10 @@ public class Configuration {
     private boolean filteredStackTraceOn = false;
     private String extendedStoryClass;
     private boolean parallel = false;
+
+    public Configuration() {
+        this(new String[]{}, Collections.<ReportWriter>emptyList());
+    }
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports) {
         this.filePaths = filePaths;

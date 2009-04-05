@@ -1,8 +1,8 @@
 import org.easyb.BehaviorRunner
-import static org.easyb.BehaviorRunner.getBehaviors
-import org.easyb.ConsoleReporter
 import org.easyb.Configuration
+import org.easyb.ConsoleReporter
 import org.easyb.exception.VerificationException
+import static org.easyb.BehaviorRunner.getBehaviors
 
 scenario "realtime console output", {
     given "a specification", {
@@ -33,9 +33,7 @@ scenario "realtime console output", {
         originalOut = System.out
         try {
             System.setOut(new PrintStream(consoleOutputStream))
-            consolerpt = new ConsoleReporter()
-            //consolerpt.configuration = new Configuration(null, null)
-            BehaviorRunner runner = new BehaviorRunner([], consolerpt)
+            BehaviorRunner runner = new BehaviorRunner(new Configuration(), new ConsoleReporter())
             runner.runBehavior(getBehaviors(specFile.absolutePath))
         } catch (VerificationException expected) {
         } finally {

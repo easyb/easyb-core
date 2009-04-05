@@ -16,17 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class BehaviorRunner {
-    private List<ReportWriter> reports;
+    private Configuration configuration;
     private BroadcastListener broadcastListener = new BroadcastListener();
     private ResultsCollector resultsCollector = new ResultsCollector();
     private FailureDetector failureDetector = new FailureDetector();
 
-    public BehaviorRunner(final ExecutionListener... listeners) {
-        this(null, listeners);
-    }
-
-    public BehaviorRunner(final List<ReportWriter> reports, final ExecutionListener... listeners) {
-        this.reports = reports;
+    public BehaviorRunner(final Configuration configuration, final ExecutionListener... listeners) {
+        this.configuration = configuration;
 
         broadcastListener.registerListener(resultsCollector);
         broadcastListener.registerListener(failureDetector);
@@ -56,9 +52,9 @@ public class BehaviorRunner {
         final Configuration configuration = new ConsoleConfigurator().configure(args);
         final ConsoleReporter consoleRpt = configuration.getConsoleReporter();
 
+        //noinspection ConstantConditions
         if (configuration != null) {
-            final BehaviorRunner runner = new BehaviorRunner(configuration.getConfiguredReports(),
-                    consoleRpt);
+            final BehaviorRunner runner = new BehaviorRunner(configuration, consoleRpt);
             try {
                 boolean success = runner.runBehavior(getBehaviors(configuration.getFilePaths(), configuration));
                 //the Ant task assumes a return code from the easyb process to
@@ -77,6 +73,7 @@ public class BehaviorRunner {
     /**
      * @param behaviors collection of files that contain the specifications
      * @throws Exception if unable to write report file
+     * @return success indicator
      */
     public boolean runBehavior(List<Behavior> behaviors) throws Exception {
         boolean wasSuccessful = true;
@@ -87,7 +84,7 @@ public class BehaviorRunner {
 
         broadcastListener.completeTesting();
 
-        for (final ReportWriter report : reports) {
+        for (final ReportWriter report : configuration.getConfiguredReports()) {
             report.writeReport(resultsCollector);
         }
 
@@ -122,6 +119,7 @@ public class BehaviorRunner {
 
     /**
      * @param paths locations of the specifications to be loaded
+     * @param config configuration
      * @return collection of files where the only element is the file of the spec to be run
      */
     public static List<Behavior> getBehaviors(final String[] paths, Configuration config) {
