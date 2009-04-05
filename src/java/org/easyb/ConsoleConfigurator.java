@@ -1,6 +1,8 @@
 package org.easyb;
 
 import org.apache.commons.cli.*;
+import static org.apache.commons.cli.OptionBuilder.withArgName;
+import static org.apache.commons.cli.OptionBuilder.withDescription;
 import org.easyb.report.*;
 
 import java.util.ArrayList;
@@ -17,6 +19,15 @@ public class ConsoleConfigurator {
 
     private static final String EXTENDED_STORY_CLASS = "extstory";
     private static final String PRETTY_PRINT = "prettyprint";
+    private static final String HTML_DESCRIPTION = "create an easyb report in html format";
+    private static final String XML_DESCRIPTION = "create an easyb report in xml format";
+    private static final String STORY_DESCRIPTION = "create a story report";
+    private static final String BEHAVIOR_DESRCIPTION = "create a behavior report";
+    private static final String STACKTRACE_DESCRIPTION = "prints stacktrace";
+    private static final String EXTENDED_STORY = "use an extended story class";
+    private static final String PARALLEL = "parallel";
+    private static final String PARALLEL_DESCRIPTION = "run specifications in parallel";
+    private static final String PRETTY_PRINT_DESCRIPTION = "prints colored behaviors";
 
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
@@ -28,9 +39,8 @@ public class ConsoleConfigurator {
             String extendedStoryClzz = getExtendedStoryClass(commandLine);
 
             return new Configuration(commandLine.getArgs(),
-                    getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
-                    commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz);
-
+                getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
+                commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine));
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
             handleHelpForMain(options);
@@ -50,6 +60,10 @@ public class ConsoleConfigurator {
         return extendedStoryClzz;
     }
 
+    private boolean isParallel(CommandLine commandLine) {
+        return commandLine.hasOption(PARALLEL);
+    }
+
     /**
      * @param args    command line arguments passed into main
      * @param options options that are available to this specification runner
@@ -65,12 +79,12 @@ public class ConsoleConfigurator {
     private static void validateArguments(final CommandLine commandLine) throws IllegalArgumentException {
         if (commandLine.getArgs().length == 0) {
             throw new IllegalArgumentException("Required arguments missing. At a minimum, " +
-                    "you must provide a path to a behavior for easyb to run.");
+                "you must provide a path to a behavior for easyb to run.");
         }
     }
 
     /**
-     * @param line
+     * @param line command line to scan for reports
      * @return immutable list of ReportWriter objects
      */
     private static List<ReportWriter> getConfiguredReports(final CommandLine line) {
@@ -106,44 +120,19 @@ public class ConsoleConfigurator {
     /**
      * @return representation of a collection of Option objects, which describe the possible options for a command-line.
      */
-    @SuppressWarnings("static-access")
+    @SuppressWarnings({"static-access", "AccessStaticViaInstance"})
     private static Options getOptionsForMain() {
         final Options options = new Options();
 
-        //noinspection AccessStaticViaInstance
-        final Option htmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
-                .withDescription("create an easyb report in html format").create(HTML_EASYB);
-        options.addOption(htmleasybreport);
-        //noinspection AccessStaticViaInstance
-        final Option xmleasybreport = OptionBuilder.withArgName("file").hasOptionalArg()
-                .withDescription("create an easyb report in xml format").create(XML_EASYB);
-        options.addOption(xmleasybreport);
-        //noinspection AccessStaticViaInstance
-        final Option storyreport = OptionBuilder.withArgName("file").hasOptionalArg()
-                .withDescription("create a story report").create(TXT_STORY);
-        options.addOption(storyreport);
-        //noinspection AccessStaticViaInstance
-        final Option behaviorreport = OptionBuilder.withArgName("file").hasOptionalArg()
-                .withDescription("create a behavior report").create(TXT_SPECIFICATION);
-        options.addOption(behaviorreport);
-
-
-        final Option stacktrace = new Option(EXCEPTION_STACK, "prints stacktrace");
-        stacktrace.setRequired(false);
-        options.addOption(stacktrace);
-
-        final Option filteredstacktrace = new Option(FILTER_EXCEPTION_STACK, "prints stacktrace");
-        stacktrace.setRequired(false);
-        options.addOption(filteredstacktrace);
-
-
-        //noinspection AccessStaticViaInstance
-        final Option extendedStoryClass = OptionBuilder.withArgName("class").hasOptionalArg()
-                .withDescription("use an extended story class").create(EXTENDED_STORY_CLASS);
-        options.addOption(extendedStoryClass);
-
-        final Option prettyPrint = new Option(PRETTY_PRINT, "prints colored behaviors");
-        options.addOption(prettyPrint);
+        options.addOption(withDescription(HTML_DESCRIPTION).hasOptionalArg().create(HTML_EASYB));
+        options.addOption(withDescription(XML_DESCRIPTION).hasOptionalArg().create(XML_EASYB));
+        options.addOption(withDescription(STORY_DESCRIPTION).hasOptionalArg().create(TXT_STORY));
+        options.addOption(withDescription(BEHAVIOR_DESRCIPTION).hasOptionalArg().create(TXT_SPECIFICATION));
+        options.addOption(withDescription(STACKTRACE_DESCRIPTION).hasOptionalArg().create(EXCEPTION_STACK));
+        options.addOption(withDescription(STACKTRACE_DESCRIPTION).hasOptionalArg().create(FILTER_EXCEPTION_STACK));
+        options.addOption(withArgName("class").withDescription(EXTENDED_STORY).hasOptionalArg().create(EXTENDED_STORY_CLASS));
+        options.addOption(withDescription(PRETTY_PRINT_DESCRIPTION).hasOptionalArg().create(PRETTY_PRINT));
+        options.addOption(withArgName(PARALLEL).withDescription(PARALLEL_DESCRIPTION).create(PARALLEL));
 
         return options;
     }

@@ -1,0 +1,14 @@
+import org.easyb.ConsoleConfigurator
+import org.easyb.Configuration
+
+it 'should recognize the parallel flag', {
+    ConsoleConfigurator configurator = new ConsoleConfigurator()
+    Configuration configuration = configurator.configure('-parallel', 'spec')
+    configuration.parallel.shouldBe true
+}
+
+it 'should default to not run in parallel', {
+    ConsoleConfigurator configurator = new ConsoleConfigurator()
+    Configuration configuration = configurator.configure('spec')
+    configuration.parallel.shouldBe false
+}

@@ -10,6 +10,7 @@ public class Configuration {
     private boolean stackTraceOn = false;
     private boolean filteredStackTraceOn = false;
     private String extendedStoryClass;
+    private boolean parallel = false;
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports) {
         this.filePaths = filePaths;
@@ -32,9 +33,10 @@ public class Configuration {
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                          final boolean stackTraceOn, final boolean filteredStackTraceOn,
-                         final String extendedStoryClassName) {
+                         final String extendedStoryClassName, final boolean parallel) {
         this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn);
         this.extendedStoryClass = extendedStoryClassName;
+        this.parallel = parallel;
     }
 
     public String getExtendedStoryClass() {
@@ -61,5 +63,9 @@ public class Configuration {
         } else {
             return new ConsoleReporter();
         }
+    }
+
+    public boolean isParallel() {
+        return parallel;
     }
 }
