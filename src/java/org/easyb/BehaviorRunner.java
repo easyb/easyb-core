@@ -1,5 +1,11 @@
 package org.easyb;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.concurrent.ExecutorService;
 
 import org.easyb.domain.Behavior;
 import org.easyb.domain.BehaviorFactory;
@@ -9,11 +15,6 @@ import org.easyb.listener.ExecutionListener;
 import org.easyb.listener.FailureDetector;
 import org.easyb.listener.ResultsCollector;
 import org.easyb.report.ReportWriter;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class BehaviorRunner {
     private Configuration configuration;
@@ -56,7 +57,7 @@ public class BehaviorRunner {
         if (configuration != null) {
             final BehaviorRunner runner = new BehaviorRunner(configuration, consoleRpt);
             try {
-                boolean success = runner.runBehavior(getBehaviors(configuration.getFilePaths(), configuration));
+                boolean success = runner.runBehaviors(getBehaviors(configuration.getFilePaths(), configuration));
                 //the Ant task assumes a return code from the easyb process to
                 //determine error or not
                 if (!success) {
@@ -72,14 +73,17 @@ public class BehaviorRunner {
 
     /**
      * @param behaviors collection of files that contain the specifications
-     * @throws Exception if unable to write report file
      * @return success indicator
+     * @throws Exception if unable to write report file
      */
-    public boolean runBehavior(List<Behavior> behaviors) throws Exception {
+    public boolean runBehaviors(List<Behavior> behaviors) throws Exception {
         boolean wasSuccessful = true;
 
-        for (final Behavior behavior : behaviors) {
-            behavior.execute(broadcastListener);
+        List<RunnableBehavior> executedBehaviors = executeBehaviors(behaviors);
+        for (RunnableBehavior each : executedBehaviors) {
+            if (each.isFailed()) {
+                throw each.getFailure();
+            }
         }
 
         broadcastListener.completeTesting();
@@ -92,11 +96,25 @@ public class BehaviorRunner {
             wasSuccessful = false;
         }
         return wasSuccessful;
+    }
 
+    private List<RunnableBehavior> executeBehaviors(List<Behavior> behaviors) throws InterruptedException {
+        ExecutorService executor = configuration.getExecutor();
+
+        List<RunnableBehavior> executedBehaviors = new ArrayList<RunnableBehavior>();
+        for (final Behavior behavior : behaviors) {
+            RunnableBehavior task = new RunnableBehavior(behavior, broadcastListener);
+            executedBehaviors.add(task);
+            executor.execute(task);
+        }
+        executor.shutdown();
+        executor.awaitTermination(60, SECONDS);
+
+        return executedBehaviors;
     }
 
     public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
-                                              final String[] paths, Configuration config) {
+        final String[] paths, Configuration config) {
         List<Behavior> behaviors = new ArrayList<Behavior>();
         for (final String path : paths) {
             behaviors.add(BehaviorFactory.createBehavior(groovyShellConfiguration, new File(path), config));
@@ -105,7 +123,7 @@ public class BehaviorRunner {
     }
 
     public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
-                                              final String[] paths) {
+        final String[] paths) {
         return getBehaviors(groovyShellConfiguration, paths, null);
     }
 
@@ -118,7 +136,7 @@ public class BehaviorRunner {
     }
 
     /**
-     * @param paths locations of the specifications to be loaded
+     * @param paths  locations of the specifications to be loaded
      * @param config configuration
      * @return collection of files where the only element is the file of the spec to be run
      */

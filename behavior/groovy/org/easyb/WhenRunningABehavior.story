@@ -34,7 +34,7 @@ scenario "realtime console output", {
         try {
             System.setOut(new PrintStream(consoleOutputStream))
             BehaviorRunner runner = new BehaviorRunner(new Configuration(), new ConsoleReporter())
-            runner.runBehavior(getBehaviors(specFile.absolutePath))
+            runner.runBehaviors(getBehaviors(specFile.absolutePath))
         } catch (VerificationException expected) {
         } finally {
             System.setOut(originalOut)

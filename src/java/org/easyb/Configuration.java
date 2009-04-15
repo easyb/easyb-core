@@ -1,8 +1,8 @@
 package org.easyb;
 
-import java.util.List;
 import java.util.Collections;
-import java.util.concurrent.Executor;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -74,7 +74,7 @@ public class Configuration {
         }
     }
 
-    public Executor getExecutor() {
+    public ExecutorService getExecutor() {
         LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
 
         if (parallel) {
