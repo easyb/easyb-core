@@ -89,7 +89,7 @@ public class ResultsCollector implements ExecutionListener {
     public void stopBehavior(BehaviorStep step, Behavior behavior) {
     }
 
-    public void startStep(final BehaviorStep step) {
+    public synchronized void startStep(final BehaviorStep step) {
         BehaviorStep clone = new BehaviorStep(step.getStepType(), step.getName());
         clone.startExecutionTimer();
         clone.setParentStep(currentStep);
@@ -104,7 +104,7 @@ public class ResultsCollector implements ExecutionListener {
     public void completeTesting() {
     }
 
-    public void stopStep() {
+    public synchronized void stopStep() {
         if (BehaviorStepType.SCENARIO == currentStep.getStepType()) {
             if (currentStep.getChildStepFailureResultCount() > 0) {
                 gotResult(new Result(Result.FAILED));
