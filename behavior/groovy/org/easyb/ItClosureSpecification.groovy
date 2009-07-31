@@ -36,7 +36,7 @@ it "should create a delegate for the passed in closure", {
     }
     try {
         itmethod("blah", xclos)
-        xclos.delegate.class.name.shouldBe("org.disco.easyb.core.delegates.EnsuringDelegate")
+        xclos.delegate.class.name.shouldBe("org.easyb.core.delegates.EnsuringDelegate")
     } catch (Throwable thr) {
         fail("apparently the it closure isn't working")
     }

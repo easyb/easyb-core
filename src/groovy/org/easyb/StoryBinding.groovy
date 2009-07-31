@@ -38,7 +38,7 @@ class StoryBinding extends Binding {
         }
 
         scenario = {description, closure = story.pendingClosure ->
-            activePlugin.beforeScenario(this)
+            activePlugin.beforeScenario(this)   
             story.scenario(description, closure)
             activePlugin.afterScenario(this)
         }

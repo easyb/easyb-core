@@ -130,7 +130,8 @@ public class ConsoleReporter extends ResultsCollector {
             if (step.getStepType().equals(BehaviorStepType.SCENARIO) ||
                     step.getStepType().equals(BehaviorStepType.GENESIS) ||
                     step.getStepType().equals(BehaviorStepType.STORY) ||
-                    step.getStepType().equals(BehaviorStepType.SPECIFICATION)) {
+                    step.getStepType().equals(BehaviorStepType.SPECIFICATION) ||
+                    step.getStepType().equals(BehaviorStepType.EXECUTE)) {
                 handleFailurePrinting(step);
             } else {
                 printFailureMessage(step);

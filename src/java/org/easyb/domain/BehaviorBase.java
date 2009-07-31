@@ -1,6 +1,8 @@
 package org.easyb.domain;
 
 import groovy.lang.GroovyShell;
+import groovy.lang.Binding;
+import groovy.lang.Script;
 
 import java.io.File;
 import java.io.Serializable;
@@ -10,6 +12,7 @@ public abstract class BehaviorBase implements Behavior, Serializable {
     private String phrase;
     private File file;
     private transient GroovyShellConfiguration gShellConfig;
+    private Binding binding;
 
     protected BehaviorBase(GroovyShellConfiguration gShellConfig, String phrase, File file) {
         this.gShellConfig = gShellConfig;
@@ -59,5 +62,13 @@ public abstract class BehaviorBase implements Behavior, Serializable {
         result = (phrase != null ? phrase.hashCode() : 0);
         result = 31 * result + (file != null ? file.hashCode() : 0);
         return result;
+    }
+
+    public Binding getBinding() {
+      return binding;
+    }
+
+    public void setBinding(Binding binding) {
+      this.binding = binding;
     }
 }

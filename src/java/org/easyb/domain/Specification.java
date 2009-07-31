@@ -24,11 +24,15 @@ public class Specification extends BehaviorBase {
         listener.startBehavior(this);
         listener.startStep(currentStep);
 
-        GroovyShell g = new GroovyShell(getClassLoader(), SpecificationBinding.getBinding(listener));
+        setBinding(SpecificationBinding.getBinding(listener) );
+        GroovyShell g = new GroovyShell(getClassLoader(), getBinding());
         bindShellVariables(g);
 
-        g.evaluate(getFile());
-        listener.stopStep();
+        listener.startStep( new BehaviorStep (BehaviorStepType.EXECUTE, getPhrase()) );
+        g.evaluate (getFile());
+
+        listener.stopStep(); // EXEC
+        listener.stopStep(); // SPECIFICATION
         listener.stopBehavior(currentStep, this);
 
         return currentStep;

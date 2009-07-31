@@ -19,6 +19,10 @@ class BehaviorStep implements Serializable {
         name = inStepName
     }
 
+    public BehaviorStepType getStepType() {
+      return stepType;
+    }
+
     public void setParentStep(BehaviorStep inParentStep) {
         parentStep = inParentStep
     }
@@ -266,6 +270,9 @@ class BehaviorStep implements Serializable {
             case BehaviorStepType.SCENARIO:
             case BehaviorStepType.SPECIFICATION:
                 formattedElement = "${lineSeparator}${spaces}${typeFormat} ${name}"
+                break
+            case BehaviorStepType.EXECUTE:
+                formattedElement = ""
                 break
             case BehaviorStepType.DESCRIPTION:
                 formattedElement = "${spaces}${description}${genesisType.equals(BehaviorStepType.STORY) ? "" : lineSeparator}"

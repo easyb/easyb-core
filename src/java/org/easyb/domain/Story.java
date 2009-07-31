@@ -1,6 +1,7 @@
 package org.easyb.domain;
 
 import groovy.lang.GroovyShell;
+import groovy.lang.Binding;
 import org.easyb.BehaviorStep;
 import org.easyb.StoryBinding;
 import org.easyb.plugin.EasybPlugin;
@@ -32,8 +33,11 @@ public class Story extends BehaviorBase {
         GroovyShell g = new GroovyShell(getClassLoader(), binding);
         bindShellVariables(g);
 
+        setBinding( binding );
         activePlugin.beforeStory(binding);
+        listener.startStep( new BehaviorStep (BehaviorStepType.EXECUTE, getPhrase()) );
         g.evaluate(story);
+        listener.stopStep(); // EXEC
         activePlugin.afterStory(binding);
 
         listener.stopStep();

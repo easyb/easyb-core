@@ -5,6 +5,7 @@ public enum BehaviorStepType {
     GENESIS("genesis"),
     SPECIFICATION("specification"),
     STORY("story"),
+    EXECUTE("execute"),
     SCENARIO("scenario"),
     GIVEN("given"),
     WHEN("when"),
