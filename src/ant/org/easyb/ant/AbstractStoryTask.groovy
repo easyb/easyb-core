@@ -10,28 +10,37 @@ public class AbstractStoryTask extends AbstractJavaTask {
     private List filesets = new ArrayList()
     private String failureProperty
 
+
     public AbstractStoryTask(Class commandLineClass, CommandRunner runner) {
         super(runner)
         this.commandLineClass = commandLineClass
     }
 
-    public void addTarget(String targetArgument) {
+    void addTarget(String targetArgument) {
         targetArgumentList.add(targetArgument)
     }
 
-    public void addTarget(int index, String dir) {
+    void addTarget(int index, String dir) {
         targetArgumentList.add(index, dir)
     }
 
-    public String getFailureProperty() {
+    void setFailureFile(String filename){
+      addTarget("-outfail ${filename}")
+    }
+
+    void setInFile(String filename){
+      addTarget("-f ${filename}")
+    }
+
+    String getFailureProperty() {
         return failureProperty
     }
 
-    public void setFailureProperty(String failureProperty) {
+    void setFailureProperty(String failureProperty) {
         this.failureProperty = failureProperty
     }
 
-    public void execute() {
+    void execute() {
         appendAntTaskJar()
         addArgumentsAndRun()
     }
@@ -63,7 +72,7 @@ public class AbstractStoryTask extends AbstractJavaTask {
         for (iter in targetArgumentList) {
             commandLine.createArgument().setLine(iter)
         }
-        
+
         if (run() != 0) {
             log("easyb execution FAILED")
             if (getFailureProperty() != null) {
