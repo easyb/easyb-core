@@ -52,10 +52,9 @@ public class BehaviorRunner {
      */
     public static void main(final String[] args) {
         final Configuration configuration = new ConsoleConfigurator().configure(args);
-        final ConsoleReporter consoleRpt = configuration.getConsoleReporter();
-
         //noinspection ConstantConditions
         if (configuration != null) {
+            final ConsoleReporter consoleRpt = configuration.getConsoleReporter();
             final BehaviorRunner runner = new BehaviorRunner(configuration, consoleRpt);
             try {
                 boolean success = runner.runBehaviors(getBehaviors(configuration.getFilePaths(), configuration));

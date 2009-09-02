@@ -105,8 +105,11 @@ public class ConsoleConfigurator {
 
     private static void validateArguments(final CommandLine commandLine) throws IllegalArgumentException {
         if (commandLine.getArgs().length == 0) {
-            throw new IllegalArgumentException("Required arguments missing. At a minimum, " +
-                    "you must provide a path to a behavior for easyb to run.");
+            if(!commandLine.hasOption(BEHAVIOR_FILE)){
+                throw new IllegalArgumentException("Required arguments missing. At a minimum, " +
+                    "you must provide a path to a behavior for easyb to run or provide the -f flag pointing to" +
+                        " a file containing behaviors.");
+            }                                                                             
         }
     }
 
@@ -141,7 +144,7 @@ public class ConsoleConfigurator {
      * @param options options that are available to this specification runner
      */
     private static void handleHelpForMain(final Options options) {
-        new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.story", options);
+        new HelpFormatter().printHelp("BehaviorRunner my/path/to/MyFile.story or provide the -f flag", options);
     }
 
     /**
