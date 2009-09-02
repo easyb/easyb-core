@@ -1,6 +1,7 @@
 package org.easyb;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,12 +80,7 @@ public class BehaviorRunner {
     public boolean runBehaviors(List<Behavior> behaviors) throws Exception {
         boolean wasSuccessful = true;
 
-        List<RunnableBehavior> executedBehaviors = executeBehaviors(behaviors);
-        for (RunnableBehavior each : executedBehaviors) {
-            if (each.isFailed()) {
-                throw each.getFailure();
-            }
-        }
+        executeBehaviors(behaviors);
 
         broadcastListener.completeTesting();
 
@@ -98,19 +94,30 @@ public class BehaviorRunner {
         return wasSuccessful;
     }
 
-    private List<RunnableBehavior> executeBehaviors(List<Behavior> behaviors) throws InterruptedException {
-        ExecutorService executor = configuration.getExecutor();
+    private void executeBehaviors(List<Behavior> behaviors)
+            throws InterruptedException, IOException, Exception {
 
-        List<RunnableBehavior> executedBehaviors = new ArrayList<RunnableBehavior>();
-        for (final Behavior behavior : behaviors) {
-            RunnableBehavior task = new RunnableBehavior(behavior, broadcastListener);
-            executedBehaviors.add(task);
-            executor.execute(task);
+        if(this.configuration.isParallel()){
+            ExecutorService executor = configuration.getExecutor();
+
+            List<RunnableBehavior> executedBehaviors = new ArrayList<RunnableBehavior>();
+            for (final Behavior behavior : behaviors) {
+                RunnableBehavior task = new RunnableBehavior(behavior, broadcastListener);
+                executedBehaviors.add(task);
+                executor.execute(task);
+            }
+            executor.shutdown();
+            executor.awaitTermination(60, SECONDS);
+            for (RunnableBehavior each : executedBehaviors) {
+                if (each.isFailed()) {
+                    throw each.getFailure();
+                }
+            }
+        } else{
+            for (final Behavior behavior : behaviors) {
+               behavior.execute(broadcastListener);
+            }            
         }
-        executor.shutdown();
-        executor.awaitTermination(60, SECONDS);
-
-        return executedBehaviors;
     }
 
     public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,

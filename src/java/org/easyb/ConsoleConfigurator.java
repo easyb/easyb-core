@@ -88,7 +88,7 @@ public class ConsoleConfigurator {
     }
 
     private boolean isParallel(CommandLine commandLine) {
-        return commandLine.hasOption(PARALLEL);
+        return commandLine.hasOption(PARALLEL);        
     }
 
     /**

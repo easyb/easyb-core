@@ -71,6 +71,10 @@ public class Configuration {
         return this.configuredReports;
     }
 
+    public boolean isParallel(){
+        return this.parallel;
+    }
+
     public ConsoleReporter getConsoleReporter() {
         if (this.stackTraceOn) {
             if (this.filteredStackTraceOn) {
