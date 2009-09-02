@@ -127,7 +127,7 @@ target("validate-behaviors": "runs and validates the easyb behaviors") {
     }
   }
 
-  ant.easyb(failureProperty: "easyb.failed") {
+  ant.easyb(failureProperty: "easyb.failed", failureFile:"${defaultdir}/failures.txt") {
 
     classpath() {
       fileset(dir: libdir, includes: jarincludes)
@@ -158,6 +158,7 @@ target("validate-behaviors": "runs and validates the easyb behaviors") {
         exclude(name: "**/PassingPendingFailing.specification")
         exclude(name: "**/ExceptionalOccurrence.story")
         exclude(name: "**/HtmlReportingStory.groovy")
+        exclude(name: "**/Issue116.story")
       }
     }
   }
