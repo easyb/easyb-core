@@ -1,13 +1,13 @@
 package org.easyb;
 
+import org.easyb.report.ReportWriter;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
-
-import org.easyb.report.ReportWriter;
 
 public class Configuration {
     private final String[] filePaths;
@@ -16,6 +16,8 @@ public class Configuration {
     private boolean filteredStackTraceOn = false;
     private String extendedStoryClass;
     private boolean parallel = false;
+    private String failureFile;
+    private boolean isFailureFile = false;
 
     public Configuration() {
         this(new String[]{}, Collections.<ReportWriter>emptyList());
@@ -27,25 +29,34 @@ public class Configuration {
     }
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
-        final boolean stackTraceOn) {
+                         final boolean stackTraceOn) {
         this(filePaths, configuredReports);
         this.stackTraceOn = stackTraceOn;
     }
 
     //yeesh this is odd, think of a better way...
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
-        final boolean stackTraceOn, final boolean filteredStackTraceOn) {
+                         final boolean stackTraceOn, final boolean filteredStackTraceOn) {
         this(filePaths, configuredReports);
         this.stackTraceOn = stackTraceOn;
         this.filteredStackTraceOn = filteredStackTraceOn;
     }
 
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
-        final boolean stackTraceOn, final boolean filteredStackTraceOn,
-        final String extendedStoryClassName, final boolean parallel) {
+                         final boolean stackTraceOn, final boolean filteredStackTraceOn,
+                         final String extendedStoryClassName, final boolean parallel) {
         this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn);
         this.extendedStoryClass = extendedStoryClassName;
         this.parallel = parallel;
+    }
+
+    public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
+                         final boolean stackTraceOn, final boolean filteredStackTraceOn,
+                         final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
+                         final String failureFile) {
+        this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn, extendedStoryClassName, parallel);
+        this.failureFile = failureFile;
+        this.isFailureFile = isFailureFile;
     }
 
     public String getExtendedStoryClass() {
@@ -69,6 +80,8 @@ public class Configuration {
             }
         } else if (this.filteredStackTraceOn) {
             return new FilteredStackTraceConsoleReporter();
+        } else if (this.isFailureFile) {
+            return new FailureFileConsoleReporter(this.failureFile);
         } else {
             return new ConsoleReporter();
         }

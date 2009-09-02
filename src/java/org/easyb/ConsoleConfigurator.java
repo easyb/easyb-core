@@ -4,6 +4,7 @@ import org.apache.commons.cli.*;
 import static org.apache.commons.cli.OptionBuilder.withArgName;
 import static org.apache.commons.cli.OptionBuilder.withDescription;
 import org.easyb.report.*;
+import org.easyb.util.BehaviorFileToPathsBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,11 +24,18 @@ public class ConsoleConfigurator {
     private static final String XML_DESCRIPTION = "create an easyb report in xml format";
     private static final String STORY_DESCRIPTION = "create a story report";
     private static final String BEHAVIOR_DESRCIPTION = "create a behavior report";
-    private static final String STACKTRACE_DESCRIPTION = "prints stacktrace";
+    private static final String STACKTRACE_DESCRIPTION = "prints stacktrace information";
+    private static final String FILTERED_STACKTRACE_DESCRIPTION = "prints filtered stacktrace information";
     private static final String EXTENDED_STORY = "use an extended story class";
     private static final String PARALLEL = "parallel";
     private static final String PARALLEL_DESCRIPTION = "run specifications in parallel";
     private static final String PRETTY_PRINT_DESCRIPTION = "prints colored behaviors";
+
+    private static final String BEHAVIOR_FILE = "f";
+    private static final String BEHAVIOR_FILE_DESCRIPTION = "run behaviors listed in a file";
+    private static final String FAILURE_BEHAVIOR_FILE = "outfail";
+    private static final String FAILURE_BEHAVIOR_FILE_DESCRIPTION = "caputure failed behaviors in a file " +
+            "(for processing at a later point -- see the -f option)";
 
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
@@ -35,12 +43,14 @@ public class ConsoleConfigurator {
         try {
             CommandLine commandLine = getCommandLineForMain(args, options);
             validateArguments(commandLine);
-
             String extendedStoryClzz = getExtendedStoryClass(commandLine);
+            String[] paths = convertArgsToPaths(commandLine);
 
-            return new Configuration(commandLine.getArgs(),
-                getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
-                commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine));
+            return new Configuration(paths,
+                    getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
+                    commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine),
+                    isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE));
+
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
             handleHelpForMain(options);
@@ -48,8 +58,21 @@ public class ConsoleConfigurator {
             System.out.println(pe.getMessage());
             handleHelpForMain(options);
         }
-
         return null;
+    }
+
+    /**
+     * @param cmdLine
+     * @return
+     */
+    private String[] convertArgsToPaths(CommandLine cmdLine) {
+        if (cmdLine.hasOption(BEHAVIOR_FILE)) {
+            String file = cmdLine.getOptionValue(BEHAVIOR_FILE);
+            BehaviorFileToPathsBuilder builder = new BehaviorFileToPathsBuilder();
+            return builder.buildPaths(((file != null) ? file : "failure-files.txt"), cmdLine.getArgs());
+        } else {
+            return cmdLine.getArgs();
+        }
     }
 
     private String getExtendedStoryClass(CommandLine commandLine) {
@@ -58,6 +81,10 @@ public class ConsoleConfigurator {
             extendedStoryClzz = commandLine.getOptionValue(EXTENDED_STORY_CLASS);
         }
         return extendedStoryClzz;
+    }
+
+    private boolean isFailureFile(CommandLine cmdLine) {
+        return cmdLine.hasOption(FAILURE_BEHAVIOR_FILE);
     }
 
     private boolean isParallel(CommandLine commandLine) {
@@ -79,7 +106,7 @@ public class ConsoleConfigurator {
     private static void validateArguments(final CommandLine commandLine) throws IllegalArgumentException {
         if (commandLine.getArgs().length == 0) {
             throw new IllegalArgumentException("Required arguments missing. At a minimum, " +
-                "you must provide a path to a behavior for easyb to run.");
+                    "you must provide a path to a behavior for easyb to run.");
         }
     }
 
@@ -129,10 +156,12 @@ public class ConsoleConfigurator {
         options.addOption(withDescription(STORY_DESCRIPTION).hasOptionalArg().create(TXT_STORY));
         options.addOption(withDescription(BEHAVIOR_DESRCIPTION).hasOptionalArg().create(TXT_SPECIFICATION));
         options.addOption(withDescription(STACKTRACE_DESCRIPTION).hasOptionalArg().create(EXCEPTION_STACK));
-        options.addOption(withDescription(STACKTRACE_DESCRIPTION).hasOptionalArg().create(FILTER_EXCEPTION_STACK));
+        options.addOption(withDescription(FILTERED_STACKTRACE_DESCRIPTION).hasOptionalArg().create(FILTER_EXCEPTION_STACK));
         options.addOption(withArgName("class").withDescription(EXTENDED_STORY).hasOptionalArg().create(EXTENDED_STORY_CLASS));
         options.addOption(withDescription(PRETTY_PRINT_DESCRIPTION).hasOptionalArg().create(PRETTY_PRINT));
         options.addOption(withArgName(PARALLEL).withDescription(PARALLEL_DESCRIPTION).create(PARALLEL));
+        options.addOption(withDescription(BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(BEHAVIOR_FILE));
+        options.addOption(withDescription(FAILURE_BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(FAILURE_BEHAVIOR_FILE));
 
         return options;
     }
