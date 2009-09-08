@@ -2,9 +2,11 @@ package org.easyb.delegates;
 
 import groovy.lang.Closure;
 import org.easyb.exception.VerificationException;
+import org.codehaus.groovy.runtime.InvokerInvocationException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * The easy delegate handles "it", "then", and "when"
@@ -12,7 +14,7 @@ import java.util.List;
  *
  * @author aglover
  */
-public class EnsuringDelegate {
+public class EnsuringDelegate implements Serializable{
     /**
      * @param clzz    the class of the exception type expected
      * @param closure closure containing code to be run that should throw an
@@ -98,6 +100,39 @@ public class EnsuringDelegate {
     public void ensure(final boolean expression) throws Exception {
         if (!expression) {
             throw new VerificationException("the expression evaluated to false");
+        }
+    }
+
+    /**
+     * 
+     * @param timeout
+     * @param closure
+     */
+    public void ensureUntil(final int timeout, final Closure closure) {
+        long starttime = System.currentTimeMillis();
+        long currtime = starttime;
+        Throwable storedEx = null;
+        while (currtime < starttime + timeout * 1000) {
+            try {
+                closure.call();
+                return;
+            } catch (InvokerInvocationException e) {
+                if (e.getCause().getClass().equals(VerificationException.class)) {
+                    storedEx = e;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e1) {
+                    }
+                }
+            }
+            currtime = System.currentTimeMillis();
+        }
+        if (storedEx != null) {
+            throw new VerificationException(storedEx.getCause().getMessage() +
+                    " (Tried repeatedly for " + timeout + " seconds)");
+        } else {
+            throw new VerificationException("Failed even after waiting "
+                    + timeout + " seconds");
         }
     }
 
