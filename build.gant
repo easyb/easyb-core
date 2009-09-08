@@ -223,7 +223,7 @@ target("run-main": "runs easyb BehaviorRunner class") {
     //arg(value: "-ef")
     //arg(line: "-txtstory myout.txt")
     //arg(line: "-f myfailures.text")
-    arg(line: "-f /Users/aglover/Development/groovy/easyb-0.9.5/easyb/easyb/target/failure-files.txt")
+   // arg(line: "-f /Users/aglover/Development/groovy/easyb-0.9.5/easyb/easyb/target/failure-files.txt")
     //arg(line: "-outfail myfailures.text")
     classpath() {
       fileset(dir: libdir, includes: jarincludes)

@@ -2,6 +2,7 @@
 
   Story: failure report
 
+
     scenario this scenario will fail!
       given a false variable
       then easyb will report a failure if should is true [FAILURE: expected true but was false]

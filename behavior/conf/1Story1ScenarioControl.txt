@@ -2,6 +2,7 @@
 
   Story: and chained feature
 
+
     scenario easyb should support and chaining
       given an integer value of 10
       given given another integer value of 5

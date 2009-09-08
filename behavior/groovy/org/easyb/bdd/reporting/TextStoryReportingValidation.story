@@ -7,7 +7,7 @@ scenario "text reports of single scenario stories with no failures", {
     }
 
     then "it should remain valid according to confirmed report syntax", {
-        filetext.readLines().shouldEqual new File("./behavior/conf/1Story1ScenarioControl.txt").getText().readLines()
+      filetext.readLines().shouldEqual new File("./behavior/conf/1Story1ScenarioControl.txt").getText().readLines()
     }
 
 }
