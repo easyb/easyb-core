@@ -88,7 +88,7 @@ class RichEnsureProxyDelegate implements RichlyEnsurable {
         } else if (method.equals("isContainedIn")) {
             this.flex.isContainedIn(params[0])
         } else {
-            throw new RuntimeException("No further routes available in invokeMethod")
+            throw new RuntimeException("No further routes available in handleIsMethod, name was ${method}")
         }
     }
 
