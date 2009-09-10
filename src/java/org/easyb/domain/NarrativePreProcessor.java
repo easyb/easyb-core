@@ -1,6 +1,8 @@
 package org.easyb.domain;
 
-public class NarrativePreProcessor {
+import org.easyb.util.PreProcessorable;
+
+public class NarrativePreProcessor implements PreProcessorable {
     public String process(String specification) {
         return specification
                 .replaceAll("(\\{*\\s)as a([^\\}]*\\})", "$1as_a$2")
