@@ -173,7 +173,78 @@ scenario "pop is called on empty stack", {
 
 
        <p>Easy story printing, eh?</p>				
-				
+
+<h3>Other features of stories</h3>
+
+<p>Stories in easyb support a number of other features including the 
+    notion of <i>narratives</i>, <i>fixtures</i> and <i>shared behaviors</i>.</p>
+
+
+<p>easyb supports the notion of narratives, which attempt to set the stage of a story. Narratives use a <code>narrative</code> clause followed by a series of descriptors that can either be written with underscores or not. </p>
+
+<p>For example, the following narrative describes a story regarding currency management:</p>
+
+<code><pre>
+narrative "regarding currency management", {
+ as a "person who uses money"
+ i want "to be able to add currencies together"
+ so that "that I can become rich over time"
+}
+
+</pre></code>
+
+<p>If you'd like to re-use a bit of logic throughout a story, you could use
+easyb's <code>before</code> or <code>before_each</code> keywords to delineate a fixture like so:</p>
+
+<code><pre>
+before "start selenium", {
+ given "selenium is up and running", {
+  selenium = new DefaultSelenium("localhost",
+    4444, "*firefox", "http://acme.racing.net/greport")
+  selenium.start()
+ }
+}
+</pre></code>
+
+<p>In the code above, an instance of Selenium is started <i>once</i> for the entire story -- if you'd like to start Selenium for each scenario, then you'd use the <code>before_each</code> keyword. </p>
+
+<p>Ideally, any <code>before</code> or <code>before_each</code> clauses should reside in the beginning of a story; what's more, easyb supports <i>post</i> style fixtures via <code>after</code> and <code>after_each</code> -- these clauses should reside at the bottom of story.
+
+
+<p>Somewhat similar to fixtures is easyb's notion of <i>shared behaviors</i> -- these are a bit more logical in that rather than creating a <code>before</code>-style clause, you construct a basic scenario and then refer to it later in other scenarios. In essence, this style of re-use is a bit more descriptive. </P>
+
+<p>Shared behaviors use easyb's <code>shared_behavior</code> and <code>it_behaves_as</code> clauses like so:</P>
+
+<code><pre>
+shared_behavior "shared behaviors", {
+  given "a string", {
+    var = ""
+  }
+  
+  when "the string is hello world", {
+    var = "hello world"
+  }
+}
+
+scenario "first scenario", {
+  it_behaves_as "shared behaviors"
+  
+  then "the string should start with hello", {
+    var.shouldStartWith "hello"
+  }
+}
+
+scenario "second scenario", {
+  it_behaves_as "shared behaviors"
+  
+  then "the string should end with world", {
+    var.shouldEndWith "world"
+  }
+}
+</pre></code>
+
+<p>For more examples and information on stories, see easyb's <A HREF="storyexmpls.html">Story examples</A> section.</p>
+
 			</div>
 		</div>
 		
