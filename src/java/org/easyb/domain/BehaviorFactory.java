@@ -20,6 +20,11 @@ public class BehaviorFactory {
 
     public static Behavior createBehavior(final GroovyShellConfiguration gShellConfig,
                                           final File behaviorFile, Configuration config) {
+
+       if(!behaviorFile.isFile()){
+         throw new IllegalArgumentException(verifyFileError(behaviorFile));  
+       }
+
         for (final String pattern : STORY_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
                 return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
