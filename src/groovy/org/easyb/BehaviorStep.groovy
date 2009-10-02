@@ -19,6 +19,13 @@ class BehaviorStep implements Serializable {
         name = inStepName
     }
 
+    public List<BehaviorStep> getChildStepsSkipExecute() {
+    	if ( childSteps.size() == 1 && childSteps[0].stepType == BehaviorStepType.EXECUTE )
+        return childSteps[0].childSteps
+      else
+        return childSteps
+    }
+
     public BehaviorStepType getStepType() {
       return stepType;
     }
@@ -210,7 +217,10 @@ class BehaviorStep implements Serializable {
     }
 
     List<BehaviorStep> getChildrenOfType(BehaviorStepType behaviorStepType) {
-        childSteps.findAll {behaviorStepType.equals(it.stepType)}
+    	if ( childSteps.size() == 1 && childSteps[0].stepType == BehaviorStepType.EXECUTE )
+        return childSteps[0].childSteps.findAll {behaviorStepType.equals(it.stepType)}
+      else
+        return childSteps.findAll {behaviorStepType.equals(it.stepType)}
     }
 
     BehaviorStep getParentStep() {

@@ -44,7 +44,7 @@
                 <td title='Result' class='${HtmlReportHelper.getStepStatusClass(scenarioStep.result)}'>${scenarioStep.result.status}</td>
                 <td title='Time (sec)'>${scenarioStep.executionTotalTimeInMillis / 1000f}</td>
               </tr>
-              <% scenarioStep.childSteps.each { componentStep -> %>
+              <% scenarioStep.childStepsSkipExecute.each { componentStep -> %>
               <tr class='scenarioComponents'>
                 <td>${componentStep.stepType.type} ${componentStep.name}</td>
                 <td class='${HtmlReportHelper.getStepStatusClass(componentStep.result)}'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>

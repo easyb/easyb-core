@@ -38,7 +38,7 @@
         <td colspan='5'>
           <table class='componentsForSpecificationTable'>
             <tbody>
-             <% specificationStep.childSteps.each { componentStep -> %>
+             <% specificationStep.childStepsSkipExecute.each { componentStep -> %>
               <tr>
                 <td>${componentStep.stepType.type} ${componentStep.name}</td>
                 <td class='${HtmlReportHelper.getStepStatusClass(componentStep.result)}' style='text-align:right;'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
