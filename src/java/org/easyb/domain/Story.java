@@ -26,7 +26,8 @@ public class Story extends BehaviorBase {
         listener.startBehavior(this);
         listener.startStep(currentStep);
 
-        String story = readStory(getFile());
+        File file = getFile();
+        String story = readStory(file);
         EasybPlugin activePlugin = new PluginFactory().pluginForStory(story);
 
         StoryBinding binding = StoryBinding.getBinding(listener, activePlugin);
@@ -36,7 +37,9 @@ public class Story extends BehaviorBase {
         setBinding(binding);
         activePlugin.beforeStory(binding);
         listener.startStep(new BehaviorStep(BehaviorStepType.EXECUTE, getPhrase()));
-        g.evaluate(story);
+        
+        //Pass in path to original file so it can be used in debuggers
+        g.evaluate(story,file.getAbsolutePath());
         listener.stopStep(); // EXEC
         activePlugin.afterStory(binding);
 
