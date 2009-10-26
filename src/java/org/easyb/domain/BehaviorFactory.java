@@ -21,13 +21,13 @@ public class BehaviorFactory {
     public static Behavior createBehavior(final GroovyShellConfiguration gShellConfig,
                                           final File behaviorFile, Configuration config) {
 
-       if(!behaviorFile.isFile()){
-         throw new IllegalArgumentException(verifyFileError(behaviorFile));  
-       }
+        if (!behaviorFile.isFile()) {
+            throw new IllegalArgumentException(verifyFileError(behaviorFile));
+        }
 
         for (final String pattern : STORY_PATTERNS) {
             if (behaviorFile.getName().endsWith(pattern)) {
-                return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+                return getStory(gShellConfig, behaviorFile, pattern, config);
             }
         }
         for (final String pattern : SPECIFICATION_PATTERNS) {
@@ -37,6 +37,26 @@ public class BehaviorFactory {
         }
 
         throw new IllegalArgumentException(verifyFileError(behaviorFile));
+    }
+
+    /**
+     * @param gShellConfig
+     * @param behaviorFile
+     * @param pattern
+     * @param config
+     * @return initailized Behavior
+     */
+    private static Behavior getStory(GroovyShellConfiguration gShellConfig, File behaviorFile,
+                                     String pattern, Configuration config) {
+        if (config != null) {
+            if (config.getExtendedStoryClass() != null) {
+                return new NonExecutableStory(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+            } else {
+                return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+            }
+        } else {
+            return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+        }
     }
 
     public static Behavior createBehavior(final File behaviorFile) {

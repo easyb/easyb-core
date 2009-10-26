@@ -18,15 +18,16 @@ public class ConsoleConfigurator {
     private static final String EXCEPTION_STACK = "e";
     private static final String FILTER_EXCEPTION_STACK = "ef";
 
-    private static final String EXTENDED_STORY_CLASS = "extstory";
+
+    private static final String NOEXECUTE_STORY_DESCRIPTION = "creates report without running any stories";
+    private static final String NOEXECUTE_STORY = "ne";
     private static final String PRETTY_PRINT = "prettyprint";
     private static final String HTML_DESCRIPTION = "create an easyb report in html format";
     private static final String XML_DESCRIPTION = "create an easyb report in xml format";
     private static final String STORY_DESCRIPTION = "create a story report";
     private static final String BEHAVIOR_DESRCIPTION = "create a behavior report";
     private static final String STACKTRACE_DESCRIPTION = "prints stacktrace information";
-    private static final String FILTERED_STACKTRACE_DESCRIPTION = "prints filtered stacktrace information";
-    private static final String EXTENDED_STORY = "use an extended story class";
+    private static final String FILTERED_STACKTRACE_DESCRIPTION = "prints filtered stacktrace information";   
     private static final String PARALLEL = "parallel";
     private static final String PARALLEL_DESCRIPTION = "run specifications in parallel";
     private static final String PRETTY_PRINT_DESCRIPTION = "prints colored behaviors";
@@ -77,8 +78,8 @@ public class ConsoleConfigurator {
 
     private String getExtendedStoryClass(CommandLine commandLine) {
         String extendedStoryClzz = null;
-        if (commandLine.hasOption(EXTENDED_STORY_CLASS)) {
-            extendedStoryClzz = commandLine.getOptionValue(EXTENDED_STORY_CLASS);
+        if (commandLine.hasOption(NOEXECUTE_STORY)) {
+            extendedStoryClzz = "NonExecutableStory";
         }
         return extendedStoryClzz;
     }
@@ -159,8 +160,8 @@ public class ConsoleConfigurator {
         options.addOption(withDescription(STORY_DESCRIPTION).hasOptionalArg().create(TXT_STORY));
         options.addOption(withDescription(BEHAVIOR_DESRCIPTION).hasOptionalArg().create(TXT_SPECIFICATION));
         options.addOption(withDescription(STACKTRACE_DESCRIPTION).hasOptionalArg().create(EXCEPTION_STACK));
-        options.addOption(withDescription(FILTERED_STACKTRACE_DESCRIPTION).hasOptionalArg().create(FILTER_EXCEPTION_STACK));
-        options.addOption(withArgName("class").withDescription(EXTENDED_STORY).hasOptionalArg().create(EXTENDED_STORY_CLASS));
+        options.addOption(withDescription(FILTERED_STACKTRACE_DESCRIPTION).hasOptionalArg().create(FILTER_EXCEPTION_STACK));        
+        options.addOption(withArgName(NOEXECUTE_STORY).withDescription(NOEXECUTE_STORY_DESCRIPTION).create(NOEXECUTE_STORY));
         options.addOption(withDescription(PRETTY_PRINT_DESCRIPTION).hasOptionalArg().create(PRETTY_PRINT));
         options.addOption(withArgName(PARALLEL).withDescription(PARALLEL_DESCRIPTION).create(PARALLEL));
         options.addOption(withDescription(BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(BEHAVIOR_FILE));

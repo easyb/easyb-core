@@ -52,7 +52,7 @@ target(jar: "create an archive of the project's classfiles") {
   depends("compile-all")
 
   ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: classdir)
-  ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: cfgdir, update: true, excludes:"resource/thirdparty/docbook/**/*")
+  ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: cfgdir, update: true, excludes: "resource/thirdparty/docbook/**/*")
 }
 
 
@@ -127,7 +127,7 @@ target("validate-behaviors": "runs and validates the easyb behaviors") {
     }
   }
 
-  ant.easyb(failureProperty: "easyb.failed", failureFile:"${defaultdir}/failures.txt") {
+  ant.easyb(failureProperty: "easyb.failed", failureFile: "${defaultdir}/failures.txt") {
 
     classpath() {
       fileset(dir: libdir, includes: jarincludes)
@@ -159,6 +159,56 @@ target("validate-behaviors": "runs and validates the easyb behaviors") {
         exclude(name: "**/ExceptionalOccurrence.story")
         exclude(name: "**/HtmlReportingStory.groovy")
         exclude(name: "**/Issue116.story")
+      }
+    }
+  }
+
+  ant.fail(if: "easyb.failed", message: "Execution halted as specifications failed")
+}
+
+
+target("validate-norun-feature": "runs and validates the non executable stories") {
+  depends(jar)
+
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
+    classpath() {
+      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+    }
+  }
+
+  ant.easyb(failureProperty: "easyb.failed", failureFile: "${defaultdir}/failures.txt", noExecute: true) {
+
+    classpath() {
+      fileset(dir: libdir, includes: jarincludes)
+      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+      pathelement(location: behaviorclassdir)
+    }
+
+    report(location: "${reportsoutputdir}/easyb-report.html", format: "html")
+    report(location: "${reportsoutputdir}/easyb-report.xml", format: "xml")
+    report(location: "${reportsoutputdir}/story-report.txt", format: "txtstory")
+
+
+
+    behaviors(dir: gbehaviordir) {
+
+      if (ant.project.properties."behavior" != null) {
+        include(name: "**/${ant.project.properties.'behavior'}.*")
+      } else {
+
+        include(name: "**/*Story.groovy")
+        include(name: "**/*.story")        
+
+        exclude(name: "**/TextStoryReportingValidation.story")
+        exclude(name: "**/FailureReport.story")
+        exclude(name: "**/PassingPendingFailingStory.story")
+        exclude(name: "**/PassingPendingFailing.specification")
+        exclude(name: "**/ExceptionalOccurrence.story")
+        exclude(name: "**/HtmlReportingStory.groovy")
+        exclude(name: "**/Issue116.story")
+        exclude(name: "**/Ignore*.story")
+        exclude(name: "**/OneTimeFixture*.story")
+        exclude(name: "**/WhenUsingPlugin*.story")
       }
     }
   }
@@ -223,7 +273,7 @@ target("run-main": "runs easyb BehaviorRunner class") {
     //arg(value: "-ef")
     //arg(line: "-txtstory myout.txt")
     //arg(line: "-f myfailures.text")
-   // arg(line: "-f /Users/aglover/Development/groovy/easyb-0.9.5/easyb/easyb/target/failure-files.txt")
+    // arg(line: "-f /Users/aglover/Development/groovy/easyb-0.9.5/easyb/easyb/target/failure-files.txt")
     //arg(line: "-outfail myfailures.text")
     classpath() {
       fileset(dir: libdir, includes: jarincludes)

@@ -32,6 +32,12 @@ public class AbstractStoryTask extends AbstractJavaTask {
       addTarget("-f ${filename}")
     }
 
+    void setNoExecute(boolean exe){
+      if(exe){
+        addTarget("-ne")
+      }
+    }
+
     String getFailureProperty() {
         return failureProperty
     }
