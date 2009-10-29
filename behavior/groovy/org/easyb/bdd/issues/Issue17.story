@@ -1,4 +1,4 @@
-package org.bdd.issues //package needed for eclipse?
+package org.easyb.bdd.issues //package needed for eclipse?
 
 given "a file ending in .story", {
     value = 12 + 5

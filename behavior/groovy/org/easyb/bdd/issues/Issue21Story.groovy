@@ -1,4 +1,4 @@
-package org.bdd.issues
+package org.easyb.bdd.issues
 
 scenario "text story format should have newline prior to story or scenario part", {
     // TODO reimplement issue 21 once the report formatting has been reimplemented

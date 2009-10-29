@@ -1,4 +1,4 @@
-package org.bdd.issues
+package org.easyb.bdd.issues
 
 scenario "shouldBe should accept negative numbers", {
 

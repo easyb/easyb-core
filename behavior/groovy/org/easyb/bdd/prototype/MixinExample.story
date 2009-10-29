@@ -12,5 +12,6 @@ scenario "mixins should work normally", {
   }
   then "mixing it into easyb should work", {
     var.betterBe "blah"
+    var.shouldBe "blah" //original stuff works the same still...
   }
 }
