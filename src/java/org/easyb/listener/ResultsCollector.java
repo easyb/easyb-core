@@ -1,8 +1,8 @@
 package org.easyb.listener;
 
 import org.easyb.BehaviorStep;
-import org.easyb.result.Result;
 import org.easyb.domain.Behavior;
+import org.easyb.result.Result;
 import org.easyb.util.BehaviorStepType;
 
 public class ResultsCollector implements ExecutionListener {
@@ -67,6 +67,10 @@ public class ResultsCollector implements ExecutionListener {
         return genesisStep.getPendingBehaviorCountRecursively();
     }
 
+    public long getInReviewScenarioCount() {
+        return genesisStep.getInReviewScenarioCountRecursively();
+    }
+
     public BehaviorStep getGenesisStep() {
         return genesisStep;
     }
@@ -113,6 +117,8 @@ public class ResultsCollector implements ExecutionListener {
                     gotResult(new Result(Result.PENDING));
                 } else if (currentStep.getChildStepIgnoredResultCount() > 0) {
                     gotResult(new Result(Result.IGNORED));
+                }else if (currentStep.getChildStepInReviewResultCount() > 0) {
+                    gotResult(new Result(Result.IN_REVIEW));
                 } else {
                     gotResult(new Result(Result.SUCCEEDED));
                 }
@@ -131,10 +137,14 @@ public class ResultsCollector implements ExecutionListener {
     }
 
     public String getScenarioResultsAsText() {
-        long scenariosExecuted = getScenarioCount() - getIgnoredScenarioCount();
-        return (scenariosExecuted == 1 ? "1 scenario" : scenariosExecuted +
-                (getIgnoredScenarioCount() > 0 ? " of " + getScenarioCount() : "") + " scenarios") +
-                (getPendingScenarioCount() > 0 ? " (including " + getPendingScenarioCount() + " pending)" : "") + " executed" +
-                (getFailedScenarioCount() > 0 ? ", but status is failure! Total failures: " + getFailedScenarioCount() : " successfully.");
+        if (getInReviewScenarioCount() > 0) {            
+            return getInReviewScenarioCount() + " scenarios in review";
+        } else {
+            long scenariosExecuted = getScenarioCount() - getIgnoredScenarioCount();
+            return (scenariosExecuted == 1 ? "1 scenario" : scenariosExecuted +
+                    (getIgnoredScenarioCount() > 0 ? " of " + getScenarioCount() : "") + " scenarios") +
+                    (getPendingScenarioCount() > 0 ? " (including " + getPendingScenarioCount() + " pending)" : "") + " executed" +
+                    (getFailedScenarioCount() > 0 ? ", but status is failure! Total failures: " + getFailedScenarioCount() : " successfully.");
+        }
     }
 }

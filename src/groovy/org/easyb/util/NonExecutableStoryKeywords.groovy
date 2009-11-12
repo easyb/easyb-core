@@ -18,7 +18,7 @@ class NonExecutableStoryKeywords extends StoryKeywords {
   def runScenario(scenarioClosure, scenarioDescription) {
     stepStack.startStep(listener, BehaviorStepType.SCENARIO, scenarioDescription)
     scenarioClosure()
-    listener.gotResult(new Result(Result.SUCCEEDED))
+    listener.gotResult(new Result(Result.IN_REVIEW))
     stepStack.stopStep(listener)
   }
 
@@ -34,7 +34,7 @@ class NonExecutableStoryKeywords extends StoryKeywords {
 
   def then(spec, closure) {
     stepStack.startStep(listener, BehaviorStepType.THEN, spec)
-    listener.gotResult(new Result(Result.SUCCEEDED))       
+    listener.gotResult(new Result(Result.IN_REVIEW))       
     stepStack.stopStep(listener)
   }
 

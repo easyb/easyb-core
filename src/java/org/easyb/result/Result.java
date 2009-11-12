@@ -12,6 +12,7 @@ public class Result implements Serializable {
     public static final Type FAILED = new Type("failure", "F");
     public static final Type PENDING = new Type("pending", "P");
     public static final Type IGNORED = new Type("ignored", "I");
+    public static final Type IN_REVIEW = new Type("in review", "IR");
 
     public static class Type implements Serializable {
         private final String description;
@@ -105,6 +106,10 @@ public class Result implements Serializable {
 
     public boolean pending() {
         return status.equals(PENDING);
+    }
+
+    public boolean inReview() {
+        return status.equals(IN_REVIEW);
     }
 
     public String toString() {
