@@ -310,7 +310,7 @@ class BehaviorStep implements Serializable {
         formattedElement = "${spaces}${description}${genesisType.equals(BehaviorStepType.STORY) ? "" : lineSeparator}"
         break
       case BehaviorStepType.NARRATIVE:
-        formattedElement = "${spaces}${description}"
+        formattedElement = "${lineSeparator}${spaces}${description}"
         break
       case BehaviorStepType.NARRATIVE_ROLE:
       case BehaviorStepType.NARRATIVE_FEATURE:
