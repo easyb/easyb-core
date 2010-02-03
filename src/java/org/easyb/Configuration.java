@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Configuration {
@@ -18,6 +19,7 @@ public class Configuration {
     private boolean parallel = false;
     private String failureFile;
     private boolean isFailureFile = false;
+    private String[] categories;
 
     public Configuration() {
         this(new String[]{}, Collections.<ReportWriter>emptyList());
@@ -59,6 +61,15 @@ public class Configuration {
         this.isFailureFile = isFailureFile;
     }
 
+    public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
+                         final boolean stackTraceOn, final boolean filteredStackTraceOn,
+                         final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
+                         final String failureFile, final String[] categories) {
+        this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn,
+                extendedStoryClassName, parallel, isFailureFile, failureFile);
+        this.categories = categories;
+    }
+
     public String getExtendedStoryClass() {
         return extendedStoryClass;
     }
@@ -71,7 +82,7 @@ public class Configuration {
         return this.configuredReports;
     }
 
-    public boolean isParallel(){
+    public boolean isParallel() {
         return this.parallel;
     }
 
