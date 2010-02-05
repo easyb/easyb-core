@@ -1,13 +1,13 @@
 import java.util.regex.Pattern
 
-//category "A"
+category "A"
 
 scenario "simple one name categories", {
   given "a string", {
     foo = """category "A" """
   }
   then "we should be able to match on it", {
-    m = foo =~ /category "(.*)" /
+    m = foo =~ /^category "(.*)" /
     m[0][1].shouldBe "A"
   }  
 }
@@ -17,10 +17,25 @@ scenario "using brackets", {
     bar = """category ["A", "B"] """
   }
   then "using []'s doesnt matter either", {
-    m2 = bar =~ /category \[(.*)\] /
+    m2 = bar =~ /^category \[(.*)\] /
     vals = (m2[0][1]).split(",")
     //println vals
     vals[0].shouldBe "\"A\""
     vals[1].trim().shouldBe "\"B\""
+  }
+}
+
+scenario "using brackets", {
+ given "a more complex string with a group", {
+    bar = """category ["A", "B"] """
+    baz = """//category ["A", "B"] """
+  }
+  then "using []'s doesnt matter either with a regex that uses OR", {
+    m2 = bar =~ /^category "(.*)"|\[(.*)\] /
+    m2.size().shouldBe 1
+
+    m3 = baz =~ /^category "(.*)"|\[(.*)\] /
+    //m3.size().shouldBe 0
+    println m3[0]
   }
 }

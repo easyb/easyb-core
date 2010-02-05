@@ -70,6 +70,10 @@ public class Configuration {
         this.categories = categories;
     }
 
+    public String[] getCategories(){
+        return this.categories;
+    }
+
     public String getExtendedStoryClass() {
         return extendedStoryClass;
     }

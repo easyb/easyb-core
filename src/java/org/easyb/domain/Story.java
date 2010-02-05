@@ -2,6 +2,7 @@ package org.easyb.domain;
 
 import groovy.lang.GroovyShell;
 import org.easyb.BehaviorStep;
+import org.easyb.Configuration;
 import org.easyb.StoryBinding;
 import org.easyb.listener.ExecutionListener;
 import org.easyb.plugin.EasybPlugin;
@@ -16,37 +17,53 @@ public class Story extends BehaviorBase {
         super(gShellConfig, phrase, file);
     }
 
+    public Story(GroovyShellConfiguration gShellConfig, String phrase, File file, Configuration config) {
+        super(gShellConfig, phrase, file, config);
+    }
+
     public String getTypeDescriptor() {
         return "story";
     }
 
     public BehaviorStep execute(ExecutionListener listener) throws IOException {
-        BehaviorStep currentStep = new BehaviorStep(BehaviorStepType.STORY, getPhrase());
-
-        listener.startBehavior(this);
-        listener.startStep(currentStep);
-
         File file = getFile();
         String story = readStory(file);
-        EasybPlugin activePlugin = new PluginFactory().pluginForStory(story);
+        if (isMemberOfCategory(story, this.getCategories())) {
+            BehaviorStep currentStep = new BehaviorStep(BehaviorStepType.STORY, getPhrase());
 
-        StoryBinding binding = StoryBinding.getBinding(listener, activePlugin);
-        GroovyShell g = new GroovyShell(getClassLoader(), binding);
-        bindShellVariables(g);
+            listener.startBehavior(this);
+            listener.startStep(currentStep);
 
-        setBinding(binding);
-        activePlugin.beforeStory(binding);
-        listener.startStep(new BehaviorStep(BehaviorStepType.EXECUTE, getPhrase()));
-        
-        //Pass in path to original file so it can be used in debuggers
-        g.evaluate(story,file.getAbsolutePath());
-        listener.stopStep(); // EXEC
-        activePlugin.afterStory(binding);
+            EasybPlugin activePlugin = new PluginFactory().pluginForStory(story);
 
-        listener.stopStep();
-        listener.stopBehavior(currentStep, this);
+            StoryBinding binding = StoryBinding.getBinding(listener, activePlugin);
+            GroovyShell g = new GroovyShell(getClassLoader(), binding);
+            bindShellVariables(g);
 
-        return currentStep;
+            setBinding(binding);
+            activePlugin.beforeStory(binding);
+            listener.startStep(new BehaviorStep(BehaviorStepType.EXECUTE, getPhrase()));
+
+            //Pass in path to original file so it can be used in debuggers
+            g.evaluate(story, file.getAbsolutePath());
+            listener.stopStep(); // EXEC
+            activePlugin.afterStory(binding);
+
+            listener.stopStep();
+            listener.stopBehavior(currentStep, this);
+
+            return currentStep;
+        } else {
+            return null;
+        }
+    }
+    //todo implement this correctly
+    protected boolean isMemberOfCategory(String story, String[] categories) {
+        String[] lines = story.split("\n");
+        for(int x =0; x < lines.length; x++){
+            //System.out.println(x + " : " + lines[x]);
+        }
+        return true;
     }
 
     protected String readStory(File story) throws IOException {

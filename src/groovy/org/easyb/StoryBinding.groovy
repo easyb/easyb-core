@@ -85,6 +85,10 @@ class StoryBinding extends Binding {
       story.all()
     }
 
+    category = {
+      //nop
+    }
+
     ignore = {Object ... scenarios ->
       if (scenarios.size() == 1) {
         def objscn = scenarios[0]

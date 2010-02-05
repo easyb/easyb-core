@@ -29,12 +29,16 @@ public class ConsoleReporter extends ResultsCollector {
     }
 
     public void completeTesting() {
-        System.out.println("\n" +
-                this.getTotalRanCountMessage() +
-                this.getTotalPendingCountMessage() +
-                (getFailedBehaviorCount() > 0 ? " with " +
-                        (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures") +
-                this.getCompletedIgnoredMesage());
+        if (getBehaviorCount() == 0) {
+            System.out.println("No behaviors were run");
+        } else {
+            System.out.println("\n" +
+                    this.getTotalRanCountMessage() +
+                    this.getTotalPendingCountMessage() +
+                    (getFailedBehaviorCount() > 0 ? " with " +
+                            (getFailedBehaviorCount() == 1 ? "1 failure" : getFailedBehaviorCount() + " failures") : " with no failures") +
+                    this.getCompletedIgnoredMesage());
+        }
     }
 
     /**

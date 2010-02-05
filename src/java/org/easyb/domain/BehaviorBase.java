@@ -3,6 +3,7 @@ package org.easyb.domain;
 import groovy.lang.GroovyShell;
 import groovy.lang.Binding;
 import groovy.lang.Script;
+import org.easyb.Configuration;
 
 import java.io.File;
 import java.io.Serializable;
@@ -13,11 +14,25 @@ public abstract class BehaviorBase implements Behavior, Serializable {
     private File file;
     private transient GroovyShellConfiguration gShellConfig;
     private Binding binding;
+    private Configuration config;
 
     protected BehaviorBase(GroovyShellConfiguration gShellConfig, String phrase, File file) {
         this.gShellConfig = gShellConfig;
         this.phrase = phrase;
         this.file = file;
+    }
+
+    protected BehaviorBase(GroovyShellConfiguration gShellConfig, String phrase, File file, Configuration config) {
+        this(gShellConfig, phrase, file);
+        this.config = config;
+    }
+
+    public String[] getCategories() {
+        if (this.config != null) {
+            return this.config.getCategories();
+        } else {
+            return null;
+        }
     }
 
     public String getPhrase() {
@@ -65,10 +80,10 @@ public abstract class BehaviorBase implements Behavior, Serializable {
     }
 
     public Binding getBinding() {
-      return binding;
+        return binding;
     }
 
     public void setBinding(Binding binding) {
-      this.binding = binding;
+        this.binding = binding;
     }
 }

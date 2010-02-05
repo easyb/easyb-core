@@ -26,7 +26,7 @@ class BehaviorKeywords {
         listener.describeStep(description)
         stepStack.stopStep listener
     }
-
+  
     ResultsCollector easybResults() {
         if (listener instanceof ResultsCollector) {
             return (ResultsCollector) listener
