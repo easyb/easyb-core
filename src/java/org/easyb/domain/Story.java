@@ -8,9 +8,11 @@ import org.easyb.listener.ExecutionListener;
 import org.easyb.plugin.EasybPlugin;
 import org.easyb.plugin.PluginFactory;
 import org.easyb.util.BehaviorStepType;
+import org.easyb.util.CategoryRegExHelper;
 import org.easyb.util.PreProcessorable;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class Story extends BehaviorBase {
     public Story(GroovyShellConfiguration gShellConfig, String phrase, File file) {
@@ -57,13 +59,30 @@ public class Story extends BehaviorBase {
             return null;
         }
     }
-    //todo implement this correctly
+
+    //todo implement this correctly - can processing be broken out at some point?
     protected boolean isMemberOfCategory(String story, String[] categories) {
-        String[] lines = story.split("\n");
-        for(int x =0; x < lines.length; x++){
-            //System.out.println(x + " : " + lines[x]);
+        if (categories != null) {
+            CategoryRegExHelper hlpr = new CategoryRegExHelper();
+            String[] lines = story.split("\n");
+            Arrays.sort(categories); //TODO do this somewhere else?
+            for (int x = 0; x < lines.length; x++) {
+                if (hlpr.lineStartsWithCategory(lines[x])) {
+                    String[] storycats = hlpr.getCategories(lines[x]);
+                    for (int y = 0; y < storycats.length; y++) {
+                        //System.out.println("story has these categories " + storycats[y]);
+                        if (Arrays.binarySearch(categories, storycats[y]) >= 0) {
+                            //value was found
+                            //System.out.println("value was found!");
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     protected String readStory(File story) throws IOException {

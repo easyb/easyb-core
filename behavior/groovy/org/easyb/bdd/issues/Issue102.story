@@ -1,5 +1,7 @@
 import org.easyb.exception.VerificationException
 
+
+
 scenario "ensureThrows should be less noisy", {
     given "some error condition", {
         var = {

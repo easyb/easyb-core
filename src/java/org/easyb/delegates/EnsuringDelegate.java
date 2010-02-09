@@ -67,7 +67,7 @@ public class EnsuringDelegate implements Serializable{
     }
 
     /**
-     * @param clzz    a list of classes of the possible exception types
+     * @param clzzList    a list of classes of the possible exception types
      * @param closure closure containing code to be run that should throw an
      *                exception
      */
@@ -86,13 +86,24 @@ public class EnsuringDelegate implements Serializable{
             if (!caught) {
                 throw new VerificationException(
                         e.getClass().getName() + " was caught. The cause was "
-                                + e.getCause().getClass() + " not " + clzzList
+                                + getCauseClause(e)
+                                + " not "
+                                + clzzList
                                 + " as specified.");
             }
             return;
         }
         throw new VerificationException("expected exception of type " + clzzList + " was not thrown");
     }
+
+    private String getCauseClause(Throwable e) {
+        if(e.getCause() != null){
+            return e.getCause().getClass().toString();
+        }else{
+            return "undetermined";
+        }
+    }
+
 
     /**
      * @param expression to be evaluated and should resolve to a boolean result

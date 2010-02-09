@@ -5,7 +5,9 @@ import org.easyb.Configuration;
 import org.easyb.util.CamelCaseConverter;
 
 import java.io.File;
+
 import static java.util.Arrays.asList;
+
 import java.util.List;
 
 public class BehaviorFactory {
@@ -52,10 +54,10 @@ public class BehaviorFactory {
             if (config.getExtendedStoryClass() != null) {
                 return new NonExecutableStory(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
             } else {
-                return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+                return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile, config);
             }
         } else {
-            return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);
+            return new Story(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile, config);
         }
     }
 
