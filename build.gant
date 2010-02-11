@@ -217,6 +217,42 @@ target("validate-norun-feature": "runs and validates the non executable stories"
 }
 
 
+target("validate-categories-feature": "runs and validates categories") {
+  depends(jar)
+
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
+    classpath() {
+      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+    }
+  }
+
+  ant.easyb(failureProperty: "easyb.failed", failureFile: "${defaultdir}/failures.txt",
+          noExecute: false, categories: "A") {
+
+    classpath() {
+      fileset(dir: libdir, includes: jarincludes)
+      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+      pathelement(location: behaviorclassdir)
+    }
+
+    report(location: "${reportsoutputdir}/easyb-report.html", format: "html")
+    report(location: "${reportsoutputdir}/easyb-report.xml", format: "xml")
+    report(location: "${reportsoutputdir}/story-report.txt", format: "txtstory")
+
+    behaviors(dir: gbehaviordir) {
+      if (ant.project.properties."behavior" != null) {
+        include(name: "**/${ant.project.properties.'behavior'}.*")
+      } else {
+        include(name: "**/*Story.groovy")
+        include(name: "**/*.story")
+      }
+    }
+  }
+
+  ant.fail(if: "easyb.failed", message: "Execution halted as behaviors failed")
+}
+
+
 target("validate-reports": "runs and validates the easyb reports") {
   runAntTask(["**/AndChainedFeature.story"],
           [["${reportsoutputdir}/valid-report.txt", "txtstory"]])
