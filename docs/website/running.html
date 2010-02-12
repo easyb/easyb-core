@@ -40,10 +40,11 @@ pageTracker._trackPageview();
 
 <p>easyb can be invoked via:</p>
 <ul>
-  <li><a href='#commandline'>the command line</a></li>
+  <li><a href='#commandline'>Command line</a></li>
   <li><a href='#ant'>Ant</a></li>
   <li><a href='#maven'>Maven</a></li>
   <li><a href='#intellij'>IntelliJ</a></li>
+<li><a href='#eclipse'>Eclipse</a></li>
 </ul>
 
 <a name='commandline'>
@@ -148,7 +149,9 @@ on the command line.</p>
       <li><code>-e</code> for a full exception stack trace</li>
       <li><code>-ef</code> for exception stack trace filtering — that is, a lot of the noise associated with a Groovy exception stack is filtered out</li>
 </ul>
-	</li></ul>
+	</li>
+	<li>You can run behavior categories by passing the <code>-c</code> flag along with a single or comma-delimited list of category names.</li>
+	</ul>
 
 <a name='ant'>
 <h2>Ant</h2>
@@ -188,6 +191,14 @@ on the command line.</p>
      &lt;/behaviors&gt;
     &lt;/easyb&gt;
 </code></pre>
+
+<p>The <code>easyb</code> task takes a number of options including: 
+	<ul>
+		<li><code>failureFile</code> -- path to file which will contain any failed behaviors </li>
+		<li><code>noExecute</code> -- boolean, which allows you to generate a report without executing any stories</li>
+		<li><code>categories</code> -- a single or comma-delimited list of category names to execute</li>
+	</ul>
+</p>
 
 <p>Please note, report's have numerous formats, including <code>html</code>, <code>xml</code>, <code>txtstory</code>, and <code>txtspecification</code>.</p>
 
@@ -297,16 +308,22 @@ file but if you simply navigate to the top of the repository you will get a perm
 
 <p>We have created an easyb plugin for IntelliJ that makes it super easyb to work with easyb specifications and to run and debug them.  This plugin can be downloaded from the IntelliJ IDEA plug-in repository -- just check within your IDE's settings.
 
-<p><strong>NOTE</strong> The current version of the easyb plugin for IntelliJ doesn't set file associations correctly.  This can cause easyb stories and specifications to disappear from the IDE or be run as if they were groovy scripts.  You can workaround this behavior by following these steps:</p>
+<a name='eclipse'>
+<h2>Eclipse</h2>
+</a>
 
+<p>We have created an easyb plugin for Eclipse that makes it super easyb to work with easyb specifications and to run them. 
+</p>
+
+
+<p>Installing the plugin works as follows:
 <ol>
-	<li>Open the IntelliJ settings dialog</li>
-	<li>Select File Types</li>
-	<li>Locate the "easyb story" file type and remove all associations</li>
-	<li>Locate the "Groovy Scripts and Classes" file type and add ".story", "*Story.groovy", ".specification", and "*Specification.groovy"
+<li>Go to the <b>Help</b> menu and then select <b>Software Updates...</b></li>
+<li>Hit the <b>Add Site..</b> button and in the resulting dialog, for the location type: <a href="http://easyb.googlecode.com/svn/trunk/eclipse-plugins/org.easyb.eclipse.updatesite/">http://easyb.googlecode.com/svn/trunk/eclipse-plugins/org.easyb.eclipse.updatesite/</a></li>
+<li>Hit the <b>Ok</b> button</li>
+<li>Select the easyb Eclipse Update Site in the list box and then hit the <b>Install...</b> button</li>
 </ol>
-
-<p><strong>NOTE</strong> Also, with the current version of the  plugin you will need to make easyb available on the classpath of your project.  The next release of the plugin will make this unnecessary.</p>
+</p>
 
 
 </div>
@@ -352,6 +369,7 @@ file but if you simply navigate to the top of the repository you will get a perm
 			<h2>Plug-ins</h2>
 			<ul>
 				<li><a href="./dbunit.html">DbUnit plug-in</a></li>
+				<li><a href="./xmlunit.html">XMLUnit plug-in</a></li>
 			</ul>
 		</li>
 		<li>

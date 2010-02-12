@@ -35,50 +35,42 @@ pageTracker._trackPageview();
 	<!-- start content -->
 	<div id="content">
 		<div class="post">
-			<h2 class="title">Take a look under the hood</h2>
+			<h2 class="title">Dealing with XML with easyb</h2>
 		
 			<div class="entry">
-				<p>easyb is hosted at <a href="http://code.google.com/p/easyb/">Google code</a>, which provides an 
-				<a href="http://code.google.com/p/easyb/source/browse">accessible Subversion repository</a>. To checkout easyb's source code, simply type </p>
+				
+				
+				<p>There’s myriad ways to validate XML; in fact, with Groovy, the mechanics of parsing XML with XMLSlurper couldn’t be easier! Nevertheless, from time to time, you might have needed an easy way to validate XML documents without having to actually parse them. Thus, <a href="http://www.ibm.com/developerworks/java/library/j-cq121906.html">XMLUnit</a> has been a handy framework today as it has been for years.</p>
+
+<p>While XMLUnit is a JUnit-style framework, you can certainly leverage it outside of JUnit. What’s more, via easyb’s plug-in framework, using XMLUnit just got a lot easier! For instance, leveraging XMLUnit with this plug-in makes validation as easy as:</p>
+
 <pre><code>
-svn checkout http://easyb.googlecode.com/svn/trunk/easyb easyb-read-only
+using "xmlunit"
+
+scenario "XML documents are compared easier via xml unit plug-in", {
+
+ given "some xml document", {
+  control = """&lt;account&gt;&lt;id&gt;3A-00&lt;/id&gt;&lt;name&gt;acme&lt;/name&gt;&lt;/account&gt;"""
+ }
+
+ then "the plugin should enable easy comparisons", {
+  testXML = """&lt;account&gt;&lt;id&gt;3A-00&lt;/id&gt;&lt;name&gt;acme&lt;/name&gt;&lt;/account&gt;"""
+  testXML.shouldBeIdenticalTo control
+  testXML.shouldBeIdenticalWith control //same behavior different call
+  testXML.shouldBeIdentical control //ditto
+  testXML.identical control //ditto
+ }
+
+ and "the instance of XMLUnit should be available for use", {
+  XMLUnit.version.shouldBe "1.3alpha"
+  XMLUnit.getIgnoreWhitespace().shouldBe true
+ }
 </code></pre>
 
-<p>Building easyb requires <a href="http://groovy.codehaus.org/">Groovy 1.6.0</a> and <a href="http://gant.codehaus.org/">Gant 1.6.0</a>. Once you've downloaded the project, in the project's root directory, type <code>gant -p</code>. You should see something like this: </p>
+<p>Note how the <code>using</code> keyword is required -- this loads the XMLUnit easyb plug-in (providing you've placed the plug-in in your classspath). The key aspects of the plug-in are the special validation methods, such as <code>shouldBeIdenticalTo</code> and its logical cousin <code>shouldBeSimilarTo</code>. Note too, these methods have synonyms (see the code above). What's more, you can grab an instance of the core XMLUnit framework as it's automatically present in the binding available to your behaviors (as XMLUnit). Lastly, all should methods in easyb support an optional message parameter that will be captured if there is an error -- <code>testXML.shouldBeIdenticalTo control, "documents were not identical"</code> -- as you can see this is quite similar to JUnit-style assertions.</p>
+				
+				
 
-<pre><code>
-   bundle-docs         creates a war file containing static html docs
-   clean               cleans target dir
-   compile-all         compile Groovy & Java classes
-   compile-behaviors   compile Groovy & Java classes in easyb behavior
-   compile-core        compile Groovy & Java classes in easyb core
-   configuregroovy     configures environment to compile w/Groovy
-   dist                create a distribution from the release
-   doc                 create documenation from docbook
-   getdeps             retrieves dependencies
-   init                init dirs
-   init-doc            initialize the doc environment
-   jar                 create an archive of the project's classfiles
-   jar-javadocs        creates a javadocs jar
-   jar-sources         creates a sources jar
-   maven-bundle        creates an upload bundle for the central maven repository
-   maven-install       install into the default local maven repository
-   publish-easyb       uploads easyb distribution to googlecode
-   release             compile and archive
-   run-main            runs easyb BehaviorRunner class
-   validate            runs and validates both, behaviors and reports
-   validate-behaviors  runs and validates the easyb behaviors
-   validate-reports    runs and validates the easyb reports	
-</code></pre>	
-
-<p>To verify everything works, type <code>gant dist</code>, which will basically run everything (including validation). At the end you should see some <code>.tar.gz</code> files created and some text like this: </p>
-
-<pre><code>
- [easyb] 90 total behaviors run with no failures
- [easyb] easyb execution passed
-</code></pre>	
-
-<p>Now you are good to go. Now wasn't that easy? If you have any questions or comments, drop us a note on <a href="http://groups.google.com/group/easyb-users">our mailing list</a>.</p>
 			</div>
 		</div>
 		
@@ -120,6 +112,7 @@ svn checkout http://easyb.googlecode.com/svn/trunk/easyb easyb-read-only
 					<li><a href="./team.html">Meet the team</a></li>
 				</ul>
 			</li>
+			
 			<li>
 				<h2>Plug-ins</h2>
 				<ul>
@@ -127,6 +120,7 @@ svn checkout http://easyb.googlecode.com/svn/trunk/easyb easyb-read-only
 					<li><a href="./xmlunit.html">XMLUnit plug-in</a></li>
 				</ul>
 			</li>
+			
 			<li>
 				<h2>Resources</h2>
 				<ul>
