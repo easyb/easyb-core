@@ -24,7 +24,7 @@ class CategoryRegExHelper {
         return handleCategories(match)
       } else if (match[0][0].startsWith("category")) {
         def singlecat = match[0][1].trim()
-        return this.trimQuotes(singlecat)
+        return [this.trimQuotes(singlecat)]
       }
     } else {
       return []
