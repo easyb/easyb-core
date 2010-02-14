@@ -109,3 +109,22 @@ scenario "using category helper", {
 
   }
 }
+
+
+scenario "using category helper", {
+  given "a more complex string with a group", {
+    bar = """category ["Andy", "Brian"] """
+    baz = """category "Cat" """
+  }
+  then "using category helper should return true or false", {
+    helper = new CategoryRegExHelper()
+
+    list1 = helper.getCategories(bar)
+    list2 = helper.getCategories(baz)
+
+    list1[0].shouldBe "Andy"
+    list1[1].shouldBe "Brian"
+    list2[0].shouldBe "Cat"
+
+  }
+}
