@@ -70,10 +70,7 @@ public class Story extends BehaviorBase {
                 if (hlpr.lineStartsWithCategory(lines[x])) {
                     String[] storycats = hlpr.getCategories(lines[x]);
                     for (int y = 0; y < storycats.length; y++) {
-                        //System.out.println("story has these categories " + storycats[y]);
-                        if (Arrays.binarySearch(categories, storycats[y]) >= 0) {
-                            //value was found
-                            //System.out.println("value was found!");
+                        if (Arrays.binarySearch(categories, storycats[y]) >= 0) {                            
                             return true;
                         }
                     }
