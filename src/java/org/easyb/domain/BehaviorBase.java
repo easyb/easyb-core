@@ -4,9 +4,11 @@ import groovy.lang.GroovyShell;
 import groovy.lang.Binding;
 import groovy.lang.Script;
 import org.easyb.Configuration;
+import org.easyb.util.CategoryRegExHelper;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Map;
 
 public abstract class BehaviorBase implements Behavior, Serializable {
@@ -85,5 +87,27 @@ public abstract class BehaviorBase implements Behavior, Serializable {
 
     public void setBinding(Binding binding) {
         this.binding = binding;
+    }
+
+    //todo implement this correctly - can processing be broken out at some point?
+    protected boolean isMemberOfCategory(String story, String[] categories) {
+        if (categories != null) {
+            CategoryRegExHelper hlpr = new CategoryRegExHelper();
+            String[] lines = story.split("\n");
+            Arrays.sort(categories); //TODO do this somewhere else?
+            for (int x = 0; x < lines.length; x++) {
+                if (hlpr.lineStartsWithCategory(lines[x])) {
+                    String[] storycats = hlpr.getCategories(lines[x]);
+                    for (int y = 0; y < storycats.length; y++) {
+                        if (Arrays.binarySearch(categories, storycats[y]) >= 0) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        } else {
+            return true;
+        }
     }
 }

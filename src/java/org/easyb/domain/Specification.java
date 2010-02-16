@@ -2,6 +2,7 @@ package org.easyb.domain;
 
 import groovy.lang.GroovyShell;
 import org.easyb.BehaviorStep;
+import org.easyb.Configuration;
 import org.easyb.SpecificationBinding;
 import org.easyb.util.BehaviorStepType;
 import org.easyb.listener.ExecutionListener;
@@ -14,6 +15,10 @@ public class Specification extends BehaviorBase {
         super(gShellConfig, phrase, file);
     }
 
+    public Specification(GroovyShellConfiguration gShellConfig, String phrase, File file, Configuration config) {
+        super(gShellConfig, phrase, file, config);
+    }
+
     public String getTypeDescriptor() {
         return "specification";
     }
@@ -24,12 +29,12 @@ public class Specification extends BehaviorBase {
         listener.startBehavior(this);
         listener.startStep(currentStep);
 
-        setBinding(SpecificationBinding.getBinding(listener) );
+        setBinding(SpecificationBinding.getBinding(listener));
         GroovyShell g = new GroovyShell(getClassLoader(), getBinding());
         bindShellVariables(g);
 
-        listener.startStep( new BehaviorStep (BehaviorStepType.EXECUTE, getPhrase()) );
-        g.evaluate (getFile());
+        listener.startStep(new BehaviorStep(BehaviorStepType.EXECUTE, getPhrase()));
+        g.evaluate(getFile());
 
         listener.stopStep(); // EXEC
         listener.stopStep(); // SPECIFICATION

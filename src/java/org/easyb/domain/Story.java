@@ -60,28 +60,6 @@ public class Story extends BehaviorBase {
         }
     }
 
-    //todo implement this correctly - can processing be broken out at some point?
-    protected boolean isMemberOfCategory(String story, String[] categories) {
-        if (categories != null) {
-            CategoryRegExHelper hlpr = new CategoryRegExHelper();
-            String[] lines = story.split("\n");
-            Arrays.sort(categories); //TODO do this somewhere else?
-            for (int x = 0; x < lines.length; x++) {
-                if (hlpr.lineStartsWithCategory(lines[x])) {
-                    String[] storycats = hlpr.getCategories(lines[x]);
-                    for (int y = 0; y < storycats.length; y++) {
-                        if (Arrays.binarySearch(categories, storycats[y]) >= 0) {                            
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     protected String readStory(File story) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
 
