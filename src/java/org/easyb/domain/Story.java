@@ -8,11 +8,9 @@ import org.easyb.listener.ExecutionListener;
 import org.easyb.plugin.EasybPlugin;
 import org.easyb.plugin.PluginFactory;
 import org.easyb.util.BehaviorStepType;
-import org.easyb.util.CategoryRegExHelper;
 import org.easyb.util.PreProcessorable;
 
 import java.io.*;
-import java.util.Arrays;
 
 public class Story extends BehaviorBase {
     public Story(GroovyShellConfiguration gShellConfig, String phrase, File file) {
@@ -30,7 +28,7 @@ public class Story extends BehaviorBase {
     public BehaviorStep execute(ExecutionListener listener) throws IOException {
         File file = getFile();
         String story = readStory(file);
-        if (isMemberOfCategory(story, this.getCategories())) {
+        if (containsTag(story, this.getTags())) {
             BehaviorStep currentStep = new BehaviorStep(BehaviorStepType.STORY, getPhrase());
 
             listener.startBehavior(this);

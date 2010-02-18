@@ -19,7 +19,7 @@ public class Configuration {
     private boolean parallel = false;
     private String failureFile;
     private boolean isFailureFile = false;
-    private String[] categories;
+    private String[] tags;
 
     public Configuration() {
         this(new String[]{}, Collections.<ReportWriter>emptyList());
@@ -64,14 +64,14 @@ public class Configuration {
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                          final boolean stackTraceOn, final boolean filteredStackTraceOn,
                          final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
-                         final String failureFile, final String[] categories) {
+                         final String failureFile, final String[] tags) {
         this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn,
                 extendedStoryClassName, parallel, isFailureFile, failureFile);
-        this.categories = categories;
+        this.tags = tags;
     }
 
-    public String[] getCategories(){
-        return this.categories;
+    public String[] getTags(){
+        return this.tags;
     }
 
     public String getExtendedStoryClass() {

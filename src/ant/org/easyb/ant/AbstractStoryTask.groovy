@@ -38,8 +38,8 @@ public class AbstractStoryTask extends AbstractJavaTask {
     }
   }
 
-  void setCategories(String cats) {
-    addTarget("-c ${cats}")
+  void setTags(String tags) {
+    addTarget("-tags ${tags}")
   }
 
   String getFailureProperty() {

@@ -2,9 +2,8 @@ package org.easyb.domain;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Binding;
-import groovy.lang.Script;
 import org.easyb.Configuration;
-import org.easyb.util.CategoryRegExHelper;
+import org.easyb.util.TagRegExHelper;
 
 import java.io.File;
 import java.io.Serializable;
@@ -29,9 +28,9 @@ public abstract class BehaviorBase implements Behavior, Serializable {
         this.config = config;
     }
 
-    public String[] getCategories() {
+    public String[] getTags() {
         if (this.config != null) {
-            return this.config.getCategories();
+            return this.config.getTags();
         } else {
             return null;
         }
@@ -90,16 +89,16 @@ public abstract class BehaviorBase implements Behavior, Serializable {
     }
 
     //todo implement this correctly - can processing be broken out at some point?
-    protected boolean isMemberOfCategory(String story, String[] categories) {
-        if (categories != null) {
-            CategoryRegExHelper hlpr = new CategoryRegExHelper();
-            String[] lines = story.split("\n");
-            Arrays.sort(categories); //TODO do this somewhere else?
+    protected boolean containsTag(String behavior, String[] tags) {
+        if (tags != null) {
+            TagRegExHelper hlpr = new TagRegExHelper();
+            String[] lines = behavior.split("\n");
+            Arrays.sort(tags); //TODO do this somewhere else?
             for (int x = 0; x < lines.length; x++) {
-                if (hlpr.lineStartsWithCategory(lines[x])) {
-                    String[] storycats = hlpr.getCategories(lines[x]);
-                    for (int y = 0; y < storycats.length; y++) {
-                        if (Arrays.binarySearch(categories, storycats[y]) >= 0) {
+                if (hlpr.lineStartsWithTag(lines[x])) {
+                    String[] behaviorcats = hlpr.getTags(lines[x]);
+                    for (int y = 0; y < behaviorcats.length; y++) {
+                        if (Arrays.binarySearch(tags, behaviorcats[y]) >= 0) {
                             return true;
                         }
                     }

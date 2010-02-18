@@ -9,13 +9,13 @@ before "init a null story", {
 }
 
 
-scenario "categories with one word", {
-  given "a category name like santiy", {
+scenario "tag with one word", {
+  given "a tag name like santiy", {
     cat = "sanity"
   }
   when "a story containing this name is processed", {
     sstory = """
-category "sanity"
+tag "sanity"
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{
@@ -34,19 +34,19 @@ scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta
 """
   }
   then "it should be run", {
-    answer = stry.isMemberOfCategory(sstory, [cat] as String[])
+    answer = stry.containsTag(sstory, [cat] as String[])
     answer.shouldBe true
   }
 }
 
 
-scenario "category list", {
-  given "a category list", {
+scenario "tag list", {
+  given "a tag list", {
     cat = ["sanity", "bar", "baz"]
   }
   when "a story containing this name is processed", {
     bstory = """
-category "baz"
+tag "baz"
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{
@@ -65,20 +65,20 @@ scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta
 """
   }
   then "it should be run", {
-    answer = stry.isMemberOfCategory(bstory, cat as String[])
+    answer = stry.containsTag(bstory, cat as String[])
     answer.shouldBe true
   }
 }
 
 
 
-scenario "category list not true", {
-  given "a category list", {
+scenario "tag list not true", {
+  given "a tag list", {
     cat = ["sanity", "bar", "baz"]
   }
   when "a story not containing the name is not processed", {
     bstory = """
-category "bazzy"
+tag "bazzy"
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{
@@ -97,20 +97,20 @@ scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta
 """
   }
   then "it should be run", {
-    answer = stry.isMemberOfCategory(bstory, cat as String[])
+    answer = stry.containsTag(bstory, cat as String[])
     answer.shouldBe false
   }
 }
 
 
 
-scenario "category list with one true one false", {
-  given "a category list", {
+scenario "tag list with one true one false", {
+  given "a tag list", {
     cat = ["sanity", "bar", "baz"]
   }
   when "a story containing a name is processed", {
     bbstory = """
-category ["bazzy","bar"]
+tag ["bazzy","bar"]
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{
@@ -129,7 +129,7 @@ scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta
 """
   }
   then "it should be run", {
-    answer = stry.isMemberOfCategory(bbstory, cat as String[])
+    answer = stry.containsTag(bbstory, cat as String[])
     answer.shouldBe true
   }
 }

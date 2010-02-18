@@ -227,7 +227,7 @@ target("validate-categories-feature": "runs and validates categories") {
   }
 
   ant.easyb(failureProperty: "easyb.failed", failureFile: "${defaultdir}/failures.txt",
-          noExecute: false, categories: "A") {
+          noExecute: false, tags: "A") {
 
     classpath() {
       fileset(dir: libdir, includes: jarincludes)

@@ -164,4 +164,5 @@ class StoryKeywords extends BehaviorKeywords {
             this.ignoreRegEx = scenarioPattern
         }
     }
+    
 }

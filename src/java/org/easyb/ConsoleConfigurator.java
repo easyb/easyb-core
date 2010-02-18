@@ -40,8 +40,8 @@ public class ConsoleConfigurator {
     private static final String FAILURE_BEHAVIOR_FILE_DESCRIPTION = "caputure failed behaviors in a file " +
             "(for processing at a later point -- see the -f option)";
 
-    private static final String CATEGORY = "c";
-    private static final String CATEGORY_DESCRIPTION = "run behaviors with category marker";
+    private static final String TAG = "tags";
+    private static final String TAG_DESCRIPTION = "run behaviors with tag marker";
 
 
     public Configuration configure(final String[] args) {
@@ -57,7 +57,7 @@ public class ConsoleConfigurator {
                     getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
                     commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine),
                     isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE),
-                    getCategories(commandLine));
+                    getTags(commandLine));
 
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
@@ -69,9 +69,9 @@ public class ConsoleConfigurator {
         return null;
     }
 
-    private String[] getCategories(CommandLine cmdLine) {
-        if (cmdLine.hasOption(CATEGORY)) {
-            return cmdLine.getOptionValue(CATEGORY).split(",");
+    private String[] getTags(CommandLine cmdLine) {
+        if (cmdLine.hasOption(TAG)) {
+            return cmdLine.getOptionValue(TAG).split(",");
         } else {
             return null;
         }
@@ -181,7 +181,7 @@ public class ConsoleConfigurator {
         options.addOption(withArgName(PARALLEL).withDescription(PARALLEL_DESCRIPTION).create(PARALLEL));
         options.addOption(withDescription(BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(BEHAVIOR_FILE));
         options.addOption(withDescription(FAILURE_BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(FAILURE_BEHAVIOR_FILE));
-        options.addOption(withDescription(CATEGORY_DESCRIPTION).hasOptionalArg().create(CATEGORY));
+        options.addOption(withDescription(TAG_DESCRIPTION).hasOptionalArg().create(TAG));
 
         return options;
     }

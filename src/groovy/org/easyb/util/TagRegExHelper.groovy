@@ -1,44 +1,42 @@
 package org.easyb.util
 
-import java.util.regex.Matcher
-
 /**
  *
  */
-class CategoryRegExHelper {
-  def pattern_1 = /^category "(.*)"|\[(.*)\]/
-  def pattern_3 = /^category/
+class TagRegExHelper {
+  def pattern_1 = /^tag "(.*)"|\[(.*)\]/
+  def pattern_3 = /^tag/
 
   /**
    * does the line start with "category"
    * Note, "//category" won't match
    */
-  boolean lineStartsWithCategory(line) {
+  boolean lineStartsWithTag(line) {
     return ((line =~ pattern_3).size() > 0)
   }
 
-  String[] getCategories(line) {
+  String[] getTags(line) {
     def match = line =~ pattern_1
     if (match.size() > 0) {
       if (match[0][0].startsWith("[")) {
-        return handleCategories(match)
-      } else if (match[0][0].startsWith("category")) {
-        def singlecat = match[0][1].trim()
-        return [this.trimQuotes(singlecat)]
+        return handleTags(match)
+      } else if (match[0][0].startsWith("tag")) {
+        def singletag = match[0][1].trim()
+        return [this.trimQuotes(singletag)]
       }
     } else {
       return []
     }
   }
 
-  private def handleCategories(match) {
+  private def handleTags(match) {
     def tmp = match[0][0]
-    def tcats = tmp[1..(tmp.indexOf("]") - 1)].split(",")
-    def categories = []
-    tcats.each {
-      categories << this.trimQuotes(it)
+    def itags = tmp[1..(tmp.indexOf("]") - 1)].split(",")
+    def tags = []
+    itags.each {
+      tags << this.trimQuotes(it)
     }
-    return categories
+    return tags
   }
 
   private def trimQuotes(value) {

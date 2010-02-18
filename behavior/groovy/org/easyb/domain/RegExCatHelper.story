@@ -1,12 +1,12 @@
-import org.easyb.util.CategoryRegExHelper
+import org.easyb.util.TagRegExHelper
 
-scenario "using category helper", {
+scenario "using tag helper", {
   given "a more complex string with a group", {
-    lots = """category ["bazzy","bar"]"""
+    lots = """tag ["bazzy","bar"]"""
   }
-  then "using category helper should return true or false", {
-    helper = new CategoryRegExHelper()
-    list1 = helper.getCategories(lots)
+  then "using tag helper should return true or false", {
+    helper = new TagRegExHelper()
+    list1 = helper.getTags(lots)
     list1[0].shouldBe "bazzy"
     list1[1].shouldBe "bar"
   }
