@@ -15,7 +15,7 @@ scenario "tag with one word", {
   }
   when "a story containing this name is processed", {
     sstory = """
-tag "sanity"
+tags "sanity"
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{
@@ -46,7 +46,7 @@ scenario "tag list", {
   }
   when "a story containing this name is processed", {
     bstory = """
-tag "baz"
+tags "baz"
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{
@@ -78,7 +78,7 @@ scenario "tag list not true", {
   }
   when "a story not containing the name is not processed", {
     bstory = """
-tag "bazzy"
+tags "bazzy"
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{
@@ -110,7 +110,7 @@ scenario "tag list with one true one false", {
   }
   when "a story containing a name is processed", {
     bbstory = """
-tag ["bazzy","bar"]
+tags ["bazzy","bar"]
 
 scenario "User A wants to work with a lab mdta, user b wants to use an prod mdta",{
 	given "blah",{

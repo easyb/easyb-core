@@ -4,8 +4,8 @@ package org.easyb.util
  *
  */
 class TagRegExHelper {
-  def pattern_1 = /^tag "(.*)"|\[(.*)\]/
-  def pattern_3 = /^tag/
+  def pattern_1 = /^tags "(.*)"|\[(.*)\]/
+  def pattern_3 = /^tags/
 
   /**
    * does the line start with "category"
