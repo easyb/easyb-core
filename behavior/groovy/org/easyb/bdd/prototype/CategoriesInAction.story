@@ -1,6 +1,6 @@
 import org.easyb.util.TagRegExHelper
 
-tag "A"
+tags "A"
 
 scenario "simple one name categories", {
   given "a string", {

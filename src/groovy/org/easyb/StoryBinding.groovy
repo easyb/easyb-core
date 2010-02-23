@@ -85,7 +85,7 @@ class StoryBinding extends Binding {
       story.all()
     }
 
-    tag = {
+    tags = {
       //nop
     }
 
