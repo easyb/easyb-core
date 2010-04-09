@@ -37,6 +37,12 @@ ant.path(id: "build.classpath") {
 target(dist: "create a distribution from the release") {
     depends(release)
     depends(doc)
+
+    //move resultant doc to release directory
+    ant.copy(file:"${docsoutputdir}/easyb_guide/easyb_guide-${version}.pdf",
+            todir:"${defaultdir}/release")
+
+
     ant.mkdir(dir: "${defaultdir}/dist")
     ant.tar(tarfile: tarfilename, basedir: "${defaultdir}/release")
     ant.gzip(zipfile: "${tarfilename}.gz", src: tarfilename)

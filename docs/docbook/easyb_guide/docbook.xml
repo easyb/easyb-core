@@ -3,7 +3,7 @@
 "file:////@docbook.base@/dtd/docbookx.dtd">
 <book>
   <bookinfo>
-    <title>@docbook.project.name@ User Guide</title>
+    <title>@docbook.project.name@ User Guide (this is a work in progress!)</title>
 
     <pubdate>@build.date@</pubdate>
 
@@ -25,6 +25,8 @@
   <chapter>
     <title>Overview</title>
 
+    <para>[Please note, this is an unfinished document and is a work in progress. Feedback and/or help
+        is most welcome!]</para>
     <para>easyb is a behavior driven development framework for the Java
     platform. By using a Domain Specific Language, easyb aims to enable
     executable, yet readable documentation.</para>
@@ -285,22 +287,23 @@ Scenarios run: 2, Failures: 0, Pending: 2, Time Elapsed: 0.495 sec
 
     <programlisting>Running account withdrawl story (AccountWithdrawl.story)
 There was an error running your easyb story or specification
-org.codehaus.groovy.control.MultipleCompilationErrorsException: startup failed, Script1.groovy: 25: unable to resolve class Account 
+org.codehaus.groovy.control.MultipleCompilationErrorsException: startup failed, Script1.groovy: \
+        25: unable to resolve class Account
  @ line 25, column 15.
 1 error
 
-        at org.codehaus.groovy.control.ErrorCollector.failIfErrors(ErrorCollector.java:296)
-        at org.codehaus.groovy.control.CompilationUnit.applyToSourceUnits(CompilationUnit.java:787)
-        at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:438)
-        at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:277)
-        at groovy.lang.GroovyShell.parseClass(GroovyShell.java:572)
-        at groovy.lang.GroovyShell.parse(GroovyShell.java:584)
-        at groovy.lang.GroovyShell.parse(GroovyShell.java:564)
-        at groovy.lang.GroovyShell.evaluate(GroovyShell.java:542)
-        at groovy.lang.GroovyShell.evaluate(GroovyShell.java:518)
-        at org.disco.easyb.domain.Story.execute(Story.java:34)
-        at org.disco.easyb.BehaviorRunner.runBehavior(BehaviorRunner.java:78)
-        at org.disco.easyb.BehaviorRunner.main(BehaviorRunner.java:59)</programlisting>
+    at org.codehaus.groovy.control.ErrorCollector.failIfErrors(ErrorCollector.java:296)
+    at org.codehaus.groovy.control.CompilationUnit.applyToSourceUnits(CompilationUnit.java:787)
+    at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:438)
+    at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:277)
+    at groovy.lang.GroovyShell.parseClass(GroovyShell.java:572)
+    at groovy.lang.GroovyShell.parse(GroovyShell.java:584)
+    at groovy.lang.GroovyShell.parse(GroovyShell.java:564)
+    at groovy.lang.GroovyShell.evaluate(GroovyShell.java:542)
+    at groovy.lang.GroovyShell.evaluate(GroovyShell.java:518)
+    at org.disco.easyb.domain.Story.execute(Story.java:34)
+    at org.disco.easyb.BehaviorRunner.runBehavior(BehaviorRunner.java:78)
+    at org.disco.easyb.BehaviorRunner.main(BehaviorRunner.java:59)</programlisting>
 
     <para>Uh-oh. We forgot to add the Account class itself. Create an Account
     class with a balance member variable and a withdrawl method. It can be in

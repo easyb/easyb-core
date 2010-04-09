@@ -40,8 +40,22 @@ target(release: "compile and archive") {
   depends("validate")
 
   ant.mkdir(dir: "${defaultdir}/release")
+
+  ant.copy(file:"./docs/dist/readme.txt", todir:"${defaultdir}/release/")
+
+  ant.mkdir(dir: "${defaultdir}/release/lib")
+  ant.mkdir(dir: "${defaultdir}/release/docs")
+  ant.copy(todir:"${defaultdir}/release/docs"){
+    fileset(dir: "./docs/website")
+  }
+  ant.mkdir(dir: "${defaultdir}/release/examples")
+  ant.copy(todir:"${defaultdir}/release/examples"){
+    fileset(dir: "./behavior/groovy/"){
+      include(name:"**/*.groovy")
+    }
+  }
   ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
-  ant.copy(todir: "${defaultdir}/release") {
+  ant.copy(todir: "${defaultdir}/release/lib") {
     fileset(dir: "./target/lib/") {
       exclude(name: "**/ant-*.jar")
     }
