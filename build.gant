@@ -42,6 +42,7 @@ target(release: "compile and archive") {
   ant.mkdir(dir: "${defaultdir}/release")
 
   ant.copy(file:"./docs/dist/readme.txt", todir:"${defaultdir}/release/")
+  ant.copy(file:"./docs/dist/LICENSE", todir:"${defaultdir}/release/")
 
   ant.mkdir(dir: "${defaultdir}/release/lib")
   ant.mkdir(dir: "${defaultdir}/release/docs")
