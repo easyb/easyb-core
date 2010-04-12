@@ -38,6 +38,7 @@
   <scm>
     <connection>scm:svn:http://easyb.googlecode.com/svn/trunk/</connection>
     <developerConnection>scm:svn:https://easyb.googlecode.com/svn/trunk/</developerConnection>
+    <url>http://code.google.com/p/easyb/source/browse/#svn/trunk/easyb</url>
   </scm>
 
   <mailingLists>
