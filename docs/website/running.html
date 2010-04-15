@@ -283,18 +283,19 @@ Total time: 3 seconds
 <pre><code>
   &lt;project&gt;
   ...
-  &lt;repositories&gt;
-    &lt;repository&gt;
-      &lt;id&gt;easyb&lt;/id&gt;
-      &lt;url&gt;http://www.easyb.org/maven2/&lt;/url&gt;
-    &lt;/repository&gt;
-  &lt;/repositories&gt;
-  &lt;pluginRepositories&gt;
-    &lt;pluginRepository&gt;
-      &lt;id&gt;easyb&lt;/id&gt;
-      &lt;url&gt;http://www.easyb.org/maven2/&lt;/url&gt;
-    &lt;/pluginRepository&gt;
-  &lt;/pluginRepositories&gt;
+    &lt;repositories&gt;
+      &lt;repository&gt;
+        &lt;id&gt;sonatype&lt;/id&gt;
+        &lt;url&gt;http://oss.sonatype.org/content/groups/public&lt;/url&gt;
+      &lt;/repository&gt;
+    &lt;/repositories&gt;
+    &lt;pluginRepositories&gt;
+      &lt;pluginRepository&gt;
+        &lt;id&gt;sonatype-plugin&lt;/id&gt;
+        &lt;url&gt;http://oss.sonatype.org/content/groups/public&lt;/url&gt;
+      &lt;/pluginRepository&gt;
+    &lt;/pluginRepositories&gt;
+
   ...
   &lt;/project&gt;
 </code></pre>
@@ -304,18 +305,18 @@ Total time: 3 seconds
 <pre><code>
   &lt;project&gt;
   ...
-  &lt;repositories&gt;
-    &lt;repository&gt;
-      &lt;id&gt;easyb&lt;/id&gt;
-      &lt;url&gt;http://www.easyb.org/maven2-snapshot/&lt;/url&gt;
-    &lt;/repository&gt;
-  &lt;/repositories&gt;
-  &lt;pluginRepositories&gt;
-    &lt;pluginRepository&gt;
-      &lt;id&gt;easyb&lt;/id&gt;
-      &lt;url&gt;http://www.easyb.org/maven2-snapshot/&lt;/url&gt;
-    &lt;/pluginRepository&gt;
-  &lt;/pluginRepositories&gt;
+    &lt;repositories&gt;
+      &lt;repository&gt;
+        &lt;id&gt;sonatype-snapshots&lt;/id&gt;
+        &lt;url&gt;http://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+      &lt;/repository&gt;
+    &lt;/repositories&gt;
+    &lt;pluginRepositories&gt;
+      &lt;pluginRepository&gt;
+        &lt;id&gt;sonatype-plugin-snapshots&lt;/id&gt;
+        &lt;url&gt;http://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+      &lt;/pluginRepository&gt;
+    &lt;/pluginRepositories&gt;
   ...
   &lt;/project&gt;
 </code></pre>
