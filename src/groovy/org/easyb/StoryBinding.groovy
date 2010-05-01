@@ -82,24 +82,37 @@ class StoryBinding extends Binding {
     }
 
     all = {
-      story.all()
+      story.ignoreOn()
     }
 
     tags = {
       //nop
     }
 
-   
+       
     ignore = {Object ... scenarios ->
       if (scenarios.size() == 1) {
         def objscn = scenarios[0]
-        try {
-          objscn.call()
-        } catch (excep) {
-          if (scenarios[0].getClass() == String) {
-            story.ignore([scenarios[0]])
-          } else {
-            story.ignore(scenarios[0])
+
+        if ( objscn instanceof String )
+          story.ignore(objscn)
+        else if ( objscn == all || !(objscn instanceof Closure) ) {
+          try {
+            objscn.call()
+          } catch (excep) {
+            if (scenarios[0].getClass() == String) {
+              story.ignore([scenarios[0]])
+            } else {
+              story.ignore(scenarios[0])
+            }
+          }
+        } else if ( objscn instanceof Closure ) {
+          story.ignoreOn()
+
+          try {
+            objscn.call()
+          } finally {
+            story.ignoreOff()
           }
         }
       } else if (scenarios.size() > 1) {

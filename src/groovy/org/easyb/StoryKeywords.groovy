@@ -149,8 +149,12 @@ class StoryKeywords extends BehaviorKeywords {
       and(description, closure)
     }
 
-    def all() {
+    def ignoreOn() {
         this.ignoreAll = true
+    }
+
+    def ignoreOff() {
+        this.ignoreAll = false
     }
 
     def ignore(scenarios) {
