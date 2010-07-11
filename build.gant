@@ -7,7 +7,7 @@ includeTargets << new File("default_tasks.gant")
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.9.7")
+version = detectOrDefaultVersion("0.9.8.3")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**
@@ -68,6 +68,7 @@ target(jar: "create an archive of the project's classfiles") {
 
   ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: classdir)
   ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: cfgdir, update: true, excludes: "resource/thirdparty/docbook/**/*")
+  ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: resourcesdir, update: true)
 }
 
 
@@ -116,7 +117,7 @@ target("compile-all": "compile Groovy & Java classes") {
 
 target("compile-core": "compile Groovy & Java classes in easyb core") {
   depends(configuregroovy)
-  genericgroovyc([sourcedir, gsourcedir, antsourcedir], classdir)
+  genericgroovyc([sourcedir, gsourcedir, antsourcedir, resourcesdir], classdir)
 }
 
 target("compile-behaviors": "compile Groovy & Java classes in easyb behavior") {
@@ -133,20 +134,13 @@ target("validate": "runs and validates both, behaviors and reports") {
   depends("validate-reports")
 }
 
-target("validate-behaviors": "runs and validates the easyb behaviors") {
-  depends(jar)
+private def validateBehaviors(easybLocation) {
 
-  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
-    classpath() {
-      pathelement(location: "${defaultdir}/easyb-${version}.jar")
-    }
-  }
-
-  ant.easyb(failureProperty: "easyb.failed", failureFile: "${defaultdir}/failures.txt") {
+  ant.easyb(failureProperty: "easyb.failed", failureFile: "${defaultdir}/failures.txt", parallel: false) {
 
     classpath() {
       fileset(dir: libdir, includes: jarincludes)
-      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+      pathelement(location: easybLocation)
       pathelement(location: behaviorclassdir)
     }
 
@@ -179,6 +173,71 @@ target("validate-behaviors": "runs and validates the easyb behaviors") {
   }
 
   ant.fail(if: "easyb.failed", message: "Execution halted as specifications failed")
+}
+
+target("coverage":"runs code coverage across tests") {
+//  depends('compile-core')
+//  depends('jar')
+//
+  ant.taskdef(resource:'tasks.properties') {
+    classpath() {
+      fileset(dir: libdir, includes: jarincludes)
+    }
+  }
+//
+//  ant.delete(file:"./cobertura.ser")
+//  ant.mkdir(dir:"target/target-inst")
+//
+//  'cobertura-instrument'(datafile:'./cobertura.ser', todir:'target/target-inst') {
+//    includeClasses(regex:'.*')
+//
+//    instrumentationClasspath() {
+//      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+//    }
+//  }
+//
+//
+//  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
+//    classpath() {
+//      pathelement(location: "target/target-inst/easyb-${version}.jar")
+//      fileset(dir: libdir, includes: jarincludes)
+//    }
+//  }
+//
+//  // run behaviors
+//  validateBehaviors("target/target-inst/easyb-${version}.jar")
+
+
+  // now issue reports
+  ant.mkdir(dir:'target/reports/coverage-report')
+  // we have 3 different source directories and we need them in one place for the source directory so we
+  // can see the report properly
+  def instrumentedSrc = 'target/reports/coverage-report/src'
+  ant.mkdir(dir:instrumentedSrc)
+
+  copy(todir: instrumentedSrc) {
+    fileset(dir: sourcedir)
+    fileset(dir: gsourcedir)
+    fileset(dir: antsourcedir)
+  }
+  
+
+  'cobertura-report'(format:'html', datafile:'./cobertura.ser', destdir:'target/reports/coverage-report',
+      srcdir:instrumentedSrc+'/')
+}
+
+
+
+target("validate-behaviors": "runs and validates the easyb behaviors") {
+  depends(jar)
+
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
+    classpath() {
+      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+    }
+  }
+
+  validateBehaviors("${defaultdir}/easyb-${version}.jar")
 }
 
 

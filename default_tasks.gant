@@ -17,6 +17,7 @@ gbehaviordir = "behavior/groovy"
 gsourcedir = "src/groovy"
 sourcedir = "src/java"
 antsourcedir = "src/ant"
+resourcesdir = "src/resources"
 behaviordir = "behavior/java"
 homedir = System.properties.'user.home'
 cfgdir = "cfg"
@@ -177,7 +178,7 @@ target("init-doc": "initialize the doc environment") {
 
 target(getdeps: "retrieves dependencies") {
     ivy.settings(file: "./ivyconfig.xml", id: "ivy.instance")
-    ivy.retrieve(pattern: "./target/lib/[artifact]-[revision].[ext]")
+    ivy.retrieve(pattern: "./target/lib/[artifact]-[revision]-[type].[ext]")
 }
 
 target(init: "init dirs") {
