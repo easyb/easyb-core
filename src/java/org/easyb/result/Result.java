@@ -61,6 +61,7 @@ public class Result implements Serializable {
     }
 
     public final Type status;
+    public String description;
     public final Throwable cause;
 
     //added to support better error handling

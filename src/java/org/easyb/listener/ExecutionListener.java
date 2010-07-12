@@ -2,6 +2,7 @@ package org.easyb.listener;
 
 import org.easyb.domain.Behavior;
 import org.easyb.BehaviorStep;
+import org.easyb.result.ReportingTag;
 import org.easyb.result.Result;
 
 public interface ExecutionListener {
@@ -16,6 +17,8 @@ public interface ExecutionListener {
     void stopStep();
 
     void stopBehavior(BehaviorStep step, Behavior behavior);
+
+    void tag(ReportingTag tag);
 
     void completeTesting();
 }

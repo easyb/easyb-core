@@ -4,6 +4,7 @@ import org.easyb.listener.ResultsCollector
 import org.easyb.result.Result
 import groovy.text.SimpleTemplateEngine
 import org.easyb.util.BehaviorStepType
+import org.easyb.listener.ResultsReporter
 
 class HtmlReportHelper {
 
@@ -18,15 +19,15 @@ class HtmlReportHelper {
         (numberOfFailures > 0) ? 'stepResultPending' : ''
     }
 
-    static formatStoryExecutionTime(ResultsCollector results) {
+    static formatStoryExecutionTime(ResultsReporter results) {
         results.genesisStep.storyExecutionTimeRecursively / 1000f
     }
 
-    static formatSpecificationExecutionTime(ResultsCollector results) {
+    static formatSpecificationExecutionTime(ResultsReporter results) {
         results.genesisStep.specificationExecutionTimeRecursively / 1000f
     }
 
-    static formatBehaviorExecutionTime(ResultsCollector results) {
+    static formatBehaviorExecutionTime(ResultsReporter results) {
         (results.genesisStep.storyExecutionTimeRecursively + results.genesisStep.specificationExecutionTimeRecursively) / 1000f
     }
 
@@ -82,7 +83,7 @@ class HtmlReportHelper {
         return formattedElement
     }
 
-    static writeListDetails(ResultsCollector results, BufferedWriter reportWriter, String templateFilename) {
+    static writeListDetails(ResultsReporter results, BufferedWriter reportWriter, String templateFilename) {
         InputStream genericListTemplateInputStream = HtmlReportHelper.class.getClassLoader().getResourceAsStream("resource/reports/${templateFilename}");
         def templateBinding = ["results": results]
         def templateEngine = new SimpleTemplateEngine()
@@ -91,19 +92,19 @@ class HtmlReportHelper {
 
     }
 
-    static writeStoriesList(ResultsCollector results, BufferedWriter reportWriter) {
+    static writeStoriesList(ResultsReporter results, BufferedWriter reportWriter) {
         writeListDetails(results, reportWriter, "easyb_report_stories_list.tmpl")
     }
 
-    static writeSpecificationsList(ResultsCollector results, BufferedWriter reportWriter) {
+    static writeSpecificationsList(ResultsReporter results, BufferedWriter reportWriter) {
         writeListDetails(results, reportWriter, "easyb_report_specifications_list.tmpl")
     }
 
-    static writeSpecificationsListPlain(ResultsCollector results, BufferedWriter reportWriter) {
+    static writeSpecificationsListPlain(ResultsReporter results, BufferedWriter reportWriter) {
         writeListDetails(results, reportWriter, "easyb_report_specifications_list_plain.tmpl")
     }
 
-    static writeStoriesListPlain(ResultsCollector results, BufferedWriter reportWriter) {
+    static writeStoriesListPlain(ResultsReporter results, BufferedWriter reportWriter) {
         writeListDetails(results, reportWriter, "easyb_report_stories_list_plain.tmpl")
     }
 

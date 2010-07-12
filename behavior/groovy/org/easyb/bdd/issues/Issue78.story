@@ -13,6 +13,8 @@ scenario "this scenario is not pending", {
     then "easyb should consider that a pending one"
 }
 
+runScenarios()
+
 if (easybResults().getPendingScenarioCount() > (initcount + 2)) {
     throw new VerificationException('Pending scenarios count not correct')
 }

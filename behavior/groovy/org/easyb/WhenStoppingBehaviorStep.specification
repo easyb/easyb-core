@@ -6,13 +6,14 @@ def stack
 def listener
 
 before "create behavior step stack", {
-    stack = new BehaviorStepStack()
-    listener = new ExecutionListenerAdaptor()
+  listener = new ExecutionListenerAdaptor()
+  stack = new BehaviorStepStack(listener)
+
 }
 
 it "should pop step from stack", {
-    stack.startStep(listener, BehaviorStepType.SCENARIO, 'description')
-    stack.stopStep(listener)
+    stack.startStep(BehaviorStepType.SCENARIO, 'description')
+    stack.stopStep()
 
     stack.lastStep().shouldNotBe null
     and

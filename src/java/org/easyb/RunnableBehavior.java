@@ -7,17 +7,15 @@ import org.easyb.listener.BroadcastListener;
 
 public class RunnableBehavior implements Runnable {
     private Behavior behavior;
-    private BroadcastListener broadcastListener;
     private Exception failure;
 
-    public RunnableBehavior(Behavior behavior, BroadcastListener broadcastListener) {
+    public RunnableBehavior(Behavior behavior) {
         this.behavior = behavior;
-        this.broadcastListener = broadcastListener;
     }
 
     public void run() {
         try {
-            behavior.execute(broadcastListener);
+            behavior.execute();
         } catch (IOException e) {
             failure = e;
         }

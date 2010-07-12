@@ -1,9 +1,10 @@
 package org.easyb;
 
 
+import org.easyb.listener.ConsoleReporterListener;
 import org.easyb.result.Result;
 
-public class StackTraceConsoleReporter extends ConsoleReporter {
+public class StackTraceConsoleReporter extends ConsoleReporterListener {
 
     public void gotResult(Result result) {
         super.gotResult(result);

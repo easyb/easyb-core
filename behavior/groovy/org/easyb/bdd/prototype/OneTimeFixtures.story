@@ -36,7 +36,7 @@ after "this after is at the top of the file", {
   }
 }
 
-//println "done"
+runScenarios()
 
 if(bar != 24){
   println "Test?!"

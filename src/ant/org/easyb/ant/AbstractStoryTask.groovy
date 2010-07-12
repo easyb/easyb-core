@@ -42,6 +42,12 @@ public class AbstractStoryTask extends AbstractJavaTask {
     addTarget("-tags ${tags}")
   }
 
+  void setParallel(boolean value) {
+    if ( value ) {
+      addTarget( "-parallel")
+    }
+  }
+
   String getFailureProperty() {
     return failureProperty
   }

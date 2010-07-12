@@ -1,8 +1,9 @@
 package org.easyb;
 
+import org.easyb.listener.ConsoleReporterListener;
 import org.easyb.result.Result;
 
-public class FilteredStackTraceConsoleReporter extends ConsoleReporter {
+public class FilteredStackTraceConsoleReporter extends ConsoleReporterListener {
     public void gotResult(Result result) {
         super.gotResult(result);
         if (result != null && result.failed()

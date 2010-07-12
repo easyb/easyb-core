@@ -1,3 +1,4 @@
+package org.easyb.bdd.nounderscores
 shared behavior "shared behaviors", {
   given "a string", {
     var = ""

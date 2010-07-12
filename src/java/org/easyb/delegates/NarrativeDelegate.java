@@ -1,5 +1,6 @@
 package org.easyb.delegates;
 
+import org.easyb.BehaviorStep;
 import org.easyb.BehaviorStepStack;
 import org.easyb.listener.ExecutionListener;
 import org.easyb.util.BehaviorStepType;
@@ -47,8 +48,9 @@ public class NarrativeDelegate {
     }
 
     private void processType(BehaviorStepType type, String text) {
-        this.stepstack.startStep(this.listener, type, text);
-        this.listener.describeStep(text);
-        this.stepstack.stopStep(this.listener);
+      BehaviorStep step = new BehaviorStep(type, text);
+      listener.startStep(step);
+      listener.describeStep(text);
+      listener.stopStep ();
     }
 }

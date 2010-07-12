@@ -1,10 +1,9 @@
 package org.easyb
 
-import org.easyb.BehaviorStep
-import org.easyb.ConsoleReporter
+import org.easyb.listener.ConsoleReporterListener
 import org.easyb.domain.Behavior
 
-class FailureFileConsoleReporter extends ConsoleReporter {
+class FailureFileConsoleReporter extends ConsoleReporterListener {
   def failures = []
   def outfile
 

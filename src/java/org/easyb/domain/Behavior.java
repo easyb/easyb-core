@@ -1,22 +1,23 @@
 package org.easyb.domain;
 
 
+import groovy.lang.Binding;
 import org.easyb.BehaviorStep;
-import org.easyb.listener.ExecutionListener;
+import org.easyb.listener.BroadcastListener;
 
 import java.io.File;
 import java.io.IOException;
 
-import groovy.lang.Binding;
-
 public interface Behavior {
-    String getPhrase();
+  String getPhrase();
 
-    File getFile();
+  File getFile();
 
-    String getTypeDescriptor();
+  String getTypeDescriptor();
 
-    Binding getBinding();
+  Binding getBinding();
 
-    BehaviorStep execute(ExecutionListener listener) throws IOException;
+  BroadcastListener getBroadcastListener();
+
+  BehaviorStep execute() throws IOException;
 }

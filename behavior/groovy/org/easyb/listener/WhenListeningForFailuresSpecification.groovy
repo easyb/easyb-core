@@ -3,7 +3,9 @@ import org.easyb.result.Result
 
 def listener
 
-before "create a failure listener", {
+// no longer relevant as the ResultAmalgamator has this "method" on it
+
+/*before "create a failure listener", {
     listener = new FailureDetector()
 }
 
@@ -20,4 +22,4 @@ it "should not consider passing specs as a cause of failure", {
 it "should not consider pending specs as a cause of failure", {
     listener.gotResult(new Result(Result.PENDING))
     listener.failuresDetected().shouldBe(false)
-}
+}*/

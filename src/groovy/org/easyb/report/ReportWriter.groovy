@@ -1,10 +1,10 @@
 package org.easyb.report
 
-import org.easyb.listener.ResultsCollector
+import org.easyb.listener.ResultsAmalgamator
 
 /**
  * Common interface for easyb reports
  */
 interface ReportWriter {
-    void writeReport(ResultsCollector results)
+  void writeReport(ResultsAmalgamator results)
 }

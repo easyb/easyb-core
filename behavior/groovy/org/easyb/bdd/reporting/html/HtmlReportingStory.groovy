@@ -2,13 +2,15 @@ import org.easyb.domain.BehaviorFactory
 import org.easyb.listener.BroadcastListener
 import org.easyb.listener.ResultsCollector
 import org.easyb.report.HtmlReportWriter
+import org.easyb.listener.ResultsAmalgamator
 
 before_each "initialize the collectors", {
     and
     given "the collectors are initialized", {
-        broadcastListener = new BroadcastListener();
-        resultsCollector = new ResultsCollector();
-        broadcastListener.registerListener(resultsCollector);
+      // all now done inside the Behavior itself
+//        broadcastListener = new BroadcastListener();
+//        resultsCollector = new ResultsCollector();
+//        broadcastListener.registerListener(resultsCollector);
     }
 }
 
@@ -42,13 +44,13 @@ scenario "a passing, failing and pending specification", {
     }
 
     when "the specification is executed", {
-        storyBehavior.execute(broadcastListener)
+        storyBehavior.execute()
     }
 
     and
     when "the reports are written", {
         htmlReportLocation = "./target/reports/PassingPendingFailing-specification-report.html"
-        new HtmlReportWriter(htmlReportLocation).writeReport(resultsCollector)
+        new HtmlReportWriter(htmlReportLocation).writeReport(new ResultsAmalgamator(storyBehavior))
     }
 
     then "the resulting html should have 3 total behaviors in the behavior summary", {
@@ -184,13 +186,13 @@ scenario "a passing, failing and pending scenario", {
     }
 
     when "the story is executed", {
-        storyBehavior.execute(broadcastListener)
+        storyBehavior.execute()
     }
 
     and
     when "the html reports are written", {
         htmlReportLocation = "./target/reports/PassingPendingFailingStory-story-report.html"
-        new HtmlReportWriter(htmlReportLocation).writeReport(resultsCollector)
+        new HtmlReportWriter(htmlReportLocation).writeReport(new ResultsAmalgamator(storyBehavior))
     }
 
     then "the resulting html should have 3 total behaviors in the behavior summary", {

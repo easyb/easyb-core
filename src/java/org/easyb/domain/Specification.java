@@ -23,13 +23,13 @@ public class Specification extends BehaviorBase {
         return "specification";
     }
 
-    public BehaviorStep execute(ExecutionListener listener) throws IOException {
+    public BehaviorStep execute() throws IOException {
         BehaviorStep currentStep = new BehaviorStep(BehaviorStepType.SPECIFICATION, getPhrase());
 
         listener.startBehavior(this);
         listener.startStep(currentStep);
 
-        setBinding(SpecificationBinding.getBinding(listener));
+        setBinding(SpecificationBinding.getBinding(listener, getFile().getParentFile()));
         GroovyShell g = new GroovyShell(getClassLoader(), getBinding());
         bindShellVariables(g);
 

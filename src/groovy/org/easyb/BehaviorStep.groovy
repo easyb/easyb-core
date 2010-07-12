@@ -2,21 +2,94 @@ package org.easyb
 
 import org.easyb.result.Result
 import org.easyb.util.BehaviorStepType
+import org.easyb.util.TextDecoder
+import org.easyb.result.ReportingTag
 
-class BehaviorStep implements Serializable {
+public class BehaviorStep implements Serializable {
   BehaviorStepType stepType
   BehaviorStep parentStep
   Result result
   String name
+
+  String currentStepName //
   String description
   long executionStartTime = 0
   long executionFinishTime = 0
+  Closure closure
+  boolean ignore
+  boolean pending
+  StoryContext storyContext
+  private TextDecoder textDecoder;
+  private List<ReportingTag> tags;
 
-  ArrayList<BehaviorStep> childSteps = new ArrayList()
+  ArrayList<BehaviorStep> childSteps = new ArrayList<BehaviorStep>()
+  ExtensionPoint extensionPoint; // if behavior step is extension point type, will have one of these
+
+
+  BehaviorStep(BehaviorStepType inStepType, String inStepName, Closure closure, BehaviorStep parent) {
+    stepType = inStepType
+    setName( inStepName )
+    this.closure = closure
+    this.parentStep = parent
+  }
 
   BehaviorStep(BehaviorStepType inStepType, String inStepName) {
-    stepType = inStepType
-    name = inStepName
+    this(inStepType, inStepName, null, null)
+  }
+
+  public void setName( String name ) {
+    if ( name.indexOf('#') >= 0 )
+      textDecoder = new TextDecoder(name)
+
+    this.name = name;
+  }
+
+  public void decodeCurrentName(int iteration) {
+    Binding binding = storyContext.binding
+    
+    binding.setProperty "iterationCount", iteration
+    binding.setProperty "easybStep", this
+
+    if ( textDecoder == null ) {
+      binding.setProperty "stepName", name
+    } else {
+      currentStepName = textDecoder.replace(binding, parentStep)
+      binding.setProperty "stepName", currentStepName
+    }
+  }
+
+  public String getName() {
+    if ( textDecoder != null && currentStepName != null )
+      return currentStepName
+    else
+      return name
+  }
+
+  /**
+   * lazy add tags
+   *
+   * @param tag - a reporting tag
+   */
+  public void addReportingTag(ReportingTag tag) {
+    if ( tags == null )
+      tags = new ArrayList<ReportingTag>()
+
+    tags.add(tag)
+  }
+
+  def cloneStep(BehaviorStep into) {
+    into.description = description
+    into.closure = closure
+    into.name = name
+  }
+
+
+  def replay() {
+    if ( closure != null ) {
+      executionStartTime = System.currentTimeMillis()
+      closure()
+      executionFinishTime = System.currentTimeMillis()
+    }
   }
 
   public List<BehaviorStep> getChildStepsSkipExecute() {
@@ -24,6 +97,11 @@ class BehaviorStep implements Serializable {
     return childSteps[0].childSteps
     else
       return childSteps
+  }
+
+  public void removeChildStep(BehaviorStep step) {
+    childSteps.remove(step)
+    step.parentStep = null
   }
 
   public BehaviorStepType getStepType() {
@@ -34,8 +112,16 @@ class BehaviorStep implements Serializable {
     parentStep = inParentStep
   }
 
+  def BehaviorStepType getLastChildsBehaviorStepType() {
+    if ( childSteps.size() > 0 )
+      return childSteps[childSteps.size()-1].stepType
+    else
+      return null;
+  }
+
   def addChildStep(BehaviorStep step) {
     childSteps.add(step)
+    step.parentStep = this
   }
 
   long getScenarioCountRecursively() {
@@ -80,20 +166,22 @@ class BehaviorStep implements Serializable {
 
 
   long getBehaviorCountRecursively() {
-    return ((getSpecificationCountRecursively() + getScenarioCountRecursively()) -
-            getIgnoredScenarioCountRecursively())
+    return (getBehaviorCountListRecursively(BehaviorStepType.grossCountableTypes, Result.SUCCEEDED) +
+        getBehaviorCountListRecursively(BehaviorStepType.grossCountableTypes, Result.FAILED) )
   }
 
+
+
   long getPendingBehaviorCountRecursively() {
-    return getPendingSpecificationCountRecursively() + getPendingScenarioCountRecursively()
+    return getBehaviorCountListRecursively(BehaviorStepType.grossCountableTypes, Result.PENDING)
   }
 
   long getFailedBehaviorCountRecursively() {
-    return getFailedSpecificationCountRecursively() + getFailedScenarioCountRecursively()
+    return getBehaviorCountListRecursively(BehaviorStepType.grossCountableTypes, Result.FAILED)
   }
 
   long getSuccessBehaviorCountRecursively() {
-    return getSuccessSpecificationCountRecursively() + getSuccessScenarioCountRecursively()
+    return getBehaviorCountListRecursively(BehaviorStepType.grossCountableTypes, Result.SUCCEEDED)
   }
 
   long getStoryExecutionTimeRecursively() {
@@ -118,6 +206,24 @@ class BehaviorStep implements Serializable {
   }
 
 
+  long getBehaviorCountListRecursively(types, resultStatus) {
+    long behaviorCount = 0
+
+    if (resultStatus == null) {
+      if (types.contains(stepType)) {
+        behaviorCount++
+      }
+    } else if ((types.contains(stepType)) && (resultStatus == result?.status)) {
+      behaviorCount++
+    }
+
+    childSteps.each { childStep ->
+      behaviorCount += childStep.getBehaviorCountListRecursively(types, resultStatus)
+    }
+
+    return behaviorCount
+  }
+
   long getBehaviorCountRecursively(type, resultStatus) {
     long behaviorCount = 0
 
@@ -132,6 +238,7 @@ class BehaviorStep implements Serializable {
     for (childStep in childSteps) {
       behaviorCount += childStep.getBehaviorCountRecursively(type, resultStatus)
     }
+    
     return behaviorCount
   }
 
@@ -317,14 +424,25 @@ class BehaviorStep implements Serializable {
       case BehaviorStepType.NARRATIVE_BENEFIT:
       case BehaviorStepType.BEFORE:
       case BehaviorStepType.AFTER:
+      case BehaviorStepType.WHERE:
+      case BehaviorStepType.BEFORE_EACH:
+      case BehaviorStepType.AFTER_EACH:
       case BehaviorStepType.IT:
       case BehaviorStepType.WHEN:
       case BehaviorStepType.GIVEN:
       case BehaviorStepType.THEN:
         formattedElement = "${spaces}${typeFormat} ${name}"
         break
+      case BehaviorStepType.EXTENSION_POINT:
+        break
       case BehaviorStepType.AND:
         formattedElement = "${spaces}${typeFormat}"
+        break
+      case BehaviorStepType.BEHAVES_AS:
+        formattedElement = "${spaces} behaves as ${name}"
+        break
+      case BehaviorStepType.SHARED_BEHAVIOR:
+        formattedElement = "${spaces} shared behavior ${name}"
         break
     }
     return formattedElement;

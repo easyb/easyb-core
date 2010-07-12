@@ -3,6 +3,8 @@ package org.easyb.report
 import org.easyb.util.BehaviorStepType
 import org.easyb.listener.ResultsCollector
 import org.easyb.result.Result
+import org.easyb.listener.ResultsAmalgamator
+import org.easyb.listener.ResultsReporter
 
 public class PrettyPrintReportWriter extends TxtReportWriter {
 
@@ -21,12 +23,14 @@ public class PrettyPrintReportWriter extends TxtReportWriter {
         return new BufferedWriter(new PrintWriter(System.out))
     }
 
-    protected final String getResultsAsText(ResultsCollector results) {
+    protected final String getResultsAsText(ResultsReporter results) {
         return null
     }
 
     @Override
-    void writeReport(ResultsCollector results) {
+    void writeReport(ResultsAmalgamator amal) {
+        ResultsReporter results = amal.getResultsReporter()
+      
         Writer writer = getWriter()
 
         if (results.getScenarioCount() > 0) {

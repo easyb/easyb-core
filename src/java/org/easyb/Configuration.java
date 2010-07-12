@@ -1,5 +1,6 @@
 package org.easyb;
 
+import org.easyb.listener.ConsoleReporterListener;
 import org.easyb.report.ReportWriter;
 
 import java.util.Collections;
@@ -90,7 +91,7 @@ public class Configuration {
         return this.parallel;
     }
 
-    public ConsoleReporter getConsoleReporter() {
+    public ConsoleReporterListener getConsoleReporter() {
         if (this.stackTraceOn) {
             if (this.filteredStackTraceOn) {
                 return new FilteredStackTraceConsoleReporter();
@@ -102,7 +103,7 @@ public class Configuration {
         } else if (this.isFailureFile) {
             return new FailureFileConsoleReporter(this.failureFile);
         } else {
-            return new ConsoleReporter();
+            return new ConsoleReporterListener();
         }
     }
 

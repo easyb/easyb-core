@@ -3,11 +3,15 @@ import org.easyb.StoryBinding
 it "should notify listener of exceptions", {
     def listener = new FakeListener()
 
-    new GroovyShell(StoryBinding.getBinding(listener)).evaluate('''
+    def story = StoryBinding.getBinding(listener, null)
+  
+    new GroovyShell(story).evaluate('''
             when "an exception is thrown", {
                 throw new RuntimeException('test')
             }
         ''');
+
+    story.replaySteps(true)
 
     listener.result.cause.message.shouldBe 'test'
 }

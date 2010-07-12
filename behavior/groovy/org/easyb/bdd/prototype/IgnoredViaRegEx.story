@@ -1,6 +1,11 @@
 import org.easyb.exception.VerificationException
 
-int initcount = easybResults().getIgnoredScenarioCount()
+before "setup counter", {
+  given "we determine the initial ignored scenario count", {
+    initcount = easybResults().getIgnoredScenarioCount()
+  }
+}
+
 
 ignore ~/abc/
 
@@ -22,7 +27,8 @@ scenario "123", {
     }
 }
 
-
-if (easybResults().getIgnoredScenarioCount() < (initcount + 1)) {
-    throw new VerificationException('Ignored scenarios count not correct')
+after "check counter", {
+  then "the ignored count should be less than the initial count+1", {
+    easybResults().getIgnoredScenarioCount().shouldBeLessThan (initcount + 1)
+  }
 }

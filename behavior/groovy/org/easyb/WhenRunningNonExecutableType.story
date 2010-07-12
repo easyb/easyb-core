@@ -1,6 +1,6 @@
 import org.easyb.BehaviorRunner
 import org.easyb.Configuration
-import org.easyb.ConsoleReporter
+import org.easyb.listener.ConsoleReporterListener
 import org.easyb.exception.VerificationException
 import static org.easyb.BehaviorRunner.getBehaviors
 
@@ -35,7 +35,7 @@ scenario "realtime console output", {
       System.setOut(new PrintStream(consoleOutputStream))
       conf = new Configuration()
       conf.extendedStoryClass = "NonExecutable"
-      BehaviorRunner runner = new BehaviorRunner(conf, new ConsoleReporter())
+      BehaviorRunner runner = new BehaviorRunner(conf)
       runner.runBehaviors(getBehaviors([specFile.absolutePath] as String[], conf))
     } catch (VerificationException expected) {
     } finally {

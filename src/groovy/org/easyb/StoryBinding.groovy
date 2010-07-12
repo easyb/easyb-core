@@ -1,21 +1,78 @@
 package org.easyb
 
-import org.easyb.StoryKeywords
 import org.easyb.listener.ExecutionListener
-import org.easyb.plugin.EasybPlugin
-import org.easyb.plugin.NullPlugin
 import org.easyb.plugin.PluginLocator
+import org.easyb.plugin.SyntaxExtension
+
 
 class StoryBinding extends Binding {
   StoryKeywords story
-  EasybPlugin activePlugin
+  // where the story is located - necessary for offsets for shared stories
+  File storyDirectory
 
-  def StoryBinding(ExecutionListener listener, EasybPlugin activePlugin) {
-    this.story = new StoryKeywords(listener)
-    this.activePlugin = activePlugin
+  def addSyntax(SyntaxExtension ext) {
+    ext.getSyntax()?.each { methodName, closure ->
+      story.binding."$methodName" = { Object[] params ->
+        story.extensionMethod(closure, params)
+      }
+    }
 
-    using = {pluginName ->
-      activePlugin = new PluginLocator().findPluginWithName(pluginName)
+    ext.getExtensionCategories()?.each { cat ->
+      story.extensionCategories.add cat
+    }
+  }
+
+  public replaySteps(boolean executeStory) {
+    story.replaySteps(executeStory, this)
+  }
+
+  def StoryBinding(ExecutionListener listener, File storyDirectory) {
+    this.story = new StoryKeywords(listener, this)
+    this.storyDirectory = storyDirectory
+
+    // load all auto syntax adding plugins
+    PluginLocator.findAllAutoloadingSyntaxExtensions().each { SyntaxExtension ext ->
+      addSyntax(ext)
+    }
+
+    where = { description, exampleData, closure = null ->
+      if (exampleData != null) {
+        story.examples(description, exampleData, closure)
+      }
+    }
+
+    examples = { description, exampleData, closure = null ->
+      if (exampleData != null) {
+        story.examples(description, exampleData, closure)
+      }
+    }
+
+    using = {pluginName, pluginVariableName = null ->
+      plugin = new PluginLocator().findPluginWithName(pluginName)
+
+      story.addPlugin(plugin)
+
+      if (pluginVariableName) {
+        setProperty(pluginVariableName, plugin)
+      }
+    }
+
+    extension = { name ->
+      addSyntax(PluginLocator.findSyntaxExtensionByName(name))
+    }
+
+    shared_stories = { String file ->
+      if (!storyDirectory)
+      storyDirectory = new File(".")
+
+      if (file.indexOf('.') < 0)
+      file += ".shared"
+
+      GroovyShell g = new GroovyShell(story.binding.getClass().getClassLoader(), story.binding);
+
+      File storyFile = new File(storyDirectory, file);
+
+      g.evaluate(storyFile);
     }
 
     before = {description = "", closure = {} ->
@@ -38,27 +95,24 @@ class StoryBinding extends Binding {
     }
 
     scenario = {description, closure = story.pendingClosure ->
-      activePlugin.beforeScenario(this)
       story.scenario(description, closure)
-      activePlugin.afterScenario(this)
+    }
+
+    runScenarios = {->
+      println "running story"
+      story.replaySteps(true, this)
     }
 
     then = {spec, closure = story.pendingClosure ->
-      activePlugin.beforeThen(this)
       story.then(spec, closure)
-      activePlugin.afterThen(this)
     }
 
     when = {description, closure = {} ->
-      activePlugin.beforeWhen(this)
       story.when(description, closure)
-      activePlugin.afterWhen(this)
     }
 
     given = {description, closure = {} ->
-      activePlugin.beforeGiven(this)
       story.given(description, closure)
-      activePlugin.afterGiven(this)
     }
 
     and = {description = "", closure = story.pendingClosure ->
@@ -89,14 +143,14 @@ class StoryBinding extends Binding {
       //nop
     }
 
-       
-    ignore = {Object ... scenarios ->
+
+    ignore = {Object... scenarios ->
       if (scenarios.size() == 1) {
         def objscn = scenarios[0]
 
-        if ( objscn instanceof String )
+        if (objscn instanceof String)
           story.ignore(objscn)
-        else if ( objscn == all || !(objscn instanceof Closure) ) {
+        else if (objscn == all || !(objscn instanceof Closure)) {
           try {
             objscn.call()
           } catch (excep) {
@@ -106,7 +160,7 @@ class StoryBinding extends Binding {
               story.ignore(scenarios[0])
             }
           }
-        } else if ( objscn instanceof Closure ) {
+        } else if (objscn instanceof Closure) {
           story.ignoreOn()
 
           try {
@@ -129,6 +183,7 @@ class StoryBinding extends Binding {
     it_behaves_as = {description ->
       story.itBehavesAs(description)
     }
+
   }
 
   def getAt(ArrayList list) {
@@ -140,7 +195,11 @@ class StoryBinding extends Binding {
    * has definitions for methods such as "when" and "given", which are used
    * in the context of stories.
    */
-  static StoryBinding getBinding(listener, activePlugin = new NullPlugin()) {
-    return new StoryBinding(listener, activePlugin)
+  static StoryBinding getBinding(listener, File storyDirectory) {
+    return new StoryBinding(listener, storyDirectory)
+  }
+
+  static StoryBinding getBinding(listener) {
+    return getBinding(listener, null)
   }
 }

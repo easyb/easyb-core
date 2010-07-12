@@ -1,3 +1,4 @@
+package org.easyb.bdd.nounderscores
 description "this is a prototype story for using narratives"
 
 narrative "this feature is for easyb users", {

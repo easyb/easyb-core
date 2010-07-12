@@ -1,8 +1,10 @@
 import org.easyb.exception.VerificationException
 
 before "do a one time setup", {
+  given "we have done a one time setup", {
     val = 10
     bar = 10
+  }
 }
 
 scenario "one scenario, value is 10", {
@@ -24,8 +26,12 @@ scenario "two scenario, value is now 20", {
 }
 
 after "do some clean up", {
+  when "10 is added to bar", {
     bar += 10
+  }
 }
+
+runScenarios()
 
 if (bar != 20) {
     throw new VerificationException("after clause didn't work")

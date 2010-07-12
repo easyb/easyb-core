@@ -2,6 +2,7 @@ package org.easyb.report
 
 import org.easyb.util.BehaviorStepType
 import org.easyb.listener.ResultsCollector
+import org.easyb.listener.ResultsReporter
 
 class TxtStoryReportWriter extends TxtReportWriter {
     private static final String DEFAULT_LOC_NAME = "easyb-story-report.txt";
@@ -22,7 +23,7 @@ class TxtStoryReportWriter extends TxtReportWriter {
         return new BufferedWriter(new FileWriter(new File(location)));
     }
 
-    protected final String getResultsAsText(ResultsCollector results) {
+    protected final String getResultsAsText(ResultsReporter results) {
         return results.getScenarioResultsAsText();
     }
 

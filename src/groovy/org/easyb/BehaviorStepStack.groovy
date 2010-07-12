@@ -1,32 +1,34 @@
 package org.easyb
 
+import org.easyb.listener.ExecutionListener
+
 class BehaviorStepStack {
-    def steps = []
+  def ExecutionListener listener
+  def BehaviorStep currentStep
 
-    def startStep(listener, behaviorType, scenarioDescription) {
-        BehaviorStep step = new BehaviorStep(behaviorType, scenarioDescription)
-        steps.add(step)
-        listener.startStep(step)
-    }
+  public BehaviorStepStack(ExecutionListener listener) {
+    this.listener = listener
+  }
 
-    def stopStep(listener) {
-        //poping last value of created a stack that
-        //never had anything useful in it when it came
-        //time to use the "And" logic
-        //steps.pop()
-        listener.stopStep()
-    }
+  def startStep( behaviorType, scenarioDescription) {
+    currentStep = new BehaviorStep (behaviorType, scenarioDescription, null, null)
+    listener.startStep(currentStep)
+  }
 
-    def lastStep() {
-        if (steps.isEmpty()) {
-            return null
-        }
-        else {
-            return steps.get(steps.size() - 1)
-        }
-    }
+  def lastStep() {
+    return currentStep
+  }
 
-    String toString() {
-        "step stack has ${steps.size()} items in it."
-    }
+  def stopStep() {
+    this.listener.stopStep()
+  }
+
+
+  def replaySteps() {
+    throw new RuntimeException("don't create me")
+  }
+
+  String toString() {
+    "step stack has ${steps.size ()} items in it."
+  }
 }
