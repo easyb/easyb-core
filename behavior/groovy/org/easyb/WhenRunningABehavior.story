@@ -41,7 +41,6 @@ scenario "realtime console output", {
         }
 
         consoleOutput = consoleOutputStream.toString()
-        println "console ouput is ${consoleOutput}"
     }
     
     then "a summary of scenario results should be printed to the console", {

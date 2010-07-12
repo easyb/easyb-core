@@ -28,7 +28,7 @@ scenario "123", {
 }
 
 after "check counter", {
-  then "the ignored count should be less than the initial count+1", {
-    easybResults().getIgnoredScenarioCount().shouldBeLessThan (initcount + 1)
+  then "the ignored count should be equal to the initial count+1", {
+    easybResults().getIgnoredScenarioCount().shouldBeEqualTo (initcount + 1)
   }
 }

@@ -184,8 +184,10 @@ class StoryKeywords extends BehaviorKeywords {
     if (currentContext.ignoreAll || currentContext.ignoreList.contains(scenarioDescription)
         || currentContext.ignoreRegEx?.matcher(scenarioDescription)?.matches()) {
       scenarioStep.ignore = true
+      currentContext.addStep(scenarioStep)
     } else if (scenarioClosure == pendingClosure) {
       scenarioStep.pending = true
+      currentContext.addStep(scenarioStep)
     } else {
       if (type == BehaviorStepType.SCENARIO)
         currentContext.addStep(scenarioStep)

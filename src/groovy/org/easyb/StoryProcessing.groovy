@@ -218,8 +218,6 @@ public class StoryProcessing {
     currentStep = step
 
     step.decodeCurrentName currentIteration
-//    println "running scenario ${step.name}"
-
 
     listener.startStep(step)
     Result result;
@@ -243,7 +241,7 @@ public class StoryProcessing {
           processSharedScenarios(childStep)
         else if ( childStep.stepType == BehaviorStepType.EXTENSION_POINT )
           childStep.extensionPoint.process(step, currentContext.binding, listener)
-        else if (childStep.closure && processing.contains(childStep.stepType)) {
+        else if (processing.contains(childStep.stepType)) {
           processChildStep(childStep)
         } } finally {
           currentStep = oldCurrent

@@ -176,36 +176,36 @@ private def validateBehaviors(easybLocation) {
 }
 
 target("coverage":"runs code coverage across tests") {
-//  depends('compile-core')
-//  depends('jar')
-//
+  depends('compile-core')
+  depends('jar')
+
   ant.taskdef(resource:'tasks.properties') {
     classpath() {
       fileset(dir: libdir, includes: jarincludes)
     }
   }
-//
-//  ant.delete(file:"./cobertura.ser")
-//  ant.mkdir(dir:"target/target-inst")
-//
-//  'cobertura-instrument'(datafile:'./cobertura.ser', todir:'target/target-inst') {
-//    includeClasses(regex:'.*')
-//
-//    instrumentationClasspath() {
-//      pathelement(location: "${defaultdir}/easyb-${version}.jar")
-//    }
-//  }
-//
-//
-//  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
-//    classpath() {
-//      pathelement(location: "target/target-inst/easyb-${version}.jar")
-//      fileset(dir: libdir, includes: jarincludes)
-//    }
-//  }
-//
-//  // run behaviors
-//  validateBehaviors("target/target-inst/easyb-${version}.jar")
+
+  ant.delete(file:"./cobertura.ser")
+  ant.mkdir(dir:"target/target-inst")
+
+  'cobertura-instrument'(datafile:'./cobertura.ser', todir:'target/target-inst') {
+    includeClasses(regex:'.*')
+
+    instrumentationClasspath() {
+      pathelement(location: "${defaultdir}/easyb-${version}.jar")
+    }
+  }
+
+
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
+    classpath() {
+      pathelement(location: "target/target-inst/easyb-${version}.jar")
+      fileset(dir: libdir, includes: jarincludes)
+    }
+  }
+
+  // run behaviors
+  validateBehaviors("target/target-inst/easyb-${version}.jar")
 
 
   // now issue reports
