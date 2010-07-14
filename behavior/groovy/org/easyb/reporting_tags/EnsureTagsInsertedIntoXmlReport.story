@@ -4,7 +4,7 @@ import org.easyb.listener.ResultsAmalgamator
 
 scenario "nested scenarios", {
   given "a story file with nested scenarios", {
-    storyBehavior = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/easyb/reporting_tags/InsertReportingTagsIntoStory1.story'))
+    storyBehavior = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/easyb/reporting_tags/InsertReportingTagsInto.story'))
   }
 
   when "the story is executed", {
