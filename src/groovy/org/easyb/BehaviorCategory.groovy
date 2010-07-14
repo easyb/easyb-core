@@ -139,9 +139,9 @@ class BehaviorCategory {
         isA(self, type, null)
     }
 
-    private static void isNotA(Object self, type) {
-        isNotA(self, type, null)
-    }
+//    private static void isNotA(Object self, type) {
+//        isNotA(self, type, null)
+//    }
 
     private static void isA(Object self, type, String msg) {
         if (!type.equals(self.getClass()) && !type.isInstance(self)) {
@@ -215,9 +215,9 @@ class BehaviorCategory {
         delegate.endsWith(value)
     }
 
-    private static void hasNot(Object self, value) {
-        hasNot(self, value, null)
-    }
+//    private static void hasNot(Object self, value) {
+//        hasNot(self, value, null)
+//    }
 
     private static void hasNot(Object self, value, String msg) {
         if (self instanceof Map) {
@@ -261,10 +261,10 @@ class BehaviorCategory {
             }
         }
     }
-
-    private static void has(Object self, value) {
-        has(self, value, null)
-    }
+//
+//    private static void has(Object self, value) {
+//        has(self, value, null)
+//    }
 
     private static void has(Object self, value, String msg) {
 

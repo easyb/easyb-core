@@ -24,10 +24,10 @@ class TxtStoryReportWriter extends TxtReportWriter {
   }
 
   protected final String getResultsAsText(ResultsReporter results) {
-    return results.getScenarioResultsAsText();
+    return results.getScenarioResultsAsText() + getTotalPendingCountMessage(results) + getIgnoredCount(results);
   }
 
-  private String getTotalPendingCountMessage(final results) {
+  private String getTotalPendingCountMessage(final ResultsReporter results) {
     def message = new StringBuffer()
 
     if (results.pendingScenarioCount > 0) {
