@@ -278,29 +278,9 @@ Total time: 3 seconds
 <h2>Maven</h2>
 </a>
 
-<p>You can also run your behaviors and stories via easyb's Maven plugin as well as generate HTML story reports. It's easy as fully explained on the <a href='http://www.easyb.org/maven-easyb-plugin'>maven-easyb-plugin</a> site.  Just take note that it may take a couple of days for easyb to get uploaded to maven central.  In the meantime you can use the easyb repository by adding this snippet to your pom:</p>
+<p>You can also run your behaviors and stories via easyb's Maven plugin as well as generate HTML story reports. It's easy as fully explained on the <a href='http://www.easyb.org/maven-easyb-plugin'>maven-easyb-plugin</a> site.  The latest versions of the easyb Maven plugin are available at <a href="http://repo1.maven.org/maven2/org/easyb/">Maven central</a>, so you shouldn't need to configure anything beyond the plugin in your POM.
 
-<pre><code>
-  &lt;project&gt;
-  ...
-    &lt;repositories&gt;
-      &lt;repository&gt;
-        &lt;id&gt;sonatype&lt;/id&gt;
-        &lt;url&gt;http://oss.sonatype.org/content/groups/public&lt;/url&gt;
-      &lt;/repository&gt;
-    &lt;/repositories&gt;
-    &lt;pluginRepositories&gt;
-      &lt;pluginRepository&gt;
-        &lt;id&gt;sonatype-plugin&lt;/id&gt;
-        &lt;url&gt;http://oss.sonatype.org/content/groups/public&lt;/url&gt;
-      &lt;/pluginRepository&gt;
-    &lt;/pluginRepositories&gt;
-
-  ...
-  &lt;/project&gt;
-</code></pre>
-
-<p>If you like living on the edge (or just want the latest features and don't mind that there might be some rough edges), then you can point your pom to the easyb snapshot repository:</p>
+<p>If you like living on the edge (or just want the latest features and don't mind that there might be some rough edges), then you can point your POM to the easyb snapshot repository:</p>
 
 <pre><code>
   &lt;project&gt;
@@ -320,9 +300,6 @@ Total time: 3 seconds
   ...
   &lt;/project&gt;
 </code></pre>
-
-<p><strong>NOTE</strong> The repositories listed above are not browsable.  This means that you (and maven) can view individual
-file but if you simply navigate to the top of the repository you will get a permission error.</p>
 
 <a name='intellij'>
 <h2>IntelliJ</h2>
