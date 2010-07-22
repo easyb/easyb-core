@@ -22,8 +22,6 @@ import java.util.List;
  */
 public class ConsoleReporterListener extends ResultsCollector {
   private long startTime;
-  private ResultsReporter results;
-
 
   public void startBehavior(final Behavior behavior) {
     super.startBehavior(behavior);
@@ -39,7 +37,7 @@ public class ConsoleReporterListener extends ResultsCollector {
 
   public void stopBehavior(final BehaviorStep currentStep, final Behavior behavior) {
     final long endTime = System.currentTimeMillis();
-    printMetrics(behavior, startTime, previousStep, endTime);
+    printMetrics(behavior, startTime, new ResultsReporter(previousStep), endTime);
   }
 
   /**
@@ -47,50 +45,49 @@ public class ConsoleReporterListener extends ResultsCollector {
    * if there were ignored scenarios, the total number is determined by subtracting
    * the ignored ones; thus, we don't convey that an ignored scenario was "run"
    */
-  private String getScenariosRunMessage(final BehaviorStep step) {
-    if (step.getIgnoredScenarioCountRecursively() > 0) {
+  private String getScenariosRunMessage(final ResultsReporter results) {
+    if (results.getIgnoredScenarioCount() > 0) {
       return "Scenarios run: (" +
-             +( step.getScenarioCountRecursively() - step.getIgnoredScenarioCountRecursively() )
+             +( results.getScenarioCount() - results.getIgnoredScenarioCount() )
              + " of "
-             + step.getScenarioCountRecursively()
+             + results.getScenarioCount()
              + ")";
     } else {
-      return "Scenarios run: " + step.getScenarioCountRecursively();
+      return "Scenarios run: " + results.getScenarioCount();
     }
   }
 
-  private String getStepRunMessage(final String name, final BehaviorStepType type, final BehaviorStep step) {
-    long aftersTotal = step.getBehaviorCountRecursively(type, null);
-    long afters = step.getBehaviorCountRecursively(type, Result.FAILED);
-
-    return name + "'s run: " + aftersTotal + ", Failures: " + afters;
+  private String getStepRunMessage(final String name, long total, long failed) {
+    return name + "'s run: " + total + ", Failures: " + failed;
   }
 
 
   private void printMetrics(final Behavior behavior, final long startTime,
-                            final BehaviorStep currentStep, final long endTime) {
+                            final ResultsReporter results, final long endTime) {
+
     System.out.print(behaviorName(behavior) + ": ");
     if (behavior instanceof Story) {
-      System.out.println(( currentStep.getFailedScenarioCountRecursively() == 0 ? "" : "FAILURE " ) +
-                         this.getScenariosRunMessage(currentStep) +
-                         ", Failures: " + currentStep.getFailedScenarioCountRecursively() +
-                         ", Pending: " + currentStep.getPendingScenarioCountRecursively() +
-                         ( currentStep.getIgnoredScenarioCountRecursively() > 0 ? ", Ignored: " + currentStep.getIgnoredScenarioCountRecursively() : "" ) +
+      System.out.println(( results.getFailedScenarioCount() == 0 ? "" : "FAILURE " ) +
+                         this.getScenariosRunMessage(results) +
+                         ", Failures: " + results.getFailedScenarioCount() +
+                         ", Pending: " + results.getPendingScenarioCount() +
+                         ( results.getIgnoredScenarioCount() > 0 ? ", Ignored: " + results.getIgnoredScenarioCount() : "" ) +
                          ", Time elapsed: " + ( endTime - startTime ) / 1000f + " sec\n" +
-                         getStepRunMessage("Before", BehaviorStepType.BEFORE, currentStep) + "\n" +
-                         getStepRunMessage("After", BehaviorStepType.AFTER, currentStep) + "\n" +
-                         getStepRunMessage("Before Scenario", BehaviorStepType.BEFORE_EACH, currentStep) + "\n" +
-                         getStepRunMessage("After Scenario", BehaviorStepType.AFTER_EACH, currentStep) + "\n"
+                         getStepRunMessage("Before", results.getTotalBeforeCount(Result.SUCCEEDED), results.getTotalBeforeCount(Result.FAILED)) + "\n" +
+                         getStepRunMessage("After", results.getTotalAfterCount(Result.SUCCEEDED), results.getTotalAfterCount(Result.FAILED)) + "\n" +
+                         getStepRunMessage("Before Each", results.getTotalBeforeEachCount(Result.SUCCEEDED), results.getTotalBeforeEachCount(Result.FAILED)) + "\n" +
+                         getStepRunMessage("After Each", results.getTotalAfterEachCount(Result.SUCCEEDED), results.getTotalAfterEachCount(Result.FAILED)) + "\n"
       );
     } else {
-      System.out.println(( currentStep.getFailedSpecificationCountRecursively() == 0 ? "" : "FAILURE " ) +
-                         "Specifications run: " + currentStep.getSpecificationCountRecursively() +
-                         ", Failures: " + currentStep.getFailedSpecificationCountRecursively() +
-                         ", Pending: " + currentStep.getPendingSpecificationCountRecursively() +
+      System.out.println(( results.getFailedSpecificationCount() == 0 ? "" : "FAILURE " ) +
+                         "Specifications run: " + results.getSpecificationCount() +
+                         ", Failures: " + results.getFailedSpecificationCount() +
+                         ", Pending: " + results.getPendingSpecificationCount() +
                          ", Time elapsed: " + ( endTime - startTime ) / 1000f + " sec");
     }
-    if (currentStep.getBehaviorCountListRecursively(BehaviorStepType.grossCountableTypes, Result.FAILED) > 0) {
-      handleFailurePrinting(currentStep);
+
+    if (results.getFailedBehaviorCount() > 0) {
+      handleFailurePrinting(results.getGenesisStep());
     }
   }
 
