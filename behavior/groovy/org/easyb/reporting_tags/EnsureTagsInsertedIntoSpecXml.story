@@ -4,7 +4,7 @@ import org.easyb.listener.ResultsAmalgamator
 
 scenario "nested spec", {
   given "a story file with nested scenarios", {
-    specBehavior = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/easyb/reporting_tags/InsertReportingTagsInto.specification'))
+    specBehavior = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/easyb/reporting_tags/InsertReportingTagsIntoSpec.specification'))
   }
 
   when "the specification is executed", {

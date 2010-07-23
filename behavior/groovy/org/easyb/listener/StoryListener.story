@@ -11,9 +11,11 @@ scenario "listener is given all successful results", {
     }
 
     when "a successful result is added", {
+        listener.startStep(new BehaviorStep(BehaviorStepType.STORY, "success scenario"))   // can't have a scenario without a story
         listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "success scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "success then step"))
         listener.gotResult(new Result(Result.SUCCEEDED))
+        listener.stopStep()
         listener.stopStep()
         listener.stopStep()
         results = listener.getResultsReporter()
@@ -50,9 +52,11 @@ scenario "listener is given a single failure", {
     }
 
     when "a failure result is added", {
+        listener.startStep(new BehaviorStep(BehaviorStepType.STORY, "success scenario"))   // can't have a scenario without a story
         listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "success scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "failure then step"))
         listener.gotResult(new Result(new Exception("FailureExceptionReason")))
+        listener.stopStep()
         listener.stopStep()
         listener.stopStep()
         results = listener.getResultsReporter()

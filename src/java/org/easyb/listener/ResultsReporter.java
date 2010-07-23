@@ -9,15 +9,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * this centralizes the counting all in one place.
+ */
 
 public class ResultsReporter {
   protected BehaviorStep genesisStep;
-  private static final List<BehaviorStepType> EXAMINE_FURTHER = Arrays.asList(BehaviorStepType.WHERE, BehaviorStepType.EXECUTE);
+  private static final List<BehaviorStepType> EXAMINE_FURTHER = Arrays.asList(BehaviorStepType.WHERE, BehaviorStepType.EXECUTE, BehaviorStepType.GENESIS);
+  private static final List<BehaviorStepType> LEGAL_BUT_WEIRD = Arrays.asList(BehaviorStepType.WHEN, BehaviorStepType.GIVEN, BehaviorStepType.THEN);
+  private static final List<BehaviorStepType> IGNORE = Arrays.asList(BehaviorStepType.DESCRIPTION, BehaviorStepType.NARRATIVE, BehaviorStepType.NARRATIVE_ROLE,
+                                                                     BehaviorStepType.NARRATIVE_FEATURE, BehaviorStepType.NARRATIVE_BENEFIT, BehaviorStepType.EXTENSION_POINT); 
 
   class StoryCollection {
     List<BehaviorStep> scenarios = new ArrayList<BehaviorStep>();
     List<BehaviorStep> afters = new ArrayList<BehaviorStep>();
     List<BehaviorStep> befores = new ArrayList<BehaviorStep>();
+    BehaviorStep fakeScenario = null; // holder for random given/then/when in a story which is legal syntax but.. weird.
 
 
     private long status(List<BehaviorStep> scenarios, Result.Type status) {
@@ -97,48 +104,60 @@ public class ResultsReporter {
       for (BehaviorStep child : step.getChildSteps() ) {
         spelunk(child);
       }
-    } else {
-      throw new RuntimeException("unexpected step " + step);
+    } else if (!IGNORE.contains(step.getStepType())) {
+      throw new RuntimeException( "Unknown step " + step);
     }
   }
 
   private void collectSpecifications(SpecificationCollection sc, BehaviorStep step) {
     for (BehaviorStep child : step.getChildSteps()) {
-      if (child.getStepType() == BehaviorStepType.IT) {
-        sc.its.add(child);
-      } else if (child.getStepType() == BehaviorStepType.BEFORE) {
-        sc.befores.add(child);
-      } else if (child.getStepType() == BehaviorStepType.AFTER) {
-        sc.afters.add(child);
-      } else if (child.getStepType() == BehaviorStepType.GENESIS) {
-        collectSpecifications(sc, step);
-      } else {
-        throw new RuntimeException("unexpected step " + step);
-      }
+      examineSpecificationStep(sc, child);
     }
+  }
 
+  private void examineSpecificationStep(SpecificationCollection sc, BehaviorStep child) {
+    if (EXAMINE_FURTHER.contains(child.getStepType())) {
+      collectSpecifications(sc, child);
+    } else if (child.getStepType() == BehaviorStepType.IT) {
+      sc.its.add(child);
+    } else if (child.getStepType() == BehaviorStepType.BEFORE) {
+      sc.befores.add(child);
+    } else if (child.getStepType() == BehaviorStepType.AFTER) {
+      sc.afters.add(child);
+    } else if (!IGNORE.contains(child.getStepType())) {
+      throw new RuntimeException( "Unknown step " + child);
+    }
   }
 
   private void collectStories(StoryCollection sc, BehaviorStep step) {
     // if we were to fix the stories so that if before/after were pending, scenarios were as well, we'd do it here.
 
     for (BehaviorStep child : step.getChildSteps()) {
-      if (EXAMINE_FURTHER.contains(child.getStepType())) {
-        collectStories(sc, child);
-      } else if (child.getStepType() == BehaviorStepType.SCENARIO) {
-        sc.scenarios.add(child);
-        fixScenarioStatus(child);
-      } else if (child.getStepType() == BehaviorStepType.BEFORE) {
-        sc.befores.add(child);
-        fixScenarioStatus(child);
-      } else if (child.getStepType() == BehaviorStepType.AFTER) {
-        sc.afters.add(child);
-        fixScenarioStatus(child);
-      } else if (child.getStepType() == BehaviorStepType.GENESIS) {
-        collectStories(sc, child);
-      } else {
-        throw new RuntimeException("unexpected step " + step);
+      examineStoryStep(sc, child);
+    }
+  }
+
+  private void examineStoryStep(StoryCollection sc, BehaviorStep child) {
+    if (EXAMINE_FURTHER.contains(child.getStepType())) {
+      collectStories(sc, child);
+    } else if (child.getStepType() == BehaviorStepType.SCENARIO) {
+      sc.scenarios.add(child);
+      fixScenarioStatus(child);
+    } else if (child.getStepType() == BehaviorStepType.BEFORE) {
+      sc.befores.add(child);
+      fixScenarioStatus(child);
+    } else if (child.getStepType() == BehaviorStepType.AFTER) {
+      sc.afters.add(child);
+      fixScenarioStatus(child);
+    } else if (LEGAL_BUT_WEIRD.contains(child.getStepType())) {
+      if ( sc.fakeScenario == null ) {
+        sc.fakeScenario = new BehaviorStep(BehaviorStepType.SCENARIO, "fake");
+        sc.scenarios.add(sc.fakeScenario);
       }
+      sc.fakeScenario.addChildStep(child);
+      fixScenarioStatus(sc.fakeScenario);
+    } else if (!IGNORE.contains(child.getStepType())) {
+      throw new RuntimeException( "Unknown step " + child);
     }
   }
 
