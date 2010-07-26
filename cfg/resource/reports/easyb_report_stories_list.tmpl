@@ -16,21 +16,21 @@
     </thead>
     <tbody>
       <%
-        results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).eachWithIndex { storyStep, rowNum ->
-          int scenarioChildrenCount = storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).size
+        results.stories.eachWithIndex { storyStep, rowNum ->
+          int scenarioChildrenCount = storyStep.scenarioCount
       %>
       <tr class='${HtmlReportHelper.getRowClass(rowNum)}'>
         <td>
          <% if(scenarioChildrenCount > 0) { %>
-          <a href="#" onclick="\$('scenarios_for_story_' + ${rowNum}).toggle(); return false;">${storyStep.name}</a>
+          <a href="#" onclick="\$('scenarios_for_story_' + ${rowNum}).toggle(); return false;">${storyStep.story.name}</a>
          <% } else { %>
-          <a>${storyStep.name}</a>
+          <a>${storyStep.story.name}</a>
          <% } %>
         </td>
-        <td>${storyStep.scenarioCountRecursively}</td>
-        <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(storyStep.failedScenarioCountRecursively)}'>${storyStep.failedScenarioCountRecursively}</td>
-        <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(storyStep.pendingScenarioCountRecursively)}'>${storyStep.pendingScenarioCountRecursively}</td>
-        <td>${storyStep.executionTotalTimeInMillis / 1000f}</td>
+        <td>${storyStep.scenarioCount}</td>
+        <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(storyStep.failedScenarioCount)}'>${storyStep.failedScenarioCount}</td>
+        <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(storyStep.pendingScenarioCount)}'>${storyStep.pendingScenarioCount}</td>
+        <td>${storyStep.story.executionTotalTimeInMillis / 1000f}</td>
       </tr>
 
       <% if(scenarioChildrenCount > 0) { %> 
@@ -38,7 +38,7 @@
         <td colspan='5'>
           <table class='scenariosForStoriesTable'>
             <tbody>
-              <% storyStep.getChildrenOfType(BehaviorStepType.SCENARIO).eachWithIndex { scenarioStep, scenarioRowNum -> %>
+              <% storyStep.scenarios.eachWithIndex { scenarioStep, scenarioRowNum -> %>
               <tr class='${HtmlReportHelper.getScenarioRowClass(scenarioRowNum)}'>
                 <td title='Scenario'>${scenarioStep.name}</td>
                 <td title='Result' class='${HtmlReportHelper.getStepStatusClass(scenarioStep.result)}'>${scenarioStep.result.status}</td>

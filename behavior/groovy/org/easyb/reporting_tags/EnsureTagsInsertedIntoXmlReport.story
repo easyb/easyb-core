@@ -23,17 +23,17 @@ scenario "nested scenarios", {
     xmlP = new XmlSlurper()
     xml = xmlP.parse(new File(xmlReportLocation))
 
-    def jira1 = xml.stories.story.execute.scenario.jira
+    def jira1 = xml.stories.story.scenario.jira
 
     jira1.'@id'.shouldBe "CSS-1574"
     jira1.'@description'.shouldBe "This should be in the report"
 
-    def jira2 = xml.stories.story.execute.scenario.given.jira
+    def jira2 = xml.stories.story.scenario.given.jira
     jira2.'@id'.shouldBe "some text"
     jira2.'@description'.shouldBe "some other text"
   }
   and "one entry called exec that should have a result of 2 based on a category calculation", {
-    xml.stories.story.execute.scenario.when.exec.'@result'.shouldBe "2"
+    xml.stories.story.scenario.when.exec.'@result'.shouldBe "2"
   }
   and "the text report should not mention 2 or jira", {
     contents = new File(txtReportLocation).text

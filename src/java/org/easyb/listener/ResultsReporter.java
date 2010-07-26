@@ -20,12 +20,28 @@ public class ResultsReporter {
   private static final List<BehaviorStepType> IGNORE = Arrays.asList(BehaviorStepType.DESCRIPTION, BehaviorStepType.NARRATIVE, BehaviorStepType.NARRATIVE_ROLE,
                                                                      BehaviorStepType.NARRATIVE_FEATURE, BehaviorStepType.NARRATIVE_BENEFIT, BehaviorStepType.EXTENSION_POINT); 
 
-  class StoryCollection {
+  public class StoryCollection {
+    BehaviorStep story;
     List<BehaviorStep> scenarios = new ArrayList<BehaviorStep>();
     List<BehaviorStep> afters = new ArrayList<BehaviorStep>();
     List<BehaviorStep> befores = new ArrayList<BehaviorStep>();
     BehaviorStep fakeScenario = null; // holder for random given/then/when in a story which is legal syntax but.. weird.
 
+    public StoryCollection(BehaviorStep story) {
+      this.story = story;
+    }
+
+    public long getFailedScenarioCount() {
+      return status(scenarios, Result.FAILED);
+    }
+
+    public long getPendingScenarioCount() {
+      return status(scenarios, Result.PENDING);
+    }
+
+    public long getScenarioCount() {
+      return scenarios.size();
+    }
 
     private long status(List<BehaviorStep> scenarios, Result.Type status) {
       long count = 0;
@@ -59,15 +75,32 @@ public class ResultsReporter {
     }
   }
 
-  class SpecificationCollection {
+  public class SpecificationCollection {
+    BehaviorStep specification;
     List<BehaviorStep> its = new ArrayList<BehaviorStep>();
     List<BehaviorStep> befores = new ArrayList<BehaviorStep>();
     List<BehaviorStep> afters = new ArrayList<BehaviorStep>();
 
-    private long status(List<BehaviorStep> scenarios, Result.Type status) {
+    public SpecificationCollection(BehaviorStep s) {
+      this.specification = s;
+    }
+
+    public long getSpecificationCount() {
+      return its.size();
+    }
+
+    public long getFailedSpecificationCount() {
+      return status(its, Result.FAILED);
+    }
+
+    public long getPendingSpecificationCount() {
+      return status(its, Result.PENDING);
+    }
+
+    private long status(List<BehaviorStep> specs, Result.Type status) {
       long count = 0;
 
-      for (BehaviorStep step : scenarios) {
+      for (BehaviorStep step : specs) {
         if (step.getResult() != null && step.getResult().status() == status) {
           count++;
         }
@@ -90,14 +123,73 @@ public class ResultsReporter {
     spelunk(genesisStep);
   }
 
+  public StoryCollection findStory(BehaviorStep step) {
+    for( StoryCollection sc : stories ) {
+      if ( sc.story == step )
+        return sc;
+    }
+
+    throw new RuntimeException( "Request for non-existent story " + step);
+  }
+
+  public SpecificationCollection findSpecification(BehaviorStep step) {
+    for( SpecificationCollection sc : specifications ) {
+      if ( sc.specification == step)
+        return sc;
+    }
+
+    throw new RuntimeException( "Request for non-existent specification" + step);
+  }
+
+
+  public long getStoryBehaviorCount() {
+    return stories.size();
+  }
+
+  public long getSpecificationBehaviorCount() {
+    return specifications.size();
+  }
+
+  public List<SpecificationCollection> getSpecifications() {
+    return specifications;
+  }
+
+  public List<StoryCollection> getStories() {
+    return stories;
+  }
+
+  /*
+  public List<BehaviorStep> getSpecifications() {
+    List<BehaviorStep> specs = new ArrayList<BehaviorStep>();
+
+    for( SpecificationCollection sc : specifications ) {
+      specs.add(sc.specification);
+    }
+
+    return specs;
+  }
+
+
+  public List<BehaviorStep> getStories() {
+    List<BehaviorStep> st = new ArrayList<BehaviorStep>();
+
+    for( StoryCollection sc : stories ) {
+      st.add(sc.story);
+    }
+
+    return st;
+  }
+  */
+
+
   private void spelunk(BehaviorStep step) {
 
     if (step.getStepType() == BehaviorStepType.STORY) {
-      StoryCollection sc = new StoryCollection();
+      StoryCollection sc = new StoryCollection(step);
       collectStories(sc, step);
       stories.add(sc);
     } else if (step.getStepType() == BehaviorStepType.SPECIFICATION) {
-      SpecificationCollection sc = new SpecificationCollection();
+      SpecificationCollection sc = new SpecificationCollection(step);
       collectSpecifications(sc, step);
       specifications.add(sc);
     } else if (step.getStepType() == BehaviorStepType.GENESIS) {
@@ -161,7 +253,7 @@ public class ResultsReporter {
     }
   }
 
-  private void fixScenarioStatus(BehaviorStep child) {
+  public static void fixScenarioStatus(BehaviorStep child) {
     // if its ignored, don't care about whats inside it
     if (child.getResult() != null && child.getResult().status() == Result.IGNORED) {
       return;
@@ -172,15 +264,23 @@ public class ResultsReporter {
       child.setResult(new Result(Result.FAILED));
     } else if (fixScenarioStatus(child, Result.PENDING) > 0) {
       child.setResult(new Result(Result.PENDING));
+    } else if (child.getResult() == null) {
+      child.setResult(new Result(Result.SUCCEEDED));
     }
   }
 
-  private int fixScenarioStatus(BehaviorStep step, Result.Type status) {
+  private static int fixScenarioStatus(BehaviorStep step, Result.Type status) {
     int count = 0;
 
     for (BehaviorStep child : step.getChildSteps()) {
       if (child.getStepType() == BehaviorStepType.BEFORE_EACH || child.getStepType() == BehaviorStepType.AFTER_EACH) {
-        count += fixScenarioStatus(child, status);
+        int subCount = fixScenarioStatus(child, status);
+
+        // set the correct status while we are at it
+        if (subCount > 0)
+          child.setResult(new Result(status));
+
+        count += subCount;
       } else if (child.getResult() != null && child.getResult().status() == status) {
           count++;
       }
@@ -324,7 +424,8 @@ public class ResultsReporter {
   }
 
   public long getInReviewScenarioCount() {
-    return genesisStep.getInReviewScenarioCountRecursively();
+    throw new RuntimeException("what is InReview???");
+    //return genesisStep.getInReviewScenarioCountRecursively();
   }
 
   public BehaviorStep getGenesisStep() {
@@ -338,15 +439,15 @@ public class ResultsReporter {
   }
 
   public String getScenarioResultsAsText() {
-    if (getInReviewScenarioCount() > 0) {
-      return getInReviewScenarioCount() + " scenarios in review";
-    } else {
+//    if (getInReviewScenarioCount() > 0) {
+//      return getInReviewScenarioCount() + " scenarios in review";
+//    } else {
       long scenariosExecuted = getScenarioCount() - getIgnoredScenarioCount();
       return ( scenariosExecuted == 1 ? "1 scenario" : scenariosExecuted +
                                                        ( getIgnoredScenarioCount() > 0 ? " of " + getScenarioCount() : "" ) + " scenarios" ) +
              ( getPendingScenarioCount() > 0 ? " (including " + getPendingScenarioCount() + " pending)" : "" ) + " executed" +
              ( getFailedScenarioCount() > 0 ? ", but status is failure! Total failures: " + getFailedScenarioCount() : " successfully." );
-    }
+//    }
   }
 
 }

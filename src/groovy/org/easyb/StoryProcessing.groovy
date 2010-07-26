@@ -6,6 +6,7 @@ import org.easyb.plugin.PluginLocator
 
 import org.easyb.util.BehaviorStepType
 import org.easyb.plugin.ExampleDataParser
+import org.easyb.listener.ResultsReporter
 
 public class StoryProcessing {
   private Stack<StoryContext> contextStack = new Stack<StoryContext>();
@@ -248,12 +249,8 @@ public class StoryProcessing {
         }
       }
 
-      if (step.childStepFailureResultCount == 0)
-        step.result = new Result(Result.SUCCEEDED)
-      else {
-        step.result = new Result(Result.FAILED)
-      }
-
+      ResultsReporter.fixScenarioStatus(step)
+      
       listener.gotResult step.result
 
       if (isRealScenario && currentContext.afterEach)

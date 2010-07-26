@@ -23,17 +23,17 @@ scenario "nested spec", {
     xmlP = new XmlSlurper()
     xml = xmlP.parse(new File(xmlReportLocation))
 
-    def jira1 = xml.specifications.specification.execute.jira
+    def jira1 = xml.specifications.specification.jira
 
     jira1.'@id'.shouldBe "CSS-1574"
     jira1.'@description'.shouldBe "This should be in the report"
 
-    def jira2 = xml.specifications.specification.execute.it.jira
+    def jira2 = xml.specifications.specification.it.jira
     jira2.'@id'.shouldBe "some text"
     jira2.'@description'.shouldBe "some other text"
   }
   and "one entry called exec that should have a result of 2 based on a category calculation", {
-    xml.specifications.specification.execute.exec.'@result'.shouldBe "2"
+    xml.specifications.specification.exec.'@result'.shouldBe "2"
   }
   and "the text report should not mention 2 or jira", {
     contents = new File(txtReportLocation).text

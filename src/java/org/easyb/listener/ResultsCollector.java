@@ -64,6 +64,7 @@ public class ResultsCollector implements ExecutionListener {
   }
 
   public synchronized void stopStep() {
+    /*
     if (currentStep.getResult() == null && BehaviorStepType.grossCountableTypes.contains(currentStep.getStepType())) {
       if (currentStep.getChildStepFailureResultCount() > 0) {
         gotResult(new Result(Result.FAILED));
@@ -79,6 +80,7 @@ public class ResultsCollector implements ExecutionListener {
         }
       }
     }
+    */
 
     currentStep.stopExecutionTimer();
     previousStep = currentStep;

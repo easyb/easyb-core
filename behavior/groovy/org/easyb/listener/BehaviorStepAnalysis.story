@@ -32,15 +32,17 @@ scenario "step with a failed then should report failed scenario", {
     }
 
     when "scenario is recorded with a failed then inside", {
+        listener.startStep(new BehaviorStep(BehaviorStepType.STORY, "failure then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "failure then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "failure then step"))
         listener.gotResult(new Result(Result.FAILED))
         listener.stopStep()
         listener.stopStep()
+        listener.stopStep()
     }
 
     then "genesis step should report a 1 failed scenario", {
-        listener.genesisStep.failedScenarioCountRecursively.shouldBe(1)
+        listener.resultsReporter.failedScenarioCount.shouldBe(1)
     }
 
 }
@@ -51,15 +53,17 @@ scenario "step with no failed or pending then should report success scenario", {
     }
 
     when "scenario is recorded with a suceeded then inside", {
+        listener.startStep(new BehaviorStep(BehaviorStepType.STORY, "failure then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "success then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "success then step"))
         listener.gotResult(new Result(Result.SUCCEEDED))
         listener.stopStep()
         listener.stopStep()
+        listener.stopStep()
     }
 
     then "genesis step should report a 0 failed scenario", {
-        listener.genesisStep.failedScenarioCountRecursively.shouldBe(0)
+        listener.resultsReporter.failedScenarioCount.shouldBe(0)
     }
 
 }
@@ -70,15 +74,17 @@ scenario "step with a pending then should report pending scenario", {
     }
 
     when "scenario is recorded with a suceeded then inside", {
+        listener.startStep(new BehaviorStep(BehaviorStepType.STORY, "failure then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "pending then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "pending then step"))
         listener.gotResult(new Result(Result.PENDING))
         listener.stopStep()
         listener.stopStep()
+        listener.stopStep()
     }
 
     then "genesis step should report 1 pending scenario", {
-        listener.genesisStep.pendingScenarioCountRecursively.shouldBe(1)
+        listener.resultsReporter.pendingScenarioCount.shouldBe(1)
     }
 
 }
@@ -89,6 +95,7 @@ scenario "step with a pending and a failed then should report 1 failed scenario 
     }
 
     when "scenario is recorded with 1 pending and 1 failed then inside", {
+        listener.startStep(new BehaviorStep(BehaviorStepType.STORY, "failure then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.SCENARIO, "failed then scenario"))
         listener.startStep(new BehaviorStep(BehaviorStepType.THEN, "pending then step"))
         listener.gotResult(new Result(Result.PENDING))
@@ -97,18 +104,20 @@ scenario "step with a pending and a failed then should report 1 failed scenario 
         listener.gotResult(new Result(Result.FAILED))
         listener.stopStep()
         listener.stopStep()
+        listener.stopStep()
     }
 
     then "genesis step should report 1 failed scenario", {
-        listener.genesisStep.failedScenarioCountRecursively.shouldBe(1)
+        resultsReporter = listener.resultsReporter
+        resultsReporter.failedScenarioCount.shouldBe(1)
     }
 
     then "genesis step should report 0 pending scenario", {
-        listener.genesisStep.pendingScenarioCountRecursively.shouldBe(0)
+        resultsReporter.pendingScenarioCount.shouldBe(0)
     }
 
     then "genesis step should report 1 scenario", {
-        listener.genesisStep.scenarioCountRecursively.shouldBe(1)
+        resultsReporter.scenarioCount.shouldBe(1)
     }
 
 }

@@ -17,28 +17,28 @@
     </thead>
     <tbody>
       <%
-        results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).eachWithIndex { specificationStep, rowNum ->
+        results.specifications.eachWithIndex { specificationStep, rowNum ->
       %>
       <tr class='${HtmlReportHelper.getRowClass(rowNum)}'>
         <td>
-          <% if(specificationStep.childSteps.size > 0) { %>
-            <a href="#" onclick="\$('components_for_specification_' + ${rowNum}).toggle(); return false;">${specificationStep.name}</a>
+          <% if(specificationStep.specificationCount > 0) { %>
+            <a href="#" onclick="\$('components_for_specification_' + ${rowNum}).toggle(); return false;">${specificationStep.specification.name}</a>
           <% } else { %>
-            <a>${specificationStep.name}</a>
+            <a>${specificationStep.specification.name}</a>
           <% } %>
         </td>
-        <td>${specificationStep.specificationCountRecursively}</td>
-        <td class="${HtmlReportHelper.getBehaviorResultFailureSummaryClass(specificationStep.failedSpecificationCountRecursively)}">${specificationStep.failedSpecificationCountRecursively}</td>
-        <td class="${HtmlReportHelper.getBehaviorResultPendingSummaryClass(specificationStep.pendingSpecificationCountRecursively)}">${specificationStep.pendingSpecificationCountRecursively}</td>
-        <td>${specificationStep.executionTotalTimeInMillis / 1000f}</td>
+        <td>${specificationStep.specificationCount}</td>
+        <td class="${HtmlReportHelper.getBehaviorResultFailureSummaryClass(specificationStep.failedSpecificationCount)}">${specificationStep.failedSpecificationCount}</td>
+        <td class="${HtmlReportHelper.getBehaviorResultPendingSummaryClass(specificationStep.pendingSpecificationCount)}">${specificationStep.pendingSpecificationCount}</td>
+        <td>${specificationStep.specification.executionTotalTimeInMillis / 1000f}</td>
       </tr>
 
-      <% if(specificationStep.childSteps.size > 0) { %>
+      <% if(specificationStep.specificationCount > 0) { %>
       <tr id='components_for_specification_${rowNum}' class='componentsForSpecification' style='display:none;'>
         <td colspan='5'>
           <table class='componentsForSpecificationTable'>
             <tbody>
-             <% specificationStep.childStepsSkipExecute.each { componentStep -> %>
+             <% specificationStep.specification.childStepsSkipExecute.each { componentStep -> %>
               <tr>
                 <td>${componentStep.stepType.type} ${componentStep.name}</td>
                 <td class='${HtmlReportHelper.getStepStatusClass(componentStep.result)}' style='text-align:right;'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
