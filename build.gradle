@@ -1,0 +1,74 @@
+
+buildscript {
+  repositories {
+    mavenRepo urls: 'http://gradle.artifactoryonline.com/gradle/plugins'
+    dependencies {
+      classpath "org.gradle.plugins:gradle-idea-plugin:0.2"
+    }
+  }
+}
+
+buildDirName = 'target'
+
+println "Build dir is ${buildDir}"
+
+apply plugin: 'groovy'
+apply plugin: 'org.gradle.idea'
+
+sourceCompatibility = 1.5
+version = '0.9.8.4'
+
+repositories {
+  mavenCentral()
+}
+
+/*
+    <dependency org="org.codehaus.groovy" name="groovy-all" rev="[1.7.0, 1.7.99)"/>
+    <dependency org="commons-cli" name="commons-cli" rev="1.2"/>
+    <dependency org="ant" name="ant" rev="1.6.5" />
+    <dependency org="net.sourceforge.cobertura" name="cobertura" rev="[1.9.1,1.9.2)"/>
+
+ */
+
+dependencies {
+  compile "commons-cli:commons-cli:1.2:@jar"
+  compile "org.apache.ant:ant:[1.8.0,1.8.99):@jar"
+  groovy(group: 'org.codehaus.groovy', name: 'groovy', version: '[1.7.0, 1.7.99)')
+}
+
+// override the source directories
+sourceSets {
+  main {
+    groovy {
+      srcDir 'src/groovy'
+      srcDir 'src/java'
+      srcDir 'src/ant'
+    }
+    resources {
+      srcDir 'src/resources'
+    }
+  }
+
+  test {
+    groovy {
+      srcDir 'behavior/groovy'
+      srcDir 'behavior/java'
+    }
+    resources {
+      srcDir 'behavior/resources'
+    }
+  }
+}
+
+task distribution {
+
+}
+
+task release(dependsOn:'distribution') {
+
+}
+
+task compile(dependsOn:'compileGroovy') {
+  println "compiling"
+}
+
