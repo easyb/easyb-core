@@ -1,4 +1,11 @@
 
+// ToDo:
+// - cobertura coverage
+// - actual tests of BDD
+// - build artifacts (jar, source, javadocs)
+// - release (prepare/perform like maven)
+// - build distribution (xdoclet)
+
 buildscript {
   repositories {
     mavenRepo urls: 'http://gradle.artifactoryonline.com/gradle/plugins'
@@ -18,17 +25,11 @@ apply plugin: 'org.gradle.idea'
 sourceCompatibility = 1.5
 version = '0.9.8.4'
 
+// really 
 repositories {
   mavenCentral()
 }
 
-/*
-    <dependency org="org.codehaus.groovy" name="groovy-all" rev="[1.7.0, 1.7.99)"/>
-    <dependency org="commons-cli" name="commons-cli" rev="1.2"/>
-    <dependency org="ant" name="ant" rev="1.6.5" />
-    <dependency org="net.sourceforge.cobertura" name="cobertura" rev="[1.9.1,1.9.2)"/>
-
- */
 
 dependencies {
   compile "commons-cli:commons-cli:1.2:@jar"
@@ -60,7 +61,7 @@ sourceSets {
   }
 }
 
-task distribution {
+task distribution(dependsOn:'test') {
 
 }
 
@@ -70,5 +71,29 @@ task release(dependsOn:'distribution') {
 
 task compile(dependsOn:'compileGroovy') {
   println "compiling"
+}
+
+task bdd(dependsOn:['compileGroovy', 'compileTestGroovy']) {
+  doLast {
+  ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
+    classpath() {
+      pathelement(location: "${buildDir}/classes/main")
+    }
+  }
+
+  String failures = new File(buildDir, "failures.txt").absoluteFile
+
+  println "${failures}"
+
+  ant.easyb(failureProperty: "easyb.failed", failureFile: "${buildDir}/failures.txt" , parallel: false) {
+    classpath() {
+      pathelement(location: "${buildDirName}/classes/main")
+      pathelement(location: "${buildDirName}/classes/test")
+      pathelement(path: configurations.compile.asPath) // should be Test
+    }
+  }
+
+  ant.fail(if: "easyb.failed", message: "Execution halted as specifications failed")
+  }
 }
 

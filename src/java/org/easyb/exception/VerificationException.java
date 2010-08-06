@@ -6,6 +6,7 @@ package org.easyb.exception;
 public class VerificationException extends RuntimeException {
     private final Object expected;
     private final Object actual;
+    private String source;
 
     public VerificationException(String message, Object expected, Object actual) {
         super(message);
@@ -31,8 +32,26 @@ public class VerificationException extends RuntimeException {
         return expected;
     }
 
+  public String getSource() {
+    return source;
+  }
+
+  public void setSource(String source) {
+    System.out.println("source set to " + source);
+    this.source = source;
+  }
+
+
     public String toString() {
         StringBuffer buf = new StringBuffer("VerificationException: ");
+
+      if (source != null)
+        buf.append(source).append("\n");
+      else {
+        System.out.println("source is null");
+
+      }
+      
         if (getMessage() != null) {
             buf.append(getMessage()).append(": ");
         }

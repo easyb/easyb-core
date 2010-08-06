@@ -84,7 +84,7 @@ class HtmlReportHelper {
     }
 
     static writeListDetails(ResultsReporter results, BufferedWriter reportWriter, String templateFilename) {
-        InputStream genericListTemplateInputStream = HtmlReportHelper.class.getClassLoader().getResourceAsStream("resource/reports/${templateFilename}");
+        InputStream genericListTemplateInputStream = HtmlReportHelper.class.getClassLoader().getResourceAsStream("reports/${templateFilename}");
         def templateBinding = ["results": results]
         def templateEngine = new SimpleTemplateEngine()
         def reportTemplate = templateEngine.createTemplate(genericListTemplateInputStream.newReader()).make(templateBinding)

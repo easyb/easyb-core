@@ -19,13 +19,13 @@ class HtmlReportWriter implements ReportWriter {
   public void writeReport(ResultsAmalgamator amal) {
     def results = amal.getResultsReporter()
 
-    writeResourceToDisk("resource/thirdparty/prototype", "prototype.js")
+    writeResourceToDisk("reports", "prototype.js")
 
     ['img01.gif', 'img02.jpg', 'img03.jpg', 'img04.jpg', 'img05.jpg', 'img06.jpg', 'spacer.gif', 'report.css'].each {
-      writeResourceToDisk("resource/reports", "easyb_${it}")
+      writeResourceToDisk("reports", "easyb_${it}")
     }
 
-    InputStream mainTemplateInputStream = this.class.getClassLoader().getResourceAsStream("resource/reports/easyb_report_main.tmpl");
+    InputStream mainTemplateInputStream = this.class.getClassLoader().getResourceAsStream("reports/easyb_report_main.tmpl");
 
     def outputReportBufferedWriter = new File(location).newWriter();
     def templateBinding = ["results": results, "reportWriter": outputReportBufferedWriter]

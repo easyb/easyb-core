@@ -53,6 +53,9 @@
               <% if (componentStep.result?.failed()) { %>
               <tr>
                 <td colspan='3' style='color:red; padding-left: 1cm;'>
+                  <% if (componentStep.result.cause() instanceof org.easyb.exception.VerificationException) { %>
+                    <b>${componentStep.result.cause()?.source}</b><br/>  
+                  <%}%>
                   <strong>${componentStep.result.cause()?.getClass().getName()}: ${componentStep.result.cause()?.getMessage()}</strong>
                   <% for(i in 1..10) { %>
                   <br />${componentStep.result.cause()?.getStackTrace()[i]}

@@ -67,7 +67,7 @@ target(jar: "create an archive of the project's classfiles") {
   depends("compile-all")
 
   ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: classdir)
-  ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: cfgdir, update: true, excludes: "resource/thirdparty/docbook/**/*")
+  //ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: cfgdir, update: true, excludes: "resource/thirdparty/docbook/**/*")
   ant.jar(destfile: "${defaultdir}/easyb-${version}.jar", basedir: resourcesdir, update: true)
 }
 
