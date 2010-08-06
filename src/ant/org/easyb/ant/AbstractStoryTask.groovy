@@ -106,7 +106,6 @@ public class AbstractStoryTask extends AbstractJavaTask {
 
   private String locate() {
     URL url = getClass().getResource(resourcePathToClassFile())
-    println "trying to locate ${url}"
     if ("jar".equalsIgnoreCase(url.getProtocol())) {
       return getJarFileOnClassPath(url)
     } else {
@@ -134,7 +133,6 @@ public class AbstractStoryTask extends AbstractJavaTask {
   }
 
   private File getFileOnClassPath(URL url) {
-    println "getFileOnClassPath ${url}"
     return fromUri(url.getFile())
   }
 
@@ -143,8 +141,6 @@ public class AbstractStoryTask extends AbstractJavaTask {
       return new File(new URI(fileUri))
     } catch (URISyntaxException e) {
       throw new RuntimeException("Couldn't locate file:" + fileUri, e)
-    } catch (Throwable iae) {
-      throw new RuntimeException("file uri invalid: ${fileUri}", iae)
     }
   }
 

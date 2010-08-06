@@ -1,15 +1,12 @@
-/*
- * Created by IntelliJ IDEA.
- * User: richard
- * Date: Aug 3, 2010
- * Time: 8:24:13 PM
- */
+
 package org.easyb.transforms
 
 import org.junit.Test
 import org.codehaus.groovy.control.CompilePhase
 import org.easyb.delegates.ShouldTransformation
 import org.codehaus.groovy.tools.ast.TranformTestHelper;
+
+// this is just a test harness for the transformer
 public class TransformerTest {
   public void shouldDoThis() {
 
