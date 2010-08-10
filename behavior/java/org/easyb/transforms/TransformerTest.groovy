@@ -1,7 +1,7 @@
 
 package org.easyb.transforms
 
-import org.junit.Test
+//import org.junit.Test
 import org.codehaus.groovy.control.CompilePhase
 import org.easyb.delegates.ShouldTransformation
 import org.codehaus.groovy.tools.ast.TranformTestHelper;
@@ -12,7 +12,7 @@ public class TransformerTest {
 
   }
 
-  @Test
+//  @Test
   public void test() {
     println (new File(".").absoluteFile)
     def file = new File('behavior/groovy/org/easyb/bdd/issues/Issue87.story')
