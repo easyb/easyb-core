@@ -5,6 +5,10 @@
       <filesystem name="libraries">
         <artifact pattern="${ivy.conf.dir}/repository/[organisation]/[revision]/[artifact]-[revision].[type]"/>
       </filesystem>
+	<filesystem name="local-maven2" m2compatible="true">
+	  <ivy pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision].pom"/>
+	  <artifact pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+	</filesystem>
       <!--
       <url name="easybrepo">
         <artifact

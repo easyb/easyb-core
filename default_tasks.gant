@@ -178,6 +178,7 @@ target("init-doc": "initialize the doc environment") {
 
 target(getdeps: "retrieves dependencies") {
     ivy.settings(file: "./ivyconfig.xml", id: "ivy.instance")
+    // unable to prevent sources and javadoc from coming do
     ivy.retrieve(pattern: "./target/lib/[artifact]-[revision]-[type].[ext]")
 }
 
