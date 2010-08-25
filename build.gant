@@ -209,9 +209,11 @@ target("coverage":"runs code coverage across tests") {
   depends('compile-core')
   depends('jar')
 
+  ivy.cachepath(pathid:'ivy.coverage.classpath', conf:"coverage")
+
   ant.taskdef(resource:'tasks.properties') {
     classpath() {
-      fileset(dir: libdir, includes: jarincludes)
+      path(refid:"ivy.coverage.classpath")
     }
   }
 
@@ -230,7 +232,7 @@ target("coverage":"runs code coverage across tests") {
   ant.taskdef(name: "easyb", classname: "org.easyb.ant.BehaviorRunnerTask") {
     classpath() {
       pathelement(location: "target/target-inst/easyb-${version}.jar")
-      fileset(dir: libdir, includes: jarincludes)
+      path(refid:"ivy.coverage.classpath")
     }
   }
 

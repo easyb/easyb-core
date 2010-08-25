@@ -3,7 +3,8 @@
 
       <configurations>
         <conf name="compile" description="the only configuration needed by this build"/>
-        <conf name="build" extends="compile" visibility="private" description="only needed for building easyb"/>
+        <conf name="coverage" extends="compile" visibility="private" description="only needed for building easyb"/>
+        <conf name="docbook" visibility="private" description="Used for compiling the docbook"/>
       </configurations>
 
       <publications>
@@ -19,7 +20,15 @@
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="[1.7.0, 1.7.99)" conf="compile->default"/>
         <dependency org="commons-cli" name="commons-cli" rev="[1.2]" conf="compile->default"/>
         <dependency org="ant" name="ant" rev="[1.6.5,1.8.99)" conf="compile->default"/>
-        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="[1.9.1,1.9.2)" conf="build->default"/>
+        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="[1.9.1,1.9.2)" conf="coverage->default"/>
+        <dependency org="org.apache.xmlgraphics" name="fop" rev="[0.95,1.0)" conf="docbook->default"/>
+        <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" conf="docbook->default"/>
+        <dependency org="net.sf.xslthl" name="xslthl" rev="2.0.1"  conf="docbook->default"/>
+        <dependency org="net.sf.docbook" name="docbook-xsl" rev="1.75.2" e:classifier="ns-resources" conf="docbook->default">
+           <artifact name="docbook-xsl" type="zip"/>
+        </dependency>
+
+        <dependency org="net.sf.docbook" name="docbook-xsl-saxon" rev="1.0.0" conf="docbook->default"/>
       </dependencies>
     </ivy-module>
 

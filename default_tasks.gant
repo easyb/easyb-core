@@ -119,7 +119,6 @@ target(doc: "create documenation from docbook") {
           </ul>
         """
 
-
         // create the xsl/fo temporary file.
         ant.java(classname: "com.icl.saxon.StyleSheet", fork:"true", dir:".", maxmemory:"256m") {
           classpath(refid: "docbook.lib.classpath")
@@ -132,7 +131,7 @@ target(doc: "create documenation from docbook") {
           arg(value: "build.date=${ant.project.properties.'build.date'}")
         }
 
-        ant.java(classname: "org.apache.fop.apps.Fop", fork:"true", dir:".") {
+        ant.java(classname: "org.apache.fop.cli.Main", fork:"true", dir:".") {
           classpath(refid: "docbook.lib.classpath")
           arg(value: "${docbookdestdir}/docbook_fop.tmp")
           arg(value: "${docbookdestdir}/${docbooksourcedirectory.name}-${version}.pdf")
@@ -165,11 +164,14 @@ target("init-doc": "initialize the doc environment") {
   ant.mkdir(dir: docsoutputdir)
   ant.mkdir(dir: websiteoutputdir)
 
-  ant.path(id: "docbook.lib.classpath") {
-    fileset(dir: "repository/docbook-dependencies") {
-      include(name: "**/*.jar")
-    }
-  }
+
+  ivy.cachepath(pathid:'docbook.lib.classpath', conf:"docbook")
+
+//  ant.path(id: "docbook.lib.classpath") {
+//    fileset(dir: "repository/docbook-dependencies") {
+//      include(name: "**/*.jar")
+//    }
+//  }
 
   ant.copy(todir: websiteoutputdir){
     fileset(dir:"./docs/website/"){
