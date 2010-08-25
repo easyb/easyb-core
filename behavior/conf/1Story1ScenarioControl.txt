@@ -1,4 +1,4 @@
-1 scenario executed successfully.
+1 scenario executed successfully. (0 behaviors were ignored)
 
   Story: and chained feature
 

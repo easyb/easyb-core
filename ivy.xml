@@ -1,15 +1,25 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<?xml-stylesheet type="text/xsl" href="./docs/ivy/ivy-doc.xsl"?>
-<ivy-module version="1.0">
-  <info organisation="org" module="easyb"/>
-  <dependencies>
-	<!--
-    <dependency name="ant-googlecode" rev="0.0.0test"/>
--->
-    <dependency org="org.codehaus.groovy" name="groovy-all" rev="[1.7.0, 1.7.99)"/>
-    <dependency org="commons-cli" name="commons-cli" rev="1.2"/>
-    <dependency org="ant" name="ant" rev="1.6.5" />
-    <dependency org="net.sourceforge.cobertura" name="cobertura" rev="[1.9.1,1.9.2)"/>
-  </dependencies>
-</ivy-module>
+    <ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
+      <info organisation="org" module="easyb"/>
+
+      <configurations>
+        <conf name="compile" description="the only configuration needed by this build"/>
+        <conf name="build" extends="compile" visibility="private" description="only needed for building easyb"/>
+      </configurations>
+
+      <publications>
+          <artifact name="easyb" type="jar" ext="jar" conf="compile"/>
+          <artifact name="easyb" type="sources" ext="jar" conf="compile" e:classifier="sources"/>
+          <artifact name="easyb" type="javadocs" ext="jar" conf="compile" e:classifier="javadocs"/>
+      </publications>
+
+      <dependencies>
+      <!--
+        <dependency name="ant-googlecode" rev="0.0.0test"/>
+    -->
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="[1.7.0, 1.7.99)" conf="compile->default"/>
+        <dependency org="commons-cli" name="commons-cli" rev="[1.2]" conf="compile->default"/>
+        <dependency org="ant" name="ant" rev="[1.6.5,1.8.99)" conf="compile->default"/>
+        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="[1.9.1,1.9.2)" conf="build->default"/>
+      </dependencies>
+    </ivy-module>
 

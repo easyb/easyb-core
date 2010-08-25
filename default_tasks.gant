@@ -31,9 +31,6 @@ target(clean: "cleans target dir") {
     ant.delete(dir: defaultdir)
 }
 
-ant.path(id: "build.classpath") {
-    fileset(dir: libdir, includes: jarincludes)
-}
 
 target(dist: "create a distribution from the release") {
     depends(release)
@@ -52,8 +49,14 @@ target(dist: "create a distribution from the release") {
 
 target(configuregroovy: "configures environment to compile w/Groovy") {
     depends(init)
+
+    ivy.cachepath(pathid:'ivy.build.classpath', conf:"compile")
+
     ant.taskdef(name: "groovyc",
-            classname: "org.codehaus.groovy.ant.Groovyc", classpathref: "build.classpath") {
+            classname: "org.codehaus.groovy.ant.Groovyc") {
+      classpath() {
+        path(refid:"ivy.build.classpath")
+      }
     }
 }
 
@@ -173,13 +176,19 @@ target("init-doc": "initialize the doc environment") {
       include(name:"**/*.*")
     }
   }
+}
 
+target("ivy-publish": "Publishes artifacts to ivy repository") {
+  ivy.publish(resolver:"chained", pubrevision:"${version}", status:"release", update:true, overwrite:true)
 }
 
 target(getdeps: "retrieves dependencies") {
-    ivy.settings(file: "./ivyconfig.xml", id: "ivy.instance")
+  echo( "Loading Ivy Settings from ${ivySettingsFile}")
+
+
+  ivy.settings(file: ivySettingsFile, id: "ivy.instance")
     // unable to prevent sources and javadoc from coming do
-    ivy.retrieve(pattern: "./target/lib/[artifact]-[revision]-[type].[ext]")
+  ivy.retrieve(pattern: "./target/lib/[artifact]-[revision]-[type].[ext]")
 }
 
 target(init: "init dirs") {
@@ -199,12 +208,16 @@ genericgroovyc = {sourcedirs, destination ->
                 dirset(dir: it)
             }
         }
-        classpath() {
-            fileset(dir: libdir) {
-                include(name: jarincludes)
-            }
-            dirset(dir: classdir)
-        }
+      classpath() {
+        path(refid:"ivy.build.classpath")
+        dirset(dir: classdir)
+      }
+//          {
+//            fileset(dir: libdir) {
+//                include(name: jarincludes)
+//            }
+//            dirset(dir: classdir)
+//        }
     }
 }
 
@@ -229,7 +242,7 @@ target("jar-javadocs": "creates a javadocs jar") {
     }
 
     ant.groovydoc(destdir: "${defaultdir}/javadoc", sourcepath: "${defaultdir}/javadoc-sources", windowtitle: "${artifactid}")
-    ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-javadoc.jar") {
+    ant.jar(destfile: "${defaultdir}/${artifactid}-${version}-javadocs.jar") {
         fileset(dir: "${defaultdir}/javadoc")
     }
 }

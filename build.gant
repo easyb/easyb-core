@@ -1,13 +1,19 @@
 /**
  * Master easyb core build
  */
+
+ant.property(file: '../easyb-version.properties')
+
+ivySettingsFile = "../ivysettings.xml"
+
 includeTargets << new File("default_tasks.gant")
+
 
 /**
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.9.8.3")
+version = detectOrDefaultVersion("0.9.8.4")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**
@@ -36,9 +42,30 @@ target("default": "validate-behaviors") {
   depends("validate-behaviors")
 }
 
-target(release: "compile and archive") {
-  depends("validate")
+target("local-release-force":"compile and release them to the repository, only use if you are sure all tests pass") {
+  depends("jar")
+  depends("jar-sources")
+  depends("jar-javadocs")
+  depends("ivy-publish")
 
+  // used only for "install-file so we can use it for maven projects here"
+  ivy.makepom(ivyfile:"../repository/org/easyb/${version}/easyb-${version}.xml",
+              pomfile:"../repository/org/easyb/${version}/easyb-${version}-pom.xml")
+
+  echo("To install in your local maven repo (if you have maven) use the following command:")
+  echo("mvn install:install-file -Dpackaging=jar -Dversion=${version} -DartifactId=easyb -DgroupId=org.easyb -DpomFile=../repository/org/easyb/${version}/easyb-${version}-pom.xml -Dfile=../repository/org/easyb/${version}/easyb-${version}.jar")
+}
+
+target("local-release":"compile, validate and release them to our own repository so other builds can use them") {
+  depends("validate")
+  depends("jar-sources")
+  depends("jar-javadocs")
+  depends("ivy-publish")
+}
+
+target(release: "compile and archive") {
+  depends("local-release")
+  
   ant.mkdir(dir: "${defaultdir}/release")
 
   ant.copy(file:"./docs/dist/readme.txt", todir:"${defaultdir}/release/")
@@ -55,12 +82,14 @@ target(release: "compile and archive") {
       include(name:"**/*.groovy")
     }
   }
+
   ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
-  ant.copy(todir: "${defaultdir}/release/lib") {
-    fileset(dir: "./target/lib/") {
-      exclude(name: "**/ant-*.jar")
-    }
-  }
+  
+  //ant.copy(todir: "${defaultdir}/release/lib") {
+  //  fileset(dir: "./target/lib/") {
+  //    exclude(name: "**/ant-*.jar")
+  //  }
+  //}
 }
 
 target(jar: "create an archive of the project's classfiles") {
@@ -132,6 +161,7 @@ target("compile-behaviors": "compile Groovy & Java classes in easyb behavior") {
 target("validate": "runs and validates both, behaviors and reports") {
   depends("validate-behaviors")
   depends("validate-reports")
+  depends("validate-categories-feature")
 }
 
 private def validateBehaviors(easybLocation) {
