@@ -28,7 +28,8 @@
         <dependency name="ant-googlecode" rev="0.0.0test"/>
     -->
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="[1.7.0, 1.7.99)" conf="compile->default"/>
-        <dependency org="commons-cli" name="commons-cli" rev="[1.2]" conf="compile->default"/>
+        <dependency org="commons-cli" name="commons-cli" rev="1.2" conf="compile->default"/>
+        <dependency org="log4j" name="log4j" rev="1.2.14" conf="compile->default"/>
         <dependency org="ant" name="ant" rev="[1.6.5,1.8.99)" conf="compile->default"/>
         <dependency org="net.sourceforge.cobertura" name="cobertura" rev="[1.9.1,1.9.2)" conf="coverage->default"/>
         <dependency org="org.apache.xmlgraphics" name="fop" rev="[0.95,1.0)" conf="docbook->default"/>
