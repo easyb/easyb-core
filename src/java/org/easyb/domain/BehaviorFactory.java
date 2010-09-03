@@ -32,6 +32,7 @@ public class BehaviorFactory {
         return getStory(gShellConfig, behaviorFile, pattern, config);
       }
     }
+    
     for (final String pattern : SPECIFICATION_PATTERNS) {
       if (behaviorFile.getName().endsWith(pattern)) {
         return new Specification(gShellConfig, createPhrase(behaviorFile, pattern), behaviorFile);

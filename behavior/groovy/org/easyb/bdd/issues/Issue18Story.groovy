@@ -1,4 +1,4 @@
-package org.bdd.issues
+package org.easyb.bdd.issues
 
 scenario "all subparts have no closures defined", {
 

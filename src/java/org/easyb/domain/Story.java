@@ -1,17 +1,22 @@
 package org.easyb.domain;
 
 import groovy.lang.GroovyShell;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.easyb.BehaviorStep;
 import org.easyb.Configuration;
 import org.easyb.StoryBinding;
-import org.easyb.listener.ExecutionListener;
-import org.easyb.plugin.EasybPlugin;
-import org.easyb.plugin.PluginFactory;
+import org.easyb.StoryContext;
 import org.easyb.util.BehaviorStepType;
 import org.easyb.util.PreProcessorable;
 
-import java.io.*;
-
+@SuppressWarnings("serial")
 public class Story extends BehaviorBase {
   private boolean executeStory = true;
 
@@ -39,6 +44,8 @@ public class Story extends BehaviorBase {
       listener.startStep(currentStep);
 
       StoryBinding binding = StoryBinding.getBinding(listener, file.getParentFile());
+ 
+      binding.setProperty("storyFile", file);
       GroovyShell g = new GroovyShell(getClassLoader(), binding);
       bindShellVariables(g);
 
@@ -52,7 +59,10 @@ public class Story extends BehaviorBase {
 
       listener.stopStep();
       listener.stopBehavior(currentStep, this);
-
+      
+      if (currentStep.getStoryContext() == null) {
+    	  currentStep.setStoryContext(new StoryContext(binding));
+      }
       return currentStep;
     } else {
       return null;

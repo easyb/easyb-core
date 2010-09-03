@@ -17,21 +17,26 @@ public class ConsoleConfigurator {
     private static final String TXT_STORY = "txtstory";
     private static final String XML_EASYB = "xml";
     private static final String HTML_EASYB = "html";
+    private static final String JUNIT_EASYB = "junit";
+    private static final String JUNIT_ROOT_PACKAGE = "root";
     private static final String EXCEPTION_STACK = "e";
     private static final String FILTER_EXCEPTION_STACK = "ef";
 
+	private static final String DEFAULT_JUNIT_ROOT_PACKAGE = "behavior";
 
     private static final String NOEXECUTE_STORY_DESCRIPTION = "creates report without running any stories";
     private static final String NOEXECUTE_STORY = "ne";
     private static final String PRETTY_PRINT = "prettyprint";
     private static final String HTML_DESCRIPTION = "create an easyb report in html format";
     private static final String XML_DESCRIPTION = "create an easyb report in xml format";
+    private static final String JUNIT_DESCRIPTION = "create an easyb report in JUnit-compatible xml format. Reports will be created in the specified directory.";
+    private static final String JUNIT_ROOT_DESCRIPTION = "Reports are created in this package by default. This makes the JUnit reports easier to fit into other generated JUnit reports.";
     private static final String STORY_DESCRIPTION = "create a story report";
     private static final String BEHAVIOR_DESRCIPTION = "create a behavior report";
     private static final String STACKTRACE_DESCRIPTION = "prints stacktrace information";
     private static final String FILTERED_STACKTRACE_DESCRIPTION = "prints filtered stacktrace information";
     private static final String PARALLEL = "parallel";
-    private static final String PARALLEL_DESCRIPTION = "run specifications in parallel";
+    private static final String PARALLEL_DESCRIPTION = "run stories and specifications in parallel";
     private static final String PRETTY_PRINT_DESCRIPTION = "prints colored behaviors";
 
     private static final String BEHAVIOR_FILE = "f";
@@ -57,7 +62,7 @@ public class ConsoleConfigurator {
                     getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
                     commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine),
                     isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE),
-                    getTags(commandLine));
+                    getTags(commandLine), getRootPackage(commandLine)); 
 
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
@@ -69,7 +74,15 @@ public class ConsoleConfigurator {
         return null;
     }
 
-    private String[] getTags(CommandLine cmdLine) {
+    private String getRootPackage(CommandLine commandLine) {
+		if (commandLine.hasOption(JUNIT_ROOT_PACKAGE)) {
+			return commandLine.getOptionValue(JUNIT_ROOT_PACKAGE);
+		} else {
+			return DEFAULT_JUNIT_ROOT_PACKAGE;
+		}
+	}
+
+	private String[] getTags(CommandLine cmdLine) {
         if (cmdLine.hasOption(TAG)) {
             return cmdLine.getOptionValue(TAG).split(",");
         } else {
@@ -153,6 +166,9 @@ public class ConsoleConfigurator {
         if (line.hasOption(PRETTY_PRINT)) {
             configuredReports.add(new PrettyPrintReportWriter());
         }
+        if (line.hasOption(JUNIT_EASYB)) {
+        	configuredReports.add(new JUnitReportWriter(line.getOptionValue(JUNIT_EASYB)));
+        }
         return Collections.unmodifiableList(configuredReports);
     }
 
@@ -170,8 +186,10 @@ public class ConsoleConfigurator {
     private static Options getOptionsForMain() {
         final Options options = new Options();
 
+        System.out.println("Setting up BehaviorRunner options");
         options.addOption(withDescription(HTML_DESCRIPTION).hasOptionalArg().create(HTML_EASYB));
         options.addOption(withDescription(XML_DESCRIPTION).hasOptionalArg().create(XML_EASYB));
+        options.addOption(withDescription(JUNIT_DESCRIPTION).hasOptionalArg().create(JUNIT_EASYB));
         options.addOption(withDescription(STORY_DESCRIPTION).hasOptionalArg().create(TXT_STORY));
         options.addOption(withDescription(BEHAVIOR_DESRCIPTION).hasOptionalArg().create(TXT_SPECIFICATION));
         options.addOption(withDescription(STACKTRACE_DESCRIPTION).hasOptionalArg().create(EXCEPTION_STACK));
@@ -182,6 +200,7 @@ public class ConsoleConfigurator {
         options.addOption(withDescription(BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(BEHAVIOR_FILE));
         options.addOption(withDescription(FAILURE_BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(FAILURE_BEHAVIOR_FILE));
         options.addOption(withDescription(TAG_DESCRIPTION).hasOptionalArg().create(TAG));
+        options.addOption(withDescription(JUNIT_ROOT_DESCRIPTION).hasOptionalArg().create(JUNIT_ROOT_PACKAGE));
 
         return options;
     }

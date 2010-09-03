@@ -21,6 +21,7 @@ public class Configuration {
     private String failureFile;
     private boolean isFailureFile = false;
     private String[] tags;
+    private String junitRootPackage;
 
     public Configuration() {
         this(new String[]{}, Collections.<ReportWriter>emptyList());
@@ -65,10 +66,11 @@ public class Configuration {
     public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                          final boolean stackTraceOn, final boolean filteredStackTraceOn,
                          final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
-                         final String failureFile, final String[] tags) {
+                         final String failureFile, final String[] tags, String rootPackage) {
         this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn,
                 extendedStoryClassName, parallel, isFailureFile, failureFile);
         this.tags = tags;
+        this.junitRootPackage = rootPackage;
     }
 
     public String[] getTags(){
@@ -89,6 +91,10 @@ public class Configuration {
 
     public boolean isParallel() {
         return this.parallel;
+    }
+    
+    public String getJunitRootPackage() {
+    	return junitRootPackage;
     }
 
     public ConsoleReporterListener getConsoleReporter() {

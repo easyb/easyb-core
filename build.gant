@@ -201,6 +201,7 @@ private def validateBehaviors(easybLocation) {
 
     report(location: "${reportsoutputdir}/easyb-report.html", format: "html")
     report(location: "${reportsoutputdir}/easyb-report.xml", format: "xml")
+    report(location: "${reportsoutputdir}/easyb-junit-report.xml", format: "junit")
     report(location: "${reportsoutputdir}/story-report.txt", format: "txtstory")
     report(location: "${reportsoutputdir}/specification-report.txt", format: "txtspecification")
 
@@ -317,6 +318,7 @@ target("validate-norun-feature": "runs and validates the non executable stories"
 
     report(location: "${reportsoutputdir}/easyb-report.html", format: "html")
     report(location: "${reportsoutputdir}/easyb-report.xml", format: "xml")
+    report(location: "${reportsoutputdir}/easyb-junit-report.xml", format: "junit")
     report(location: "${reportsoutputdir}/story-report.txt", format: "txtstory")
 
 
@@ -368,6 +370,7 @@ target("validate-categories-feature": "runs and validates categories") {
 
     report(location: "${reportsoutputdir}/easyb-report.html", format: "html")
     report(location: "${reportsoutputdir}/easyb-report.xml", format: "xml")
+    report(location: "${reportsoutputdir}/easyb-junit-report.xml", format: "junit")
     report(location: "${reportsoutputdir}/story-report.txt", format: "txtstory")
 
     behaviors(dir: gbehaviordir) {

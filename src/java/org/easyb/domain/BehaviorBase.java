@@ -1,17 +1,18 @@
 package org.easyb.domain;
 
-import groovy.lang.GroovyShell;
 import groovy.lang.Binding;
-import org.easyb.Configuration;
-import org.easyb.listener.BroadcastListener;
-import org.easyb.listener.ExecutionListener;
-import org.easyb.util.TagRegExHelper;
+import groovy.lang.GroovyShell;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.easyb.Configuration;
+import org.easyb.listener.BroadcastListener;
+import org.easyb.util.TagRegExHelper;
+
+@SuppressWarnings("serial")
 public abstract class BehaviorBase implements Behavior, Serializable {
   private String phrase;
   private File file;

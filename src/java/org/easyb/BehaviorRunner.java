@@ -18,6 +18,8 @@ import org.easyb.report.ReportWriter;
 public class BehaviorRunner {
   private Configuration configuration;
 
+  private ResultsAmalgamator resultsAmalgamator;
+
   public BehaviorRunner(final Configuration configuration, final ListenerBuilder... listeners) {
     this.configuration = configuration;
 
@@ -77,20 +79,20 @@ public class BehaviorRunner {
 
     ListenerFactory.notifyTestingCompleted();
 
-    ResultsAmalgamator r = new ResultsAmalgamator(behaviors);
+	resultsAmalgamator = new ResultsAmalgamator(behaviors, configuration);
 
-    // this is hideous
+    // this is hideous - no, THIS IS JAVA! ;-)
     System.out.println(String.format("%d total behavior%s ran with %s failure%s",
-                                     r.getResultsReporter().getBehaviorCount(),
-                                     r.getResultsReporter().getBehaviorCount() == 1 ? "" : "s",
-                                     r.getResultsReporter().getFailedBehaviorCount() == 0 ? "no" : ("" + r.getResultsReporter().getFailedBehaviorCount()) ,
-                                     r.getResultsReporter().getFailedBehaviorCount() ==1 ? "" : "s"));
+                                     resultsAmalgamator.getResultsReporter().getBehaviorCount(),
+                                     resultsAmalgamator.getResultsReporter().getBehaviorCount() == 1 ? "" : "s",
+                                     resultsAmalgamator.getResultsReporter().getFailedBehaviorCount() == 0 ? "no" : ("" + resultsAmalgamator.getResultsReporter().getFailedBehaviorCount()) ,
+                                     resultsAmalgamator.getResultsReporter().getFailedBehaviorCount() ==1 ? "" : "s"));
 
     for (final ReportWriter report : configuration.getConfiguredReports()) {
-      report.writeReport(r);
+      report.writeReport(resultsAmalgamator);
     }
 
-    if (r.failuresDetected()) {
+    if (resultsAmalgamator.failuresDetected()) {
       wasSuccessful = false;
     }
     return wasSuccessful;
