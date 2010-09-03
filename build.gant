@@ -43,9 +43,16 @@ target("default": "validate-behaviors") {
 }
 
 target("generate-pom":"generates pom file for this project") {
-  ivy.makepom(ivyfile:"ivy.xml",
-              pomfile:"${defaultdir}/pom-${version}.pom") {
-    mapping(conf:"compile", scope:"compile")
+  def pomTemplate = new File("pom-template.xml")
+
+  if ( pomTemplate.exists() ) {
+    def text = pomTemplate.text
+    def binding = [version:version]
+
+    def engine = new groovy.text.SimpleTemplateEngine()
+    def template = engine.createTemplate(text).make(binding)
+
+    new File("${defaultdir}/easyb-${version}.pom").write template.toString()
   }
 }
 
@@ -54,13 +61,23 @@ target("local-release-force":"compile and release them to the repository, only u
   depends("jar")
   depends("jar-sources")
   depends("jar-javadocs")
-  depends("generate-pom")
   depends("ivy-publish")
 
-  echo("To install in your local maven repo (if you have maven) use the following command:")
-  echo("""mvn install:install-file -Dpackaging=jar -Dversion=${version} -DartifactId=easyb -DgroupId=org.easyb
-       -DpomFile=../repository/org/easyb/${version}/easyb-${version}-pom.xml
-       -Dfile=../repository/org/easyb/${version}/easyb-${version}.jar""")
+}
+
+target("mvn":"mvn commands") {
+  depends("generate-pom")
+  def cmds = ["""mvn install:install-file -Dpackaging=jar -Dversion=${version} -DartifactId=easyb -DgroupId=org.easyb -DpomFile=${defaultdir}/easyb-${version}.pom -Dfile=${defaultdir}/easyb-${version}.jar""",
+      """mvn install:install-file -Dpackaging=jar -Dversion=${version} -DartifactId=easyb -DgroupId=org.easyb -DpomFile=${defaultdir}/easyb-${version}.pom -Dclassifier=sources -Dfile=${defaultdir}/easyb-${version}-sources.jar""",
+      """mvn install:install-file -Dpackaging=jar -Dversion=${version} -DartifactId=easyb -DgroupId=org.easyb -DpomFile=${defaultdir}/easyb-${version}.pom -Dclassifier=javadocs -Dfile=${defaultdir}/easyb-${version}-javadocs.jar"""]
+
+  cmds.each { cmd ->
+    println cmd
+    def proc = cmd.execute()
+    proc.waitFor()
+    println proc.in.text
+    println proc.err.text
+  }
 }
 
 

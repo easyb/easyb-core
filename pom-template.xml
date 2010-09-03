@@ -6,7 +6,7 @@
   <groupId>org.easyb</groupId>
   <artifactId>easyb</artifactId>
   <packaging>jar</packaging>
-  <version>VERSION</version>
+  <version>${version}</version>
   <name>easyb</name>
   <description>A behavior driven development framework for the Java platform</description>
   <url>http://www.easyb.org</url>
@@ -26,6 +26,12 @@
       <email>rod@rodcoffin.com</email>
       <url>http://www.rodcoffin.com</url>
     </developer>
+      <developer>
+        <id>rvowles</id>
+        <name>Richard Vowles</name>
+        <email>richard@bluetrainsoftware.com</email>
+        <url>http://www.bluetrainsoftware.com</url>
+      </developer>
   </developers>
 
   <licenses>
@@ -36,9 +42,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://easyb.googlecode.com/svn/trunk/</connection>
+    <connection>scm:svn:http://easyb.googlecode.com/svn/tags/easyb-${version}</connection>
     <developerConnection>scm:svn:https://easyb.googlecode.com/svn/trunk/</developerConnection>
-    <url>http://code.google.com/p/easyb/source/browse/#svn/trunk/easyb</url>
+    <url>http://code.google.com/p/easyb/source/browse/#svn/tags/easyb-${version}</url>
   </scm>
 
   <mailingLists>
@@ -79,7 +85,7 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
-      <version>1.7.2</version>
+      <version>[1.7.4,1.7.99)</version>
     </dependency>
   </dependencies>
 

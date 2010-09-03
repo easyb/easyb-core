@@ -17,7 +17,6 @@
       </configurations>
 
       <publications>
-          <artifact name="pom" ext="pom" conf="compile"/>
           <artifact name="easyb" type="jar" ext="jar" conf="compile"/>
           <artifact name="easyb" type="sources" ext="jar" conf="compile" e:classifier="sources"/>
           <artifact name="easyb" type="javadocs" ext="jar" conf="compile" e:classifier="javadocs"/>
