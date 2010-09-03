@@ -75,6 +75,8 @@ public class BehaviorRunner {
 
     executeBehaviors(behaviors);
 
+    ListenerFactory.notifyTestingCompleted();
+
     ResultsAmalgamator r = new ResultsAmalgamator(behaviors);
 
     // this is hideous
