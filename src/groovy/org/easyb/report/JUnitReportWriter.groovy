@@ -47,6 +47,7 @@ class JUnitReportWriter implements ReportWriter {
 			println "STORY NOT FOUND"
 			return
 		}
+		
 		createReportDirectory()
 		generatedReportFileName = reportFileNameFor(story)
 		
@@ -62,14 +63,20 @@ class JUnitReportWriter implements ReportWriter {
 		def root = rootPackageOrDefaultIfUndefined()
 		
 		def qualifiedStoryClassname = "${root}.${storyClassname}"
+		def totalStoryDuration = story.executionTotalTimeInMillis / 1000
 		
-		xml.testsuite(tests:totalTests, results:successfulTests, failures:failingTests, disabled: pendingTests,
-				errors: 0, time:"0.0", name:qualifiedStoryClassname)  {
+		xml.testsuite(tests:totalTests, 
+					  results:successfulTests, 
+					  failures:failingTests, 
+					  disabled: pendingTests,
+					  errors: 0, 
+					  time:totalStoryDuration, 
+					  name:qualifiedStoryClassname)  {
 					
 					scenarios.each { scenario ->
-						
-						testcase(time:"0", classname:qualifiedStoryClassname, name: scenario.name) {
-							if (thisIsAPending(scenario)) {
+						def scenarioDuration = scenario.executionTotalTimeInMillis / 1000
+						testcase(time:scenarioDuration, classname:qualifiedStoryClassname, name: scenario.name) {
+							if (thisIsAPending(scenario) || thisIsAnIngored(scenario)) {
 								skipped()
 							}
 							if (thereAreFailuresInThis(scenario)) {
@@ -158,6 +165,11 @@ class JUnitReportWriter implements ReportWriter {
 		pendingSteps > 0
 	}
 	
+	def thisIsAnIngored(BehaviorStep scenario) {
+		def ignoredSteps = scenario.getBehaviorCountListRecursively([SCENARIO, IT, GIVEN, WHEN, THEN, AND], Result.IGNORED)
+		ignoredSteps > 0
+	}
+
 	def thereAreFailuresInThis(BehaviorStep scenario) {
 		long failureCount = failuresInThis(scenario)
 		failureCount > 0

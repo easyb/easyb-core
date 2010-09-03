@@ -137,7 +137,6 @@ scenario "Pending stories should be marked as skipped", {
     }
     when "we run the tests and generate a JUnit report", {
         junitReport = generateJUnitReportFrom(spec)
-        println "JUNIT REPORT = ${junitReport}"
     }
     then "the report should be a valid JUnit report with one skipped story", {
 
@@ -324,6 +323,19 @@ scenario "Including the classname in the JUnit reports", {
 	}
 	when "we run the tests and generate a JUnit report", {
 		junitReport = generateJUnitReportFromStoryIn(storyPath)
+	}
+	then "the testsuite name should have the story name and the default easyb root package of 'behavior'", {
+		junitReport.shouldHave "name='behavior.EmptyStackStory'"
+	}
+}
+
+scenario "Including the unqualified classname in each test case  in the JUnit reports", {
+	given "a scenario in a file", {
+		storyPath = new File("behavior/groovy/org/easyb/bdd/story/stack/EmptyStackStory.groovy")
+	}
+	when "we run the tests and generate a JUnit report", {
+		junitReport = generateJUnitReportFromStoryIn(storyPath)
+		println "JUNIT REPORT: $junitReport"
 	}
 	then "the testcase classname should have the story name and the default easyb root package of 'behavior'", {
 		junitReport.shouldHave "classname='behavior.EmptyStackStory'"
