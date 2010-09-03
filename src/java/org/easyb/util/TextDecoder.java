@@ -47,6 +47,8 @@ public class TextDecoder {
       variableMatcher.appendReplacement(sb, value);
     }
 
+    variableMatcher.appendTail(sb);
+
     return sb.toString();
   }
 
@@ -70,10 +72,10 @@ public class TextDecoder {
     }
   }
 
-
+//
 //  public static void main(String[] args) {
 //    Binding b = new Binding();
 //    b.setProperty( "ikea", new Integer(3));
-//    System.out.println(new TextDecoder("#{ikea + 7} is #ikea").replace(b, null));
+//    System.out.println(new TextDecoder("#{ikea + 7} is #ikea idea").replace(b, null));
 //  }
 }

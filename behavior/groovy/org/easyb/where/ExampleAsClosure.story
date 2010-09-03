@@ -20,7 +20,7 @@ before "Before we start running the examples", {
   }
 }
 
-scenario "Text '#{text}' should equal #number", {
+scenario "Text '#{text}' should equal #number number", {
   when "we parse #text", {
     parsedValue = Integer.parseInt(text)
     whenCount ++
