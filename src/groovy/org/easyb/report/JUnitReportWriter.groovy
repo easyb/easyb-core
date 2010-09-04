@@ -83,7 +83,7 @@ class JUnitReportWriter implements ReportWriter {
 								skipped()
 							}
 							if (thereAreFailuresInThis(scenario)) {
-								failure(message: failureMessagesFrom(scenario))
+								failure(message: failureMessagesFrom(scenario), scenarioDetailsFrom(scenario))
 							}
 						}
 					}
@@ -192,6 +192,9 @@ class JUnitReportWriter implements ReportWriter {
 	def failureMessagesFrom(BehaviorStep scenario) {
 		def failures = ""
 		scenario.childSteps.each {step ->
+			if (failures) {
+				failures += "; "
+			}
 			failures += failureMessageFor(step)
 		}
 		return failures
@@ -201,7 +204,7 @@ class JUnitReportWriter implements ReportWriter {
 	def failureMessageFor(BehaviorStep step) {
 		def message = ""
 		if (step?.result?.failed() && step?.result?.cause) {
-			message = """Step "${step.name}" -- ${step.result.cause().message}\n"""
+			message = """Step "${step.name}" -- ${step.result.cause().message}"""
 		}
 		return message
 	}
@@ -215,5 +218,38 @@ class JUnitReportWriter implements ReportWriter {
 			return getBaseStory(firstChild)
 		}
 		return null;
+	}
+	
+	def scenarioDetailsFrom(BehaviorStep step) {
+		def behaviorType = getGenesisType(step)
+		def topLevelStep = getScenarioStep(step)
+		describeEachStepDownFrom(topLevelStep,behaviorType)
+	}
+		
+	def describeEachStepDownFrom(BehaviorStep step, BehaviorStepType genesisType) {
+		def description = step.format('\n', ' ', genesisType)
+		step.childSteps.each { childStep ->		
+			if (description) {
+				description += '\n'
+			}
+			description += describeEachStepDownFrom(childStep, genesisType)
+		}
+		return description
+	}
+	
+	def getScenarioStep(BehaviorStep step) {
+		if (step.stepType in [BehaviorStepType.SCENARIO, BehaviorStepType.IT]) {
+			step
+		} else {
+			getScenarioStep(step.parentStep)
+		}
+	}
+
+	def getGenesisType(BehaviorStep step) {
+		if (step.stepType in [BehaviorStepType.STORY, BehaviorStepType.SPECIFICATION]) {
+			step.stepType
+		} else {
+			getGenesisType(step.parentStep)
+		}
 	}
 }

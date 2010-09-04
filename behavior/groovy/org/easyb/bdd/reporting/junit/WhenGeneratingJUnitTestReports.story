@@ -47,15 +47,21 @@ scenario "creating a JUnit report with a failing scenario", {
     }
     when "we run the tests and generate a JUnit report", {
         junitReport = generateJUnitReportFrom(spec)
+		println "JUNIT REPORT = $junitReport"
     }
     then "the report should be a valid JUnit report with one failing test case", {
-
         junitReport.shouldHave "<testsuite tests='1' results='0' failures='1' disabled='0' errors='0'"
         junitReport.shouldHave "<testcase"
         junitReport.shouldHave "name='test scenario 1'"
-        junitReport.shouldHave "<failure message='Step \"something should occur\" -- expected false but was true"
+        junitReport.shouldHave "<failure message='Step \"something should occur\" -- expected false but was true'>"
         junitReport.shouldHave "</testsuite>"
-    }
+    } 
+	and "the failure message should contain the scenario details", {
+        junitReport.shouldHave "scenario test scenario 1"
+        junitReport.shouldHave "given some context"
+        junitReport.shouldHave "when something happens"
+        junitReport.shouldHave "then something should occur</failure>"
+	}
 }
 
 
@@ -258,6 +264,7 @@ scenario "creating a JUnit report with nested scenarios with a failure", {
 	}
 	when "we run the tests and generate a JUnit report", {
 		junitReport = generateJUnitReportFrom(spec)
+		
 	}
 	then "the report should contain test cases for the child scenarios", {
 		junitReport.shouldHave "name='child scenario 1'"
@@ -346,7 +353,6 @@ scenario "JUnit report generation for specifications with pending and failing st
 	}
 	when "we run the tests and generate a JUnit report", {
 		junitReport = generateJUnitReportFromStoryIn(storyPath)
-		println "REPORT = $junitReport"
 	}
 	then "the report should hava a test case for each specification ", {
 		junitReport.shouldHave "<testsuite tests='3' results='1' failures='1' disabled='1' errors='0'"
