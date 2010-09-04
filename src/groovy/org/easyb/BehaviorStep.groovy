@@ -10,6 +10,7 @@ public class BehaviorStep implements Serializable {
   BehaviorStep parentStep
   Result result
   String name
+  Map context
 
   String currentStepName //
   String description

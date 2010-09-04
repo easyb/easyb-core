@@ -1,13 +1,12 @@
 package org.easyb.listener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.easyb.BehaviorStep;
 import org.easyb.result.Result;
 import org.easyb.util.BehaviorStepType;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * this centralizes the counting all in one place.

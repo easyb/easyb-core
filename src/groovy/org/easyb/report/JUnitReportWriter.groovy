@@ -19,7 +19,6 @@ import static org.easyb.util.BehaviorStepType.*
 class JUnitReportWriter implements ReportWriter {
 	private String location
 	private String generatedReportFileName
-	private String rootPackage
 	private static final String DEFAULT_LOCATION = "target/reports/junit";
 	private static final String DEFAULT_JUNIT_ROOT_PACKAGE = "behavior";
 	
@@ -37,19 +36,23 @@ class JUnitReportWriter implements ReportWriter {
 	
 	def void writeReport(ResultsAmalgamator amal) {
 		ResultsReporter results = amal.getResultsReporter()
-		rootPackage = amal.configuration.junitRootPackage
 		writeReport(results)
 	}
 	
 	public void writeReport(def results) {
-		BehaviorStep story = getBaseStory(results.genesisStep)
-		if (!story) {
-			println "STORY NOT FOUND"
-			return
-		}
-		
 		createReportDirectory()
+		writeAReportForEachStoryOrSpecificationIn(results)
+	}
+	
+	private writeAReportForEachStoryOrSpecificationIn(results) {
+		results.genesisStep.childSteps.each {
+			story -> writeReportFor(story)
+		}
+	}
+	
+	private writeReportFor(story) {
 		generatedReportFileName = reportFileNameFor(story)
+		println "Writing JUnit report to ${generatedReportFileName}"
 		
 		def writer = new BufferedWriter(new FileWriter(new File(generatedReportFileName)))
 		def xml = new MarkupBuilder(writer)
@@ -57,26 +60,26 @@ class JUnitReportWriter implements ReportWriter {
 		def scenarios = getLowestLevelScenariosFrom(story)
 		def totalTests = totalTestsIn(scenarios)
 		def successfulTests = totalSuccessfulTestsIn(scenarios)
-		def pendingTests = results.pendingScenarioCount + results.pendingSpecificationCount
-		def failingTests = results.failedScenarioCount + results.failedSpecificationCount		
-		def storyClassname = stripFilenameExtensionFrom(story.storyContext.binding.storyFile.name)
-		def root = rootPackageOrDefaultIfUndefined()
+		def pendingTests = totalPendingTestsIn(scenarios)// results.pendingScenarioCount + results.pendingSpecificationCount
+		def failingTests = totalFailingTestsIn(scenarios) //results.failedScenarioCount + results.failedSpecificationCount	
 		
+		def storyClassname = stripFilenameExtensionFrom(story.context.sourceFile.name)
+		def root = DEFAULT_JUNIT_ROOT_PACKAGE
 		def qualifiedStoryClassname = "${root}.${storyClassname}"
 		def totalStoryDuration = story.executionTotalTimeInMillis / 1000
 		
 		xml.testsuite(tests:totalTests, 
-					  results:successfulTests, 
-					  failures:failingTests, 
-					  disabled: pendingTests,
-					  errors: 0, 
-					  time:totalStoryDuration, 
-					  name:qualifiedStoryClassname)  {
+				results:successfulTests, 
+				failures:failingTests, 
+				disabled: pendingTests,
+				errors: 0, 
+				time:totalStoryDuration, 
+				name:qualifiedStoryClassname)  {
 					
 					scenarios.each { scenario ->
 						def scenarioDuration = scenario.executionTotalTimeInMillis / 1000
-						testcase(time:scenarioDuration, classname:qualifiedStoryClassname, name: scenario.name) {
-							if (thisIsAPending(scenario) || thisIsAnIngored(scenario)) {
+						testcase(classname:qualifiedStoryClassname, name: scenario.name, time:scenarioDuration) {
+							if (thisIsAPending(scenario) || thisIsAnIgnored(scenario)) {
 								skipped()
 							}
 							if (thereAreFailuresInThis(scenario)) {
@@ -102,14 +105,10 @@ class JUnitReportWriter implements ReportWriter {
 		return filename
 	}
 	
-	def rootPackageOrDefaultIfUndefined() {		
-		(rootPackage) ? rootPackage : DEFAULT_JUNIT_ROOT_PACKAGE
-	}
-	
 	def reportFileNameFor(def story) {
 		def storyNameWithoutSpaces = story.name.replaceAll("\\s","_")
 		def storyInCamelCaseAndInitialCapital = capitalizedCamelCase(storyNameWithoutSpaces)
-		def root = rootPackageOrDefaultIfUndefined();
+		def root = DEFAULT_JUNIT_ROOT_PACKAGE;
 		"${location}/TEST-${root}.${storyInCamelCaseAndInitialCapital}.xml"
 	} 
 	
@@ -136,15 +135,23 @@ class JUnitReportWriter implements ReportWriter {
 	}
 	
 	def totalPendingTestsIn(def scenarios) {
-		scenarios.findAll {
-			it.result.ignored()
-		}.size()
+		scenarios.findAll { step ->
+			(thisIsAPending(step) || thisIsAnIgnored(step))
+ 		}.size()
 	}
 	
-	def getLowestLevelScenariosFrom(BehaviorStep story) {
+	def getLowestLevelScenariosFrom(BehaviorStep step) {
 		def lowestLevelScenarios = []
-		def immediateChildScenarios = story.getChildrenOfType(BehaviorStepType.SCENARIO)
-		immediateChildScenarios.each {scenario ->
+		
+		if ((step.stepType == BehaviorStepType.SCENARIO) || (step.stepType == BehaviorStepType.IT)) {
+			lowestLevelScenarios << step
+		}
+		def immediateChildScenarios = step.getChildrenOfType(BehaviorStepType.SCENARIO)
+		def immediateChildSpecItems = step.getChildrenOfType(BehaviorStepType.IT)
+		
+		def immediateChildren = immediateChildScenarios + immediateChildSpecItems
+		
+		immediateChildren.each {scenario ->
 			def childScenarios = getLowestLevelScenariosFrom(scenario)
 			if (childScenarios) {
 				lowestLevelScenarios = lowestLevelScenarios.plus(childScenarios)
@@ -160,23 +167,25 @@ class JUnitReportWriter implements ReportWriter {
 		"org.easyb.${dispScenarioName}"
 	}
 	
-	def thisIsAPending(BehaviorStep scenario) {
-		def pendingSteps = scenario.getBehaviorCountListRecursively([SCENARIO, IT, GIVEN, WHEN, THEN, AND], Result.PENDING)
-		pendingSteps > 0
+	def thisIsAPending(BehaviorStep step) {
+		def pendingChildSteps = step.getBehaviorCountListRecursively([SCENARIO, IT, GIVEN, WHEN, THEN, AND], Result.PENDING)
+		(step.result == Result.PENDING) || (pendingChildSteps > 0)
 	}
 	
-	def thisIsAnIngored(BehaviorStep scenario) {
-		def ignoredSteps = scenario.getBehaviorCountListRecursively([SCENARIO, IT, GIVEN, WHEN, THEN, AND], Result.IGNORED)
-		ignoredSteps > 0
+	def thisIsAnIgnored(BehaviorStep step) {
+		def ignoredChildSteps = step.getBehaviorCountListRecursively([SCENARIO, IT, GIVEN, WHEN, THEN, AND], Result.IGNORED)
+		(step.result == Result.IGNORED) || (ignoredChildSteps > 0)
 	}
 
-	def thereAreFailuresInThis(BehaviorStep scenario) {
-		long failureCount = failuresInThis(scenario)
-		failureCount > 0
+	def thereAreFailuresInThis(BehaviorStep step) {
+		failuresInThis(step)
 	}
 	
-	private long failuresInThis(BehaviorStep scenario) {
-		def failingSteps = scenario.getBehaviorCountListRecursively([SCENARIO, IT, GIVEN, WHEN, THEN, AND], Result.FAILED)
+	private long failuresInThis(BehaviorStep step) {
+		def failingSteps = step.getBehaviorCountListRecursively([SCENARIO, IT, GIVEN, WHEN, THEN, AND], Result.FAILED)
+		if (step.result == Result.FAILED)  {
+			failingSteps++
+		}
 		failingSteps
 	}
 		
@@ -197,9 +206,9 @@ class JUnitReportWriter implements ReportWriter {
 		return message
 	}
 	
-	private BehaviorStep getBaseStory(BehaviorStep step) {
+	private List<BehaviorStep> getBaseStories(BehaviorStep step) {
 		
-		if (step.stepType == BehaviorStepType.STORY) {
+		if (step.stepType in [BehaviorStepType.STORY, BehaviorStepType.SPECIFICATION]) {
 			return step
 		} else if ( step.getChildSteps()) {
 			def firstChild = step.getChildSteps().get(0)

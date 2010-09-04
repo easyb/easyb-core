@@ -45,7 +45,7 @@ public class Story extends BehaviorBase {
 
       StoryBinding binding = StoryBinding.getBinding(listener, file.getParentFile());
  
-      binding.setProperty("storyFile", file);
+      binding.setProperty("sourceFile", file);
       GroovyShell g = new GroovyShell(getClassLoader(), binding);
       bindShellVariables(g);
 
@@ -60,9 +60,8 @@ public class Story extends BehaviorBase {
       listener.stopStep();
       listener.stopBehavior(currentStep, this);
       
-      if (currentStep.getStoryContext() == null) {
-    	  currentStep.setStoryContext(new StoryContext(binding));
-      }
+      currentStep.setContext(binding.getVariables());
+      
       return currentStep;
     } else {
       return null;

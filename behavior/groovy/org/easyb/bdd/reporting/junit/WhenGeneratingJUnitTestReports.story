@@ -174,31 +174,6 @@ scenario "Partially implemented stories should be marked as skipped", {
 }
 
 
-scenario "creating a JUnit report with one specification", {
-    given "a specification", {
-        spec = """
-            before "initialize zipcodevalidator instance", {
-                zipvalidate = new ZipCodeValidator();
-            }
-
-            it "should deny invalid zip codes", {
-                ["221o1", "2210", "22010-121o"].each {zip ->
-                    zipvalidate.validate(zip).is false
-                }
-            }
-
-            it "should accept valid zip codes", {
-                ["22101", "22100", "22010-1210"].each {zip ->
-                    zipvalidate.validate(zip).shouldBe true
-                }
-            }"""
-    }
-    when "we run the tests and generate a JUnit report"
-    then "the report should be a valid JUnit report with one test case"
-}
-
-
-
 scenario "creating a JUnit report with  nested scenarios", {
     given "a scenario with nested scenarios", {
         spec = """
@@ -317,6 +292,7 @@ scenario "creating a JUnit report with one scenario", {
 	}
 }
 
+
 scenario "Including the classname in the JUnit reports", {
 	given "a scenario in a file", {
 		storyPath = new File("behavior/groovy/org/easyb/bdd/story/stack/EmptyStackStory.groovy")
@@ -335,7 +311,6 @@ scenario "Including the unqualified classname in each test case  in the JUnit re
 	}
 	when "we run the tests and generate a JUnit report", {
 		junitReport = generateJUnitReportFromStoryIn(storyPath)
-		println "JUNIT REPORT: $junitReport"
 	}
 	then "the testcase classname should have the story name and the default easyb root package of 'behavior'", {
 		junitReport.shouldHave "classname='behavior.EmptyStackStory'"
@@ -343,19 +318,61 @@ scenario "Including the unqualified classname in each test case  in the JUnit re
 }
 
 scenario "Configuring the root package name in the JUnit reports", {
-	given "a scenario in a file", {
+	given "a scenario in a file"
 //		storyPath = new File("behavior/groovy/org/easyb/bdd/story/stack/EmptyStackStory.groovy")
-	}
-	and "the root package name configured as 'easyb'", {
+	and "the root package name configured as 'easyb'"
 //		configuration = [junitRootPackage:'easyb'] as Configuration
+	when "we run the tests and generate a JUnit report"
+//		junitReport = generateJUnitReportFromStoryIn(storyPath, configuration)
+	then "the testcase classname should have the story name and the easyb root package of 'easyb'"
+//		junitReport.shouldHave "classname='easyb.EmptyStackStory'"
+}
+
+scenario "JUnit report generation for specifications", {
+	given "a specification in a file", {
+		storyPath = new File("behavior/groovy/org/easyb/bdd/specification/queue/QueueSpecification.groovy")
 	}
 	when "we run the tests and generate a JUnit report", {
-//		junitReport = generateJUnitReportFromStoryIn(storyPath, configuration)
+		junitReport = generateJUnitReportFromStoryIn(storyPath)
 	}
-	then "the testcase classname should have the story name and the easyb root package of 'easyb'", {
-//		junitReport.shouldHave "classname='easyb.EmptyStackStory'"
+	then "the report should hava a test case for each specification ", {
+		junitReport.shouldHave "<testsuite tests='3'"
 	}
 }
+
+scenario "JUnit report generation for specifications with pending and failing steps", {
+	given "a specification containing passing, pending and failing steps", {
+		storyPath = new File("behavior/groovy/org/easyb/bdd/reporting/html/PassingPendingFailing.specification")
+	}
+	when "we run the tests and generate a JUnit report", {
+		junitReport = generateJUnitReportFromStoryIn(storyPath)
+		println "REPORT = $junitReport"
+	}
+	then "the report should hava a test case for each specification ", {
+		junitReport.shouldHave "<testsuite tests='3' results='1' failures='1' disabled='1' errors='0'"
+	}
+	and "the report should contain the name of the specification", {
+		junitReport.shouldHave "name='behavior.PassingPendingFailing"
+	}
+	and "the report should contain a skipped test", {
+		junitReport.shouldHave "<skipped />"
+	}
+}
+
+def generateJUnitReportFrom(def spec) {
+	specFile = File.createTempFile('EasybTest', '.story')
+	specFile.deleteOnExit()
+	specFile.write(spec)
+	generateJUnitReportFromStoryIn(specFile)
+}
+
+def generateJUnitReportFromSpecification(def spec) {
+	specFile = File.createTempFile('EasybTest', '.specification')
+	specFile.deleteOnExit()
+	specFile.write(spec)
+	generateJUnitReportFromSspecificationIn(specFile)
+}
+
 
 def generateJUnitReportFromStoryIn(def specFile) {
 	generateJUnitReportFromStoryIn(specFile, new Configuration())
@@ -374,11 +391,4 @@ def generateJUnitReportFromStoryIn(def specFile, def configuration) {
 	def reportFile = report.getGeneratedReportFileName()
 	filetext = new File(reportFile).getText()
 	return filetext;
-}
-
-def generateJUnitReportFrom(def spec) {
-    specFile = File.createTempFile('EasybTest', '.story')
-    specFile.deleteOnExit()
-    specFile.write(spec)
-	generateJUnitReportFromStoryIn(specFile)
 }

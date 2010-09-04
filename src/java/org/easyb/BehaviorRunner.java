@@ -79,7 +79,7 @@ public class BehaviorRunner {
 
     ListenerFactory.notifyTestingCompleted();
 
-	resultsAmalgamator = new ResultsAmalgamator(behaviors, configuration);
+	resultsAmalgamator = new ResultsAmalgamator(behaviors);
 
     // this is hideous - no, THIS IS JAVA! ;-)
     System.out.println(String.format("%d total behavior%s ran with %s failure%s",
