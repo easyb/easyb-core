@@ -299,6 +299,32 @@ scenario "creating a JUnit report with one scenario", {
 	}
 }
 
+scenario "creating a JUnit report with two scenario including one failed scenario", {
+    given "a scenario", {
+        spec = """
+      scenario "test scenario 1", {
+        given "some context"
+        when "something happens"
+        then "something should occur", {
+          true.shouldBe false
+        }
+      }
+      scenario "test scenario 1", {
+        given "some context"
+        when "something happens"
+        then "something should occur", {
+          true.shouldBe true
+        }
+      }
+    """
+    }
+    when "we run the tests and generate a JUnit report", {
+        junitReport = generateJUnitReportFrom(spec)
+    }
+    then "the report should be a valid JUnit report with one test case", {
+        junitReport.shouldHave "<testsuite tests='2' results='1' failures='1' disabled='0' errors='0'"
+    }
+}
 
 scenario "Including the classname in the JUnit reports", {
 	given "a scenario in a file", {
@@ -363,6 +389,38 @@ scenario "JUnit report generation for specifications with pending and failing st
 	and "the report should contain a skipped test", {
 		junitReport.shouldHave "<skipped />"
 	}
+}
+
+
+scenario "creating a JUnit report from a data-driven test", {
+    given "a data-driven scenario including a failure", {
+        spec = """
+                examples "simple addition", {
+                  number  =              [1,   2,    3,     4,    5,    6,    7,     8,      9,    10]
+                  numberPlusOne  =       [2,   3,    4,     5,    6,    7,    7,     9,     10,    11]
+                }
+                
+                scenario "The number #{number}' plus 1 should be #{numberPlusOne}", {
+                    given "the number #number", {
+                        theNumber = number
+                    }
+                    when "the system converts this number to the roman numeral equivalent", {
+                        theNumberPlusOne = number + 1
+                    }
+                    
+                    then "the result should be #theNumberPlusOne", {
+                        theNumberPlusOne.shouldBe numberPlusOne
+                    }
+                }                
+             """
+    }
+    when "we run the tests and generate a JUnit report", {
+        junitReport = generateJUnitReportFrom(spec)
+        
+    }
+    then "the report should contain only 1 failure", {
+        junitReport.shouldHave "<testsuite tests='10' results='9' failures='1' disabled='0' errors='0'"
+    }
 }
 
 def generateJUnitReportFrom(def spec) {
