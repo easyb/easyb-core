@@ -221,7 +221,6 @@ public class StoryProcessing {
     step.decodeCurrentName currentIteration
 
     listener.startStep(step)
-    Result result;
 
     def processing = [BehaviorStepType.GIVEN, BehaviorStepType.WHEN, BehaviorStepType.THEN]
 
@@ -233,22 +232,21 @@ public class StoryProcessing {
         processScenario(currentContext.beforeEach, false)
 
       step.childSteps.each { childStep ->
-        def oldCurrent = currentStep
-
         currentStep = childStep
 
-        try {
         if (childStep.stepType == BehaviorStepType.BEHAVES_AS)
           processSharedScenarios(childStep)
         else if ( childStep.stepType == BehaviorStepType.EXTENSION_POINT )
           childStep.extensionPoint.process(step, currentContext.binding, listener)
         else if (processing.contains(childStep.stepType)) {
           processChildStep(childStep)
-        } } finally {
-          currentStep = oldCurrent
-          currentStep.result = null
         }
       }
+
+
+      step.result = null  // give it a default
+      currentStep = step // reset it
+
 
       ResultsReporter.fixScenarioStatus(step)
       
