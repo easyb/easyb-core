@@ -246,6 +246,7 @@ public class StoryProcessing {
           processChildStep(childStep)
         } } finally {
           currentStep = oldCurrent
+          currentStep.result = null
         }
       }
 

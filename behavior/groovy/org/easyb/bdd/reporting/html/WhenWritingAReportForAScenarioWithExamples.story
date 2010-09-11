@@ -5,7 +5,8 @@ import org.easyb.report.HtmlReportWriter
 import org.easyb.listener.ResultsAmalgamator
 
  
-scenario "a scenaroi using examples", {
+ignore "a scenario using examples"
+scenario "a scenario using examples", {
     given "a scenario using examples", {
         story = BehaviorFactory.createBehavior(new File('./behavior/groovy/org/easyb/bdd/reporting/html/ScenarioWithExamples.story'))
     }
