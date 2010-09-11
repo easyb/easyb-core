@@ -423,6 +423,36 @@ scenario "creating a JUnit report from a data-driven test", {
     }
 }
 
+scenario "creating a JUnit report from a data-driven test with multiple failures", {
+    given "a data-driven scenario including several failure", {
+        spec = """
+                examples "simple addition", {
+                  number  =              [1,   2,    3,     4,    5,    6,    7,     8,      9,    10]
+                  numberPlusOne  =       [2,   0,    4,     5,    6,    7,    0,     9,     10,    0]
+                }
+                
+                scenario "The number #{number}' plus 1 should be #{numberPlusOne}", {
+                    given "the number #number", {
+                        theNumber = number
+                    }
+                    when "the system converts this number to the roman numeral equivalent", {
+                        theNumberPlusOne = number + 1
+                    }
+                    
+                    then "the result should be #theNumberPlusOne", {
+                        theNumberPlusOne.shouldBe numberPlusOne
+                    }
+                }
+             """
+    }
+    when "we run the tests and generate a JUnit report", {
+        junitReport = generateJUnitReportFrom(spec)
+        
+    }
+    then "the report should contain 3 failures", {
+        junitReport.shouldHave "<testsuite tests='10' results='7' failures='3' disabled='0' errors='0'"
+    }
+}
 def generateJUnitReportFrom(def spec) {
 	specFile = File.createTempFile('EasybTest', '.story')
 	specFile.deleteOnExit()
