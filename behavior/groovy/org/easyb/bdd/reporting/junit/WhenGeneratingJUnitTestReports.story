@@ -54,6 +54,10 @@ scenario "creating a JUnit report with a failing scenario", {
         junitReport.shouldHave "<testcase"
         junitReport.shouldHave "name='test scenario 1'"
         junitReport.shouldHave "<failure message='Step \"something should occur\" -- expected false but was true'>"
+        junitReport.shouldHave "scenario test scenario 1"
+        junitReport.shouldHave "given some context"
+        junitReport.shouldHave "when something happens"
+        junitReport.shouldHave "then something should occur"
         junitReport.shouldHave "</testsuite>"
     } 
 	and "the failure message should contain the scenario details", {

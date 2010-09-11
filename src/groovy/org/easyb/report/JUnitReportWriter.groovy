@@ -81,7 +81,10 @@ class JUnitReportWriter implements ReportWriter {
                                 skipped()
                             }
                             if (thereAreFailuresInThis(scenario)) {
-                                failure(message: failureMessagesFrom(scenario), scenarioDetailsFrom(scenario))
+                                def failureMessage = failureMessagesFrom(scenario)
+                                def scenarioDetails = scenarioDetailsFrom(scenario);
+                                def failureDetails = "${failureMessage}\n${scenarioDetails}"
+                                failure(message: failureMessage, failureDetails)
                             }
                         }
                     }
