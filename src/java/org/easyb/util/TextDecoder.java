@@ -42,7 +42,7 @@ public class TextDecoder {
 
 
       
-      String value = ( prop == null ) ? variableName : prop.toString();
+      String value = ( prop == null ) ? "null" : prop.toString();
 
       variableMatcher.appendReplacement(sb, value);
     }
@@ -67,7 +67,7 @@ public class TextDecoder {
       try {
       return binding.getProperty(variableName.substring(1));
       } catch ( MissingPropertyException mpe ) {
-        return "#{" + variableName + "}";
+        return "#{" + variableName.substring(1) + "}";
       }
     }
   }
