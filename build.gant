@@ -13,7 +13,7 @@ includeTargets << new File("default_tasks.gant")
  * Properties needed by default tasks
  */
 artifactid = "easyb"
-version = detectOrDefaultVersion("0.9.8.4")
+version = detectOrDefaultVersion("0.9.8.5")
 sourcedirs = [gsourcedir, sourcedir, antsourcedir]
 
 /**

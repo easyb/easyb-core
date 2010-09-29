@@ -65,6 +65,7 @@ public class BehaviorRunner {
         System.exit(-1);
       }
     }
+    System.exit(0);
   }
 
   /**
@@ -100,7 +101,6 @@ public class BehaviorRunner {
 
   private void executeBehaviors(List<Behavior> behaviors)
     throws Exception {
-
     if (this.configuration.isParallel()) {
       ExecutorService executor = configuration.getExecutor();
 
