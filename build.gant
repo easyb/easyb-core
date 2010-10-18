@@ -111,7 +111,7 @@ target(release: "compile and archive") {
   ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
   ant.copy(file: "${defaultdir}/easyb-${version}-sources.jar", todir: "${defaultdir}/release")
   ant.copy(file: "${defaultdir}/easyb-${version}-javadocs.jar", todir: "${defaultdir}/release")
-  ant.copy(file: "${defaultdir}/ivy-{version}.xml", todir: "${defaultdir}/release")
+  ant.copy(file: "${defaultdir}/ivy-${version}.xml", todir: "${defaultdir}/release")
 
   ant.copy(todir: "${defaultdir}/release/lib") {
     fileset(dir: "./target/lib/") {
