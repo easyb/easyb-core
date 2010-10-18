@@ -98,8 +98,7 @@ class StoryBinding extends Binding {
       story.scenario(description, closure)
     }
 
-    runScenarios = {->
-      println "running story"
+    runScenarios = {->      
       story.replaySteps(true, this)
     }
 

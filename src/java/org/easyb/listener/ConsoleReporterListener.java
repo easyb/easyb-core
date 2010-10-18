@@ -56,28 +56,17 @@ public class ConsoleReporterListener extends ResultsCollector {
       return "Scenarios run: " + results.getScenarioCount();
     }
   }
-
-  private String getStepRunMessage(final String name, long total, long failed) {
-    return name + "'s run: " + total + ", Failures: " + failed;
-  }
-
-
+  
   private void printMetrics(final Behavior behavior, final long startTime,
                             final ResultsReporter results, final long endTime) {
-
-    System.out.print(behaviorName(behavior) + ": ");
+        
     if (behavior instanceof Story) {
       System.out.println(( results.getFailedScenarioCount() == 0 ? "" : "FAILURE " ) +
                          this.getScenariosRunMessage(results) +
                          ", Failures: " + results.getFailedScenarioCount() +
                          ", Pending: " + results.getPendingScenarioCount() +
                          ( results.getIgnoredScenarioCount() > 0 ? ", Ignored: " + results.getIgnoredScenarioCount() : "" ) +
-                         ", Time elapsed: " + ( endTime - startTime ) / 1000f + " sec\n" +
-                         getStepRunMessage("Before", results.getTotalBeforeCount(Result.SUCCEEDED), results.getTotalBeforeCount(Result.FAILED)) + "\n" +
-                         getStepRunMessage("After", results.getTotalAfterCount(Result.SUCCEEDED), results.getTotalAfterCount(Result.FAILED)) + "\n" +
-                         getStepRunMessage("Before Each", results.getTotalBeforeEachCount(Result.SUCCEEDED), results.getTotalBeforeEachCount(Result.FAILED)) + "\n" +
-                         getStepRunMessage("After Each", results.getTotalAfterEachCount(Result.SUCCEEDED), results.getTotalAfterEachCount(Result.FAILED)) + "\n"
-      );
+                         ", Time elapsed: " + ( endTime - startTime ) / 1000f + " sec\n");
     } else {
       System.out.println(( results.getFailedSpecificationCount() == 0 ? "" : "FAILURE " ) +
                          "Specifications run: " + results.getSpecificationCount() +

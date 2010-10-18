@@ -10,7 +10,7 @@ where "we are using sample data at a global level", [number:numberArray]
 
 before "Before we start running the examples", {
   given "an initial value for counters", {
-    println "initial"
+    //println "initial"
     whenCount = 0
     thenCount = 0
     numberTotal = 0

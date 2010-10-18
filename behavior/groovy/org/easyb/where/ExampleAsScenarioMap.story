@@ -10,7 +10,7 @@ numberArray = [12, 8, 20, 199]
 
 before "Before we start running the examples", {
   given "an initial value for counters", {
-    println "initial"
+    //println "initial"
     whenCount = 0
     thenCount = 0
     numberTotal = 0

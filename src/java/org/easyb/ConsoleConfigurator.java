@@ -185,8 +185,7 @@ public class ConsoleConfigurator {
     @SuppressWarnings({"static-access", "AccessStaticViaInstance"})
     private static Options getOptionsForMain() {
         final Options options = new Options();
-
-        System.out.println("Setting up BehaviorRunner options");
+                
         options.addOption(withDescription(HTML_DESCRIPTION).hasOptionalArg().create(HTML_EASYB));
         options.addOption(withDescription(XML_DESCRIPTION).hasOptionalArg().create(XML_EASYB));
         options.addOption(withDescription(JUNIT_DESCRIPTION).hasOptionalArg().create(JUNIT_EASYB));
