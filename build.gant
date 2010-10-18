@@ -110,11 +110,17 @@ target(release: "compile and archive") {
 
   ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
   
-  //ant.copy(todir: "${defaultdir}/release/lib") {
-  //  fileset(dir: "./target/lib/") {
-  //    exclude(name: "**/ant-*.jar")
-  //  }
-  //}
+  ant.copy(todir: "${defaultdir}/release/lib") {
+    fileset(dir: "./target/lib/") {
+      include(name: "**/commons-cli-*.jar")
+    }
+  }
+  new File("${defaultdir}/release/lib/").eachFile{ fl ->
+    def nm = fl.name[0..-9]
+    //ant.copy(file:"${defaultdir}/release/lib/${fl}", tofile:"${defaultdir}/release/lib/${nm}.jar")
+    fl.renameTo(new File("${defaultdir}/release/lib/${nm}.jar"))
+  }
+
 }
 
 target(jar: "create an archive of the project's classfiles") {

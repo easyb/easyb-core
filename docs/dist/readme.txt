@@ -18,7 +18,7 @@ This bundle contains the following:
 Dependencies
 ------------
 - Java 1.5 or higher
-- Groovy 1.7.2  (although, you should be ok with previous 1.7.x versions)
+- Groovy 1.7.5  (although, you should be ok with previous 1.7.x versions)
 - Apache commons-cli 1.2
 
 License
