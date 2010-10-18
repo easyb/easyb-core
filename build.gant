@@ -109,16 +109,18 @@ target(release: "compile and archive") {
   }
 
   ant.copy(file: "${defaultdir}/easyb-${version}.jar", todir: "${defaultdir}/release")
-  
+  ant.copy(file: "${defaultdir}/easyb-${version}-sources.jar", todir: "${defaultdir}/release")
+  ant.copy(file: "${defaultdir}/easyb-${version}-javadocs.jar", todir: "${defaultdir}/release")
+  ant.copy(file: "${defaultdir}/ivy-{version}.xml", todir: "${defaultdir}/release")
+
   ant.copy(todir: "${defaultdir}/release/lib") {
     fileset(dir: "./target/lib/") {
       include(name: "**/commons-cli-*.jar")
+      include(name: "**/groovy-all-*.jar")
     }
   }
   new File("${defaultdir}/release/lib/").eachFile{ fl ->
-    def nm = fl.name[0..-9]
-    //ant.copy(file:"${defaultdir}/release/lib/${fl}", tofile:"${defaultdir}/release/lib/${nm}.jar")
-    fl.renameTo(new File("${defaultdir}/release/lib/${nm}.jar"))
+    fl.renameTo(new File("${defaultdir}/release/lib/${fl.name[0..-9]}.jar"))
   }
 
 }

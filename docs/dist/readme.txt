@@ -10,6 +10,8 @@ Contents
 This bundle contains the following:
 
   easyb-<version>.jar
+  easyb-<version>-sources.jar - source code
+  easyb-<version>-javadoc.jar - JavaDocs
   easyb_guide-<version>.pdf   - this is a work in progress!
   docs/                       - documentation
   lib/                        - dependent runtime jars

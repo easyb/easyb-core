@@ -214,12 +214,6 @@ genericgroovyc = {sourcedirs, destination ->
         path(refid:"ivy.build.classpath")
         dirset(dir: classdir)
       }
-//          {
-//            fileset(dir: libdir) {
-//                include(name: jarincludes)
-//            }
-//            dirset(dir: classdir)
-//        }
     }
 }
 
