@@ -1,0 +1,8 @@
+1 scenario executed, but status is failure! Total failures: 1 (0 behaviors were ignored)
+
+  Story: failure report
+
+
+    scenario this scenario will fail!
+      given a false variable
+      then easyb will report a failure if should is true [FAILURE: expected true but was false]

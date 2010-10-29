@@ -1,0 +1,17 @@
+import org.easyb.exception.VerificationException
+
+before "setup string", {
+    var = "hello world"
+}
+
+after "tear down", {
+    var = 24
+}
+
+it "should be hello world", {
+    var.shouldBe "hello world"
+}
+
+if(var != 24){
+  throw new VerificationException("after closure doesn't appear to be working!")
+}
