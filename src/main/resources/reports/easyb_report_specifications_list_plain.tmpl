@@ -1,0 +1,11 @@
+<%
+  import org.easyb.util.BehaviorStepType
+  import org.easyb.report.HtmlReportHelper
+%>
+
+<div id='SpecificationsListPlain' style='display:none;'>
+  <h2>Specifications Text</h2>
+  
+  <div>${results.getSpecificationResultsAsText()}</div>
+  <div><%= HtmlReportHelper.formatHtmlReportElement(results, BehaviorStepType.SPECIFICATION)%></div>
+</div>

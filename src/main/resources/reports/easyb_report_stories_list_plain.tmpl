@@ -1,0 +1,11 @@
+<%
+  import org.easyb.util.BehaviorStepType
+  import org.easyb.report.HtmlReportHelper
+%>
+
+<div id='StoriesListPlain' style='display:none;'>
+  <h2>Stories Text</h2>
+  
+  <div><%= results.getScenarioResultsAsText() %></div>
+  <div><%= HtmlReportHelper.formatHtmlReportElement(results, BehaviorStepType.STORY)%></div>
+</div>

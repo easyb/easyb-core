@@ -1,0 +1,177 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<%
+  import org.easyb.util.BehaviorStepType
+  import org.easyb.report.HtmlReportHelper
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+  <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+  <title>easyb-report</title>
+  <meta name='keywords' content='BDD, behavior driven development, java, java bdd, groovy, groovy bdd, groovy behavior driven development, java behavior driven development, ruby, rspec, easyb, easy bdd'/>
+  <meta name='description' content='easyb is story verification framework built in the spirit of behavior driven development.'/>
+  <link href='easyb_report.css' rel='stylesheet' type='text/css'/>
+  <script src='prototype.js' type='text/javascript'></script>
+  <script type='text/javascript'>
+    function showOnlyContent(contentDiv, linkId) {
+      \$('Summaries').hide();
+      \$('summary-menu-link').removeClassName('selected-menu-link');
+    <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.SPECIFICATION).size() > 0) { %>
+      \$('SpecificationsList').hide();
+      \$('SpecificationsListPlain').hide();
+      \$('specifications-list-menu-link').removeClassName('selected-menu-link');
+      \$('specifications-list-plain-menu-link').removeClassName('selected-menu-link');
+    <% } %>
+    <% if(results.genesisStep.getChildrenOfType(BehaviorStepType.STORY).size() > 0) { %>
+      \$('StoriesList').hide();
+      \$('StoriesListPlain').hide();
+      \$('stories-list-menu-link').removeClassName('selected-menu-link');
+      \$('stories-list-plain-menu-link').removeClassName('selected-menu-link');
+    <% } %>
+      \$(linkId).addClassName('selected-menu-link');
+      \$(contentDiv).show();
+    }
+    function toggleScenariosForStory(storyNumber) {
+      \$('scenarios_for_story_' + storyNumber).toggle();
+      return false;
+    }
+    function toggleComponentsForSpecification(specificationNumber) {
+      \$('components_for_specification_' + specificationNumber).toggle();
+      return false;
+    }
+  </script>
+</head>
+<body>
+<!-- start header -->
+<div id='header'>
+  <h1>
+    <a href='http://www.easyb.org'>
+      <span>easyb</span>
+    </a>
+  </h1>
+  <h2>&nbsp;&nbsp; -- BDD in java can't get any easier</h2>
+</div>
+<!-- end header -->
+
+
+<!-- start page -->
+<div id='page'>
+  <!-- start content -->
+  <div id='content'>
+    <div class='post'>
+      <div class='entry'>
+        <div id='Summaries'>
+          <h2>Summary</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Behaviors</th>
+                <th>Failed</th>
+                <th>Pending</th>
+                <th>Time (sec)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class='primaryRow'>
+                <td>${results.behaviorCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(results.failedBehaviorCount)}'>${results.failedBehaviorCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(results.pendingBehaviorCount)}'>${results.pendingBehaviorCount}</td>
+                <td>${HtmlReportHelper.formatBehaviorExecutionTime(results)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <h2>Stories Summary</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Stories</th>
+                <th>Scenarios</th>
+                <th>Failed</th>
+                <th>Pending</th>
+                <th>Time (sec)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class='primaryRow'>
+                <td>${results.storyBehaviorCount}</td>
+                <td>${results.scenarioCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(results.failedScenarioCount)}'>${results.failedScenarioCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(results.pendingScenarioCount)}'>${results.pendingScenarioCount}</td>
+                <td>${HtmlReportHelper.formatStoryExecutionTime(results)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <h2>Specifications Summary</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Specifications</th>
+                <th>Failed</th>
+                <th>Pending</th>
+                <th>Time (sec)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class='primaryRow'>
+                <td>${results.specificationBehaviorCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(results.failedSpecificationCount)}'>${results.failedSpecificationCount}</td>
+                <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(results.pendingSpecificationCount)}'>${results.pendingSpecificationCount}</td>
+                <td>${HtmlReportHelper.formatSpecificationExecutionTime(results)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <% if(results.specificationBehaviorCount > 0) {
+          HtmlReportHelper.writeSpecificationsList(results, reportWriter)
+          HtmlReportHelper.writeSpecificationsListPlain(results, reportWriter)
+        } %>
+        <% if(results.storyBehaviorCount > 0) {
+          HtmlReportHelper.writeStoriesList(results, reportWriter)
+          HtmlReportHelper.writeStoriesListPlain(results, reportWriter)
+        } %>
+      </div>
+    </div>
+
+  </div>
+  <!-- end content -->
+
+
+  <!-- start sidebar -->
+  <div id='sidebar'>
+    <ul>
+      <li>
+        <h2>Sections</h2>
+        <ul>
+          <li>
+            <a id='summary-menu-link' class='selected-menu-link' href='#' onclick='showOnlyContent("Summaries", "summary-menu-link")'>Summary</a>
+          </li>
+          <% if(results.storyBehaviorCount > 0) { %>
+          <li>
+            <a id='stories-list-menu-link' href='#' onclick='showOnlyContent("StoriesList", "stories-list-menu-link")'>Stories</a>
+          </li>
+          <li>
+            <a id='stories-list-plain-menu-link' href='#' onclick='showOnlyContent("StoriesListPlain", "stories-list-plain-menu-link")'>Stories Text</a>
+          </li>
+          <% } %>
+          <% if(results.specificationBehaviorCount > 0) { %>
+          <li>
+            <a id='specifications-list-menu-link' href='#' onclick='showOnlyContent("SpecificationsList", "specifications-list-menu-link")'>Specifications</a>
+          </li>
+          <li>
+            <a id='specifications-list-plain-menu-link' href='#' onclick='showOnlyContent("SpecificationsListPlain", "specifications-list-plain-menu-link")'>Specifications Text</a>
+          </li>
+          <% } %>
+        </ul>
+      </li>
+    </ul>
+    <div style='clear: both;'>&nbsp;</div>
+  </div>
+  <!-- end sidebar -->
+
+</div>
+<!-- end page -->
+
+<div id='footer'/>
+</body>
+</html>
