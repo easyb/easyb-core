@@ -1,0 +1,73 @@
+package org.easyb.plugin
+
+import org.easyb.plugin.ExampleAsMapDataParser
+
+it "should recognize a map", {
+  ExampleAsMapDataParser p = new ExampleAsMapDataParser()
+  p.processData([:], {map->}, null ).shouldBe true
+}
+
+it "should return fields correctly", {
+  ExampleAsMapDataParser p = new ExampleAsMapDataParser()
+
+  int counter = 0
+
+  def result = p.processData([a:[1], b:[2], c:[3]], { map ->
+    map.keySet().size().shouldBe 3
+    map.a.shouldBe 1
+    map.b.shouldBe 2
+    map.c.shouldBe 3
+
+    counter ++
+  }, null)
+  counter.shouldBe 1
+  result.shouldBe true
+}
+
+it "should return an even set of fields correctly", {
+  ExampleAsMapDataParser p = new ExampleAsMapDataParser()
+  int counter = 0
+
+  def result = p.processData([a:[1,2], b:[1,2], c:[3,4]], { m ->
+   if ( counter == 0 ) {
+     m['a'].shouldBe 1
+     m['b'].shouldBe 1
+     m['c'].shouldBe 3
+   } else {
+     m['a'].shouldBe 2
+     m['b'].shouldBe 2
+     m['c'].shouldBe 4
+   }
+    counter ++
+  }, null )
+  result.shouldBe true
+}
+
+it "should return an odd set of fields correctly", {
+  ExampleAsMapDataParser p = new ExampleAsMapDataParser()
+  int counter = 0
+
+  def result = p.processData([a:[1], b:[1,2], c:[3]], { m ->
+   if ( counter == 0 ) {
+     m['a'].shouldBe 1
+     m['b'].shouldBe 1
+     m['c'].shouldBe 3
+   } else {
+     m['a'].shouldBe 1
+     m['b'].shouldBe 2
+     m['c'].shouldBe 3
+   }
+    counter ++
+  }, null )
+  result.shouldBe true
+}
+
+it "should not process an array", {
+  def p = new ExampleAsMapDataParser()
+  p.processData([], {map->}, null ).shouldBe false
+}
+
+it "should not process a closure", {
+  def p = new ExampleAsMapDataParser()
+  p.processData({}, {map->}, null ).shouldBe false
+}
