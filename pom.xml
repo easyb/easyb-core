@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>easyb-maven-parent</artifactId>
 		<groupId>org.easyb</groupId>
-		<version>1.1-SNAPSHOT</version>
+		<version>1.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
 	<version>1.1-SNAPSHOT</version>
@@ -109,11 +109,14 @@
 								<property name="runtime_classpath" refid="maven.runtime.classpath"/>
 								<property name="test_classpath" refid="maven.test.classpath"/>
 								<property name="plugin_classpath" refid="maven.plugin.classpath"/>
+								<!--
 								<echo message="compile classpath: ${compile_classpath}"/>
 								<echo message="runtime classpath: ${runtime_classpath}"/>
 								<echo message="test classpath:    ${test_classpath}"/>
 								<echo message="plugin classpath:  ${plugin_classpath}"/>
 								<echo message=" test classes ${project.build.directory}/test-classes"/>
+								-->
+								<mkdir dir="${project.build.directory}/reports"/>
 								<taskdef name="easyb" classname="org.easyb.ant.BehaviorRunnerTask">
 									<classpath>
 										<path refid="maven.runtime.classpath"/>
