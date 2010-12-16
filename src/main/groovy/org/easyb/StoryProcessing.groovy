@@ -55,11 +55,6 @@ public class StoryProcessing {
         processChildStep step
       }
     }
-    if ( exampleStep && exampleStep.childSteps.size() > 0 ) {
-      exampleStep.childSteps.each { childStep ->
-        processChildStep childStep
-      }
-    }
   }
 
   private def  processStoryUsingExamples(StoryContext context, BehaviorStep exampleStep) {
