@@ -4,10 +4,10 @@
 	<parent>
 		<artifactId>easyb-maven-parent</artifactId>
 		<groupId>org.easyb</groupId>
-		<version>1.1-SNAPSHOT</version>
+		<version>1.2</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
-	<version>1.1</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>easyb</name>
 	<description>A behavior driven development framework for the Java platform</description>
