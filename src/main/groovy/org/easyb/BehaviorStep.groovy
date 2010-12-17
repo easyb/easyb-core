@@ -6,6 +6,8 @@ import org.easyb.util.TextDecoder
 import org.easyb.result.ReportingTag
 
 public class BehaviorStep implements Serializable {
+  private static int idGenerator = 1;
+  private int id // unique
   BehaviorStepType stepType
   BehaviorStep parentStep
   Result result
@@ -32,10 +34,16 @@ public class BehaviorStep implements Serializable {
     setName( inStepName )
     this.closure = closure
     this.parentStep = parent
+
+    id = idGenerator ++;
   }
 
   BehaviorStep(BehaviorStepType inStepType, String inStepName) {
     this(inStepType, inStepName, null, null)
+  }
+
+  public int getId() {
+    return id
   }
 
   public void setName( String name ) {
@@ -82,6 +90,7 @@ public class BehaviorStep implements Serializable {
     into.description = description
     into.closure = closure
     into.name = name
+    into.id = id // clone the unique id as well, so we know it is the same
   }
 
 
