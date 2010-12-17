@@ -7,7 +7,7 @@
 		<version>1.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<packaging>jar</packaging>
 	<name>easyb</name>
 	<description>A behavior driven development framework for the Java platform</description>
@@ -111,7 +111,7 @@
       				<instructions>
 	        			<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
     	    			<Bundle-Version>${project.version}</Bundle-Version>
-    	    			<Import-Package>*,org.apache.tools.ant;version="[1.6.5, 1.8.99)";resolution:=optional</Import-Package>
+    	    			<Import-Package>*,groovy.text,org.apache.tools.ant;version="[1.6.5, 1.8.99)";resolution:=optional,org.apache.tools.ant.types;version="[1.6.5, 1.8.99)";resolution:=optional,org.apache.tools.ant.taskdefs;version="[1.6.5, 1.8.99)";resolution:=optional</Import-Package>
 				        <Export-Package>org.easyb;version="${project.version}", 
 				        org.easyb.ant;version="${project.version}", 
 				        org.easyb.delegates;version="${project.version}", 
