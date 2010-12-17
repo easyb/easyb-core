@@ -7,7 +7,7 @@
 		<version>1.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
-	<version>1.1</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>easyb</name>
 	<description>A behavior driven development framework for the Java platform</description>
@@ -111,21 +111,23 @@
       				<instructions>
 	        			<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
     	    			<Bundle-Version>${project.version}</Bundle-Version>
-				        <Export-Package>org.easyb;version="${project.version}</Export-Package>
-				        <Export-Package>org.easyb.ant;version="${project.version}</Export-Package>
-			    	    <Export-Package>org.easyb.delegates;version="${project.version}</Export-Package>
-			        	<Export-Package>org.easyb.domain;version="${project.version}</Export-Package>
-			        	<Export-Package>org.easyb.exception;version="${project.version}</Export-Package>
-				        <Export-Package>org.easyb.listener;version="${project.version}</Export-Package>
-				        <Export-Package>org.easyb.plugin;version="${project.version}</Export-Package>
-				        <Export-Package>org.easyb.report;version="${project.version}</Export-Package>
-				        <Export-Package>org.easyb.result;version="${project.version}</Export-Package>
-			    	    <Export-Package>org.easyb.util;version="${project.version}</Export-Package>
+    	    			<Import-Package>*,org.apache.tools.ant;version="[1.6.5, 1.8.99)";resolution:=optional</Import-Package>
+				        <Export-Package>org.easyb;version="${project.version}", 
+				        org.easyb.ant;version="${project.version}", 
+				        org.easyb.delegates;version="${project.version}", 
+				        org.easyb.domain;version="${project.version}", 
+				        org.easyb.exception;version="${project.version}", 
+				        org.easyb.listener;version="${project.version}", 
+				        org.easyb.plugin;version="${project.version}", 
+				        org.easyb.report;version="${project.version}", 
+				        org.easyb.result;version="${project.version}", 
+				        org.easyb.util;version="${project.version}"</Export-Package>
       				</instructions>
       			</configuration>
 			</plugin>
 			<plugin>
   				<artifactId>maven-jar-plugin</artifactId>
+  				<version>2.3.1</version>
   				<configuration>
     				<archive>  
       					<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
