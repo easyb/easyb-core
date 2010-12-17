@@ -4,10 +4,10 @@
 	<parent>
 		<artifactId>easyb-maven-parent</artifactId>
 		<groupId>org.easyb</groupId>
-		<version>1.2</version>
+		<version>1.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<packaging>jar</packaging>
 	<name>easyb</name>
 	<description>A behavior driven development framework for the Java platform</description>
@@ -93,6 +93,45 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+    			<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>1.4.0</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+      					<id>bundle-manifest</id>
+      					<phase>process-classes</phase>
+      					<goals>
+        					<goal>manifest</goal>
+      					</goals>
+					</execution>
+				</executions>
+      			<configuration>
+      				<instructions>
+	        			<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+    	    			<Bundle-Version>${project.version}</Bundle-Version>
+				        <Export-Package>org.easyb;version="${project.version}</Export-Package>
+				        <Export-Package>org.easyb.ant;version="${project.version}</Export-Package>
+			    	    <Export-Package>org.easyb.delegates;version="${project.version}</Export-Package>
+			        	<Export-Package>org.easyb.domain;version="${project.version}</Export-Package>
+			        	<Export-Package>org.easyb.exception;version="${project.version}</Export-Package>
+				        <Export-Package>org.easyb.listener;version="${project.version}</Export-Package>
+				        <Export-Package>org.easyb.plugin;version="${project.version}</Export-Package>
+				        <Export-Package>org.easyb.report;version="${project.version}</Export-Package>
+				        <Export-Package>org.easyb.result;version="${project.version}</Export-Package>
+			    	    <Export-Package>org.easyb.util;version="${project.version}</Export-Package>
+      				</instructions>
+      			</configuration>
+			</plugin>
+			<plugin>
+  				<artifactId>maven-jar-plugin</artifactId>
+  				<configuration>
+    				<archive>  
+      					<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+    				</archive> 
+  				</configuration>
+			</plugin>  
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
