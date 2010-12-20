@@ -8,8 +8,18 @@ import org.easyb.listener.ResultsReporter
 
 class HtmlReportHelper {
 
+	static def textToHtml = ['\r\n':'<br/>', '\n':'<br/>', '\r':'<br/>', 
+		                     ]
+	
     private HtmlReportHelper() {
     }
+
+	static formatStep(String stepText) {
+		textToHtml.each {
+			stepText = stepText.replaceAll(it.key, it.value)
+		}
+		stepText
+	}
 
     static getBehaviorResultFailureSummaryClass(long numberOfFailures) {
         (numberOfFailures > 0) ? 'stepResultFailed' : ''
@@ -79,7 +89,6 @@ class HtmlReportHelper {
                 || element.getChildSteps().isEmpty())) {
             formattedElement += "${'&nbsp;'.multiply(1)}<span style='color:#BABFEE;'>[PENDING]</span>"
         }
-
         return formattedElement
     }
 
