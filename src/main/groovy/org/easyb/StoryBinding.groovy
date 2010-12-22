@@ -35,13 +35,13 @@ class StoryBinding extends Binding {
       addSyntax(ext)
     }
 
-    where = { description, exampleData, closure = null ->
+    where = {  source, lineNo, description, exampleData, closure = null ->
       if (exampleData != null) {
         story.examples(description, exampleData, closure)
       }
     }
 
-    examples = { description, exampleData, closure = null ->
+    examples = {  source, lineNo, description, exampleData, closure = null ->
       if (exampleData != null) {
         story.examples(description, exampleData, closure)
       }
@@ -75,58 +75,64 @@ class StoryBinding extends Binding {
       g.evaluate(storyFile);
     }
 
-    before = {description = "", closure = {} ->
+    before = { source, lineNo, description = "", closure = {} ->
       story.before(description, closure)
     }
 
     assumption = before.curry("story assumption")
     assuming = before.curry("story assumes")
 
-    after = {description = "", closure = {} ->
+    after = { source, lineNo, description = "", closure = {} ->
       story.after(description, closure)
     }
 
-    before_each = {description = "", closure = {} ->
+    before_each = { source, lineNo, description = "", closure = {} ->
       story.beforeEach(description, closure)
     }
 
-    after_each = {description = "", closure = {} ->
+    after_each = { source, lineNo, description = "", closure = {} ->
       story.afterEach(description, closure)
     }
 
-    scenario = {description, closure = story.pendingClosure ->
+    scenario = { source, lineNo, description, closure = story.pendingClosure ->
+      println "added info, lineNo ${lineNo} source ${source}"
       story.scenario(description, closure)
     }
+//
+//    scenario = {description, closure = story.pendingClosure ->
+//      println "no added"
+//      story.scenario(description, closure, "<unknown>", 0)
+//    }
 
     runScenarios = {->      
       story.replaySteps(true, this)
     }
 
-    then = {spec, closure = story.pendingClosure ->
+    then = { source, lineNo, spec, closure = story.pendingClosure ->
       story.then(spec, closure)
     }
 
-    when = {description, closure = {} ->
+    when = { source, lineNo, description, closure = {} ->
       story.when(description, closure)
     }
 
-    given = {description, closure = {} ->
+    given = { source, lineNo, description, closure = {} ->
       story.given(description, closure)
     }
 
-    and = {description = "", closure = story.pendingClosure ->
+    and = { source, lineNo, description = "", closure = story.pendingClosure ->
       story.and(description, closure)
     }
 
-    but = {description = "", closure = story.pendingClosure ->
+    but = { source, lineNo, description = "", closure = story.pendingClosure ->
       story.but(description, closure)
     }
 
-    narrative = {description = "", closure = {} ->
+    narrative = { source, lineNo, description = "", closure = {} ->
       story.narrative(description, closure)
     }
 
-    description = {description ->
+    description = { source, lineNo, description ->
       story.description description
     }
 
@@ -143,7 +149,7 @@ class StoryBinding extends Binding {
     }
 
 
-    ignore = {Object... scenarios ->
+    ignore = { Object... scenarios ->
       if (scenarios.size() == 1) {
         def objscn = scenarios[0]
 
