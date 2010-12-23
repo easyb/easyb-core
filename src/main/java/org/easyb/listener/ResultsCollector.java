@@ -49,7 +49,8 @@ public class ResultsCollector implements ExecutionListener {
   }
 
   public synchronized void startStep(final BehaviorStep step) {
-    BehaviorStep clone = new BehaviorStep(step.getStepType(), step.getName());
+    BehaviorStep clone = step.cloneStep();
+//      new BehaviorStep(step.getStepType(), step.getName());
     clone.startExecutionTimer();
     clone.setParentStep(currentStep);
     currentStep.addChildStep(clone);

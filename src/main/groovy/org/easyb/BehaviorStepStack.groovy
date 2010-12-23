@@ -11,7 +11,12 @@ class BehaviorStepStack {
   }
 
   def startStep( behaviorType, scenarioDescription) {
-    currentStep = new BehaviorStep (behaviorType, scenarioDescription, null, null)
+    currentStep = new BehaviorStep (behaviorType, scenarioDescription, null, null, null, 0)
+    listener.startStep(currentStep)
+  }
+
+  def startStep( behaviorType, scenarioDescription, String source, int lineNo) {
+    currentStep = new BehaviorStep (behaviorType, scenarioDescription, null, null, source, lineNo)
     listener.startStep(currentStep)
   }
 

@@ -37,12 +37,12 @@ class SpecificationBinding extends Binding {
       listener.gotResult(new Result(Result.PENDING))
     }
 
-    before = {description, closure = {} ->
-      specification.before(description, closure)
+    before = {source, lineNo, description, closure = {} ->
+      specification.before(description, closure, source, lineNo)
     }
 
-    after = {description, closure = {} ->
-      specification.after(description, closure)
+    after = {source, lineNo, description, closure = {} ->
+      specification.after(description, closure, source, lineNo)
     }
 
     shared_specs = { file ->
@@ -72,9 +72,8 @@ class SpecificationBinding extends Binding {
       addSyntax(PluginLocator.findSyntaxExtensionByName(name))
     }
 
-
-    it = {spec, closure = pendingClosure ->
-      specification.it(spec, closure)
+    it = {source, lineNo, spec, closure = pendingClosure ->
+      specification.it(spec, closure, source, lineNo)
     }
 
     and = {

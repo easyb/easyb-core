@@ -20,14 +20,14 @@ class SpecificationKeywords extends BehaviorKeywords {
   }
 
 
-  def after(description, closure) {
-    stepStack.startStep(BehaviorStepType.AFTER, description)
+  def after(description, closure, String source, int lineNo) {
+    stepStack.startStep(BehaviorStepType.AFTER, description, source, lineNo)
     afterIt = closure
     stepStack.stopStep()
   }
 
-  def before(description, closure) {
-    stepStack.startStep(BehaviorStepType.BEFORE, description)
+  def before(description, closure, String source, int lineNo) {
+    stepStack.startStep(BehaviorStepType.BEFORE, description, source, lineNo)
     beforeIt = closure
     stepStack.stopStep()
   }
@@ -38,8 +38,8 @@ class SpecificationKeywords extends BehaviorKeywords {
     ex.process(stepStack.currentStep, binding, listener)
   }
 
-  def it(spec, closure) {
-    stepStack.startStep(BehaviorStepType.IT, spec)
+  def it(spec, closure, String source, int lineNo) {
+    stepStack.startStep(BehaviorStepType.IT, spec, source, lineNo)
     closure.delegate = new EnsuringDelegate()
     try {
       if (beforeIt != null) {

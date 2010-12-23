@@ -75,7 +75,7 @@ public abstract class TxtReportWriter implements ReportWriter {
         case BehaviorStepType.AND:
         case BehaviorStepType.IT:
           if (element.result?.failed()) {
-            return " [FAILURE: ${element.result?.cause()?.getMessage()}]"
+            return " [FAILURE: ${element.result?.cause()?.getMessage()}] on line ${element.lineNo}"
           }
           break;
         case BehaviorStepType.SCENARIO:
@@ -84,6 +84,7 @@ public abstract class TxtReportWriter implements ReportWriter {
             //a scenario w/out child scenarioSteps is pending or ignored
             return element.result?.pending() ? " [PENDING]" : " [IGNORED]"
           }
+
           break
       }
     }

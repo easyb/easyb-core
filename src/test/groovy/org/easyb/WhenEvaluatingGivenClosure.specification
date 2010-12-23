@@ -5,7 +5,7 @@ it "should notify listener of exceptions", {
 
     def story = StoryBinding.getBinding(listener, null)
     new GroovyShell(story).evaluate('''
-            given "an exception is thrown", {
+            given "", 0, "an exception is thrown", {
                 throw new RuntimeException('test')
             }
         ''');

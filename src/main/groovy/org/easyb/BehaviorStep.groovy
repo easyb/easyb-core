@@ -22,6 +22,8 @@ public class BehaviorStep implements Serializable {
   boolean ignore
   boolean pending
   StoryContext storyContext
+  String source
+  int lineNo
   private TextDecoder textDecoder;
   private List<ReportingTag> tags;
 
@@ -29,17 +31,19 @@ public class BehaviorStep implements Serializable {
   ExtensionPoint extensionPoint; // if behavior step is extension point type, will have one of these
 
 
-  BehaviorStep(BehaviorStepType inStepType, String inStepName, Closure closure, BehaviorStep parent) {
+  BehaviorStep(BehaviorStepType inStepType, String inStepName, Closure closure, BehaviorStep parent, String source, int lineNo) {
     stepType = inStepType
     setName( inStepName )
     this.closure = closure
     this.parentStep = parent
+    this.source = source;
+    this.lineNo = lineNo;
 
     id = idGenerator ++;
   }
 
   BehaviorStep(BehaviorStepType inStepType, String inStepName) {
-    this(inStepType, inStepName, null, null)
+    this(inStepType, inStepName, null, null, null, 0)
   }
 
   public int getId() {
@@ -86,11 +90,21 @@ public class BehaviorStep implements Serializable {
     tags.add(tag)
   }
 
-  def cloneStep(BehaviorStep into) {
+  private BehaviorStep() {}
+
+  def BehaviorStep cloneStep() {
+    BehaviorStep into = new BehaviorStep()
     into.description = description
     into.closure = closure
-    into.name = name
+    into.name = getName()
     into.id = id // clone the unique id as well, so we know it is the same
+    into.stepType = stepType
+    into.source = source
+    into.lineNo = lineNo
+    into.storyContext = storyContext
+    into.result = result
+
+    return into
   }
 
 
@@ -240,6 +254,8 @@ public class BehaviorStep implements Serializable {
     "BehaviorStep Type: ${stepType.toString()}"
   }
 
+  private static File here = new File(".");
+
   /**
    * Writes the step as a formated text string.
    * @param lineSeparator , breaks the report lines
@@ -257,6 +273,8 @@ public class BehaviorStep implements Serializable {
       case BehaviorStepType.SCENARIO:
       case BehaviorStepType.SPECIFICATION:
         formattedElement = "${lineSeparator}${spaces}${typeFormat} ${name}"
+//        if (storyContext?.binding?.sourceFile)
+//          formattedElement += " (${storyContext.binding.sourceFile.})"
         break
       case BehaviorStepType.EXECUTE:
         formattedElement = ""

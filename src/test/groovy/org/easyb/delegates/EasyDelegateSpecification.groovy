@@ -6,7 +6,9 @@ import org.easyb.listener.ResultsCollector
 
 before "obtain a reference to the binding object", {
     ExecutionListener behaviorListener = new ResultsCollector()
-    itbehave = SpecificationBinding.getBinding(behaviorListener).it
+    itbehave = { desc, closure ->
+      SpecificationBinding.getBinding(behaviorListener).variables.it "", 0, desc, closure
+    }
 }
 
 it "should support a simple ensure call", {

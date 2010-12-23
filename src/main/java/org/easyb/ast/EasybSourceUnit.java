@@ -55,9 +55,9 @@ public class EasybSourceUnit {
             } else
                 lineOffsets.add(countLeadingWhitespace(lineText));
 
-            lineText = lineText.trim();
+            //lineText = lineText.trim();
             if (line != expr.getLastLineNumber() && lineText.length() > 0)
-                lineText += ' ';
+                lineText += '\n';
             normalizedText += lineText;
             textOffsets.add(normalizedText.length());
         }

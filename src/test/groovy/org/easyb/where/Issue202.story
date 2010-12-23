@@ -35,6 +35,7 @@ scenario "txt report are bugged with where clause",{
 	}
 	and "body reports 2 given steps implied by the where clause", {
 		matches = (report =~ /being x=(.)/)
+    println matches
 		ensure (matches[0] == ["being x=1", "1"])
 		ensure (matches[1] == ["being x=2", "2"])
 	}

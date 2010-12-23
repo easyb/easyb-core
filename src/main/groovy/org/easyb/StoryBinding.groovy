@@ -4,7 +4,6 @@ import org.easyb.listener.ExecutionListener
 import org.easyb.plugin.PluginLocator
 import org.easyb.plugin.SyntaxExtension
 
-
 class StoryBinding extends Binding {
   StoryKeywords story
   // where the story is located - necessary for offsets for shared stories
@@ -35,15 +34,15 @@ class StoryBinding extends Binding {
       addSyntax(ext)
     }
 
-    where = {  source, lineNo, description, exampleData, closure = null ->
+    where = { source, lineNo, description, exampleData, closure = null ->
       if (exampleData != null) {
-        story.examples(description, exampleData, closure)
+        story.examples(description, exampleData, closure, source, lineNo)
       }
     }
 
-    examples = {  source, lineNo, description, exampleData, closure = null ->
+    examples = { source, lineNo, description, exampleData, closure = null ->
       if (exampleData != null) {
-        story.examples(description, exampleData, closure)
+        story.examples(description, exampleData, closure, source, lineNo)
       }
     }
 
@@ -76,63 +75,58 @@ class StoryBinding extends Binding {
     }
 
     before = { source, lineNo, description = "", closure = {} ->
-      story.before(description, closure)
+      story.before(description, closure, source, lineNo)
     }
+
 
     assumption = before.curry("story assumption")
     assuming = before.curry("story assumes")
 
     after = { source, lineNo, description = "", closure = {} ->
-      story.after(description, closure)
+      story.after(description, closure, source, lineNo)
     }
 
     before_each = { source, lineNo, description = "", closure = {} ->
-      story.beforeEach(description, closure)
+      story.beforeEach(description, closure, source, lineNo)
     }
 
     after_each = { source, lineNo, description = "", closure = {} ->
-      story.afterEach(description, closure)
+      story.afterEach(description, closure, source, lineNo)
     }
 
     scenario = { source, lineNo, description, closure = story.pendingClosure ->
-      println "added info, lineNo ${lineNo} source ${source}"
-      story.scenario(description, closure)
+      story.scenario(description, closure, source, lineNo)
     }
-//
-//    scenario = {description, closure = story.pendingClosure ->
-//      println "no added"
-//      story.scenario(description, closure, "<unknown>", 0)
-//    }
 
     runScenarios = {->      
       story.replaySteps(true, this)
     }
 
     then = { source, lineNo, spec, closure = story.pendingClosure ->
-      story.then(spec, closure)
+      story.then(spec, closure, source, lineNo)
     }
 
     when = { source, lineNo, description, closure = {} ->
-      story.when(description, closure)
+      story.when(description, closure, source, lineNo)
     }
 
     given = { source, lineNo, description, closure = {} ->
-      story.given(description, closure)
+      story.given(description, closure, source, lineNo)
     }
 
-    and = { source, lineNo, description = "", closure = story.pendingClosure ->
-      story.and(description, closure)
+    and = { source = null, lineNo = 0, description = "", closure = story.pendingClosure ->
+      story.and(description, closure, source, lineNo)
     }
 
-    but = { source, lineNo, description = "", closure = story.pendingClosure ->
-      story.but(description, closure)
+    but = { source = null, lineNo = 0, description = "", closure = story.pendingClosure ->
+      story.but(description, closure, source, lineNo)
     }
 
-    narrative = { source, lineNo, description = "", closure = {} ->
+    narrative = { description = "", closure = {} ->
       story.narrative(description, closure)
     }
 
-    description = { source, lineNo, description ->
+    description = { description ->
       story.description description
     }
 
@@ -181,14 +175,19 @@ class StoryBinding extends Binding {
       }
     }
 
-    shared_behavior = {description, closure = {} ->
-      story.sharedBehavior(description, closure)
+    // American spelling
+    shared_behavior = {source, lineNo, description, closure = {} ->
+      story.sharedBehavior(description, closure, source, lineNo)
     }
 
-    it_behaves_as = {description ->
-      story.itBehavesAs(description)
+    // English spelling
+    shared_behaviour = {source, lineNo, description, closure = {} ->
+      story.sharedBehavior(description, closure, source, lineNo)
     }
 
+    it_behaves_as = {source, lineNo, description ->
+      story.itBehavesAs(description, source, lineNo)
+    }
   }
 
   def getAt(ArrayList list) {

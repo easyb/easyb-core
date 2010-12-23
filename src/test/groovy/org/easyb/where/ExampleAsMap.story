@@ -32,7 +32,7 @@ scenario "Text #text should equal #number", {
 after "should be true after running example data", {
   then "we should have set totals", {
     //println "thenCount is ${thenCount}"
-    whenCount.shouldBe 4
+    whenCount.shouldEqual 4
     thenCount.shouldBe 4 // change these and errors should print out for this after/then combo
     num = 0
     numberArray.each { num += it }

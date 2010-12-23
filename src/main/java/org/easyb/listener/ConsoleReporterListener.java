@@ -32,12 +32,12 @@ public class ConsoleReporterListener extends ResultsCollector {
 
   private String behaviorName(Behavior behavior) {
     return behavior.getPhrase() + " " + behavior.getTypeDescriptor()
-           + " (" + behavior.getFile().getName() + ")";
+           + " (" + behavior.getFile().getAbsolutePath() + ")";
   }
 
   public void stopBehavior(final BehaviorStep currentStep, final Behavior behavior) {
     final long endTime = System.currentTimeMillis();
-    printMetrics(behavior, startTime, new ResultsReporter(previousStep), endTime);
+    printMetrics(behavior, startTime, new ResultsReporter(genesisStep), endTime);
   }
 
   /**
@@ -61,7 +61,7 @@ public class ConsoleReporterListener extends ResultsCollector {
                             final ResultsReporter results, final long endTime) {
         
     if (behavior instanceof Story) {
-      System.out.println(( results.getFailedScenarioCount() == 0 ? "" : "FAILURE " ) +
+      System.out.println(( (results.getFailedBehaviorCount()) == 0 ? "" : "FAILURE " ) +
                          this.getScenariosRunMessage(results) +
                          ", Failures: " + results.getFailedScenarioCount() +
                          ", Pending: " + results.getPendingScenarioCount() +

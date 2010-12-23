@@ -93,7 +93,7 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<plugin>
+      <plugin>
     			<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<version>1.4.0</version>
@@ -172,6 +172,8 @@
 									</classpath>
 									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test"/>
 									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports"/>
+                  <jvmarg value="-Deasyb.ast.suffixes=shared"/>
+                  <jvmarg value="-Deasyb.ast.debug=true"/>
 									<report location="${project.build.directory}/reports/easyb-report.html" format="html"/>
 									<report location="${project.build.directory}/reports/easyb-report.xml" format="xml"/>
 									<report location="${project.build.directory}/reports/easyb-junit-report.xml" format="junit"/>
