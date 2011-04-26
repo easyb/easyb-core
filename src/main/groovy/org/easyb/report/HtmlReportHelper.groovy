@@ -1,14 +1,105 @@
 package org.easyb.report
 
-import org.easyb.listener.ResultsCollector
 import org.easyb.result.Result
 import groovy.text.SimpleTemplateEngine
 import org.easyb.util.BehaviorStepType
 import org.easyb.listener.ResultsReporter
+import org.easyb.report.markdown.MarkdownProcessor
 
 class HtmlReportHelper {
 
+	static def textToHtml = ['\r\n':'<br/>', '\n':'<br/>', '\r':'<br/>' ]
+	
     private HtmlReportHelper() {
+    }
+
+	static formatStep(String stepText) {
+        stepText = expandTabs(stepText)
+        stepText = formatMarkdownTags(stepText);
+        stepText = stripParagraphMarkersFromOneLiners(stepText);
+        replaceNewLines(stepText)
+	}
+    
+    static expandTabs(String stepText) {
+        def textWithExpandedTabs = new StringBuffer()
+        
+        def stepTextChars = stepText.toCharArray();
+        
+        int pos = 0
+        int positionInLine = 0
+        def tabsFound = false
+        while(pos < stepTextChars.length) {
+           def c = stepTextChars[pos]
+
+            if (isATab(c) && (positionInLine > 0)) {
+               expandTabsAt(positionInLine, textWithExpandedTabs)
+               tabsFound = true;
+           } else {
+               textWithExpandedTabs << c
+           }
+
+           if (isANewLineOrAnInitialTab(c, positionInLine)) {
+               positionInLine = 0;
+           } else {
+               positionInLine++
+           }
+           pos++
+        }
+        if (tabsFound) {
+            textWithExpandedTabs.insert(0,"<pre><code>");
+            textWithExpandedTabs.append("</code><pre>");
+        }
+        textWithExpandedTabs.toString()
+    }
+
+    private static boolean isANewLineOrAnInitialTab(char c, int positionInLine) {
+        (c == '\n' || c == '\r' || c == '\t')
+    }
+
+    private static boolean isATab(char c) {
+        c == '\t'
+    }
+
+    private static void expandTabsAt(int pos, StringBuffer textWithExpandedTabs) {
+        def tabCount = (int) (pos % 4 == 0) ? 4 : (4 - (pos % 4))
+        for (int i = 0; i < tabCount; i++) {
+            textWithExpandedTabs << "&nbsp;"
+        }
+    }
+
+    static formatMarkdownTags(String stepText) {
+        MarkdownProcessor markdownProcessor = new MarkdownProcessor()
+        markdownProcessor.markdown(stepText);
+    }
+    
+    static replaceNewLines(String stepText) {
+        textToHtml.each {
+            stepText = stepText.replaceAll(it.key, it.value)
+        }
+        return stepText
+    }
+    
+    static stripParagraphMarkersFromOneLiners(String text) {
+
+        def trimmedText = text.trim();
+
+        if (onlyHasOne("<p>", trimmedText)) {
+            trimmedText = removeAll("<p>", trimmedText)
+        }
+
+        if (onlyHasOne("</p>", trimmedText)) {
+            trimmedText = removeAll("</p>", trimmedText)
+        }
+
+        return trimmedText
+    }
+
+    static onlyHasOne(element, text) {
+       text.findAll(element) == [element]; 
+    }
+
+    static removeAll(String pattern, String text) {
+        text.replace(pattern,"")
     }
 
     static getBehaviorResultFailureSummaryClass(long numberOfFailures) {
@@ -79,7 +170,6 @@ class HtmlReportHelper {
                 || element.getChildSteps().isEmpty())) {
             formattedElement += "${'&nbsp;'.multiply(1)}<span style='color:#BABFEE;'>[PENDING]</span>"
         }
-
         return formattedElement
     }
 

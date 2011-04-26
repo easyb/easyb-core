@@ -93,7 +93,7 @@
               </tr>
               <% scenarioStep.childStepsSkipExecute.each { componentStep -> %>
               <tr class='scenarioComponents'>
-                <td>${componentStep.stepType.type} ${componentStep.name}</td>
+                <td>${componentStep.stepType.type} ${HtmlReportHelper.formatStep(componentStep.name)}</td>
                 <td class='${HtmlReportHelper.getStepStatusClass(componentStep.result)}'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
                 <td />
               </tr>
