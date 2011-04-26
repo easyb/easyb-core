@@ -48,6 +48,10 @@ public class ConsoleConfigurator {
     private static final String TAG = "tags";
     private static final String TAG_DESCRIPTION = "run behaviors with tag marker";
 
+    private static final String ISSUE_MANAGEMENT = "issueSystemBaseUrl";
+    private static final String ISSUE_MANAGEMENT_DESCRIPTION = "The base URL for your issue management system (e.g. JIRA)";
+    private static final String ISSUE_MANAGEMENT_HEADER = "issueSystemHeading";
+    private static final String ISSUE_MANAGEMENT_HEADER_DESCRIPTION = "Optional heading to go in the issue column";
 
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
@@ -62,7 +66,8 @@ public class ConsoleConfigurator {
                     getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
                     commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine),
                     isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE),
-                    getTags(commandLine), getRootPackage(commandLine)); 
+                    getTags(commandLine), getRootPackage(commandLine),
+                    getIssueSystemBaseUrl(commandLine), getIssueHeading(commandLine));
 
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
@@ -73,6 +78,24 @@ public class ConsoleConfigurator {
         }
         return null;
     }
+
+    private String getIssueSystemBaseUrl(CommandLine commandLine) {
+        if (commandLine.hasOption(ISSUE_MANAGEMENT)) {
+            return commandLine.getOptionValue(ISSUE_MANAGEMENT);
+        } else {
+            return null;
+        }
+    }
+
+
+    private String getIssueHeading(CommandLine commandLine) {
+        if (commandLine.hasOption(ISSUE_MANAGEMENT_HEADER)) {
+            return commandLine.getOptionValue(ISSUE_MANAGEMENT_HEADER);
+        } else {
+            return null;
+        }
+    }
+
 
     private String getRootPackage(CommandLine commandLine) {
 		if (commandLine.hasOption(JUNIT_ROOT_PACKAGE)) {
@@ -200,6 +223,8 @@ public class ConsoleConfigurator {
         options.addOption(withDescription(FAILURE_BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(FAILURE_BEHAVIOR_FILE));
         options.addOption(withDescription(TAG_DESCRIPTION).hasOptionalArg().create(TAG));
         options.addOption(withDescription(JUNIT_ROOT_DESCRIPTION).hasOptionalArg().create(JUNIT_ROOT_PACKAGE));
+        options.addOption(withDescription(ISSUE_MANAGEMENT_DESCRIPTION).hasOptionalArg().create(ISSUE_MANAGEMENT));
+        options.addOption(withDescription(ISSUE_MANAGEMENT_HEADER_DESCRIPTION).hasOptionalArg().create(ISSUE_MANAGEMENT_HEADER));
 
         return options;
     }

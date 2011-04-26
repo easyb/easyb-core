@@ -1,1 +1,8 @@
 target
+
+/.idea/
+easyb-core.iml
+/.project
+/.classpath
+/.settings/
+/easyb-core.iws
