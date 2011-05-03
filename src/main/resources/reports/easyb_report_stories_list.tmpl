@@ -15,12 +15,6 @@
           if ((baseUrl) && (!baseUrl.endsWith('/'))) {
               baseUrl = baseUrl + '/'
           }
-%>
-  <p>aStoryStep.story.issueSystemProjectPrefix=${aStoryStep.story.issueSystemProjectPrefix}</p>
-  <p>aStoryStep.story.issueSystemHeading=${aStoryStep.story.issueSystemHeading}</p>
-  <p>aStoryStep.story.issueSystemBaseUrl=${aStoryStep.story.issueSystemBaseUrl}</p>
-
-<%
           if (aStoryStep.story.issueSystemProjectPrefix) {
             baseUrl = baseUrl + aStoryStep.story.issueSystemProjectPrefix
           }
