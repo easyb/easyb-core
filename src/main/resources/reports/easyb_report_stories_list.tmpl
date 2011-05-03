@@ -15,9 +15,6 @@
           if ((baseUrl) && (!baseUrl.endsWith('/'))) {
               baseUrl = baseUrl + '/'
           }
-          if (aStoryStep.story.issueSystemProjectPrefix) {
-            baseUrl = baseUrl + aStoryStep.story.issueSystemProjectPrefix
-          }
           if (aStoryStep.story.issueSystemHeading) {
             issueHeading = aStoryStep.story.issueSystemHeading
           }
@@ -49,9 +46,16 @@
               int scenarioChildrenCount = storyStep.scenarioCount
               def issueTagReferences = ""
               def firstEntry = true
+
+              def issueSystemUrl = baseUrl
+              def prefix = storyStep.story.issueSystemProjectPrefix
+
               if (storyStep.story.issueTags) {
                 storyStep.story.issueTags.each { tagValue ->
-                  def openTag = (includeIssueLink) ? "<a href='${baseUrl}${tagValue}'>" : ""
+                  if ((prefix) && (!tagValue.startsWith(prefix))) {
+                    issueSystemUrl = issueSystemUrl + prefix
+                  }
+                  def openTag = (includeIssueLink) ? "<a href='${issueSystemUrl}${tagValue}'>" : ""
                   def closeTag = (includeIssueLink) ? "</a>" : ""
 
                   if (!firstEntry) {
