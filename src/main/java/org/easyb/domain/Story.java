@@ -46,6 +46,7 @@ public class Story extends BehaviorBase {
       if ((getConfig() != null) && (getConfig().getIssueSystemBaseUrl() != null)) {
         currentStep.setIssueSystemBaseUrl(getConfig().getIssueSystemBaseUrl());
         currentStep.setIssueSystemHeading(getConfig().getIssueSystemHeading());
+        currentStep.setIssueSystemProjectPrefix(getConfig().getIssueSystemProjectPrefix());
       }
       currentStep.addTags(storyTags);
 

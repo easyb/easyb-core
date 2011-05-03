@@ -24,6 +24,7 @@ public class Configuration {
     private String junitRootPackage;
     private String issueSystemBaseUrl;
     private String issueSystemHeading;
+    private String issueSystemProjectPrefix;
 
     public Configuration() {
         this(new String[]{}, Collections.<ReportWriter>emptyList());
@@ -69,13 +70,16 @@ public class Configuration {
                          final boolean stackTraceOn, final boolean filteredStackTraceOn,
                          final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
                          final String failureFile, final String[] tags, String rootPackage,
-                         final String issueSystemBaseUrl, final String issueSystemHeading) {
+                         final String issueSystemBaseUrl,
+                         final String issueSystemHeading,
+                         final String issueSystemProjectPrefix) {
         this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn,
                 extendedStoryClassName, parallel, isFailureFile, failureFile);
         this.tags = tags;
         this.junitRootPackage = rootPackage;
         this.issueSystemBaseUrl = issueSystemBaseUrl;
         this.issueSystemHeading = issueSystemHeading;
+        this.issueSystemProjectPrefix = issueSystemProjectPrefix;
     }
 
     public String[] getTags(){
@@ -108,6 +112,10 @@ public class Configuration {
 
     public String getIssueSystemHeading() {
         return issueSystemHeading;
+    }
+
+    public String getIssueSystemProjectPrefix() {
+        return issueSystemProjectPrefix;
     }
 
     public ConsoleReporterListener getConsoleReporter() {

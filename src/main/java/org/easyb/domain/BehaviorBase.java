@@ -56,6 +56,14 @@ public abstract class BehaviorBase implements Behavior, Serializable {
       }
   }
 
+   public String getIssueSystemProjectPrefix() {
+       if (this.config != null) {
+           return this.config.getIssueSystemProjectPrefix();
+       } else {
+           return null;
+       }
+   }
+
   public String getPhrase() {
     return phrase;
   }

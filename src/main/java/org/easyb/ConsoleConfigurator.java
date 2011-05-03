@@ -52,6 +52,8 @@ public class ConsoleConfigurator {
     private static final String ISSUE_MANAGEMENT_DESCRIPTION = "The base URL for your issue management system (e.g. JIRA)";
     private static final String ISSUE_MANAGEMENT_HEADER = "issueSystemHeading";
     private static final String ISSUE_MANAGEMENT_HEADER_DESCRIPTION = "Optional heading to go in the issue column";
+    private static final String ISSUE_MANAGEMENT_PROJECT_PREFIX = "issueSystemProjectPrefix";
+    private static final String ISSUE_MANAGEMENT_PROJECT_PREFIX_DESCRIPTION = "Project-specific prefix for issue numbers";
 
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
@@ -67,7 +69,9 @@ public class ConsoleConfigurator {
                     commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine),
                     isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE),
                     getTags(commandLine), getRootPackage(commandLine),
-                    getIssueSystemBaseUrl(commandLine), getIssueHeading(commandLine));
+                    getIssueSystemBaseUrl(commandLine),
+                    getIssueHeading(commandLine),
+                    getIssueSystemProjectPrefix(commandLine));
 
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
@@ -91,6 +95,14 @@ public class ConsoleConfigurator {
     private String getIssueHeading(CommandLine commandLine) {
         if (commandLine.hasOption(ISSUE_MANAGEMENT_HEADER)) {
             return commandLine.getOptionValue(ISSUE_MANAGEMENT_HEADER);
+        } else {
+            return null;
+        }
+    }
+
+    private String getIssueSystemProjectPrefix(CommandLine commandLine) {
+        if (commandLine.hasOption(ISSUE_MANAGEMENT_PROJECT_PREFIX)) {
+            return commandLine.getOptionValue(ISSUE_MANAGEMENT_PROJECT_PREFIX);
         } else {
             return null;
         }
@@ -215,16 +227,22 @@ public class ConsoleConfigurator {
         options.addOption(withDescription(STORY_DESCRIPTION).hasOptionalArg().create(TXT_STORY));
         options.addOption(withDescription(BEHAVIOR_DESRCIPTION).hasOptionalArg().create(TXT_SPECIFICATION));
         options.addOption(withDescription(STACKTRACE_DESCRIPTION).hasOptionalArg().create(EXCEPTION_STACK));
-        options.addOption(withDescription(FILTERED_STACKTRACE_DESCRIPTION).hasOptionalArg().create(FILTER_EXCEPTION_STACK));
-        options.addOption(withArgName(NOEXECUTE_STORY).withDescription(NOEXECUTE_STORY_DESCRIPTION).create(NOEXECUTE_STORY));
+        options.addOption(withDescription(FILTERED_STACKTRACE_DESCRIPTION)
+                          .hasOptionalArg().create(FILTER_EXCEPTION_STACK));
+        options.addOption(withArgName(NOEXECUTE_STORY)
+                          .withDescription(NOEXECUTE_STORY_DESCRIPTION).create(NOEXECUTE_STORY));
         options.addOption(withDescription(PRETTY_PRINT_DESCRIPTION).hasOptionalArg().create(PRETTY_PRINT));
         options.addOption(withArgName(PARALLEL).withDescription(PARALLEL_DESCRIPTION).create(PARALLEL));
         options.addOption(withDescription(BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(BEHAVIOR_FILE));
-        options.addOption(withDescription(FAILURE_BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(FAILURE_BEHAVIOR_FILE));
+        options.addOption(withDescription(FAILURE_BEHAVIOR_FILE_DESCRIPTION)
+                          .hasOptionalArg().create(FAILURE_BEHAVIOR_FILE));
         options.addOption(withDescription(TAG_DESCRIPTION).hasOptionalArg().create(TAG));
         options.addOption(withDescription(JUNIT_ROOT_DESCRIPTION).hasOptionalArg().create(JUNIT_ROOT_PACKAGE));
         options.addOption(withDescription(ISSUE_MANAGEMENT_DESCRIPTION).hasOptionalArg().create(ISSUE_MANAGEMENT));
-        options.addOption(withDescription(ISSUE_MANAGEMENT_HEADER_DESCRIPTION).hasOptionalArg().create(ISSUE_MANAGEMENT_HEADER));
+        options.addOption(withDescription(ISSUE_MANAGEMENT_HEADER_DESCRIPTION)
+                          .hasOptionalArg().create(ISSUE_MANAGEMENT_HEADER));
+        options.addOption(withDescription(ISSUE_MANAGEMENT_PROJECT_PREFIX_DESCRIPTION)
+                          .hasOptionalArg().create(ISSUE_MANAGEMENT_PROJECT_PREFIX));
 
         return options;
     }

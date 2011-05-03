@@ -12,6 +12,18 @@
         if (aStoryStep.story.issueSystemBaseUrl) {
           baseUrl = aStoryStep.story.issueSystemBaseUrl
 
+          if ((baseUrl) && (!baseUrl.endsWith('/'))) {
+              baseUrl = baseUrl + '/'
+          }
+%>
+  <p>aStoryStep.story.issueSystemProjectPrefix=${aStoryStep.story.issueSystemProjectPrefix}</p>
+  <p>aStoryStep.story.issueSystemHeading=${aStoryStep.story.issueSystemHeading}</p>
+  <p>aStoryStep.story.issueSystemBaseUrl=${aStoryStep.story.issueSystemBaseUrl}</p>
+
+<%
+          if (aStoryStep.story.issueSystemProjectPrefix) {
+            baseUrl = baseUrl + aStoryStep.story.issueSystemProjectPrefix
+          }
           if (aStoryStep.story.issueSystemHeading) {
             issueHeading = aStoryStep.story.issueSystemHeading
           }
@@ -41,9 +53,6 @@
       <%
           results.stories.eachWithIndex { storyStep, rowNum ->
               int scenarioChildrenCount = storyStep.scenarioCount
-              if ((baseUrl) && (!baseUrl.endsWith('/'))) {
-                  baseUrl = baseUrl + '/'
-              }
               def issueTagReferences = ""
               def firstEntry = true
               if (storyStep.story.issueTags) {

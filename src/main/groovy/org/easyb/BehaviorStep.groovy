@@ -29,6 +29,7 @@ public class BehaviorStep implements Serializable {
   private List<String> storyTags
   private String issueSystemBaseUrl
   private String issueSystemHeading
+  private String issueSystemProjectPrefix
 
   ArrayList<BehaviorStep> childSteps = new ArrayList<BehaviorStep>()
   ExtensionPoint extensionPoint; // if behavior step is extension point type, will have one of these
@@ -109,6 +110,7 @@ public class BehaviorStep implements Serializable {
     into.storyTags = getStoryTags()
     into.issueSystemBaseUrl = issueSystemBaseUrl
     into.issueSystemHeading = issueSystemHeading
+    into.issueSystemProjectPrefix = issueSystemProjectPrefix
 
     return into
   }
@@ -363,6 +365,12 @@ public class BehaviorStep implements Serializable {
         return this.issueSystemHeading;
     }
 
+    public String getIssueSystemProjectPrefix() {
+        return this.issueSystemProjectPrefix;
+    }
 
+    public void setIssueSystemProjectPrefix(String issueSystemProjectPrefix) {
+        this.issueSystemProjectPrefix = issueSystemProjectPrefix;
+    }
 
 }
