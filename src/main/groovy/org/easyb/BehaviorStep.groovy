@@ -24,8 +24,12 @@ public class BehaviorStep implements Serializable {
   StoryContext storyContext
   String source
   int lineNo
-  private TextDecoder textDecoder;
-  private List<ReportingTag> tags;
+  private TextDecoder textDecoder
+  private List<ReportingTag> tags
+  private List<String> storyTags
+  private String issueSystemBaseUrl
+  private String issueSystemHeading
+  private String issueSystemProjectPrefix
 
   ArrayList<BehaviorStep> childSteps = new ArrayList<BehaviorStep>()
   ExtensionPoint extensionPoint; // if behavior step is extension point type, will have one of these
@@ -103,6 +107,10 @@ public class BehaviorStep implements Serializable {
     into.lineNo = lineNo
     into.storyContext = storyContext
     into.result = result
+    into.storyTags = getStoryTags()
+    into.issueSystemBaseUrl = issueSystemBaseUrl
+    into.issueSystemHeading = issueSystemHeading
+    into.issueSystemProjectPrefix = issueSystemProjectPrefix
 
     return into
   }
@@ -313,4 +321,56 @@ public class BehaviorStep implements Serializable {
     }
     return formattedElement;
   }
+
+    public void addTags (List<String> newTags) {
+        if ( storyTags == null ) {
+          storyTags = new ArrayList<String>()
+        }
+        storyTags.addAll newTags;
+    }
+
+    public List<String> getStoryTags() {
+        List<String> copyOfTags = new ArrayList<String>()
+        if (storyTags != null) {
+            copyOfTags.addAll storyTags
+        }
+        return copyOfTags
+    }
+
+    public List<String> getIssueTags() {
+        List<String> issueTags = new ArrayList<String>()
+        if (storyTags) {
+            storyTags.each { tag ->
+                if (tag.startsWith('#')) {
+                    issueTags.add(tag.substring(1))
+                }
+            }
+        }
+        return issueTags;
+    }
+
+    public void setIssueSystemBaseUrl(String issueSystemBaseUrl) {
+        this.issueSystemBaseUrl = issueSystemBaseUrl;
+    }
+
+    public String getIssueSystemBaseUrl() {
+        return this.issueSystemBaseUrl;
+    }
+
+    public void setIssueSystemHeading(String issueSystemHeading) {
+        this.issueSystemHeading = issueSystemHeading;
+    }
+
+    public String getIssueSystemHeading() {
+        return this.issueSystemHeading;
+    }
+
+    public String getIssueSystemProjectPrefix() {
+        return this.issueSystemProjectPrefix;
+    }
+
+    public void setIssueSystemProjectPrefix(String issueSystemProjectPrefix) {
+        this.issueSystemProjectPrefix = issueSystemProjectPrefix;
+    }
+
 }

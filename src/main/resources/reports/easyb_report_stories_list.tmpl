@@ -4,11 +4,37 @@
 %>
 <div id='StoriesList' style='display:none;'>
   <h2>Stories List</h2>
+  <%
+      def includeIssueLink = false
+      def baseUrl = null
+      def issueHeading = "Issues"
+      results.stories.each { aStoryStep ->
+        if (aStoryStep.story.issueSystemBaseUrl) {
+          baseUrl = aStoryStep.story.issueSystemBaseUrl
+
+          if ((baseUrl) && (!baseUrl.endsWith('/'))) {
+              baseUrl = baseUrl + '/'
+          }
+          if (aStoryStep.story.issueSystemHeading) {
+            issueHeading = aStoryStep.story.issueSystemHeading
+          }
+        }
+      }
+      includeIssueLink = (baseUrl != null)
+
+  %>
   <table>
     <thead>
       <tr>
         <th>Story</th>
         <th>Scenarios</th>
+        <%
+           if (includeIssueLink) {
+        %>
+        <th>${issueHeading}</th>
+        <%
+            }
+        %>
         <th>Failed</th>
         <th>Pending</th>
         <th>Time (sec)</th>
@@ -16,8 +42,29 @@
     </thead>
     <tbody>
       <%
-        results.stories.eachWithIndex { storyStep, rowNum ->
-          int scenarioChildrenCount = storyStep.scenarioCount
+          results.stories.eachWithIndex { storyStep, rowNum ->
+              int scenarioChildrenCount = storyStep.scenarioCount
+              def issueTagReferences = ""
+              def firstEntry = true
+
+              def issueSystemUrl = baseUrl
+              def prefix = storyStep.story.issueSystemProjectPrefix
+
+              if (storyStep.story.issueTags) {
+                storyStep.story.issueTags.each { tagValue ->
+                  if ((prefix) && (!tagValue.startsWith(prefix))) {
+                    issueSystemUrl = issueSystemUrl + prefix
+                  }
+                  def openTag = (includeIssueLink) ? "<a href='${issueSystemUrl}${tagValue}'>" : ""
+                  def closeTag = (includeIssueLink) ? "</a>" : ""
+
+                  if (!firstEntry) {
+                    issueTagReferences += ","
+                  }
+                  issueTagReferences += "${openTag}${tagValue}${closeTag}"
+                  firstEntry = false
+                }
+              }
       %>
       <tr class='${HtmlReportHelper.getRowClass(rowNum)}'>
         <td>
@@ -28,6 +75,13 @@
          <% } %>
         </td>
         <td>${storyStep.scenarioCount}</td>
+        <%
+           if (includeIssueLink) {
+        %>
+                <td>${issueTagReferences}</td>
+        <%
+           }
+        %>
         <td class='${HtmlReportHelper.getBehaviorResultFailureSummaryClass(storyStep.failedScenarioCount)}'>${storyStep.failedScenarioCount}</td>
         <td class='${HtmlReportHelper.getBehaviorResultPendingSummaryClass(storyStep.pendingScenarioCount)}'>${storyStep.pendingScenarioCount}</td>
         <td>${storyStep.story.executionTotalTimeInMillis / 1000f}</td>
@@ -46,7 +100,7 @@
               </tr>
               <% scenarioStep.childStepsSkipExecute.each { componentStep -> %>
               <tr class='scenarioComponents'>
-                <td>${componentStep.stepType.type} ${componentStep.name}</td>
+                <td>${componentStep.stepType.type} ${HtmlReportHelper.formatStep(componentStep.name)}</td>
                 <td class='${HtmlReportHelper.getStepStatusClass(componentStep.result)}'>${componentStep.result?.status != null ? componentStep.result?.status : ""}</td>
                 <td />
               </tr>

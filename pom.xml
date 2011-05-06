@@ -178,8 +178,9 @@
 									</classpath>
 									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test" />
 									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports" />
-                  <jvmarg value="-Deasyb.ast.suffixes=shared" />
-                  <jvmarg value="-Deasyb.ast.debug=true" />
+                  					<jvmarg value="-Deasyb.ast.suffixes=shared" />
+									<jvmarg value="-Deasyb.test=${easyb.test}"/>
+                  					<jvmarg value="-Deasyb.ast.debug=true" />
 									<report location="${project.build.directory}/reports/easyb-report.html" format="html" />
 									<report location="${project.build.directory}/reports/easyb-report.xml" format="xml" />
 									<report location="${project.build.directory}/reports/easyb-junit-report.xml" format="junit" />
@@ -236,7 +237,6 @@
 										<include name="**/*.story" />
 										<include name="**/*Specification.groovy" />
 										<include name="**/*.specification" />
-
 										<exclude name="**/TextStoryReportingValidation.story" />
 										<exclude name="**/FailureReport.story" />
 										<exclude name="**/PassingPendingFailingStory.story" />
@@ -247,6 +247,7 @@
 										<exclude name="**/Ignore*.story" />
 										<exclude name="**/OneTimeFixture*.story" />
 										<exclude name="**/WhenUsingPlugin*.story" />
+										<exclude name="**/Sample*.story"/>
 									</behaviors>
 								</easyb>
 								<fail if="easyb.failed" message="Execution halted as specifications/stories failed" />
@@ -354,4 +355,7 @@
 			</plugin>
 		</plugins>
 	</build>
+	<properties>
+		<easyb.test>*</easyb.test>
+	</properties>
 </project>

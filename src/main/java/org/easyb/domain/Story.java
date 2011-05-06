@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.easyb.BehaviorStep;
 import org.easyb.Configuration;
@@ -37,15 +38,25 @@ public class Story extends BehaviorBase {
   public BehaviorStep execute() throws IOException {
     File file = getFile();
     String story = readStory(file);
+
+    List<String> storyTags = readTagsIn(story);
+
     if (containsTag(story, this.getTags())) {
       BehaviorStep currentStep = new BehaviorStep(BehaviorStepType.STORY, getPhrase());
+      if ((getConfig() != null) && (getConfig().getIssueSystemBaseUrl() != null)) {
+        currentStep.setIssueSystemBaseUrl(getConfig().getIssueSystemBaseUrl());
+        currentStep.setIssueSystemHeading(getConfig().getIssueSystemHeading());
+        currentStep.setIssueSystemProjectPrefix(getConfig().getIssueSystemProjectPrefix());
+      }
+      currentStep.addTags(storyTags);
 
       listener.startBehavior(this);
       listener.startStep(currentStep);
 
       StoryBinding binding = StoryBinding.getBinding(listener, file.getParentFile());
- 
+
       binding.setProperty("sourceFile", file);
+      binding.setProperty("storyTags", storyTags);
       GroovyShell g = new GroovyShell(getClassLoader(), binding);
       bindShellVariables(g);
 
@@ -61,7 +72,7 @@ public class Story extends BehaviorBase {
       listener.stopBehavior(currentStep, this);
       
       currentStep.setContext(binding.getVariables());
-      
+
       return currentStep;
     } else {
       return null;

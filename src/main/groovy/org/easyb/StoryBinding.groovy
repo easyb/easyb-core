@@ -47,7 +47,7 @@ class StoryBinding extends Binding {
     }
 
     using = {pluginName, pluginVariableName = null ->
-      plugin = new PluginLocator().findPluginWithName(pluginName)
+      def plugin = new PluginLocator().findPluginWithName(pluginName)
 
       story.addPlugin(plugin)
 

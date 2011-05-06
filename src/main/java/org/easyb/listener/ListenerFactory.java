@@ -2,6 +2,7 @@ package org.easyb.listener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class ListenerFactory {
   private static List<ListenerBuilder> listenerBuilders = new ArrayList<ListenerBuilder>();
-  private static ConcurrentLinkedQueue<ExecutionListener> proxies = new ConcurrentLinkedQueue<ExecutionListener>();
+  private static Queue<ExecutionListener> proxies = new ConcurrentLinkedQueue<ExecutionListener>();
 
   public static void registerBuilder(ListenerBuilder lb) {
     listenerBuilders.add(new ListenerBuilderProxy(lb));

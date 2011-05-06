@@ -5,7 +5,9 @@ import groovy.lang.GroovyShell;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.easyb.Configuration;
@@ -34,6 +36,10 @@ public abstract class BehaviorBase implements Behavior, Serializable {
     this.config = config;
   }
 
+  protected Configuration getConfig() {
+      return config;
+  }
+
   public String[] getTags() {
     if (this.config != null) {
       return this.config.getTags();
@@ -41,6 +47,22 @@ public abstract class BehaviorBase implements Behavior, Serializable {
       return null;
     }
   }
+
+  public String getIssueManagementBaseUrl() {
+      if (this.config != null) {
+        return this.config.getIssueSystemBaseUrl();
+      } else {
+        return null;
+      }
+  }
+
+   public String getIssueSystemProjectPrefix() {
+       if (this.config != null) {
+           return this.config.getIssueSystemProjectPrefix();
+       } else {
+           return null;
+       }
+   }
 
   public String getPhrase() {
     return phrase;
@@ -96,25 +118,34 @@ public abstract class BehaviorBase implements Behavior, Serializable {
 
   //todo implement this correctly - can processing be broken out at some point?
   protected boolean containsTag(String behavior, String[] tags) {
+
+    List<String> storyTags = readTagsIn(behavior);
+
     if (tags != null) {
-      TagRegExHelper hlpr = new TagRegExHelper();
       String[] lines = behavior.split("\n");
-      Arrays.sort(tags); //TODO do this somewhere else?
-      for (int x = 0; x < lines.length; x++) {
-        if (hlpr.lineStartsWithTag(lines[x])) {
-          String[] behaviorcats = hlpr.getTags(lines[x]);
-          for (int y = 0; y < behaviorcats.length; y++) {
-            if (Arrays.binarySearch(tags, behaviorcats[y]) >= 0) {
-              return true;
-            }
+      Arrays.sort(tags);
+      for(String tagInStory : storyTags) {
+          if (Arrays.binarySearch(tags, tagInStory) >= 0) {
+            return true;
           }
-        }
       }
       return false;
     } else {
       return true;
     }
   }
+
+    protected List<String> readTagsIn(String behavior) {
+        List<String> storyTags = new ArrayList<String>();
+        String[] lines = behavior.split("\n");
+        TagRegExHelper hlpr = new TagRegExHelper();
+        for (int x = 0; x < lines.length; x++) {
+          if (hlpr.lineStartsWithTag(lines[x])) {
+            storyTags.addAll(Arrays.asList(hlpr.getTags(lines[x])));
+          }
+        }
+        return storyTags;
+    }
 
   public BroadcastListener getBroadcastListener() {
     return listener;

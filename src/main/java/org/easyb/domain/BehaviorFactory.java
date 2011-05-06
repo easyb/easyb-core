@@ -66,6 +66,10 @@ public class BehaviorFactory {
     return createBehavior(DEFAULT_GROOVY_SHELL_CONFIG, behaviorFile, null);
   }
 
+  public static Behavior createBehavior(final File behaviorFile, Configuration config) {
+    return createBehavior(DEFAULT_GROOVY_SHELL_CONFIG, behaviorFile, config);
+  }
+
   /**
    * This method builds a user friendly error message, which
    * assists in debugging why a particular behavior file

@@ -1,3 +1,5 @@
+package org.easyb.bdd.reporting.html
+
 import org.easyb.domain.BehaviorFactory
 import org.easyb.listener.BroadcastListener
 import org.easyb.listener.ResultsCollector
