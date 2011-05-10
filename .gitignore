@@ -5,3 +5,5 @@ easyb-core.iml
 /.classpath
 /.settings/
 /easyb-core.iws
+
+/out

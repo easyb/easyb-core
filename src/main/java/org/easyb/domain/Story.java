@@ -48,15 +48,17 @@ public class Story extends BehaviorBase {
         currentStep.setIssueSystemHeading(getConfig().getIssueSystemHeading());
         currentStep.setIssueSystemProjectPrefix(getConfig().getIssueSystemProjectPrefix());
       }
+
       currentStep.addTags(storyTags);
+
+      StoryBinding binding = StoryBinding.getBinding(listener, file.getParentFile());
+      binding.setProperty("sourceFile", file);
+      binding.setProperty("storyTags", storyTags);
 
       listener.startBehavior(this);
       listener.startStep(currentStep);
 
-      StoryBinding binding = StoryBinding.getBinding(listener, file.getParentFile());
 
-      binding.setProperty("sourceFile", file);
-      binding.setProperty("storyTags", storyTags);
       GroovyShell g = new GroovyShell(getClassLoader(), binding);
       bindShellVariables(g);
 

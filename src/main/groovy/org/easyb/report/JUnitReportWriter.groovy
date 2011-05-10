@@ -50,8 +50,7 @@ class JUnitReportWriter implements ReportWriter {
     
     private writeReportFor(story) {
         generatedReportFileName = reportFileNameFor(story)
-        println "Writing JUnit report to ${generatedReportFileName}"
-        
+
         def writer = new BufferedWriter(new FileWriter(new File(generatedReportFileName)))
         def xml = new MarkupBuilder(writer)
         
@@ -91,7 +90,6 @@ class JUnitReportWriter implements ReportWriter {
                 }
         
         writer.close()
-        println "JUnit report written to ${generatedReportFileName}"
     }
     
     def createReportDirectory() {
