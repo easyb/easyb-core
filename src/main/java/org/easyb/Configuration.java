@@ -68,7 +68,7 @@ public class Configuration {
   public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                        final boolean stackTraceOn, final boolean filteredStackTraceOn,
                        final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
-                       final String failureFile, final String[] tags, String rootPackage, Integer parallelMaxThreads, Integer parallelTimeout) {
+                       final String failureFile, final String[] tags, String rootPackage, Integer parallelMaxThreads, Long parallelTimeout) {
     this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn,
          extendedStoryClassName, parallel, isFailureFile, failureFile);
     this.tags = tags;
@@ -79,7 +79,7 @@ public class Configuration {
     }
 
     if (parallelTimeout != null) {
-      this.parallelTimeoutInSeconds = parallelTimeout.intValue();
+      this.parallelTimeoutInSeconds = parallelTimeout.longValue();
     }
   }
 

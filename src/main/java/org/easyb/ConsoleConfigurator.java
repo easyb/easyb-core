@@ -66,7 +66,7 @@ public class ConsoleConfigurator {
                     isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE),
                     getTags(commandLine), getRootPackage(commandLine),
                     commandLine.hasOption(PARALLEL_MAX_THREADS) ? Integer.parseInt(commandLine.getOptionValue(PARALLEL_MAX_THREADS)) : null,
-                    commandLine.hasOption(PARALLEL_TIMEOUT_IN_SECONDS) ? Integer.parseInt(commandLine.getOptionValue(PARALLEL_TIMEOUT_IN_SECONDS)) : null);
+                    commandLine.hasOption(PARALLEL_TIMEOUT_IN_SECONDS) ? Long.parseLong(commandLine.getOptionValue(PARALLEL_TIMEOUT_IN_SECONDS)) : null);
 
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
