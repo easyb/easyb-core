@@ -113,7 +113,7 @@ public class BehaviorRunner {
       }
 
       executor.shutdown();
-      executor.awaitTermination(60, SECONDS);
+      executor.awaitTermination(configuration.getParallelTimeoutInSeconds(), SECONDS);
 
       //TODO: add this to genesys?
       for (RunnableBehavior each : executedBehaviors) {

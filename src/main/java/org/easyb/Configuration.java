@@ -22,6 +22,8 @@ public class Configuration {
   private boolean isFailureFile = false;
   private String[] tags;
   private String junitRootPackage;
+  private int maxThreads = 10;
+  private long parallelTimeoutInSeconds = 60;
 
   public Configuration() {
     this(new String[]{}, Collections.<ReportWriter>emptyList());
@@ -66,11 +68,19 @@ public class Configuration {
   public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                        final boolean stackTraceOn, final boolean filteredStackTraceOn,
                        final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
-                       final String failureFile, final String[] tags, String rootPackage) {
+                       final String failureFile, final String[] tags, String rootPackage, Integer parallelMaxThreads, Integer parallelTimeout) {
     this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn,
          extendedStoryClassName, parallel, isFailureFile, failureFile);
     this.tags = tags;
     this.junitRootPackage = rootPackage;
+
+    if (parallelMaxThreads != null) {
+      this.maxThreads = parallelMaxThreads.intValue();
+    }
+
+    if (parallelTimeout != null) {
+      this.parallelTimeoutInSeconds = parallelTimeout.intValue();
+    }
   }
 
   public String[] getTags() {
@@ -117,9 +127,25 @@ public class Configuration {
     LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
 
     if (parallel) {
-      return new ThreadPoolExecutor(10, 10, 60L, SECONDS, queue, new ThreadPoolExecutor.CallerRunsPolicy());
+      return new ThreadPoolExecutor(maxThreads, maxThreads, 60L, SECONDS, queue, new ThreadPoolExecutor.CallerRunsPolicy());
     } else {
       return new ThreadPoolExecutor(1, 1, 60L, SECONDS, queue, new ThreadPoolExecutor.CallerRunsPolicy());
     }
+  }
+
+  public long getParallelTimeoutInSeconds() {
+    return parallelTimeoutInSeconds;
+  }
+
+  public void setParallelTimeoutInSeconds(long parallelTimeoutInSeconds) {
+    this.parallelTimeoutInSeconds = parallelTimeoutInSeconds;
+  }
+
+  public int getMaxThreads() {
+    return maxThreads;
+  }
+
+  public void setMaxThreads(int maxThreads) {
+    this.maxThreads = maxThreads;
   }
 }

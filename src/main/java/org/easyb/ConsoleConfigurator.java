@@ -21,6 +21,8 @@ public class ConsoleConfigurator {
     private static final String JUNIT_ROOT_PACKAGE = "root";
     private static final String EXCEPTION_STACK = "e";
     private static final String FILTER_EXCEPTION_STACK = "ef";
+    private static final String PARALLEL_TIMEOUT_IN_SECONDS = "parallelTimeoutInSeconds";
+    private static final String PARALLEL_MAX_THREADS = "parallelMaxThreads";
 
 	private static final String DEFAULT_JUNIT_ROOT_PACKAGE = "behavior";
 
@@ -62,7 +64,9 @@ public class ConsoleConfigurator {
                     getConfiguredReports(commandLine), commandLine.hasOption(EXCEPTION_STACK),
                     commandLine.hasOption(FILTER_EXCEPTION_STACK), extendedStoryClzz, isParallel(commandLine),
                     isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE),
-                    getTags(commandLine), getRootPackage(commandLine)); 
+                    getTags(commandLine), getRootPackage(commandLine),
+                    commandLine.hasOption(PARALLEL_MAX_THREADS) ? Integer.parseInt(commandLine.getOptionValue(PARALLEL_MAX_THREADS)) : null,
+                    commandLine.hasOption(PARALLEL_TIMEOUT_IN_SECONDS) ? Integer.parseInt(commandLine.getOptionValue(PARALLEL_TIMEOUT_IN_SECONDS)) : null);
 
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
