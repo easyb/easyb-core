@@ -48,6 +48,18 @@ public class AbstractStoryTask extends AbstractJavaTask {
     }
   }
 
+  void setParallelTimeoutInSeconds(long value) {
+    if (value > 0L) {
+      addTarget( "-parallelTimeoutInSeconds ${value}" )
+    }
+  }
+
+  void setParallelMaxThreads(int value) {
+    if (value > 0) {
+      addTarget( "-parallelMaxThreads ${value}")
+    }
+  }
+
   String getFailureProperty() {
     return failureProperty
   }
