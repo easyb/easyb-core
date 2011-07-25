@@ -1,16 +1,10 @@
 package org.easyb.ast;
 
-import org.codehaus.groovy.transform.powerassert.*;
-
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
 import org.codehaus.groovy.control.Janitor;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.syntax.Token;
-import org.codehaus.groovy.syntax.Types;
-
-import org.easyb.exception.VerificationException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
