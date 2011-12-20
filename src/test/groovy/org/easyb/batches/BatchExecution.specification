@@ -1,0 +1,102 @@
+import org.easyb.batches.BatchManager
+import org.easyb.domain.Behavior
+
+it "should say to execute a behavior by default", {
+    batchManager = new BatchManager(null, null);
+
+    def someBehavior = [] as Behavior;
+
+    def result = batchManager.shouldExecute(someBehavior)
+
+    result.shouldBe true
+}
+
+it "should say to execute all behaviors by default", {
+    batchManager = new BatchManager(null, null);
+
+    def someBehavior = [] as Behavior;
+    def someOtherBehavior = [] as Behavior;
+
+    batchManager.shouldExecute(someBehavior).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior).shouldBe true
+}
+
+it "should only execute every nth behavior if batching system properties defined", {
+
+    someBehavior = [] as Behavior;
+    someOtherBehavior2 = [] as Behavior;
+    someOtherBehavior3 = [] as Behavior;
+    someOtherBehavior4 = [] as Behavior;
+    someOtherBehavior5 = [] as Behavior;
+
+    batchManager = new BatchManager(5,1);
+
+    batchManager.shouldExecute(someBehavior).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior2).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior3).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior4).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior5).shouldBe false
+}
+
+
+it "should only execute every nth behavior for larger sets of behaviors", {
+
+    someBehavior = [] as Behavior;
+    someOtherBehavior2 = [] as Behavior;
+    someOtherBehavior3 = [] as Behavior;
+    someOtherBehavior4 = [] as Behavior;
+    someOtherBehavior5 = [] as Behavior;
+    someOtherBehavior6 = [] as Behavior;
+    someOtherBehavior7 = [] as Behavior;
+    someOtherBehavior8 = [] as Behavior;
+    someOtherBehavior9 = [] as Behavior;
+    someOtherBehavior10 = [] as Behavior;
+
+    batchManager = new BatchManager(3,2);
+
+    batchManager.shouldExecute(someBehavior).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior2).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior3).shouldBe false
+
+    batchManager.shouldExecute(someOtherBehavior4).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior5).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior6).shouldBe false
+
+    batchManager.shouldExecute(someOtherBehavior7).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior8).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior9).shouldBe false
+
+    batchManager.shouldExecute(someOtherBehavior10).shouldBe false
+
+}
+
+it "should only execute every nth behavior for larger sets of behaviors and execution at the end", {
+
+    someBehavior = [] as Behavior;
+    someOtherBehavior2 = [] as Behavior;
+    someOtherBehavior3 = [] as Behavior;
+    someOtherBehavior4 = [] as Behavior;
+    someOtherBehavior5 = [] as Behavior;
+    someOtherBehavior6 = [] as Behavior;
+    someOtherBehavior7 = [] as Behavior;
+    someOtherBehavior8 = [] as Behavior;
+    someOtherBehavior9 = [] as Behavior;
+    someOtherBehavior10 = [] as Behavior;
+
+    batchManager = new BatchManager(3,1);
+
+    batchManager.shouldExecute(someBehavior).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior2).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior3).shouldBe false
+
+    batchManager.shouldExecute(someOtherBehavior4).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior5).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior6).shouldBe false
+
+    batchManager.shouldExecute(someOtherBehavior7).shouldBe true
+    batchManager.shouldExecute(someOtherBehavior8).shouldBe false
+    batchManager.shouldExecute(someOtherBehavior9).shouldBe false
+
+    batchManager.shouldExecute(someOtherBehavior10).shouldBe true
+
+}

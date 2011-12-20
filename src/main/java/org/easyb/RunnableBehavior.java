@@ -2,23 +2,31 @@ package org.easyb;
 
 import java.io.IOException;
 
+import org.easyb.batches.BatchManager;
 import org.easyb.domain.Behavior;
-import org.easyb.listener.BroadcastListener;
 
 public class RunnableBehavior implements Runnable {
     private Behavior behavior;
     private Exception failure;
+    private BatchManager batchManager;
 
-    public RunnableBehavior(Behavior behavior) {
+    public RunnableBehavior(Behavior behavior, BatchManager batchManager) {
         this.behavior = behavior;
+        this.batchManager = batchManager;
     }
 
     public void run() {
         try {
-            behavior.execute();
+            if (shouldExecute(behavior)) {
+                behavior.execute();
+            }
         } catch (IOException e) {
             failure = e;
         }
+    }
+
+    private boolean shouldExecute(Behavior behavior) {
+        return batchManager.shouldExecute(behavior);
     }
 
     public boolean isFailed() {

@@ -24,6 +24,8 @@ public class Configuration {
   private String junitRootPackage;
   private int maxThreads = 10;
   private long parallelTimeoutInSeconds = 60;
+  private Integer batchCount = 0;
+  private Integer batchNumber = 0;
 
   public Configuration() {
     this(new String[]{}, Collections.<ReportWriter>emptyList());
@@ -68,11 +70,16 @@ public class Configuration {
   public Configuration(final String[] filePaths, final List<ReportWriter> configuredReports,
                        final boolean stackTraceOn, final boolean filteredStackTraceOn,
                        final String extendedStoryClassName, final boolean parallel, final boolean isFailureFile,
-                       final String failureFile, final String[] tags, String rootPackage, Integer parallelMaxThreads, Long parallelTimeout) {
+                       final String failureFile, final String[] tags, String rootPackage,
+                       Integer parallelMaxThreads, Long parallelTimeout,
+                       Integer batchCount, Integer batchNumber) {
     this(filePaths, configuredReports, stackTraceOn, filteredStackTraceOn,
          extendedStoryClassName, parallel, isFailureFile, failureFile);
     this.tags = tags;
     this.junitRootPackage = rootPackage;
+
+    this.batchCount = batchCount;
+    this.batchNumber = batchNumber;
 
     if (parallelMaxThreads != null) {
       this.maxThreads = parallelMaxThreads.intValue();
@@ -147,5 +154,13 @@ public class Configuration {
 
   public void setMaxThreads(int maxThreads) {
     this.maxThreads = maxThreads;
+  }
+
+  public Integer getBatchCount() {
+    return batchCount;
+  }
+
+  public Integer getBatchNumber() {
+    return batchNumber;
   }
 }
