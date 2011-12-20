@@ -9,6 +9,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.util.concurrent.ExecutorService;
 
+import org.easyb.batches.BatchManager;
 import org.easyb.domain.Behavior;
 import org.easyb.domain.BehaviorFactory;
 import org.easyb.domain.GroovyShellConfiguration;
@@ -20,10 +21,13 @@ public class BehaviorRunner {
 
   private ResultsAmalgamator resultsAmalgamator;
 
-  public BehaviorRunner(final Configuration configuration, final ListenerBuilder... listeners) {
-    this.configuration = configuration;
+  private BatchManager batchManager;
 
-    
+  public BehaviorRunner(final Configuration configuration, final ListenerBuilder... listeners) {
+      this.configuration = configuration;
+      this.batchManager = new BatchManager(configuration.getBatchCount(), configuration.getBatchNumber());
+
+
 
     for (ListenerBuilder lb : listeners) {
       ListenerFactory.registerBuilder(lb);
@@ -105,9 +109,9 @@ public class BehaviorRunner {
       ExecutorService executor = configuration.getExecutor();
 
       List<RunnableBehavior> executedBehaviors = new ArrayList<RunnableBehavior>();
-      
+
       for (final Behavior behavior : behaviors) {
-        RunnableBehavior task = new RunnableBehavior(behavior);
+        RunnableBehavior task = new RunnableBehavior(behavior, batchManager);
         executedBehaviors.add(task);
         executor.execute(task);
       }
@@ -123,12 +127,18 @@ public class BehaviorRunner {
       }
     } else {
       for (final Behavior behavior : behaviors) {
-        behavior.execute();
+        if (shouldExecute(behavior)) {
+            behavior.execute();
+        }
       }
     }
   }
 
-  public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
+    private boolean shouldExecute(Behavior behavior) {
+        return batchManager.shouldExecute(behavior);
+    }
+
+    public static List<Behavior> getBehaviors(final GroovyShellConfiguration groovyShellConfiguration,
                                             final String[] paths, Configuration config) {
     List<Behavior> behaviors = new ArrayList<Behavior>();
     for (final String path : paths) {

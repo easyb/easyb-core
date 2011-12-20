@@ -50,6 +50,11 @@ public class ConsoleConfigurator {
     private static final String TAG = "tags";
     private static final String TAG_DESCRIPTION = "run behaviors with tag marker";
 
+    private static final String BATCH_COUNT = "batchCount";
+    private static final String BATCH_COUNT_DESCRIPTION = "The total number of batches these tests are being split up into";
+
+    private static final String BATCH_NUMBER = "batchNumber";
+    private static final String BATCH_NUMBER_DESCRIPTION = "The number of the current batch if these tests are being split up into";
 
     public Configuration configure(final String[] args) {
         final Options options = getOptionsForMain();
@@ -66,7 +71,9 @@ public class ConsoleConfigurator {
                     isFailureFile(commandLine), commandLine.getOptionValue(FAILURE_BEHAVIOR_FILE),
                     getTags(commandLine), getRootPackage(commandLine),
                     commandLine.hasOption(PARALLEL_MAX_THREADS) ? Integer.parseInt(commandLine.getOptionValue(PARALLEL_MAX_THREADS)) : null,
-                    commandLine.hasOption(PARALLEL_TIMEOUT_IN_SECONDS) ? Long.parseLong(commandLine.getOptionValue(PARALLEL_TIMEOUT_IN_SECONDS)) : null);
+                    commandLine.hasOption(PARALLEL_TIMEOUT_IN_SECONDS) ? Long.parseLong(commandLine.getOptionValue(PARALLEL_TIMEOUT_IN_SECONDS)) : null,
+                    commandLine.hasOption(BATCH_COUNT) ? Integer.parseInt(commandLine.getOptionValue(BATCH_COUNT)) : null,
+                    commandLine.hasOption(BATCH_NUMBER) ? Integer.parseInt(commandLine.getOptionValue(BATCH_NUMBER)) : null);
 
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.getMessage());
@@ -204,6 +211,8 @@ public class ConsoleConfigurator {
         options.addOption(withDescription(FAILURE_BEHAVIOR_FILE_DESCRIPTION).hasOptionalArg().create(FAILURE_BEHAVIOR_FILE));
         options.addOption(withDescription(TAG_DESCRIPTION).hasOptionalArg().create(TAG));
         options.addOption(withDescription(JUNIT_ROOT_DESCRIPTION).hasOptionalArg().create(JUNIT_ROOT_PACKAGE));
+        options.addOption(withDescription(BATCH_COUNT_DESCRIPTION).hasOptionalArg().create(BATCH_COUNT));
+        options.addOption(withDescription(BATCH_NUMBER_DESCRIPTION).hasOptionalArg().create(BATCH_NUMBER));
 
         return options;
     }
