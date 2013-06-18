@@ -84,8 +84,8 @@ class SpecificationBinding extends Binding {
       specification.narrative(description, closure)
     }
 
-    description = {description ->
-      specification.description(description)
+    description = {desc ->
+      specification.description(desc)
     }
   }
 

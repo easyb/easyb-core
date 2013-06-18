@@ -4,42 +4,17 @@
 	<parent>
 		<artifactId>easyb-maven-parent</artifactId>
 		<groupId>org.easyb</groupId>
-		<version>1.4</version>
+		<version>1.5-SNAPSHOT</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
 	<version>1.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>easyb-core</name>
-	<description>A behavior driven development framework for the Java platform</description>
-	<url>http://www.easyb.org</url>
-	<developers>
-		<developer>
-			<id>ajglover</id>
-			<name>Andy Glover</name>
-		</developer>
-		<developer>
-			<id>kenneth.s.brooks</id>
-			<name>Ken Brooks</name>
-		</developer>
-		<developer>
-			<id>rfciii</id>
-			<name>Rod Coffin</name>
-			<email>rod@rodcoffin.com</email>
-			<url>http://www.rodcoffin.com</url>
-		</developer>
-		<developer>
-			<id>rvowles</id>
-			<name>Richard Vowles</name>
-			<email>richard@bluetrainsoftware.com</email>
-			<url>http://www.bluetrainsoftware.com</url>
-		</developer>
-	</developers>
-	<licenses>
-		<license>
-			<name>MIT License</name>
-			<url>http://www.opensource.org/licenses/mit-license.php</url>
-		</license>
-	</licenses>
+
+  <description>A behavior driven development framework for the Java platform</description>
+
+
+
 	<mailingLists>
 		<mailingList>
 			<name>easyb users</name>
@@ -63,22 +38,33 @@
 			<post>http://groups.google.com/group/easyb-commits</post>
 		</mailingList>
 	</mailingLists>
+
 	<scm>
 		<!-- this is the format documented in the 1.4 SCM plugin -->
 		<connection>scm:git:git@github.com:easyb/easyb-core</connection>
 		<developerConnection>scm:git:git@github.com:easyb/easyb-core</developerConnection>
 		<url>http://github.com/easyb/easyb-core</url>
 	</scm>
-	<issueManagement>
+
+  <issueManagement>
 		<system>Google Code</system>
 		<url>http://code.google.com/p/easyb/issues/</url>
 	</issueManagement>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<version>1.7.10</version>
+			<groupId>org.easyb</groupId>
+      <artifactId>easyb-composite-groovy</artifactId>
+			<version>[1,2)</version>
+      <type>pom</type>
 		</dependency>
+
+    <dependency>
+      <groupId>org.easyb</groupId>
+      <artifactId>easyb-ast</artifactId>
+      <version>[1,2)</version>
+    </dependency>
+
 		<dependency>
 			<groupId>commons-cli</groupId>
 			<artifactId>commons-cli</artifactId>
@@ -93,7 +79,7 @@
 			<groupId>ant</groupId>
 			<artifactId>ant</artifactId>
 			<version>1.6.5</version> <!-- not version coded as we don't care about the version, they all do what we want -->
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
