@@ -71,7 +71,7 @@ class XmlReportWriter implements ReportWriter {
       } else if (step.stepType == BehaviorStepType.NARRATIVE) {
         xml."${step.stepType.type()}"(description: step.name) {
           for (child in step.childSteps) {
-            xml."${child.stepType.type()}"(description: step.name)
+            xml."${child.stepType.type()}"(description: child.name)
           }
         }
       } else if (step.stepType == BehaviorStepType.EXECUTE) {
