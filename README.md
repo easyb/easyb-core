@@ -1,7 +1,9 @@
-= easyb-core =
+easyb-core
+==========
 This project contains the main code for easyb.
 
-== Building ==
+Building
+--------
 In case you are building a released version of easyb-core, it will be enough to check out this project 
 only and build it.
 
