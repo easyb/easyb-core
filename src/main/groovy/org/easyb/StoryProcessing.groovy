@@ -11,7 +11,7 @@ import groovy.util.logging.*
 
 @Log
 public class StoryProcessing {
-  private Stack<StoryContext> contextStack = new Stack<StoryContext>();
+  private Stack<StoryContext> contextStack = new Stack<StoryContext>()
   private StoryContext currentContext = null
   private BehaviorStep currentStep
   private boolean executeStory
@@ -100,7 +100,6 @@ public class StoryProcessing {
    */
 
   private def runContext(StoryContext context, BehaviorStep exampleStep) {
-    log.finest("*StoryProcessing* runContext: $context exampleStep: $exampleStep **********")
     if (currentContext != null)
       contextStack.push(currentContext)
 
@@ -214,8 +213,6 @@ public class StoryProcessing {
   }
 
   private def processScenario(BehaviorStep step, isRealScenario) {
-    log.finest("*processScenario* ${isRealScenario} ${step?.toString()}")
-
     currentStep = step
 
     step.decodeCurrentName currentIteration
@@ -229,22 +226,17 @@ public class StoryProcessing {
         currentContext.notifyPlugins { plugin, binding -> plugin.beforeScenario(binding) }
 
         if (currentContext.beforeEach) {
-          log.finest("processScenario(${currentContext.beforeEach}, false) {")
-          log.finest("Source: ${step.source} --> \n${currentContext.beforeEach.source}\n")
           processScenario(currentContext.beforeEach, false)
-          log.finest("} processScenario(${currentContext.beforeEach}, false)")
         }
 
       }
 
       if (step.childSteps.size() == 0) {
-        log.finest("Has closure ${currentStep.name} ${currentStep.closure != null} *** \n${currentStep.source}")
         if (currentStep.stepType != BehaviorStepType.SCENARIO) {
           currentStep.closure()
         }
 
       } else {
-        log.finest("Number of childsteps of step ${step.toString()} ${step.name} ${step.childSteps.size()}")
         step.childSteps.each { childStep ->
           currentStep = childStep
 

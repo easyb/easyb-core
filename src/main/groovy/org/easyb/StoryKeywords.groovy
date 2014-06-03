@@ -158,29 +158,23 @@ class StoryKeywords extends BehaviorKeywords {
   }
 
   def before(description, closure, String source, int lineNo) {
-    log.finest("*StoryKeywords* Before $description")
     currentContext.beforeScenarios = parseScenario(closure, description, BehaviorStepType.BEFORE, source, lineNo)
   }
 
   def after(description, closure, String source, int lineNo) {
-    log.finest("*StoryKeywords* After $description")
     currentContext.afterScenarios = parseScenario(closure, description, BehaviorStepType.AFTER, source, lineNo)
   }
 
   def beforeEach(description, closure, String source, int lineNo) {
-    log.finest("*StoryKeywords* Before_each $description")
     currentContext.beforeEach = parseScenario(closure, description, BehaviorStepType.BEFORE_EACH, source, lineNo)
   }
 
   def afterEach(description, closure, String source, int lineNo) {
-    log.finest("*StoryKeywords* After_each $description")
     currentContext.afterEach = parseScenario(closure, description, BehaviorStepType.AFTER_EACH, source, lineNo)
   }
 
   def scenario(scenarioDescription, scenarioClosure, String source, int lineNo) {
-    log.finest("*StoryKeywords* parse scenario $scenarioDescription")
     parseScenario(scenarioClosure, scenarioDescription, BehaviorStepType.SCENARIO, source, lineNo)
-    log.finest("*StoryKeywords* parse scenario $scenarioDescription")
   }
 
   def parseScenario(scenarioClosure, scenarioDescription, BehaviorStepType type, String source, int lineNo) {
@@ -203,7 +197,6 @@ class StoryKeywords extends BehaviorKeywords {
       scenarioClosure()
     } else {
       if (type == BehaviorStepType.SCENARIO) {
-        log.finest("*StoryKeywords* --- found scenario $scenarioDescription with context " + scenarioStep.storyContext.toString())
         currentContext.addStep(scenarioStep)
       } else if (type == BehaviorStepType.SHARED_BEHAVIOR) {
         currentContext.sharedScenarios[scenarioStep.name] = scenarioStep
@@ -238,7 +231,6 @@ class StoryKeywords extends BehaviorKeywords {
 
 
   private BehaviorStep addStep(BehaviorStepType inStepType, String inStepName, Closure closure, String source, int lineNo) {
-    log.finest("StoryKeywords.addStep $inStepName")
     BehaviorStep step = new BehaviorStep(inStepType, inStepName, closure, currentStep, source, lineNo)
     step.storyContext = currentContext
 
