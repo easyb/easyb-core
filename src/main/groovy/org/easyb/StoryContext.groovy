@@ -8,9 +8,10 @@ own story context in which the whole chain of before/after/before_each/after_eac
 package org.easyb
 
 import org.easyb.plugin.EasybPlugin
-import org.easyb.util.BehaviorStepType;
+import org.easyb.util.BehaviorStepType
 
-
+import groovy.util.logging.*
+@Log
 public class StoryContext {
 
   public StoryContext(Binding binding) {
@@ -35,7 +36,7 @@ public class StoryContext {
 
   StoryContext parentContext;
 
-  List<StoryContext> sharedContexts = new ArrayList<StoryContext>();
+  List<StoryContext> sharedContexts = new ArrayList<StoryContext>()
 
   /* before step */
   BehaviorStep beforeScenarios
@@ -74,10 +75,12 @@ public class StoryContext {
   }
 
   public void addStep(BehaviorStep step) {
+    log.finest("Add step ${step.name} => \n${step.source}")
     steps.add(step)
   }
 
   public void removeStep(BehaviorStep step) {
+    log.finest("Remove step ${step.name}")
     steps.remove(step)
   }
 
