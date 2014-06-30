@@ -234,10 +234,12 @@ public class ResultsReporter {
     } else if (child.getStepType() == BehaviorStepType.SCENARIO) {
       sc.scenarios.add(child);
       fixScenarioStatus(child);
-    } else if (child.getStepType() == BehaviorStepType.BEFORE) {
+    } else if ((child.getStepType() == BehaviorStepType.BEFORE) ||
+               (child.getStepType() == BehaviorStepType.BEFORE_EACH)) {
       sc.befores.add(child);
       fixScenarioStatus(child);
-    } else if (child.getStepType() == BehaviorStepType.AFTER) {
+    } else if ((child.getStepType() == BehaviorStepType.AFTER) ||
+               (child.getStepType() == BehaviorStepType.AFTER_EACH)) {
       sc.afters.add(child);
       fixScenarioStatus(child);
     } else if (LEGAL_BUT_WEIRD.contains(child.getStepType())) {

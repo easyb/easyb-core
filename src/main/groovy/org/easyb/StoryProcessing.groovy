@@ -7,7 +7,9 @@ import org.easyb.plugin.PluginLocator
 import org.easyb.util.BehaviorStepType
 import org.easyb.plugin.ExampleDataParser
 import org.easyb.listener.ResultsReporter
+import groovy.util.logging.*
 
+@Log
 public class StoryProcessing {
   private Stack<StoryContext> contextStack = new Stack<StoryContext>();
   private StoryContext currentContext = null
@@ -98,6 +100,7 @@ public class StoryProcessing {
    */
 
   private def runContext(StoryContext context, BehaviorStep exampleStep) {
+    log.finest("*StoryProcessing* runContext: $context exampleStep: $exampleStep **********")
     if (currentContext != null)
       contextStack.push(currentContext)
 
@@ -110,19 +113,20 @@ public class StoryProcessing {
         plugin.beforeStory(binding)
       }
 
-      if (context.beforeScenarios)
+      if (context.beforeScenarios) {
         processScenario(context.beforeScenarios, false)
+      }
 
       try {
-        if (!context.exampleData)
+        if (!context.exampleData) {
           processStoryContext(context, exampleStep)
-        else
+        } else {
           processStoryUsingExamples(context, exampleStep)
-
+        }
       } finally {
-        if (context.afterScenarios)
+        if (context.afterScenarios) {
           processScenario(context.afterScenarios, false)
-
+        }
         context.notifyPlugins { plugin, binding -> plugin.afterStory(binding) }
       }
     } finally {
@@ -210,6 +214,7 @@ public class StoryProcessing {
   }
 
   private def processScenario(BehaviorStep step, isRealScenario) {
+    log.finest("*processScenario* ${isRealScenario} ${step?.toString()}")
 
     currentStep = step
 
@@ -220,31 +225,43 @@ public class StoryProcessing {
     def processing = [BehaviorStepType.GIVEN, BehaviorStepType.WHEN, BehaviorStepType.THEN]
 
     try {
-      if (isRealScenario)
+      if (isRealScenario) {
         currentContext.notifyPlugins { plugin, binding -> plugin.beforeScenario(binding) }
 
-      if (isRealScenario && currentContext.beforeEach)
-        processScenario(currentContext.beforeEach, false)
-
-      step.childSteps.each { childStep ->
-        currentStep = childStep
-
-        if (childStep.stepType == BehaviorStepType.BEHAVES_AS)
-          processSharedScenarios(childStep)
-        else if ( childStep.stepType == BehaviorStepType.EXTENSION_POINT )
-          childStep.extensionPoint.process(step, currentContext.binding, listener)
-        else if (processing.contains(childStep.stepType)) {
-          processChildStep(childStep)
+        if (currentContext.beforeEach) {
+          log.finest("processScenario(${currentContext.beforeEach}, false) {")
+          log.finest("Source: ${step.source} --> \n${currentContext.beforeEach.source}\n")
+          processScenario(currentContext.beforeEach, false)
+          log.finest("} processScenario(${currentContext.beforeEach}, false)")
         }
+
       }
 
+      if (step.childSteps.size() == 0) {
+        log.finest("Has closure ${currentStep.name} ${currentStep.closure != null} *** \n${currentStep.source}")
+        if (currentStep.stepType != BehaviorStepType.SCENARIO) {
+          currentStep.closure()
+        }
+
+      } else {
+        log.finest("Number of childsteps of step ${step.toString()} ${step.name} ${step.childSteps.size()}")
+        step.childSteps.each { childStep ->
+          currentStep = childStep
+
+          if (childStep.stepType == BehaviorStepType.BEHAVES_AS) {
+            processSharedScenarios(childStep)
+          } else if ( childStep.stepType == BehaviorStepType.EXTENSION_POINT ) {
+            childStep.extensionPoint.process(step, currentContext.binding, listener)
+          } else if (processing.contains(childStep.stepType)) {
+            processChildStep(childStep)
+          }
+        }
+      }
 
       step.result = null  // give it a default
       currentStep = step // reset it
 
-
       ResultsReporter.fixScenarioStatus(step)
-      
       listener.gotResult step.result
 
       if (isRealScenario && currentContext.afterEach)

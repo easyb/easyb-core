@@ -23,7 +23,7 @@ scenario "easyb should handle equal-- what do we do?", {
         ibar = bar
     }
 
-    then "easyb shoud throw an exception as they are equal-- not greater than", {
+    then "easyb should throw an exception as they are equal-- not greater than", {
         try {
             ibar.shouldBeGreaterThan foo
         } catch (e) {
@@ -31,7 +31,7 @@ scenario "easyb should handle equal-- what do we do?", {
         }
     }
 
-    and "easyb shoud throw another exception as they are equal-- not less than", {
+    and "easyb should throw another exception as they are equal-- not less than", {
         try {
             ibar.shouldBeLessThan foo
         } catch (e) {
