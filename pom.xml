@@ -7,7 +7,7 @@
 		<version>1.5</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
-	<version>1.6-SNAPSHOT</version>
+	<version>1.6</version>
 	<packaging>jar</packaging>
 	<name>easyb-core</name>
 	<description>A behavior driven development framework for the Java platform</description>
@@ -39,7 +39,8 @@
 		<connection>scm:git:git@github.com:easyb/easyb-core</connection>
 		<developerConnection>scm:git:git@github.com:easyb/easyb-core</developerConnection>
 		<url>http://github.com/easyb/easyb-core</url>
-	</scm>
+	  <tag>easyb-core-1.6</tag>
+  </scm>
 	<issueManagement>
 		<system>Google Code</system>
 		<url>http://code.google.com/p/easyb/issues/</url>
@@ -130,10 +131,10 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<property name="compile_classpath" refid="maven.compile.classpath"/>
-								<property name="runtime_classpath" refid="maven.runtime.classpath"/>
-								<property name="test_classpath" refid="maven.test.classpath"/>
-								<property name="plugin_classpath" refid="maven.plugin.classpath"/>
+								<property name="compile_classpath" refid="maven.compile.classpath" />
+								<property name="runtime_classpath" refid="maven.runtime.classpath" />
+								<property name="test_classpath" refid="maven.test.classpath" />
+								<property name="plugin_classpath" refid="maven.plugin.classpath" />
 								<!--
 								<echo message="compile classpath: ${compile_classpath}" />
 								<echo message="runtime classpath: ${runtime_classpath}" />
@@ -141,44 +142,44 @@
 								<echo message="plugin classpath: ${plugin_classpath}" />
 								<echo message=" test classes ${project.build.directory}/test-classes" />
 								-->
-								<mkdir dir="${project.build.directory}/reports"/>
+								<mkdir dir="${project.build.directory}/reports" />
 								<taskdef name="easyb" classname="org.easyb.ant.BehaviorRunnerTask">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
 									</classpath>
 								</taskdef>
 								<easyb failureProperty="easyb.failed" failureFile="${project.build.directory}/reports/failures.txt" parallel="false">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
-										<pathelement location="${project.build.directory}/test-classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
+										<pathelement location="${project.build.directory}/test-classes" />
 									</classpath>
-									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test"/>
-									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports"/>
-									<jvmarg value="-Deasyb.ast.suffixes=shared"/>
-									<jvmarg value="-Deasyb.ast.debug=true"/>
-									<report location="${project.build.directory}/reports/easyb-report.html" format="html"/>
-									<report location="${project.build.directory}/reports/easyb-report.xml" format="xml"/>
-									<report location="${project.build.directory}/reports/easyb-junit-report.xml" format="junit"/>
-									<report location="${project.build.directory}/reports/story-report.txt" format="txtstory"/>
-									<report location="${project.build.directory}/reports/specification-report.txt" format="txtspecification"/>
+									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test" />
+									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports" />
+									<jvmarg value="-Deasyb.ast.suffixes=shared" />
+									<jvmarg value="-Deasyb.ast.debug=true" />
+									<report location="${project.build.directory}/reports/easyb-report.html" format="html" />
+									<report location="${project.build.directory}/reports/easyb-report.xml" format="xml" />
+									<report location="${project.build.directory}/reports/easyb-junit-report.xml" format="junit" />
+									<report location="${project.build.directory}/reports/story-report.txt" format="txtstory" />
+									<report location="${project.build.directory}/reports/specification-report.txt" format="txtspecification" />
 									<behaviors dir="${project.basedir}/src/test/groovy">
-										<include name="**/*Story.groovy"/>
-										<include name="**/*.story"/>
-										<include name="**/*Specification.groovy"/>
-										<include name="**/*.specification"/>
-										<include name=""/>
-										<exclude name="**/TextStoryReportingValidation.story"/>
-										<exclude name="**/FailureReport.story"/>
-										<exclude name="**/PassingPendingFailingStory.story"/>
-										<exclude name="**/PassingPendingFailing.specification"/>
-										<exclude name="**/ExceptionalOccurrence.story"/>
-										<exclude name="**/HtmlReportingStory.groovy"/>
-										<exclude name="**/Issue116.story"/>
+										<include name="**/*Story.groovy" />
+										<include name="**/*.story" />
+										<include name="**/*Specification.groovy" />
+										<include name="**/*.specification" />
+										<include name="" />
+										<exclude name="**/TextStoryReportingValidation.story" />
+										<exclude name="**/FailureReport.story" />
+										<exclude name="**/PassingPendingFailingStory.story" />
+										<exclude name="**/PassingPendingFailing.specification" />
+										<exclude name="**/ExceptionalOccurrence.story" />
+										<exclude name="**/HtmlReportingStory.groovy" />
+										<exclude name="**/Issue116.story" />
 									</behaviors>
 								</easyb>
-								<fail if="easyb.failed" message="Execution halted as specifications/stories failed"/>
+								<fail if="easyb.failed" message="Execution halted as specifications/stories failed" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -242,24 +243,24 @@
 							<tasks>
 								<taskdef name="easyb" classname="org.easyb.ant.BehaviorRunnerTask">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
 									</classpath>
 								</taskdef>
 								<easyb failureProperty="easyb.failed" failureFile="${project.build.directory}/reports/failures.txt" parallel="false">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
-										<pathelement location="${project.build.directory}/test-classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
+										<pathelement location="${project.build.directory}/test-classes" />
 									</classpath>
-									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test"/>
-									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports"/>
-									<report location="${project.build.directory}/reports/valid-report.txt" format="txtstory"/>
+									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test" />
+									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports" />
+									<report location="${project.build.directory}/reports/valid-report.txt" format="txtstory" />
 									<behaviors dir="${project.basedir}/src/test/groovy">
-										<include name="**/AndChainedFeature.story"/>
+										<include name="**/AndChainedFeature.story" />
 									</behaviors>
 								</easyb>
-								<fail if="easyb.failed" message="Execution halted as specifications/stories failed"/>
+								<fail if="easyb.failed" message="Execution halted as specifications/stories failed" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -274,24 +275,24 @@
 							<tasks>
 								<taskdef name="easyb" classname="org.easyb.ant.BehaviorRunnerTask">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
 									</classpath>
 								</taskdef>
 								<easyb failureProperty="easyb.failed" failureFile="${project.build.directory}/reports/failures.txt" parallel="false">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
-										<pathelement location="${project.build.directory}/test-classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
+										<pathelement location="${project.build.directory}/test-classes" />
 									</classpath>
-									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test"/>
-									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports"/>
-									<report location="${project.build.directory}/reports/valid-report-failure.txt" format="txtstory"/>
+									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test" />
+									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports" />
+									<report location="${project.build.directory}/reports/valid-report-failure.txt" format="txtstory" />
 									<behaviors dir="${project.basedir}/src/test/groovy">
-										<include name="**/FailureReport.story"/>
+										<include name="**/FailureReport.story" />
 									</behaviors>
 								</easyb>
-								<fail unless="easyb.failed" message="Execution halted as specifications/stories didn't fail"/>
+								<fail unless="easyb.failed" message="Execution halted as specifications/stories didn't fail" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -306,24 +307,24 @@
 							<tasks>
 								<taskdef name="easyb" classname="org.easyb.ant.BehaviorRunnerTask">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
 									</classpath>
 								</taskdef>
 								<easyb failureProperty="easyb.failed" failureFile="${project.build.directory}/reports/failures.txt" parallel="false">
 									<classpath>
-										<path refid="maven.runtime.classpath"/>
-										<pathelement location="${project.build.directory}/classes"/>
-										<pathelement location="${project.build.directory}/test-classes"/>
+										<path refid="maven.runtime.classpath" />
+										<pathelement location="${project.build.directory}/classes" />
+										<pathelement location="${project.build.directory}/test-classes" />
 									</classpath>
-									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test"/>
-									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports"/>
-									<report location="${project.build.directory}/reports/valid-reporting.txt" format="txtstory"/>
+									<jvmarg value="-Deasyb.test.source.dir=${project.basedir}/src/test" />
+									<jvmarg value="-Deasyb.reports.dir=${project.build.directory}/reports" />
+									<report location="${project.build.directory}/reports/valid-reporting.txt" format="txtstory" />
 									<behaviors dir="${project.basedir}/src/test/groovy">
-										<include name="**/TextStoryReportingValidation.story"/>
+										<include name="**/TextStoryReportingValidation.story" />
 									</behaviors>
 								</easyb>
-								<fail if="easyb.failed" message="Execution halted as specifications/stories failed"/>
+								<fail if="easyb.failed" message="Execution halted as specifications/stories failed" />
 							</tasks>
 						</configuration>
 					</execution>
