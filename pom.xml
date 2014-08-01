@@ -7,7 +7,7 @@
 		<version>1.5</version>
 	</parent>
 	<artifactId>easyb-core</artifactId>
-	<version>1.6</version>
+	<version>1.7-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>easyb-core</name>
 	<description>A behavior driven development framework for the Java platform</description>
@@ -39,7 +39,7 @@
 		<connection>scm:git:git@github.com:easyb/easyb-core</connection>
 		<developerConnection>scm:git:git@github.com:easyb/easyb-core</developerConnection>
 		<url>http://github.com/easyb/easyb-core</url>
-	  <tag>easyb-core-1.6</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<issueManagement>
 		<system>Google Code</system>
